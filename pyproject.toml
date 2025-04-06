@@ -1,0 +1,24 @@
+[project]
+name = "handmanim"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Subhrajyoty Roy",email = "subhrajyotyroy@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cairocffi (>=1.7.1,<2.0.0)",
+    "numpy (>=2.2.4,<3.0.0)",
+    "svgwrite (>=1.4.3,<2.0.0)",
+    "moviepy (>=2.1.2,<3.0.0)",
+    "pycairo (>=1.27.0,<2.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "handmanim", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
