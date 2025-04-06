@@ -4,10 +4,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent / "src"))
 
 from handmanim.scene import Scene
-from handmanim.primitives.shapes import Circle
-from handmanim.primitives.text import Text
+from handmanim.primitives.rectangle import Rectangle
 
-scene = Scene(width=800, height=600)
-scene.add(Circle(center=(400, 300), radius=100, jitter=0.1))
-scene.add(Text("Hello world!", position=(300, 150), font_size=48))
+scene = Scene(width=300, height=300)
+scene.add(Rectangle(100, 100, 150, 120, stroke_color=(0, 0, 1), fill_color=(1, 0, 0), roughness=1.5, pastel=True))
 scene.render("output.png")
