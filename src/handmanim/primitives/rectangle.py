@@ -2,16 +2,7 @@ import numpy as np
 from .base import BasePrimitive
 from .line import Line
 from ..transformed_context import TransformedContext
-
-class RectangleFillType:
-    DIAGONAL = "diagonal"
-    ANTI_DIAGONAL = "anti_diagonal"
-    HORIZONTAL = "horizontal"
-    VERTICAL = "vertical"
-    CHECKER = "checker"
-    CHECKER_DIAGONAL = "checker_diagonal"
-
-
+from ..stylings.fill_patterns import HachureFillPatterns, apply_hachure_fill_patterns
 
 class Rectangle(BasePrimitive):
     """
@@ -28,7 +19,7 @@ class Rectangle(BasePrimitive):
         pastel: bool = False,  # whether to use pastel colors
         sketch_number: int = 2,  # number of sketch lines
         fill_color: tuple[float, float, float] = None,  # fill color
-        fill_type: RectangleFillType = RectangleFillType.DIAGONAL,  # fill type
+        fill_type: HachureFillPatterns = HachureFillPatterns.DIAGONAL,  # fill type
         fill_spacing: float = 10,  # spacing between fill lines
     ):
         self.x, self.y = bottom_left
@@ -62,63 +53,16 @@ class Rectangle(BasePrimitive):
         ctx.rectangle(self.x, self.y, self.width, self.height)
         ctx.clip()
 
-        # pastel fill effect
-        r, g, b = self.fill_color
-        ctx.set_source_rgba(r, g, b, 0.3 if self.pastel else 1.0)
-        ctx.set_line_width(1 if not self.pastel else 2)  # thicker lines for pastel
-
-        # now draw the filling pattern
-        spacing = self.fill_spacing  # distance between hatch lines
-        if self.fill_type == RectangleFillType.HORIZONTAL:
-            for ysub in np.arange(self.y, self.y + self.height, spacing):
-                ctx.move_to(self.x, ysub)
-                ctx.line_to(self.x + self.width, ysub)
-                ctx.stroke()
-        elif self.fill_type == RectangleFillType.VERTICAL:
-            for xsub in np.arange(self.x, self.x + self.width, spacing):
-                ctx.move_to(xsub, self.y)
-                ctx.line_to(xsub, self.y + self.height)
-                ctx.stroke()
-        elif self.fill_type == RectangleFillType.CHECKER:
-            # both horizontal and vertical lines
-            for ysub in np.arange(self.y, self.y + self.height, spacing):
-                ctx.move_to(self.x, ysub)
-                ctx.line_to(self.x + self.width, ysub)
-                ctx.stroke()
-            for xsub in np.arange(self.x, self.x + self.width, spacing):
-                ctx.move_to(xsub, self.y)
-                ctx.line_to(xsub, self.y + self.height)
-                ctx.stroke()
-        elif self.fill_type == RectangleFillType.DIAGONAL:
-            # diagonal hatch lines
-            angle = np.radians(45)
-            tan_a = np.tan(angle)
-            for ysub in np.arange(self.y, self.y + self.height + self.width * tan_a, self.fill_spacing):
-                ctx.move_to(self.x, ysub)
-                ctx.line_to(self.x + self.width, ysub - self.width / tan_a)
-                ctx.stroke()
-        elif self.fill_type == RectangleFillType.ANTI_DIAGONAL:
-            # anti-diagonal hatch lines
-            angle = np.radians(45)
-            tan_a = np.tan(angle)
-            for ysub in np.arange(self.y - self.width * tan_a, self.y + self.height, self.fill_spacing):
-                ctx.move_to(self.x, ysub)
-                ctx.line_to(self.x + self.width, ysub + self.width * tan_a)
-                ctx.stroke()
-        elif self.fill_type == RectangleFillType.CHECKER_DIAGONAL:
-            # both diagonal and anti-diagonal lines
-            angle = np.radians(45)
-            tan_a = np.tan(angle)
-            for ysub in np.arange(self.y, self.y + self.height + self.width * tan_a, self.fill_spacing):
-                ctx.move_to(self.x, ysub)
-                ctx.line_to(self.x + self.width, ysub - self.width / tan_a)
-                ctx.stroke()
-            for ysub in np.arange(self.y - self.width * tan_a, self.y + self.height, self.fill_spacing):
-                ctx.move_to(self.x, ysub)
-                ctx.line_to(self.x + self.width, ysub + self.width * tan_a)
-                ctx.stroke()
-        else:
-            raise ValueError(f"Unknown fill type: {self.fill_type}")
+        # apply the fill pattern
+        apply_hachure_fill_patterns(
+            ctx,
+            (self.x, self.y, self.width, self.height),
+            self.fill_type,
+            fill_spacing=self.fill_spacing,
+            fill_color=self.fill_color,
+            pastel=self.pastel,
+            stroke_width=self.stroke_width,
+        )
         
         # restore context
         ctx.restore()

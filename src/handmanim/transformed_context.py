@@ -1,4 +1,5 @@
 import cairo
+import numpy as np
 
 class TransformedContext:
     """
@@ -18,6 +19,13 @@ class TransformedContext:
         """
         return x, self._height - y  # only the y-axis flips
     
+    def get_current_point(self) -> tuple:
+        """
+            Get the current point of the context
+        """
+        x, y = self._ctx.get_current_point()
+        return self._transform(x, y)
+    
     def move_to(self, x: float, y: float):
         """
             Move the context to the given coordinates
@@ -31,6 +39,35 @@ class TransformedContext:
         """
         x, y = self._transform(x, y)
         self._ctx.line_to(x, y)
+
+    def curve_to(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float):
+        """
+            Draw a curve to the given coordinates from current pencil coordinates
+            (x1, y1) is the first control point
+            (x2, y2) is the second control point
+            (x3, y3) is the end point
+        """
+        x1, y1 = self._transform(x1, y1)
+        x2, y2 = self._transform(x2, y2)
+        x3, y3 = self._transform(x3, y3)
+        self._ctx.curve_to(x1, y1, x2, y2, x3, y3)
+
+    def quadratic_curve_to(self, x1: float, y1: float, x2: float, y2: float):
+        """
+            Draw a quadratic curve to the given coordinates from current pencil coordinates
+            (x1, y1) is the control point
+            (x2, y2) is the end point
+        """
+        x0, y0 = self.get_current_point()  # get the current point
+
+        # compute the cubic control points, x(0) = x0, x(1) = x2, x(0.5) = x1
+        # we need to compute x(0.33) and x(0.66) to get the control points
+        # Convert quadratic to cubic Bézier control points
+        cx1 = x0 + (2.0 / 3.0) * (x1 - x0)
+        cy1 = y0 + (2.0 / 3.0) * (y1 - y0)
+        cx2 = x2 + (2.0 / 3.0) * (x1 - x2)
+        cy2 = y2 + (2.0 / 3.0) * (y1 - y2)  # assume linear interpolation
+        self._ctx.curve_to(cx1, cy1, cx2, cy2, x2, y2)
 
     def rectangle(self, x: float, y: float, width: float, height: float):
         """
@@ -49,12 +86,23 @@ class TransformedContext:
         x, y = self._transform(x, y)
         self._ctx.arc(x, y, radius, angle1, angle2)
 
+    def ellipse(self, x: float, y: float, width: float, height: float):
+        """
+            Draw an ellipse at the given coordinates with the given width and height
+            (x, y) is the center of the ellipse
+        """
+        x, y = self._transform(x, y)
+        self._ctx.save()  # save the context state
+        self._ctx.scale(1, height / width)  # scale the context to make it an ellipse
+        self._ctx.arc(x, y, width / 2, 0, 2 * np.pi)
+        self._ctx.restore()
+
     def circle(self, x: float, y: float, radius: float):
         """
             Draw a circle at the given coordinates with the given radius
         """
         x, y = self._transform(x, y)
-        self._ctx.circle(x, y, radius)
+        self._ctx.arc(x, y, radius, 0, 2 * np.pi)
 
     # although I can override the __getattr__ method to get the context methods
     # I think it is better to just use the context methods directly
