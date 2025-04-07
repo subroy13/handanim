@@ -1,78 +1,144 @@
-import math
-import random
-import cairo
+import numpy as np
+from .base import BasePrimitive
+from .line import Line
+from ..transformed_context import TransformedContext
 
-class Rectangle:
-    def __init__(self, x, y, width, height, stroke_color=(0, 0, 0), stroke_width=2,
-                 fill_color=None, roughness=1.0, pastel=False):
-        self.x = x
-        self.y = y
+class RectangleFillType:
+    DIAGONAL = "diagonal"
+    ANTI_DIAGONAL = "anti_diagonal"
+    HORIZONTAL = "horizontal"
+    VERTICAL = "vertical"
+    CHECKER = "checker"
+    CHECKER_DIAGONAL = "checker_diagonal"
+
+
+
+class Rectangle(BasePrimitive):
+    """
+        A class to represent a rectangle in a hand-drawn style.
+    """
+    def __init__(
+        self,
+        bottom_left: tuple[float, float],
+        width: float,
+        height: float,
+        stroke_color: tuple[float, float, float] = (0, 0, 0),
+        stroke_width: float = 1,
+        roughness: float = 1.0,
+        pastel: bool = False,  # whether to use pastel colors
+        sketch_number: int = 2,  # number of sketch lines
+        fill_color: tuple[float, float, float] = None,  # fill color
+        fill_type: RectangleFillType = RectangleFillType.DIAGONAL,  # fill type
+        fill_spacing: float = 10,  # spacing between fill lines
+    ):
+        self.x, self.y = bottom_left
         self.width = width
         self.height = height
         self.stroke_color = stroke_color
         self.stroke_width = stroke_width
-        self.fill_color = fill_color
         self.roughness = roughness
         self.pastel = pastel
+        self.sketch_number = sketch_number
+        self.fill_color = fill_color
+        self.fill_type = fill_type
+        self.fill_spacing = fill_spacing
 
-    def _draw_sketchy_line(self, ctx, x1, y1, x2, y2):
-        """Draws a hand-drawn-like line with some jitter."""
-        for _ in range(2):
-            jitter = lambda: random.uniform(-self.roughness, self.roughness)
-            ctx.move_to(x1 + jitter(), y1 + jitter())
-            ctx.line_to(x2 + jitter(), y2 + jitter())
-            ctx.stroke()
+    def _draw_sketchy_line(self, start: tuple[float, float], end: tuple[float, float], ctx: TransformedContext):
+        """
+            Draws a hand-drawn-like line with some jitter
+        """
+        line = Line(start, end, self.stroke_color, self.stroke_width, self.roughness, self.pastel, self.sketch_number)
+        line.draw(ctx)
 
-    def _fill_hachure(self, ctx):
+    def _fill_hachure(self, ctx: TransformedContext):
+        """
+            Fills the rectangle with a filling pattern
+        """
         if self.fill_color is None:
             return
 
-        spacing = 10  # Distance between hatch lines
-        angle = math.radians(45)
-        sin_a = math.sin(angle)
-        cos_a = math.cos(angle)
-        tan_a = math.tan(angle)
-
-        x0, y0 = self.x, self.y
-        x1, y1 = x0 + self.width, y0 + self.height
-
-        # Clip to rectangle
+        # clip to rectangle
         ctx.save()
-        ctx.rectangle(x0, y0, self.width, self.height)
+        ctx.rectangle(self.x, self.y, self.width, self.height)
         ctx.clip()
 
-        # Pastel fill effect
+        # pastel fill effect
         r, g, b = self.fill_color
         ctx.set_source_rgba(r, g, b, 0.3 if self.pastel else 1.0)
-        ctx.set_line_width(1 if not self.pastel else 2)
+        ctx.set_line_width(1 if not self.pastel else 2)  # thicker lines for pastel
 
-        # Diagonal lines spaced evenly
-        for i in range(y0, y0 + self.width + 2 * int(self.height / tan_a), spacing):
-            x_start = x0
-            y_start = i
-            x_end = x_start + self.width
-            y_end = y_start - self.width / cos_a
-
-            for _ in range(2 if self.pastel else 1):
-                jitter = lambda: random.uniform(-0.5, 0.5) if self.pastel else 0
-                ctx.move_to(x_start + jitter(), y_start + jitter())
-                ctx.line_to(x_end + jitter(), y_end + jitter())
+        # now draw the filling pattern
+        spacing = self.fill_spacing  # distance between hatch lines
+        if self.fill_type == RectangleFillType.HORIZONTAL:
+            for ysub in np.arange(self.y, self.y + self.height, spacing):
+                ctx.move_to(self.x, ysub)
+                ctx.line_to(self.x + self.width, ysub)
                 ctx.stroke()
-
-        # Restore context
+        elif self.fill_type == RectangleFillType.VERTICAL:
+            for xsub in np.arange(self.x, self.x + self.width, spacing):
+                ctx.move_to(xsub, self.y)
+                ctx.line_to(xsub, self.y + self.height)
+                ctx.stroke()
+        elif self.fill_type == RectangleFillType.CHECKER:
+            # both horizontal and vertical lines
+            for ysub in np.arange(self.y, self.y + self.height, spacing):
+                ctx.move_to(self.x, ysub)
+                ctx.line_to(self.x + self.width, ysub)
+                ctx.stroke()
+            for xsub in np.arange(self.x, self.x + self.width, spacing):
+                ctx.move_to(xsub, self.y)
+                ctx.line_to(xsub, self.y + self.height)
+                ctx.stroke()
+        elif self.fill_type == RectangleFillType.DIAGONAL:
+            # diagonal hatch lines
+            angle = np.radians(45)
+            tan_a = np.tan(angle)
+            for ysub in np.arange(self.y, self.y + self.height + self.width * tan_a, self.fill_spacing):
+                ctx.move_to(self.x, ysub)
+                ctx.line_to(self.x + self.width, ysub - self.width / tan_a)
+                ctx.stroke()
+        elif self.fill_type == RectangleFillType.ANTI_DIAGONAL:
+            # anti-diagonal hatch lines
+            angle = np.radians(45)
+            tan_a = np.tan(angle)
+            for ysub in np.arange(self.y - self.width * tan_a, self.y + self.height, self.fill_spacing):
+                ctx.move_to(self.x, ysub)
+                ctx.line_to(self.x + self.width, ysub + self.width * tan_a)
+                ctx.stroke()
+        elif self.fill_type == RectangleFillType.CHECKER_DIAGONAL:
+            # both diagonal and anti-diagonal lines
+            angle = np.radians(45)
+            tan_a = np.tan(angle)
+            for ysub in np.arange(self.y, self.y + self.height + self.width * tan_a, self.fill_spacing):
+                ctx.move_to(self.x, ysub)
+                ctx.line_to(self.x + self.width, ysub - self.width / tan_a)
+                ctx.stroke()
+            for ysub in np.arange(self.y - self.width * tan_a, self.y + self.height, self.fill_spacing):
+                ctx.move_to(self.x, ysub)
+                ctx.line_to(self.x + self.width, ysub + self.width * tan_a)
+                ctx.stroke()
+        else:
+            raise ValueError(f"Unknown fill type: {self.fill_type}")
+        
+        # restore context
         ctx.restore()
 
-    def draw(self, ctx: cairo.Context):
+    def draw(self, ctx: TransformedContext):
+        """
+            Draws the rectangle with a hand-drawn-like style.
+        """
+        # Draw the fill pattern
         self._fill_hachure(ctx)
 
-        # Stroke rectangle edges in sketchy style
+        # Draw the rectangle edges in sketchy style
         ctx.set_source_rgb(*self.stroke_color)
         ctx.set_line_width(self.stroke_width)
 
         x0, y0 = self.x, self.y
         x1, y1 = x0 + self.width, y0 + self.height
 
-        self._draw_sketchy_line(ctx, x0, y0, x1, y0)
-        self._draw_sketchy_line(ctx, x1, y0, x1, y1)
-        self._draw_sketchy_line(ctx, x1, y1, x0, y1)
-        self._draw_sketchy_line(ctx, x0, y1, x0, y0)
+        self._draw_sketchy_line((x0, y0), (x1, y0), ctx)
+        self._draw_sketchy_line((x1, y0), (x1, y1), ctx)
+        self._draw_sketchy_line((x1, y1), (x0, y1), ctx)
+        self._draw_sketchy_line((x0, y1), (x0, y0), ctx)
+

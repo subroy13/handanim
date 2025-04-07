@@ -1,20 +1,23 @@
+from typing import List
 import cairo
-import os
 from pathlib import Path
+from .primitives import BasePrimitive
+from .transformed_context import TransformedContext
 
 class Scene:
-    def __init__(self, width=800, height=600, background_color=(1, 1, 1)):
+    def __init__(self, width: int=800, height: int=600, background_color: tuple[float, float, float] = (1, 1, 1)):
         self.width = width
         self.height = height
         self.background_color = background_color
-        self.objects = []
+        self.objects : List[BasePrimitive] = []
 
-    def add(self, drawable):
+    def add(self, drawable: BasePrimitive):
         self.objects.append(drawable)
 
     def render(self, output_file="output.png"):
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
-        ctx = cairo.Context(surface)
+        cairo_ctx = cairo.Context(surface)
+        ctx = TransformedContext(cairo_ctx, self.width, self.height)  # set the transformed context
 
         # Fill background
         ctx.set_source_rgb(*self.background_color)
