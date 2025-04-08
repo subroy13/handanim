@@ -2,6 +2,7 @@ import numpy as np
 from .base import BasePrimitive
 from ..transformed_context import TransformedContext
 
+
 class Line(BasePrimitive):
 
     def __init__(
@@ -35,10 +36,9 @@ class Line(BasePrimitive):
 
         # Draw sketchy lines
         for _ in range(self.sketch_number):
-            jitter = lambda: np.random.uniform(-self.roughness, self.roughness)
-            ctx.move_to(self.x1 + jitter(), self.y1 + jitter())
-            ctx.line_to(self.x2 + jitter(), self.y2 + jitter())
+            jitters = np.random.uniform(-self.roughness, self.roughness, size=(4,))
+            ctx.move_to(self.x1 + jitters[0], self.y1 + jitters[1])
+            ctx.line_to(self.x2 + jitters[2], self.y2 + jitters[3])
             ctx.stroke()
 
         ctx.restore()  # restore the context to the previous state (to back to original color scheme)
-        

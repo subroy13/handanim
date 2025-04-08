@@ -1,6 +1,7 @@
 import numpy as np
 from ..transformed_context import TransformedContext
 
+
 class HachureFillPatterns:
     DIAGONAL = "diagonal"
     ANTI_DIAGONAL = "anti_diagonal"
@@ -9,9 +10,12 @@ class HachureFillPatterns:
     CHECKER = "checker"
     CHECKER_DIAGONAL = "checker_diagonal"
 
+
 def apply_hachure_fill_patterns(
     ctx: TransformedContext,
-    bound_box: tuple[float, float, float, float],  # (x, y, width, height) to specify the bounding box
+    bound_box: tuple[
+        float, float, float, float
+    ],  # (x, y, width, height) to specify the bounding box
     fill_type: HachureFillPatterns,  # the type of fill pattern to apply
     fill_spacing: float = 10,  # spacing between lines
     fill_color: tuple[float, float, float] = (0, 0, 0),  # color of the fill pattern
@@ -22,7 +26,7 @@ def apply_hachure_fill_patterns(
     r, g, b = fill_color
     ctx.set_source_rgba(r, g, b, 0.3 if pastel else 1.0)
     ctx.set_line_width(1 if not pastel else 2)  # thicker lines for pastel
-    
+
     # extract the bounding box parameters
     x, y, width, height = bound_box
 
@@ -77,4 +81,3 @@ def apply_hachure_fill_patterns(
             ctx.stroke()
     else:
         raise ValueError(f"Unknown fill type: {fill_type}")
-    

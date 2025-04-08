@@ -1,13 +1,14 @@
-import numpy as np
 from .base import BasePrimitive
 from .line import Line
 from ..transformed_context import TransformedContext
 from ..stylings.fill_patterns import HachureFillPatterns, apply_hachure_fill_patterns
 
+
 class Rectangle(BasePrimitive):
     """
-        A class to represent a rectangle in a hand-drawn style.
+    A class to represent a rectangle in a hand-drawn style.
     """
+
     def __init__(
         self,
         bottom_left: tuple[float, float],
@@ -34,16 +35,29 @@ class Rectangle(BasePrimitive):
         self.fill_type = fill_type
         self.fill_spacing = fill_spacing
 
-    def _draw_sketchy_line(self, start: tuple[float, float], end: tuple[float, float], ctx: TransformedContext):
+    def _draw_sketchy_line(
+        self,
+        start: tuple[float, float],
+        end: tuple[float, float],
+        ctx: TransformedContext,
+    ):
         """
-            Draws a hand-drawn-like line with some jitter
+        Draws a hand-drawn-like line with some jitter
         """
-        line = Line(start, end, self.stroke_color, self.stroke_width, self.roughness, self.pastel, self.sketch_number)
+        line = Line(
+            start,
+            end,
+            self.stroke_color,
+            self.stroke_width,
+            self.roughness,
+            self.pastel,
+            self.sketch_number,
+        )
         line.draw(ctx)
 
     def _fill_hachure(self, ctx: TransformedContext):
         """
-            Fills the rectangle with a filling pattern
+        Fills the rectangle with a filling pattern
         """
         if self.fill_color is None:
             return
@@ -63,13 +77,13 @@ class Rectangle(BasePrimitive):
             pastel=self.pastel,
             stroke_width=self.stroke_width,
         )
-        
+
         # restore context
         ctx.restore()
 
     def draw(self, ctx: TransformedContext):
         """
-            Draws the rectangle with a hand-drawn-like style.
+        Draws the rectangle with a hand-drawn-like style.
         """
         # Draw the fill pattern
         self._fill_hachure(ctx)
@@ -85,4 +99,3 @@ class Rectangle(BasePrimitive):
         self._draw_sketchy_line((x1, y0), (x1, y1), ctx)
         self._draw_sketchy_line((x1, y1), (x0, y1), ctx)
         self._draw_sketchy_line((x0, y1), (x0, y0), ctx)
-
