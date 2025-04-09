@@ -1,14 +1,10 @@
 import numpy as np
+import cairo
 from .base import BasePrimitive
-from ..transformed_context import TransformedContext
-from ..stylings.fill_patterns import HachureFillPatterns, apply_hachure_fill_patterns
+from ..constants import RoughOptions
 
 
 class Ellipse(BasePrimitive):
-    """
-    A class to represent an ellipse in a hand-drawn style.
-    """
-
     def __init__(
         self,
         center: tuple[float, float],
@@ -16,143 +12,153 @@ class Ellipse(BasePrimitive):
         height: float,
         stroke_color: tuple[float, float, float] = (0, 0, 0),
         stroke_width: float = 1,
-        roughness: float = 1.0,
-        pastel: bool = False,  # whether to use pastel colors
-        sketch_number: int = 2,  # number of sketch lines
-        fill_color: tuple[float, float, float] = None,  # fill color
-        fill_type: HachureFillPatterns = HachureFillPatterns.DIAGONAL,  # fill type
-        fill_spacing: float = 10,  # spacing between fill lines
+        stroke_opacity: float = 1,
+        options: RoughOptions = RoughOptions(),
     ):
-        self.x, self.y = center
+        self.center = np.array(center)
         self.width = width
         self.height = height
         self.stroke_color = stroke_color
         self.stroke_width = stroke_width
-        self.roughness = roughness
-        self.pastel = pastel
-        self.sketch_number = sketch_number
-        self.fill_color = fill_color
-        self.fill_type = fill_type
-        self.fill_spacing = fill_spacing
+        self.stroke_opacity = stroke_opacity
+        self.options = options
 
-    def _fill_hachure(self, ctx: TransformedContext):
+    def _get_ellipse_params(
+        self,
+        width: float,
+        height: float,
+    ):
         """
-        Fills the ellipse with a filling pattern
+        Get the number of points to approximate this ellipse with,
+        and approximated radius with random variation
         """
-        if self.fill_color is None:
-            return
-
-        # clip to ellipse
-        ctx.save()
-
-        # draw the curves
-        (
-            ctx_top_left,
-            top,
-            ctx_top_right,
-            ctx_bottom_right,
-            bottom,
-            ctx_bottom_left,
-        ) = self._get_ellipse_bezier_points(exact=True)
-        ctx.move_to(*top)
-        ctx.curve_to(*ctx_top_right, *ctx_bottom_right, *bottom)
-        ctx.curve_to(*ctx_bottom_left, *ctx_top_left, *top)
-        ctx.clip()
-
-        # apply the fill pattern
-        apply_hachure_fill_patterns(
-            ctx,
-            (
-                self.x - self.width / 2,
-                self.y - self.height / 2,
-                self.width,
-                self.height,
-            ),
-            self.fill_type,
-            self.fill_spacing,
-            self.fill_color,
+        perimeter = np.sqrt(2 * np.pi * np.sqrt((width / 2) ** 2 + (height / 2) ** 2))
+        step_count = np.ceil(
+            self.options.curve_step_count * max(1, perimeter / np.sqrt(200))
         )
-        ctx.restore()  # restore context
+        increment = 2 * np.pi / step_count
+        rx = width / 2
+        ry = height / 2
+        curve_fit_randomness = 1 - self.options.curve_fitting
+        rx += (
+            np.random.uniform(low=-1, high=1)
+            * rx
+            * curve_fit_randomness
+            * self.options.roughness
+        )
+        ry += (
+            np.random.uniform(low=-1, high=1)
+            * ry
+            * curve_fit_randomness
+            * self.options.roughness
+        )
+        return rx, ry, increment
 
-    def _get_ellipse_bezier_points(self, exact=False):
+    def _compute_ellipse_points(
+        increment: float,
+        center: np.ndarray,
+        rx: float,
+        ry: float,
+        offset: float,
+        overlap: float,
+        roughness: float = 0,
+    ):
         """
-        Draws an approximate ellipse using bezier curves
+        Compute the points of an ellipse
         """
-        # calculate the top and bottom end points
-        if exact:
-            jitters = (0, 0, 0)
+        core_only = roughness == 0
+        rad = np.array([rx, ry])
+        core_points = []
+        all_points = []
+
+        get_ellipse_arc = lambda a: np.array([np.cos(a), np.sin(a)])
+
+        if core_only:
+            # compute only the core points
+            increment = increment / 4  # compute the core points with greater precision
+            all_points.append(center + rad * get_ellipse_arc(-increment))
+            for a in np.arange(0, 2 * np.pi + increment, increment):
+                p = center + rad * get_ellipse_arc(a)
+                core_points.append(p)
+                all_points.append(p)
+            all_points.append(center + rad * get_ellipse_arc(increment))
         else:
-            jitters = np.random.uniform(-self.roughness, self.roughness, size=(3,))
+            random_offset = np.random.uniform(low=-1, high=1) * roughness - np.pi / 2
+            all_points.append(
+                center
+                + 0.9 * rad * get_ellipse_arc(random_offset - increment)
+                + np.random.uniform(low=-1, high=1, size=2) * offset * roughness
+            )
+            end_angle = 2 * np.pi + random_offset - 0.01
+            for a in np.arange(random_offset, end_angle + increment, increment):
+                p = (
+                    center
+                    + rad * get_ellipse_arc(a)
+                    + np.random.uniform(low=-1, high=1, size=2) * offset * roughness
+                )
+                core_points.append(p)
+                all_points.append(p)
 
-        top = (self.x + jitters[0], self.y + self.height / 2 + jitters[1])
-        bottom = (self.x + jitters[0], self.y - self.height / 2 + jitters[2])
+            # add enbding points for the curve, with overlaping points
+            temp_points = (
+                np.tile(center, 3)
+                + np.random.uniform(low=-1, high=1, size=6) * offset * roughness
+            )
 
-        # determine the control points
-        SCALE_FACTOR = 4 / 3
-        ctx_top_left = (self.x - self.width / 2 * SCALE_FACTOR, top[1])
-        ctx_top_right = (self.x + self.width / 2 * SCALE_FACTOR, top[1])
-        ctx_bottom_left = (self.x - self.width / 2 * SCALE_FACTOR, bottom[1])
-        ctx_bottom_right = (self.x + self.width / 2 * SCALE_FACTOR, bottom[1])
+            all_points.append(
+                temp_points[0:2]
+                + rad * get_ellipse_arc(random_offset + 2 * np.pi + overlap * 0.5)
+            )
+            all_points.append(
+                temp_points[2:4] + 0.98 * rad * get_ellipse_arc(random_offset + overlap)
+            )
+            all_points.append(
+                temp_points[4:6]
+                + 0.9 * rad * get_ellipse_arc(random_offset + overlap * 0.5)
+            )
 
-        # return the points
-        return [
-            ctx_top_left,
-            top,
-            ctx_top_right,
-            ctx_bottom_right,
-            bottom,
-            ctx_bottom_left,
-        ]
+        return core_points, all_points
 
-    def draw(self, ctx: TransformedContext):
+    def draw(self, ctx: cairo.Context):
         """
-        Draws the ellipse with a hand-drawn-like style.
+        Draw a sketchy version of an ellipse
         """
-        ctx.save()  # saves the current state
+        ctx.save()  # save the current state of the context
 
-        # Draw the fill pattern
-        self._fill_hachure(ctx)
-
-        # draw the edges in sketchy style
-        ctx.set_source_rgb(*self.stroke_color)
+        # set stroke color and width
+        r, g, b = self.stroke_color
+        ctx.set_source_rgba(r, g, b, self.stroke_opacity)
         ctx.set_line_width(self.stroke_width)
 
-        # Draw the ellipse outline
-        for _ in range(self.sketch_number):
-            (
-                ctx_top_left,
-                top,
-                ctx_top_right,
-                ctx_bottom_right,
-                bottom,
-                ctx_bottom_left,
-            ) = self._get_ellipse_bezier_points()
-            ctx.move_to(*top)
-            ctx.curve_to(*ctx_top_right, *ctx_bottom_right, *bottom)
-            ctx.stroke()  # create the curve stroke
-
-            ctx.move_to(*bottom)
-            ctx.curve_to(*ctx_bottom_left, *ctx_top_left, *top)
-            ctx.stroke()  # create the curve stroke
-
-        ctx.restore()  # restore the context to the previous state (to back to original color scheme)
-
-
-class Circle(Ellipse):
-    """
-    A class to represent a circle in a hand-drawn style.
-    """
-
-    def __init__(
-        self,
-        center: tuple[float, float],
-        radius: float,
-        **kwargs,
-    ):
-        super().__init__(
-            center=center,
-            width=radius * 2,
-            height=radius * 2,
-            **kwargs,
+        # compute the ellipse parameters
+        rx, ry, increment = self._get_ellipse_params(self.width, self.height)
+        ap1, cp1 = self._compute_ellipse_points(
+            increment,
+            self.center,
+            rx,
+            ry,
+            1,
+            increment
+            + np.random.uniform(low=0.1, high=np.random.uniform(low=0.4, high=1))
+            * self.options.roughness,
+            self.options.roughness,
         )
-        self.radius = radius
+
+        # TODO: create curve
+
+        # draw for the second time for sketchy effect
+        ap2, _ = self._compute_ellipse_points(
+            increment,
+            self.center,
+            rx,
+            ry,
+            1.5,
+            0,
+            self.options.roughness,
+        )
+
+        # TODO: create curve again
+
+        # TODO?? Return Path??
+
+        ctx.restore()  # restore the previous state of the context
