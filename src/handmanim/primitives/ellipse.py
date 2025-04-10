@@ -1,6 +1,7 @@
 import numpy as np
 import cairo
 from .base import BasePrimitive
+from .curves import Curve
 from ..constants import RoughOptions
 
 
@@ -55,6 +56,7 @@ class Ellipse(BasePrimitive):
         return rx, ry, increment
 
     def _compute_ellipse_points(
+        self,
         increment: float,
         center: np.ndarray,
         rx: float,
@@ -144,21 +146,54 @@ class Ellipse(BasePrimitive):
             self.options.roughness,
         )
 
-        # TODO: create curve
-
-        # draw for the second time for sketchy effect
-        ap2, _ = self._compute_ellipse_points(
-            increment,
-            self.center,
-            rx,
-            ry,
-            1.5,
-            0,
-            self.options.roughness,
+        # create the first ellipse stroke
+        curve1 = Curve(
+            points=ap1,
+            stroke_color=self.stroke_color,
+            stroke_width=self.stroke_width,
+            stroke_opacity=self.stroke_opacity,
+            options=self.options,
         )
+        curve1.draw_single_curve(ctx)
 
-        # TODO: create curve again
-
-        # TODO?? Return Path??
-
+        if not self.options.disable_multi_stroke and self.options.roughness > 0:
+            # draw for the second time for sketchy effect
+            ap2, _ = self._compute_ellipse_points(
+                increment,
+                self.center,
+                rx,
+                ry,
+                1.5,
+                0,
+                self.options.roughness,
+            )
+            curve2 = Curve(
+                points=ap2,
+                stroke_color=self.stroke_color,
+                stroke_width=self.stroke_width,
+                stroke_opacity=self.stroke_opacity,
+                options=self.options,
+            )
+            curve2.draw_single_curve(ctx)
         ctx.restore()  # restore the previous state of the context
+
+
+class Circle(Ellipse):
+    def __init__(
+        self,
+        center: tuple[float, float],
+        radius: float,
+        stroke_color: tuple[float, float, float] = (0, 0, 0),
+        stroke_width: float = 1,
+        stroke_opacity: float = 1,
+        options: RoughOptions = RoughOptions(),
+    ):
+        super().__init__(
+            center,
+            2 * radius,
+            2 * radius,
+            stroke_color,
+            stroke_width,
+            stroke_opacity,
+            options,
+        )

@@ -10,3 +10,4 @@ class RoughOptions:
         self.curve_tightness = kwargs.get("curve_tightness", 0)
         self.curve_fitting = kwargs.get("curve_fitting", 0.95)
         self.curve_step_count = kwargs.get("curve_step_count", 9)
+        self.disable_multi_stroke = kwargs.get("disable_multi_stroke", False)
