@@ -29,6 +29,8 @@ class FillStyle:
         self.color = kwargs.get("color", (0, 0, 0))
         self.opacity = kwargs.get("opacity", 1)
         self.fill_pattern = kwargs.get("fill_pattern", "hachure")
+        self.hachure_angle = kwargs.get("hachure_angle", 45)
+        self.hachure_gap = kwargs.get('hachure_gap', 2)
 
 
 class SketchStyle:
