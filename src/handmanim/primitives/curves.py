@@ -3,7 +3,7 @@ import numpy as np
 import cairo
 from .base import BasePrimitive
 from .lines import Line
-from ..constants import RoughOptions
+from ..stylings.styles import SketchStyle
 
 
 class Curve(BasePrimitive):
@@ -14,7 +14,7 @@ class Curve(BasePrimitive):
         stroke_color: Tuple[float, float, float] = (0, 0, 0),
         stroke_width: float = 1,
         stroke_opacity: float = 1,
-        options: RoughOptions = RoughOptions(),
+        options: SketchStyle = SketchStyle(),
     ):
         self.points = [np.array(point) for point in points]
         self.stroke_color = stroke_color
