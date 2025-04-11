@@ -1,10 +1,8 @@
 [project]
-name = "handmanim"
+name = "handanim"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Subhrajyoty Roy",email = "subhrajyotyroy@gmail.com"}
-]
+authors = [{ name = "Subhrajyoty Roy", email = "subhrajyotyroy@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -12,11 +10,11 @@ dependencies = [
     "numpy (>=2.2.4,<3.0.0)",
     "svgwrite (>=1.4.3,<2.0.0)",
     "moviepy (>=2.1.2,<3.0.0)",
-    "pycairo (>=1.27.0,<2.0.0)"
+    "pycairo (>=1.27.0,<2.0.0)",
 ]
 
 [tool.poetry]
-packages = [{include = "handmanim", from = "src"}]
+packages = [{ include = "handanim", from = "src" }]
 
 
 [build-system]

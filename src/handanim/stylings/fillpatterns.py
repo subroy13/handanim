@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from abc import ABC, abstractmethod
 import cairo
 import numpy as np
 
@@ -8,14 +7,7 @@ from .utils import polygon_hachure_lines
 from .styles import FillStyle, SketchStyle, StrokeStyle
 
 
-class BaseFillPattern(ABC):
-
-    @abstractmethod
-    def fill(self, ctx: cairo.Context):
-        pass
-
-
-class HachureFillPattern(BaseFillPattern):
+class BaseFillPattern:
 
     def __init__(
         self,
@@ -28,6 +20,24 @@ class HachureFillPattern(BaseFillPattern):
         self.bound_box_list = bound_box_list
         self.fill_style = fill_style
         self.sketch_style = sketch_style
+
+    def fill(self, ctx: cairo.Context):
+        raise NotImplementedError("fill method not implemented for base fill pattern")
+
+
+class SolidFillPattern(BaseFillPattern):
+
+    def fill(self, ctx: cairo.Context):
+        ctx.set_source_rgba(*self.fill_style.color, self.fill_style.opacity)
+        for box in self.bound_box_list:
+            ctx.move_to(*box[0])
+            for i in range(1, len(box)):
+                ctx.line_to(*box[i])
+            ctx.close_path()
+        ctx.fill()
+
+
+class HachureFillPattern(BaseFillPattern):
 
     def render_fill_lines(
         self, ctx: cairo.Context, lines: List[List[Tuple[float, float]]]
@@ -105,17 +115,7 @@ class ZigZagFillPattern(HachureFillPattern):
 
 
 class ZigZagLineFillPattern(BaseFillPattern):
-    def __init__(
-        self,
-        bound_box_list: List[
-            List[Tuple[float, float]]
-        ],  # defines the bounding box for filling
-        fill_style: FillStyle = FillStyle(),
-        sketch_style: SketchStyle = SketchStyle(),
-    ):
-        self.bound_box_list = bound_box_list
-        self.fill_style = fill_style
-        self.sketch_style = sketch_style
+    # TODO: Check and fix this
 
     def zigzag_lines(
         self,
@@ -126,7 +126,7 @@ class ZigZagLineFillPattern(BaseFillPattern):
         for line in lines:
             start, end = line  # get the start and end point of the line
             length = np.linalg.norm(np.array(end) - np.array(start))
-            count = np.round(length / (2 * zo))
+            count = int(np.round(length / (2 * zo)))
             if start[0] > end[0]:
                 start, end = end, start
             alpha = np.atan(
@@ -143,6 +143,7 @@ class ZigZagLineFillPattern(BaseFillPattern):
                 mid = np.array(start) + dz * trig_mid
                 zigzag_lines.append([s2, mid])
                 zigzag_lines.append([mid, e2])
+        return zigzag_lines
 
     def render_fill_lines(
         self, ctx: cairo.Context, lines: List[List[Tuple[float, float]]]
@@ -161,7 +162,7 @@ class ZigZagLineFillPattern(BaseFillPattern):
             )
             line.draw(ctx)
 
-    def fill_polygons(self, ctx):
+    def fill(self, ctx):
         gap = max(self.fill_style.hachure_gap, 0.1)
         zo = gap if self.fill_style.zigzag_offset < 0 else self.fill_style.zigzag_offset
         fill_style_new = self.fill_style
@@ -175,38 +176,22 @@ class ZigZagLineFillPattern(BaseFillPattern):
         self.render_fill_lines(ctx, zigzag_lines)
 
 
-class DottedFillPattern(BaseFillPattern):
-    def __init__(
-        self,
-        bound_box_list: List[
-            List[Tuple[float, float]]
-        ],  # defines the bounding box for filling
-        fill_style: FillStyle = FillStyle(),
-        sketch_style: SketchStyle = SketchStyle(),
-    ):
-        self.bound_box_list = bound_box_list
-        self.fill_style = fill_style
-        self.sketch_style = sketch_style
-
-    def get_dots_on_lines(
-        self,
-        lines: List[List[Tuple[float, float]]],
-    ):
-        gap = max(self.fill_style.hachure_gap, 0.1)
-        fweight = self.fill_style.fill_weight
-        ro = gap / 4
-        for line in lines:
-            start, end = line  # get the start and end point of the line
-            length = np.linalg.norm(np.array(end) - np.array(start))
-            count = np.ceil(length / gap) - 1
-            offset = length - (count * gap)
-            x = (line[0][0] + line[1][0]) / 2 - (gap / 4)
-            minY = min(line[0][1], line[1][1])
-
-            for i in range(count):
-                y = minY + offset + (i * gap)
-                cx = (x - ro) + np.random.uniform() * 2 * ro
-                cy = (y - ro) + np.random.uniform() * 2 * ro
-
-                # TODO: implement the point ellipses
-                pass
+def get_filler(
+    bound_box_list: List[List[Tuple[float, float]]],
+    fill_style: FillStyle = FillStyle(),
+    sketch_style=SketchStyle(),
+) -> BaseFillPattern:
+    cls_name = None
+    if fill_style.fill_pattern == "hachure":
+        cls_name = HachureFillPattern
+    elif fill_style.fill_pattern == "hatch":
+        cls_name = HatchFillPattern
+    elif fill_style.fill_pattern == "zigzag":
+        cls_name = ZigZagFillPattern
+    elif fill_style.fill_pattern == "zigzag-line":
+        cls_name = ZigZagLineFillPattern
+    elif fill_style.fill_pattern == "solid":
+        cls_name = SolidFillPattern
+    else:
+        raise ValueError(f"fill pattern {fill_style.fill_pattern} not supported")
+    return cls_name(bound_box_list, fill_style, sketch_style)

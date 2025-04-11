@@ -1,18 +1,20 @@
+from typing import Tuple, Optional
 import numpy as np
 import cairo
 from .base import BasePrimitive
 from .curves import Curve
 from ..stylings.styles import StrokeStyle, SketchStyle, FillStyle
+from ..stylings.fillpatterns import get_filler
 
 
 class Ellipse(BasePrimitive):
     def __init__(
         self,
-        center: tuple[float, float],
+        center: Tuple[float, float],
         width: float,
         height: float,
         stroke_style: StrokeStyle = StrokeStyle(),
-        fill_style: FillStyle = FillStyle(),
+        fill_style: Optional[FillStyle] = None,
         sketch_style: SketchStyle = SketchStyle(),
     ):
         self.center = np.array(center)
@@ -119,17 +121,7 @@ class Ellipse(BasePrimitive):
 
         return core_points, all_points
 
-    def draw(self, ctx: cairo.Context):
-        """
-        Draw a sketchy version of an ellipse
-        """
-        ctx.save()  # save the current state of the context
-
-        # set stroke color and width
-        r, g, b = self.stroke_style.color
-        ctx.set_source_rgba(r, g, b, self.stroke_style.opacity)
-        ctx.set_line_width(self.stroke_style.width)
-
+    def draw_ellipse_border(self, ctx: cairo.Context):
         # compute the ellipse parameters
         rx, ry, increment = self._get_ellipse_params(self.width, self.height)
         ap1, cp1 = self._compute_ellipse_points(
@@ -172,6 +164,25 @@ class Ellipse(BasePrimitive):
                 sketch_style=self.sketch_style,
             )
             curve2.draw_single_curve(ctx)
+
+        return cp1
+
+    def draw(self, ctx: cairo.Context):
+        """
+        Draw a sketchy version of an ellipse
+        """
+        ctx.save()  # save the current state of the context
+
+        # set stroke color and width
+        r, g, b = self.stroke_style.color
+        ctx.set_source_rgba(r, g, b, self.stroke_style.opacity)
+        ctx.set_line_width(self.stroke_style.width)
+        core_points = self.draw_ellipse_border(ctx)  # draw the ellipse border
+
+        if self.fill_style is not None:
+            filler = get_filler([core_points], self.fill_style, self.sketch_style)
+            filler.fill(ctx)
+
         ctx.restore()  # restore the previous state of the context
 
 

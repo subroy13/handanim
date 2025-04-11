@@ -1,6 +1,5 @@
 from typing import List, Tuple
 import numpy as np
-import cairo
 
 from .styles import SketchStyle, FillStyle
 
@@ -25,12 +24,13 @@ def straight_hachure_lines(
 ):
     vertex_array = []
     for polygon in polygon_list:
-        if polygon[0][0] != polygon[-1][0] or polygon[0][1] != polygon[-1][1]:
+        pp = [point for point in polygon]
+        if pp[0][0] != pp[-1][0] or pp[0][1] != pp[-1][1]:
             # the polygon is not closed
-            polygon.append(polygon[0])  # make it closed
-        if len(polygon) > 2:
+            pp.append(pp[0])  # make it closed
+        if len(pp) > 2:
             vertex_array.append(
-                polygon
+                pp
             )  # if a polygon has less than 2 vertices, then it cannot be filled
 
     lines = []
@@ -69,13 +69,13 @@ def straight_hachure_lines(
                     break
                 ix = i  # first the first index where there is an increment in y
             removed = edges[: (ix + 1)]
-            edges = edges[ix + 1 :]  # remove the edges that are already processed
+            edges = edges[(ix + 1) :]  # remove the edges that are already processed
             active_edges.extend([{"s": y, "edge": edge} for edge in removed])
 
         active_edges = [
             ae for ae in active_edges if ae["edge"]["ymax"] > y
         ]  # remove the edges that are points (of y-length 0)
-        active_edges.sort(lambda ae: ae["edge"]["x"])  # sort by x
+        active_edges.sort(key=lambda ae: ae["edge"]["x"])  # sort by x
 
         # fill between the edges
         if (step_offset != 1) or (iteration % gap == 0):
@@ -117,7 +117,7 @@ def hachure_lines(
     rotated_lines = straight_hachure_lines(rotated_polygons, gap, offset)
     if angle != 0:
         # rotate the lines back
-        lines = [rotate_points(line, rotation_center, -angle) for line in lines]
+        lines = [rotate_points(line, rotation_center, -angle) for line in rotated_lines]
     else:
         lines = rotated_lines
     return lines
@@ -129,7 +129,7 @@ def polygon_hachure_lines(
     sketch_style=SketchStyle(),
 ):
     angle = fill_style.hachure_angle + 90
-    gap = np.round(np.max(fill_style.hachure_gap, 0.1))
+    gap = np.round(max(fill_style.hachure_gap, 0.1))
     skipoffset = 1
     if sketch_style.roughness >= 1:
         # get a random number
