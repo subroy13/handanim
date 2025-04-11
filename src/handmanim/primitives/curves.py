@@ -3,7 +3,7 @@ import numpy as np
 import cairo
 from .base import BasePrimitive
 from .lines import Line
-from ..stylings.styles import SketchStyle
+from ..stylings.styles import StrokeStyle, SketchStyle
 
 
 class Curve(BasePrimitive):
@@ -11,16 +11,12 @@ class Curve(BasePrimitive):
     def __init__(
         self,
         points: List[Tuple[float, float]],  # the list of points that defines the curve
-        stroke_color: Tuple[float, float, float] = (0, 0, 0),
-        stroke_width: float = 1,
-        stroke_opacity: float = 1,
-        options: SketchStyle = SketchStyle(),
+        stroke_style: StrokeStyle = StrokeStyle(),
+        sketch_style: SketchStyle = SketchStyle(),
     ):
         self.points = [np.array(point) for point in points]
-        self.stroke_color = stroke_color
-        self.stroke_width = stroke_width
-        self.stroke_opacity = stroke_opacity
-        self.options = options
+        self.stroke_style = stroke_style
+        self.sketch_style = sketch_style
 
     def draw_single_curve(
         self,
@@ -42,10 +38,8 @@ class Curve(BasePrimitive):
             line = Line(
                 points[0],
                 points[1],
-                self.stroke_color,
-                self.stroke_width,
-                self.stroke_opacity,
-                self.options,
+                stroke_style=self.stroke_style,
+                sketch_style=self.sketch_style,
             )
             line.draw_single_line(ctx, move=True, overlay=True)
         elif len(points) == 3:
@@ -56,7 +50,7 @@ class Curve(BasePrimitive):
             ctx.stroke()
         else:
             # there are more points, handle accordingly
-            s = 1 - self.options.curve_tightness
+            s = 1 - self.sketch_style.curve_tightness
             ctx.move_to(*points[0])  # move to the first point
             for i in range(1, len(points) - 2):
                 b0 = points[i]
@@ -67,11 +61,12 @@ class Curve(BasePrimitive):
 
             # check for closing points
             if close_point is not None:
-                ro = self.options.max_random_offset
+                ro = self.sketch_style.max_random_offset
                 ctx.line_to(
                     *(
                         close_point
-                        + np.random.uniform(-ro, ro, size=(2,)) * self.options.roughness
+                        + np.random.uniform(-ro, ro, size=(2,))
+                        * self.sketch_style.roughness
                     )
                 )
             ctx.stroke()
@@ -90,7 +85,7 @@ class Curve(BasePrimitive):
         # add the start and end point twice with random offsets
         random_offsets = (
             np.random.uniform(-offset, offset, size=(len(points) + 2, 2))
-            * self.options.roughness
+            * self.sketch_style.roughness
         )
         new_points = [points[0] + random_offsets[0, :]]
         for i, point in enumerate(points):
@@ -105,17 +100,17 @@ class Curve(BasePrimitive):
         ctx.save()  # save the current state of the context
 
         # Set stroke color and width
-        r, g, b = self.stroke_color
-        ctx.set_source_rgba(r, g, b, self.stroke_opacity)
-        ctx.set_line_width(self.stroke_width)
+        r, g, b = self.stroke_style.color
+        ctx.set_source_rgba(r, g, b, self.stroke_style.opacity)
+        ctx.set_line_width(self.stroke_style.width)
 
         # draw the underlay and overlay curves
         self.draw_single_curve_with_randomization(
-            ctx, self.points, 1 + self.options.roughness * 0.2
+            ctx, self.points, 1 + self.sketch_style.roughness * 0.2
         )
-        if not self.options.disable_multi_stroke:
+        if not self.sketch_style.disable_multi_stroke:
             self.draw_single_curve_with_randomization(
-                ctx, self.points, 1.5 * (1 + self.options.roughness * 0.22)
+                ctx, self.points, 1.5 * (1 + self.sketch_style.roughness * 0.22)
             )
 
         # restore the context to its previous state

@@ -2,7 +2,7 @@ import numpy as np
 import cairo
 from .base import BasePrimitive
 from .curves import Curve
-from ..constants import RoughOptions
+from ..stylings.styles import StrokeStyle, SketchStyle, FillStyle
 
 
 class Ellipse(BasePrimitive):
@@ -11,18 +11,16 @@ class Ellipse(BasePrimitive):
         center: tuple[float, float],
         width: float,
         height: float,
-        stroke_color: tuple[float, float, float] = (0, 0, 0),
-        stroke_width: float = 1,
-        stroke_opacity: float = 1,
-        options: RoughOptions = RoughOptions(),
+        stroke_style: StrokeStyle = StrokeStyle(),
+        fill_style: FillStyle = FillStyle(),
+        sketch_style: SketchStyle = SketchStyle(),
     ):
         self.center = np.array(center)
         self.width = width
         self.height = height
-        self.stroke_color = stroke_color
-        self.stroke_width = stroke_width
-        self.stroke_opacity = stroke_opacity
-        self.options = options
+        self.stroke_style = stroke_style
+        self.fill_style = fill_style
+        self.sketch_style = sketch_style
 
     def _get_ellipse_params(
         self,
@@ -35,23 +33,23 @@ class Ellipse(BasePrimitive):
         """
         perimeter = np.sqrt(2 * np.pi * np.sqrt((width / 2) ** 2 + (height / 2) ** 2))
         step_count = np.ceil(
-            self.options.curve_step_count * max(1, perimeter / np.sqrt(200))
+            self.sketch_style.curve_step_count * max(1, perimeter / np.sqrt(200))
         )
         increment = 2 * np.pi / step_count
         rx = width / 2
         ry = height / 2
-        curve_fit_randomness = 1 - self.options.curve_fitting
+        curve_fit_randomness = 1 - self.sketch_style.curve_fitting
         rx += (
             np.random.uniform(low=-1, high=1)
             * rx
             * curve_fit_randomness
-            * self.options.roughness
+            * self.sketch_style.roughness
         )
         ry += (
             np.random.uniform(low=-1, high=1)
             * ry
             * curve_fit_randomness
-            * self.options.roughness
+            * self.sketch_style.roughness
         )
         return rx, ry, increment
 
@@ -128,9 +126,9 @@ class Ellipse(BasePrimitive):
         ctx.save()  # save the current state of the context
 
         # set stroke color and width
-        r, g, b = self.stroke_color
-        ctx.set_source_rgba(r, g, b, self.stroke_opacity)
-        ctx.set_line_width(self.stroke_width)
+        r, g, b = self.stroke_style.color
+        ctx.set_source_rgba(r, g, b, self.stroke_style.opacity)
+        ctx.set_line_width(self.stroke_style.width)
 
         # compute the ellipse parameters
         rx, ry, increment = self._get_ellipse_params(self.width, self.height)
@@ -142,21 +140,22 @@ class Ellipse(BasePrimitive):
             1,
             increment
             + np.random.uniform(low=0.1, high=np.random.uniform(low=0.4, high=1))
-            * self.options.roughness,
-            self.options.roughness,
+            * self.sketch_style.roughness,
+            self.sketch_style.roughness,
         )
 
         # create the first ellipse stroke
         curve1 = Curve(
             points=ap1,
-            stroke_color=self.stroke_color,
-            stroke_width=self.stroke_width,
-            stroke_opacity=self.stroke_opacity,
-            options=self.options,
+            stroke_style=self.stroke_style,
+            sketch_style=self.sketch_style,
         )
         curve1.draw_single_curve(ctx)
 
-        if not self.options.disable_multi_stroke and self.options.roughness > 0:
+        if (
+            not self.sketch_style.disable_multi_stroke
+            and self.sketch_style.roughness > 0
+        ):
             # draw for the second time for sketchy effect
             ap2, _ = self._compute_ellipse_points(
                 increment,
@@ -165,14 +164,12 @@ class Ellipse(BasePrimitive):
                 ry,
                 1.5,
                 0,
-                self.options.roughness,
+                self.sketch_style.roughness,
             )
             curve2 = Curve(
                 points=ap2,
-                stroke_color=self.stroke_color,
-                stroke_width=self.stroke_width,
-                stroke_opacity=self.stroke_opacity,
-                options=self.options,
+                stroke_style=self.stroke_style,
+                sketch_style=self.sketch_style,
             )
             curve2.draw_single_curve(ctx)
         ctx.restore()  # restore the previous state of the context
@@ -183,17 +180,15 @@ class Circle(Ellipse):
         self,
         center: tuple[float, float],
         radius: float,
-        stroke_color: tuple[float, float, float] = (0, 0, 0),
-        stroke_width: float = 1,
-        stroke_opacity: float = 1,
-        options: RoughOptions = RoughOptions(),
+        stroke_style: StrokeStyle = StrokeStyle(),
+        fill_style: FillStyle = FillStyle(),
+        sketch_style: SketchStyle = SketchStyle(),
     ):
         super().__init__(
             center,
             2 * radius,
             2 * radius,
-            stroke_color,
-            stroke_width,
-            stroke_opacity,
-            options,
+            stroke_style,
+            fill_style,
+            sketch_style,
         )

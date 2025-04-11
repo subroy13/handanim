@@ -30,7 +30,10 @@ class FillStyle:
         self.opacity = kwargs.get("opacity", 1)
         self.fill_pattern = kwargs.get("fill_pattern", "hachure")
         self.hachure_angle = kwargs.get("hachure_angle", 45)
-        self.hachure_gap = kwargs.get('hachure_gap', 2)
+        self.hachure_gap = kwargs.get("hachure_gap", 4)
+        self.hachure_line_width = kwargs.get("hachure_line_width", 1)
+        self.zigzag_offset = kwargs.get("zigzag_offset", -1)
+        self.fill_weight = kwargs.get("fill_weight", 2)
 
 
 class SketchStyle:
