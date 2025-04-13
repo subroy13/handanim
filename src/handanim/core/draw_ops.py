@@ -1,5 +1,7 @@
 from typing import Any, List, Union
 from enum import Enum
+import numpy as np
+
 
 class OpsType(Enum):
     SET_PEN = "set_pen"
@@ -7,13 +9,16 @@ class OpsType(Enum):
     LINE_TO = "line_to"
     CURVE_TO = "curve_to"
 
+
 class Ops:
     """
-        Describes a drawing operation to be performed
+    Describes a drawing operation to be performed
     """
-    def __init__(self, type: OpsType, data: Any):
+
+    def __init__(self, type: OpsType, data: Any, partial: float = 1.0):
         self.type = type
-        self.data = data    # the data to use to perform draw operation
+        self.data = data  # the data to use to perform draw operation
+        self.partial = partial  # how much of the ops needs to be performed
 
 
 class OpsSet:
@@ -28,3 +33,9 @@ class OpsSet:
         if isinstance(ops, dict):
             ops = Ops(**ops)
         self.opsset.append(ops)
+
+    def extend(self, other_opsset: Any):
+        if isinstance(other_opsset, OpsSet):
+            self.opsset.extend(other_opsset.opsset)
+        else:
+            raise TypeError("other value is not an opsset")
