@@ -1,43 +1,37 @@
 from typing import List, Tuple
-import cairo
 import numpy as np
 
 from ..primitives.lines import Line
 from .utils import polygon_hachure_lines
-from .styles import FillStyle, SketchStyle, StrokeStyle
+from ..core.styles import FillStyle, SketchStyle, StrokeStyle
+from ..core.drawable import DrawableFill
+from ..core.draw_ops import OpsSet, Ops, OpsType
 
 
-class BaseFillPattern:
+class SolidFillPattern(DrawableFill):
 
-    def __init__(
-        self,
-        bound_box_list: List[
-            List[Tuple[float, float]]
-        ],  # defines the bounding box for filling
-        fill_style: FillStyle = FillStyle(),
-        sketch_style: SketchStyle = SketchStyle(),
-    ):
-        self.bound_box_list = bound_box_list
-        self.fill_style = fill_style
-        self.sketch_style = sketch_style
-
-    def fill(self, ctx: cairo.Context):
-        raise NotImplementedError("fill method not implemented for base fill pattern")
-
-
-class SolidFillPattern(BaseFillPattern):
-
-    def fill(self, ctx: cairo.Context):
-        ctx.set_source_rgba(*self.fill_style.color, self.fill_style.opacity)
+    def fill(self) -> OpsSet:
+        opsset = OpsSet(
+            [
+                Ops(
+                    OpsType.SET_PEN,
+                    data={
+                        "color": self.fill_style.color,
+                        "opacity": self.fill_style.opacity,
+                        "mode": "fill",
+                    },
+                )
+            ]
+        )
         for box in self.bound_box_list:
-            ctx.move_to(*box[0])
+            opsset.add(Ops(OpsType.MOVE_TO, data=[box[0]]))
             for i in range(1, len(box)):
-                ctx.line_to(*box[i])
-            ctx.close_path()
-        ctx.fill()
+                opsset.add(Ops(OpsType.LINE_TO, data=[box[i]]))
+            opsset.add(Ops(OpsType.CLOSE_PATH))
+        return opsset
 
 
-class HachureFillPattern(BaseFillPattern):
+class HachureFillPattern(DrawableFill):
 
     def render_fill_lines(
         self, ctx: cairo.Context, lines: List[List[Tuple[float, float]]]
@@ -79,7 +73,7 @@ class HachureFillPattern(BaseFillPattern):
         ctx.restore()
 
 
-class HatchFillPattern(HachureFillPattern):
+class HatchFillPattern(DrawableFill):
 
     def fill_polygons(self, ctx):
         # draw the normal hachure lines
@@ -90,7 +84,7 @@ class HatchFillPattern(HachureFillPattern):
         self.fill_style = current_fill_style  # reset the fill style
 
 
-class ZigZagFillPattern(HachureFillPattern):
+class ZigZagFillPattern(DrawableFill):
 
     def fill_polygons(self, ctx):
         gap = max(self.fill_style.hachure_gap, 0.1)
@@ -114,7 +108,7 @@ class ZigZagFillPattern(HachureFillPattern):
         self.render_fill_lines(ctx, zigzag_lines)
 
 
-class ZigZagLineFillPattern(BaseFillPattern):
+class ZigZagLineFillPattern(DrawableFill):
     # TODO: Check and fix this
 
     def zigzag_lines(
@@ -180,7 +174,7 @@ def get_filler(
     bound_box_list: List[List[Tuple[float, float]]],
     fill_style: FillStyle = FillStyle(),
     sketch_style=SketchStyle(),
-) -> BaseFillPattern:
+) -> DrawableFill:
     cls_name = None
     if fill_style.fill_pattern == "hachure":
         cls_name = HachureFillPattern

@@ -1,7 +1,7 @@
 from typing import List, Tuple
 import numpy as np
 
-from .styles import SketchStyle, FillStyle
+from ..core.styles import SketchStyle, FillStyle
 
 
 def rotate_points(

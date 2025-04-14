@@ -1,7 +1,10 @@
 from typing import Optional, List
 from enum import Enum
 import numpy as np
+import cairo
+import imageio.v2 as imageio
 
+from .renderer import cairo_surface_to_numpy, render_opsset
 from .drawable import Drawable
 from .draw_ops import OpsSet
 
@@ -133,7 +136,9 @@ class Scene:
             if active:
                 active_list.append(object_id)
 
-    def create_event_timeline(self, fps: int = 20, max_length: Optional[float] = None):
+    def create_event_timeline(
+        self, fps: int = 20, max_length: Optional[float] = None
+    ) -> List[OpsSet]:
         events: List[AnimationEvent] = self.events
         events = events.sort(key=lambda x: x.start_time)
         key_frames = [event.start_time for event in events] + [
@@ -182,3 +187,26 @@ class Scene:
                     frame_opsset.extend(partial_opsset)
 
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
+        return scene_opsset_list
+
+    def render(
+        self, output_path: str, fps: int = 20, max_length: Optional[float] = None
+    ):
+        # calculate the events
+        opsset_list = self.create_event_timeline(fps, max_length)
+        with imageio.get_writer(output_path, fps=fps, codec="libx264") as writer:
+            for frame_ops in opsset_list:
+                surface = cairo.ImageSurface(
+                    cairo.FORMAT_ARGB32, self.width, self.height
+                )
+                ctx = cairo.Context(surface)  # create cairo context
+
+                # optional background
+                if self.background_color is not None:
+                    ctx.set_source_rgb(*self.background_color)
+                ctx.paint()
+
+                render_opsset(ctx, frame_ops)  # applies the operations to cairo context
+
+                frame_np = cairo_surface_to_numpy(surface)
+                writer.append_data(frame_np)

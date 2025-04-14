@@ -1,29 +1,17 @@
-from handanim.scene import Scene
-from handanim.primitives import Line, Circle, Ellipse, Rectangle, Polygon, NGon
-from handanim.stylings.styles import SketchStyle, StrokeStyle, FillStyle
+from handanim.core.animation import Scene, AnimationEvent, AnimationEventType
+from handanim.primitives.ellipse import Ellipse
+from handanim.core.styles import StrokeStyle, SketchStyle
 
-scene = Scene(width=500, height=500, background_color=(1, 1, 1))
-# scene.add(
-#     NGon(
-#         center=(250, 250),
-#         radius=100,
-#         n=5,
-#         stroke_style=StrokeStyle(color=(1, 0, 0)),
-#         fill_style=FillStyle(color=(0, 0, 1), hachure_gap=10),
-#         sketch_style=SketchStyle(roughness=2),
-#     )
-# )
-scene.add(
-    Ellipse(
-        center=(250, 250),
-        height=200,
-        width=500,
-        stroke_style=StrokeStyle(color=(1, 0, 0)),
-        fill_style=FillStyle(
-            color=(0, 0, 1), opacity=0.3, hachure_gap=4, fill_pattern="solid"
-        ),
-        sketch_style=SketchStyle(roughness=2),
-    )
+scene = Scene(width=800, height=600)
+ellipse = Ellipse(
+    center=(250, 250),
+    height=200,
+    width=500,
+    stroke_style=StrokeStyle(color=(1, 0, 0)),
+    sketch_style=SketchStyle(roughness=2),
 )
-
-scene.render("output.svg")
+event = AnimationEvent(
+    drawable=Ellipse, type=AnimationEventType.SKETCH, start_time=0, duration=3
+)
+scene.add(event)
+scene.render(output_path="output.mp4", fps=20, max_length=5)

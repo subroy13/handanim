@@ -1,28 +1,25 @@
-from typing import Tuple, Optional
+from typing import Tuple
 import numpy as np
-import cairo
-from .base import BasePrimitive
+
 from .curves import Curve
-from ..stylings.styles import StrokeStyle, SketchStyle, FillStyle
+from ..core.drawable import Drawable
+from ..core.draw_ops import OpsSet, Ops, OpsType
 from ..stylings.fillpatterns import get_filler
 
 
-class Ellipse(BasePrimitive):
+class Ellipse(Drawable):
     def __init__(
         self,
         center: Tuple[float, float],
         width: float,
         height: float,
-        stroke_style: StrokeStyle = StrokeStyle(),
-        fill_style: Optional[FillStyle] = None,
-        sketch_style: SketchStyle = SketchStyle(),
+        *args,
+        **kwargs,
     ):
+        super().__init__(*args, **kwargs)
         self.center = np.array(center)
         self.width = width
         self.height = height
-        self.stroke_style = stroke_style
-        self.fill_style = fill_style
-        self.sketch_style = sketch_style
 
     def _get_ellipse_params(
         self,
@@ -121,7 +118,7 @@ class Ellipse(BasePrimitive):
 
         return core_points, all_points
 
-    def draw_ellipse_border(self, ctx: cairo.Context):
+    def draw_ellipse_border(self, opsset: OpsSet) -> Tuple[list, OpsSet]:
         # compute the ellipse parameters
         rx, ry, increment = self._get_ellipse_params(self.width, self.height)
         ap1, cp1 = self._compute_ellipse_points(
@@ -142,7 +139,7 @@ class Ellipse(BasePrimitive):
             stroke_style=self.stroke_style,
             sketch_style=self.sketch_style,
         )
-        curve1.draw_single_curve(ctx)
+        opsset = curve1.draw_single_curve(opsset)
 
         if (
             not self.sketch_style.disable_multi_stroke
@@ -163,27 +160,34 @@ class Ellipse(BasePrimitive):
                 stroke_style=self.stroke_style,
                 sketch_style=self.sketch_style,
             )
-            curve2.draw_single_curve(ctx)
+            opsset = curve2.draw_single_curve(opsset)
 
-        return cp1
+        return cp1, opsset
 
-    def draw(self, ctx: cairo.Context):
+    def draw(self) -> OpsSet:
         """
         Draw a sketchy version of an ellipse
         """
-        ctx.save()  # save the current state of the context
+        opsset = OpsSet(
+            [
+                Ops(
+                    OpsType.SET_PEN,
+                    data={
+                        "color": self.stroke_style.color,
+                        "width": self.stroke_style.width,
+                        "opacity": self.stroke_style.opacity,
+                    },
+                )
+            ]
+        )
 
-        # set stroke color and width
-        r, g, b = self.stroke_style.color
-        ctx.set_source_rgba(r, g, b, self.stroke_style.opacity)
-        ctx.set_line_width(self.stroke_style.width)
-        core_points = self.draw_ellipse_border(ctx)  # draw the ellipse border
+        core_points, opsset = self.draw_ellipse_border(
+            opsset
+        )  # draw the ellipse border
 
         if self.fill_style is not None:
             filler = get_filler([core_points], self.fill_style, self.sketch_style)
-            filler.fill(ctx)
-
-        ctx.restore()  # restore the previous state of the context
+            opsset.extend(filler.fill())
 
 
 class Circle(Ellipse):
@@ -191,15 +195,13 @@ class Circle(Ellipse):
         self,
         center: tuple[float, float],
         radius: float,
-        stroke_style: StrokeStyle = StrokeStyle(),
-        fill_style: FillStyle = FillStyle(),
-        sketch_style: SketchStyle = SketchStyle(),
+        *args,
+        **kwargs,
     ):
         super().__init__(
             center,
             2 * radius,
             2 * radius,
-            stroke_style,
-            fill_style,
-            sketch_style,
+            *args,
+            **kwargs,
         )

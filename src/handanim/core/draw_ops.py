@@ -1,6 +1,5 @@
 from typing import Any, List, Union
 from enum import Enum
-import numpy as np
 
 
 class OpsType(Enum):
@@ -8,6 +7,7 @@ class OpsType(Enum):
     MOVE_TO = "move_to"
     LINE_TO = "line_to"
     CURVE_TO = "curve_to"
+    CLOSE_PATH = "close_path"
 
 
 class Ops:

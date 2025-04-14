@@ -1,30 +1,24 @@
 from typing import List
 import numpy as np
-import cairo
 
-from .base import BasePrimitive
-from ..stylings.styles import StrokeStyle, SketchStyle
+from ..core.draw_ops import OpsSet, Ops, OpsType
+from ..core.drawable import Drawable
 
 
-class Line(BasePrimitive):
+class Line(Drawable):
     def __init__(
-        self,
-        start: tuple[float, float],
-        end: tuple[float, float],
-        stroke_style: StrokeStyle = StrokeStyle(),
-        sketch_style: SketchStyle = SketchStyle(),
+        self, start: tuple[float, float], end: tuple[float, float], *args, **kwargs
     ):
+        super().__init__(*args, **kwargs)
         self.start = np.array(start)
         self.end = np.array(end)
-        self.stroke_style = stroke_style
-        self.sketch_style = sketch_style
 
     def draw_single_line(
         self,
-        ctx: cairo.Context,  # the context to use to draw
+        opsset: OpsSet,
         move: bool = False,  # should we move to the specific position before drawing?
         overlay: bool = False,  # is this the second pass?
-    ):
+    ) -> OpsSet:
         length = np.linalg.norm(
             self.end - self.start
         )  # get the length of the line segment
@@ -48,57 +42,67 @@ class Line(BasePrimitive):
 
         # draw the curved lines, based on move and overlay
         if move:
-            ctx.move_to(*(self.start + random_jitter(2) * jitter_scale))
+            opsset.add(
+                Ops(
+                    OpsType.MOVE_TO, data=[self.start + random_jitter(2) * jitter_scale]
+                )
+            )
 
-        ctx.curve_to(
-            *(
-                mid_disp
-                + self.start
-                + (self.end - self.start) * diverge_point
-                + random_jitter(2) * jitter_scale
-            ),
-            *(
-                mid_disp
-                + self.start
-                + 2 * (self.end - self.start) * diverge_point
-                + random_jitter(2) * jitter_scale
-            ),  # curve controls are placed close to the start points
-            *(self.end + random_jitter(2) * jitter_scale),
+        opsset.add(
+            Ops(
+                OpsType.CURVE_TO,
+                data=[
+                    mid_disp
+                    + self.start
+                    + (self.end - self.start) * diverge_point
+                    + random_jitter(2) * jitter_scale,
+                    mid_disp
+                    + self.start
+                    + 2 * (self.end - self.start) * diverge_point
+                    + random_jitter(2) * jitter_scale,
+                    self.end + random_jitter(2) * jitter_scale,
+                ],
+            )
         )
-        ctx.stroke()
 
-    def draw(self, ctx: cairo.Context):
+    def draw(self) -> OpsSet:
         """
         Draws a hand-drawn-like line with some jitter.
         """
-        ctx.save()  # save the current state of the context
-
-        # Set stroke color and width
-        r, g, b = self.stroke_style.color
-        ctx.set_source_rgba(r, g, b, self.stroke_style.opacity)
-        ctx.set_line_width(self.stroke_style.width)
+        opsset = OpsSet()
+        opsset.add(
+            Ops(
+                OpsType.SET_PEN,
+                {
+                    "color": self.stroke_style.color,
+                    "width": self.stroke_style.width,
+                    "opacity": self.stroke_style.opacity,
+                },
+            )
+        )
 
         # draw the sketchy lines
-        self.draw_single_line(ctx, move=True, overlay=False)
-        self.draw_single_line(ctx, move=True, overlay=True)
+        opsset = self.draw_single_line(opsset, move=True, overlay=False)
+        opsset = self.draw_single_line(opsset, move=True, overlay=True)
+        return opsset
 
-        ctx.restore()  # restore the context to its previous state
 
-
-class LinearPath(BasePrimitive):
+class LinearPath(Drawable):
     def __init__(
         self,
         points: List[tuple[float, float]],
-        stroke_style: StrokeStyle = StrokeStyle(),
-        sketch_style: SketchStyle = SketchStyle(),
+        close: bool = False,
+        *args,
+        **kwargs,
     ):
+        super().__init__(*args, **kwargs)
         self.points = points
-        self.stroke_style = stroke_style
-        self.sketch_style = sketch_style
+        self.close = close
 
-    def draw(self, ctx: cairo.Context, close: bool = False):
+    def draw(self) -> OpsSet:
         if self.points is None or len(self.points) < 2:
             raise ValueError("LinearPath must have at least two points")
+        opsset = OpsSet()
         for i in range(len(self.points) - 1):
             start = self.points[i]
             end = self.points[i + 1]
@@ -108,8 +112,9 @@ class LinearPath(BasePrimitive):
                 self.stroke_style,
                 self.sketch_style,
             )
-            line.draw(ctx)
-        if len(self.points) > 2 and close:
+            opsset.extend(line.draw())
+
+        if len(self.points) > 2 and self.close:
             # do the closing line
             start = self.points[-1]
             end = self.points[0]
@@ -119,4 +124,5 @@ class LinearPath(BasePrimitive):
                 self.stroke_style,
                 self.sketch_style,
             )
-            line.draw(ctx)
+            opsset.extend(line.draw())
+        return opsset
