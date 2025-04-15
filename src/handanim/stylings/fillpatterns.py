@@ -1,5 +1,6 @@
 from typing import List, Tuple
 import numpy as np
+import cairo
 
 from ..primitives.lines import Line
 from .utils import polygon_hachure_lines

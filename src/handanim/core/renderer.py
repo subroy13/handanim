@@ -43,6 +43,12 @@ def render_opsset(
         else:
             raise NotImplementedError("Unknown operation type")
 
+    # at the end of everything, check if stroke or fill is needed to complete the drawing
+    if has_path and mode == "stroke":
+        ctx.stroke()
+    elif has_path and mode == "fill":
+        ctx.fill()
+
 
 def cairo_surface_to_numpy(surface: cairo.ImageSurface):
     """Convert a Cairo surface to a numpy array"""

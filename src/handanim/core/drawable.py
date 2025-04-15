@@ -22,6 +22,9 @@ class Drawable:
         self.sketch_style = sketch_style
         self.fill_style = fill_style
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}>"
+
     def draw(self) -> OpsSet:
         """
         Provides the list of operations to be performed to

@@ -64,6 +64,7 @@ class Line(Drawable):
                 ],
             )
         )
+        return opsset
 
     def draw(self) -> OpsSet:
         """

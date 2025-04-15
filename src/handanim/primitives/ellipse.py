@@ -189,6 +189,8 @@ class Ellipse(Drawable):
             filler = get_filler([core_points], self.fill_style, self.sketch_style)
             opsset.extend(filler.fill())
 
+        return opsset
+
 
 class Circle(Ellipse):
     def __init__(

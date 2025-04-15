@@ -38,6 +38,9 @@ class AnimationEvent:
         self.end_time = start_time + duration
         self.easing_fun = easing_fun
 
+    def __repr__(self) -> str:
+        return f"AnimationEvent(type={self.type}, start_time={self.start_time}, duration={self.duration}, end_time={self.end_time}) for {str(self.drawable)}"
+
 
 def get_animated_opset(
     opsset: OpsSet, animation_type: AnimationEventType, progress: float = 1.0
@@ -135,12 +138,15 @@ class Scene:
                     break
             if active:
                 active_list.append(object_id)
+        return active_list
 
     def create_event_timeline(
-        self, fps: int = 20, max_length: Optional[float] = None
+        self,
+        fps: int = 20,
+        max_length: Optional[float] = None,  # number of seconds to create the video for
     ) -> List[OpsSet]:
         events: List[AnimationEvent] = self.events
-        events = events.sort(key=lambda x: x.start_time)
+        events.sort(key=lambda x: x.start_time)  # sort events in place
         key_frames = [event.start_time for event in events] + [
             event.end_time for event in events
         ]
@@ -153,8 +159,12 @@ class Scene:
         current_active_objects = None
         if max_length is None:
             max_length = np.round(key_frames[-1])
+        else:
+            max_length = np.round(max_length * fps)  # else convert to frames
         for t in range(0, max_length):
-            frame_opsset = OpsSet()  # initialize with blank opsset, will add more
+            frame_opsset = OpsSet(
+                initial_set=[]
+            )  # initialize with blank opsset, will add more
 
             # for each frame need to compute the operation sets
             if t in key_frames:
@@ -169,8 +179,8 @@ class Scene:
                     # find the relevant event
                     if (
                         event.drawable.id == object_id
-                        and event.start_time >= t / max_length
-                        and event.end_time <= t / max_length
+                        and event.start_time <= t / fps
+                        and t / fps <= event.end_time
                     ):
                         active_event = event
                         break
@@ -180,12 +190,15 @@ class Scene:
                     frame_opsset.extend(object_opsset)
                 else:
                     # there was an active event
-                    progress = (t - active_event.start_time) / active_event.duration
+                    progress = np.clip(
+                        (t / fps - active_event.start_time) / active_event.duration,
+                        0,
+                        1,
+                    )
                     partial_opsset = get_animated_opset(
                         object_opsset, active_event.type, progress
                     )
                     frame_opsset.extend(partial_opsset)
-
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
 

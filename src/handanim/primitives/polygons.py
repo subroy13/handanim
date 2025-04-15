@@ -25,7 +25,10 @@ class Polygon(Drawable):
         if len(self.points) < 3:
             raise ValueError("Polygon must have at least three points")
         linePath = LinearPath(
-            self.points, self.stroke_style, self.sketch_style, close=True
+            self.points,
+            close=True,
+            stroke_style=self.stroke_style,
+            sketch_style=self.sketch_style,
         )
         opsset.extend(linePath.draw())  # always close the path for a polygon
 
