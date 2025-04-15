@@ -3,6 +3,22 @@ import numpy as np
 from .draw_ops import OpsSet, OpsType
 
 
+def interpolate_bezier(p0, p1, p2, p3, t):
+    """De Casteljau's algorithm to split a cubic Bezier curve at t."""
+
+    def lerp(a, b, t):
+        return a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t
+
+    p01 = lerp(p0, p1, t)
+    p12 = lerp(p1, p2, t)
+    p23 = lerp(p2, p3, t)
+    p012 = lerp(p01, p12, t)
+    p123 = lerp(p12, p23, t)
+    p0123 = lerp(p012, p123, t)
+
+    return (p01, p012, p0123)
+
+
 def render_opsset(
     ctx: cairo.Context,
     opsset: OpsSet,
@@ -19,10 +35,25 @@ def render_opsset(
             ctx.move_to(*ops.data[0])
         elif ops.type == OpsType.LINE_TO:
             has_path = True
-            ctx.line_to(*ops.data[0])
+            if ops.partial < 1.0:
+                x0, y0 = ctx.get_current_point()
+                x1, y1 = ops.data[0]
+                x = x0 + ops.partial * (x1 - x0)  # calculate vectors
+                y = y0 + ops.partial * (y1 - y0)
+                ctx.line_to(x, y)
+            else:
+                ctx.line_to(*ops.data[0])
         elif ops.type == OpsType.CURVE_TO:
             has_path = True
-            ctx.curve_to(*ops.data[0], *ops.data[1], *ops.data[2])
+            if ops.partial < 1.0:
+                p0 = ctx.get_current_point()
+                p1, p2, p3 = ops.data[0], ops.data[1], ops.data[2]
+                cp1, cp2, ep = interpolate_bezier(p0, p1, p2, p3, ops.partial)
+                ctx.curve_to(*cp1, *cp2, *ep)
+            else:
+                ctx.curve_to(
+                    *ops.data[0], *ops.data[1], *ops.data[2]
+                )  # TODO: Need to implement De Casteljau's algorithm
         elif ops.type == OpsType.CLOSE_PATH:
             has_path = True
             ctx.close_path()

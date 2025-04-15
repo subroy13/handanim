@@ -6,7 +6,7 @@ import imageio.v2 as imageio
 
 from .renderer import cairo_surface_to_numpy, render_opsset
 from .drawable import Drawable
-from .draw_ops import OpsSet
+from .draw_ops import OpsSet, OpsType, Ops
 
 
 class AnimationEventType(Enum):
@@ -40,34 +40,6 @@ class AnimationEvent:
 
     def __repr__(self) -> str:
         return f"AnimationEvent(type={self.type}, start_time={self.start_time}, duration={self.duration}, end_time={self.end_time}) for {str(self.drawable)}"
-
-
-def get_animated_opset(
-    opsset: OpsSet, animation_type: AnimationEventType, progress: float = 1.0
-):
-    """
-    Get the progress proportion of the OpsSets
-    available
-    """
-    if animation_type == AnimationEventType.SKETCH:
-        n_count = len(
-            opsset.opsset
-        )  # TODO: we need to modify later to avoid set_pen operations
-        n_active = int(progress * n_count)
-        partial_frac = (
-            progress * n_count - n_active
-        )  # amount of progress need for the last operation
-        if n_active > 0:
-            newopsset = OpsSet(initial_set=opsset.opsset[:n_active])
-        else:
-            newopsset = OpsSet()
-        if partial_frac > 0:
-            last_op = opsset.opsset[n_active]
-            last_op.partial = partial_frac
-            newopsset.add(last_op)
-        return newopsset
-    else:
-        raise NotImplementedError("Other animation methods are not yet implemented")
 
 
 class Scene:
@@ -140,6 +112,71 @@ class Scene:
                 active_list.append(object_id)
         return active_list
 
+    def get_animated_opset(
+        self, opsset: OpsSet, animation_type: AnimationEventType, progress: float = 1.0
+    ):
+        """
+        Get the progress proportion of the OpsSets calculated for the
+        specific type of animation
+        """
+        if progress <= 0:
+            return OpsSet(initial_set=[])
+        progress = min(progress, 1.0)
+        base_ops = opsset.opsset
+
+        if animation_type == AnimationEventType.SKETCH:
+            n_count = len(
+                [op for op in base_ops if op.type != OpsType.SET_PEN]
+            )  # counters are based on the non set-pen operations
+            n_active = int(progress * n_count)
+            counter = 0
+            last_op = None
+            new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
+            for op in base_ops:
+                if op.type != OpsType.SET_PEN and counter < n_active:
+                    new_opsset.add(op)
+                    counter += 1
+                elif counter < n_active:
+                    # set pen operations keep adding
+                    new_opsset.add(op)
+                else:
+                    last_op = op  # the last operation for which it stopped
+                    break
+
+            if last_op is not None and (progress * n_count - n_active) > 0:
+                # need to calculate it partially
+                last_op.partial = progress * n_count - n_active
+                new_opsset.add(last_op)
+            return new_opsset
+        elif animation_type in {
+            AnimationEventType.FADE_IN,
+            AnimationEventType.FADE_OUT,
+        }:
+            new_opsset = OpsSet(initial_set=[])
+            mod_opacity = (
+                progress
+                if animation_type == AnimationEventType.FADE_IN
+                else 1 - progress
+            )
+            for op in base_ops:
+                if op.type == OpsType.SET_PEN:
+                    modifed_data = dict(op.data)
+                    modifed_data["opacity"] = mod_opacity
+                    new_opsset.add(
+                        Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial)
+                    )
+                else:
+                    new_opsset.add(op)  # add as it is
+            return new_opsset
+        elif animation_type in {
+            AnimationEventType.ZOOM_IN,
+            AnimationEventType.ZOOM_OUT,
+        }:
+            # TODO: handle this case by sending proper set_pen event
+            return opsset
+        else:
+            raise NotImplementedError("Other animation methods are not yet implemented")
+
     def create_event_timeline(
         self,
         fps: int = 20,
@@ -195,7 +232,7 @@ class Scene:
                         0,
                         1,
                     )
-                    partial_opsset = get_animated_opset(
+                    partial_opsset = self.get_animated_opset(
                         object_opsset, active_event.type, progress
                     )
                     frame_opsset.extend(partial_opsset)
