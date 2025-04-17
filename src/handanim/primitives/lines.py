@@ -70,7 +70,7 @@ class Line(Drawable):
         """
         Draws a hand-drawn-like line with some jitter.
         """
-        opsset = OpsSet()
+        opsset = OpsSet(initial_set=[])
         opsset.add(
             Ops(
                 OpsType.SET_PEN,
@@ -103,7 +103,7 @@ class LinearPath(Drawable):
     def draw(self) -> OpsSet:
         if self.points is None or len(self.points) < 2:
             raise ValueError("LinearPath must have at least two points")
-        opsset = OpsSet()
+        opsset = OpsSet(initial_set=[])
         for i in range(len(self.points) - 1):
             start = self.points[i]
             end = self.points[i + 1]

@@ -21,7 +21,7 @@ class Polygon(Drawable):
         """
         Draw a polygon with the given points
         """
-        opsset = OpsSet()
+        opsset = OpsSet(initial_set=[])
         if len(self.points) < 3:
             raise ValueError("Polygon must have at least three points")
         linePath = LinearPath(

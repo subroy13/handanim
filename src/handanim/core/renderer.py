@@ -3,20 +3,16 @@ import numpy as np
 from .draw_ops import OpsSet, OpsType
 
 
-def interpolate_bezier(p0, p1, p2, p3, t):
-    """De Casteljau's algorithm to split a cubic Bezier curve at t."""
+def slice_bezier(p0, p1, p2, p3, t):
+    p0, p1, p2, p3 = np.array(p0), np.array(p1), np.array(p2), np.array(p3)
+    p12 = (p1 - p0) * t + p0
+    p23 = (p2 - p1) * t + p1
+    p34 = (p3 - p2) * t + p2
+    p123 = (p23 - p12) * t + p12
+    p234 = (p34 - p23) * t + p23
+    p1234 = (p234 - p123) * t + p123
 
-    def lerp(a, b, t):
-        return a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t
-
-    p01 = lerp(p0, p1, t)
-    p12 = lerp(p1, p2, t)
-    p23 = lerp(p2, p3, t)
-    p012 = lerp(p01, p12, t)
-    p123 = lerp(p12, p23, t)
-    p0123 = lerp(p012, p123, t)
-
-    return (p01, p012, p0123)
+    return [p12, p123, p1234]
 
 
 def render_opsset(
@@ -48,12 +44,10 @@ def render_opsset(
             if ops.partial < 1.0:
                 p0 = ctx.get_current_point()
                 p1, p2, p3 = ops.data[0], ops.data[1], ops.data[2]
-                cp1, cp2, ep = interpolate_bezier(p0, p1, p2, p3, ops.partial)
+                cp1, cp2, ep = slice_bezier(p0, p1, p2, p3, ops.partial)
                 ctx.curve_to(*cp1, *cp2, *ep)
             else:
-                ctx.curve_to(
-                    *ops.data[0], *ops.data[1], *ops.data[2]
-                )  # TODO: Need to implement De Casteljau's algorithm
+                ctx.curve_to(*ops.data[0], *ops.data[1], *ops.data[2])
         elif ops.type == OpsType.CLOSE_PATH:
             has_path = True
             ctx.close_path()

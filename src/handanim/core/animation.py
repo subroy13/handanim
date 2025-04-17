@@ -3,6 +3,7 @@ from enum import Enum
 import numpy as np
 import cairo
 import imageio.v2 as imageio
+from tqdm import tqdm
 
 from .renderer import cairo_surface_to_numpy, render_opsset
 from .drawable import Drawable
@@ -54,6 +55,7 @@ class Scene:
         AnimationEventType.ZOOM_IN,
     ]
     DESTROY_EVENT_TYPES = [AnimationEventType.FADE_OUT, AnimationEventType.ZOOM_OUT]
+    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO]
 
     def __init__(
         self,
@@ -126,23 +128,22 @@ class Scene:
 
         if animation_type == AnimationEventType.SKETCH:
             n_count = len(
-                [op for op in base_ops if op.type != OpsType.SET_PEN]
+                [op for op in base_ops if op.type not in self.SETUP_OPS_TYPES]
             )  # counters are based on the non set-pen operations
             n_active = int(progress * n_count)
             counter = 0
             last_op = None
             new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
             for op in base_ops:
-                if op.type != OpsType.SET_PEN and counter < n_active:
+                if op.type not in self.SETUP_OPS_TYPES and counter < n_active:
                     new_opsset.add(op)
                     counter += 1
                 elif counter < n_active:
-                    # set pen operations keep adding
+                    # set pen operations keep adding, but don't increase counter
                     new_opsset.add(op)
                 else:
                     last_op = op  # the last operation for which it stopped
                     break
-
             if last_op is not None and (progress * n_count - n_active) > 0:
                 # need to calculate it partially
                 last_op.partial = progress * n_count - n_active
@@ -193,12 +194,12 @@ class Scene:
         ).tolist()  # this converts seconds to frames
 
         scene_opsset_list: List[OpsSet] = []
-        current_active_objects = None
+        current_active_objects = []
         if max_length is None:
             max_length = np.round(key_frames[-1])
         else:
             max_length = np.round(max_length * fps)  # else convert to frames
-        for t in range(0, max_length):
+        for t in tqdm(range(0, max_length)):
             frame_opsset = OpsSet(
                 initial_set=[]
             )  # initialize with blank opsset, will add more
