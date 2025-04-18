@@ -1,5 +1,6 @@
 from typing import Any, List, Union
 from enum import Enum
+import json
 
 
 class OpsType(Enum):
@@ -20,6 +21,9 @@ class Ops:
         self.data = data  # the data to use to perform draw operation
         self.partial = partial  # how much of the ops needs to be performed
 
+    def __repr__(self):
+        return f"Ops({self.type}, {json.dumps(self.data)}, {self.partial})"
+
 
 class OpsSet:
 
@@ -28,6 +32,9 @@ class OpsSet:
             self.opsset = initial_set
         else:
             self.opsset = [Ops(**d) for d in initial_set]
+
+    def __repr__(self):
+        return "OpsSet:" + "\n\t".join([str(ops) for ops in self.opsset])
 
     def add(self, ops: Union[Ops, dict]):
         if isinstance(ops, dict):
@@ -39,3 +46,17 @@ class OpsSet:
             self.opsset.extend(other_opsset.opsset)
         else:
             raise TypeError("other value is not an opsset")
+
+    def translate(self, offset_x: float, offset_y: float):
+        """
+        Translates every operation of the opsset by the (offset_x, offset_y) amount
+        """
+        new_ops = []
+        for ops in self.opsset:
+            if isinstance(ops.data, list):
+                # ops.data is list means, everything is a point
+                new_data = [(x + offset_x, y + offset_y) for x, y in ops.data]
+                new_ops.append(Ops(ops.type, new_data, ops.partial))
+            else:
+                new_ops.append(ops)  # keep same ops
+        self.opsset = new_ops
