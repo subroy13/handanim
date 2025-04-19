@@ -1,6 +1,7 @@
 from typing import Any, List, Union
 from enum import Enum
 import json
+import numpy as np
 
 
 class OpsType(Enum):
@@ -8,6 +9,7 @@ class OpsType(Enum):
     MOVE_TO = "move_to"
     LINE_TO = "line_to"
     CURVE_TO = "curve_to"
+    QUAD_CURVE_TO = "quad_curve_to"
     CLOSE_PATH = "close_path"
 
 
@@ -22,7 +24,11 @@ class Ops:
         self.partial = partial  # how much of the ops needs to be performed
 
     def __repr__(self):
-        return f"Ops({self.type}, {json.dumps(self.data)}, {self.partial})"
+        if isinstance(self.data, list) or isinstance(self.data, np.ndarray):
+            rounded_data = [[np.round(x, 2) for x in point] for point in self.data]
+        else:
+            rounded_data = self.data
+        return f"Ops({self.type}, {json.dumps(rounded_data)}, {self.partial})"
 
 
 class OpsSet:
@@ -43,7 +49,8 @@ class OpsSet:
 
     def extend(self, other_opsset: Any):
         if isinstance(other_opsset, OpsSet):
-            self.opsset.extend(other_opsset.opsset)
+            for op in other_opsset.opsset:
+                self.opsset.append(op)
         else:
             raise TypeError("other value is not an opsset")
 

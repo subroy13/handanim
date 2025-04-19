@@ -48,6 +48,18 @@ def render_opsset(
                 ctx.curve_to(*cp1, *cp2, *ep)
             else:
                 ctx.curve_to(*ops.data[0], *ops.data[1], *ops.data[2])
+        elif ops.type == OpsType.QUAD_CURVE_TO:
+            has_path = True
+            q1, q2 = ops.data[0], ops.data[1]
+            p0 = ctx.get_current_point()
+            p1 = (1 / 3 * np.array(p0) + 2 / 3 * np.array(q1)).tolist()
+            p2 = (1 / 3 * np.array(q1) + 2 / 3 * np.array(q2)).tolist()
+            p3 = q2
+            if ops.partial < 1.0:
+                cp1, cp2, ep = slice_bezier(p0, p1, p2, p3, ops.partial)
+                ctx.curve_to(*cp1, *cp2, *ep)
+            else:
+                ctx.curve_to(*p1, *p2, *p3)
         elif ops.type == OpsType.CLOSE_PATH:
             has_path = True
             ctx.close_path()

@@ -40,7 +40,10 @@ class AnimationEvent:
         self.easing_fun = easing_fun
 
     def __repr__(self) -> str:
-        return f"AnimationEvent(type={self.type}, start_time={self.start_time}, duration={self.duration}, end_time={self.end_time}) for {str(self.drawable)}"
+        return (
+            f"AnimationEvent(type={self.type}, start_time={self.start_time},",
+            f"duration={self.duration}, end_time={self.end_time}) for {str(self.drawable)}",
+        )
 
 
 class Scene:
@@ -146,8 +149,13 @@ class Scene:
                     break
             if last_op is not None and (progress * n_count - n_active) > 0:
                 # need to calculate it partially
-                last_op.partial = progress * n_count - n_active
-                new_opsset.add(last_op)
+                new_opsset.add(
+                    Ops(
+                        type=last_op.type,
+                        data=last_op.data,
+                        partial=progress * n_count - n_active,
+                    )
+                )
             return new_opsset
         elif animation_type in {
             AnimationEventType.FADE_IN,
@@ -161,8 +169,10 @@ class Scene:
             )
             for op in base_ops:
                 if op.type == OpsType.SET_PEN:
-                    modifed_data = dict(op.data)
-                    modifed_data["opacity"] = mod_opacity
+                    modifed_data = {
+                        k: mod_opacity if k == "opacity" else v
+                        for k, v in op.data.items()
+                    }
                     new_opsset.add(
                         Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial)
                     )
@@ -174,7 +184,7 @@ class Scene:
             AnimationEventType.ZOOM_OUT,
         }:
             # TODO: handle this case by sending proper set_pen event
-            return opsset
+            return OpsSet(initial_set=[])
         else:
             raise NotImplementedError("Other animation methods are not yet implemented")
 
@@ -199,7 +209,7 @@ class Scene:
             max_length = np.round(key_frames[-1])
         else:
             max_length = np.round(max_length * fps)  # else convert to frames
-        for t in tqdm(range(0, max_length)):
+        for t in tqdm(range(0, max_length), desc="Calculating animation frames..."):
             frame_opsset = OpsSet(
                 initial_set=[]
             )  # initialize with blank opsset, will add more
@@ -240,13 +250,41 @@ class Scene:
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
 
+    def render_snapshot(
+        self,
+        output_path: str,  # must be an svg file path
+        frame: float,  # the precise second index for the frame to render
+        fps: int = 20,
+        max_length: Optional[float] = None,  # number of seconds to create the video for
+    ):
+        """
+        This is a helper function used to debug video snapshots
+        """
+        opsset_list = self.create_event_timeline(
+            fps, max_length
+        )  # create the animated video
+        frame_index = np.clip(
+            np.round(frame * fps), 0, len(opsset_list) - 1
+        )  # get the frame index
+        frame_ops = opsset_list[frame_index]
+        with cairo.SVGSurface(output_path, self.width, self.height) as surface:
+            ctx = cairo.Context(surface)  # create cairo context
+
+            # set the background color
+            if self.background_color is not None:
+                ctx.set_source_rgb(*self.background_color)
+            ctx.paint()
+
+            render_opsset(ctx, frame_ops)
+            surface.finish()
+
     def render(
         self, output_path: str, fps: int = 20, max_length: Optional[float] = None
     ):
         # calculate the events
         opsset_list = self.create_event_timeline(fps, max_length)
         with imageio.get_writer(output_path, fps=fps, codec="libx264") as writer:
-            for frame_ops in opsset_list:
+            for frame_ops in tqdm(opsset_list, desc="Rendering video..."):
                 surface = cairo.ImageSurface(
                     cairo.FORMAT_ARGB32, self.width, self.height
                 )

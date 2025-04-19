@@ -1,16 +1,11 @@
 from typing import Tuple
-import os
 from fontTools.ttLib import TTFont
 from fontTools.pens.basePen import BasePen
 import numpy as np
 
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-
-FONT_PATHS = {
-    "headstay": "HeadstayRegular.ttf",
-    "caveat": "Caveat/Caveat-VariableFont_wght.ttf",
-}
+from ..stylings.fonts import list_fonts, get_font_path
 
 
 class CustomPen(BasePen):
@@ -63,18 +58,18 @@ class Text(Drawable):
         self.text = text
         self.position = position
         self.font_size = font_size
-        self.font_root_path = os.path.join(os.path.dirname(__file__), "../../../fonts/")
-        self.scale_factor = kwargs.get("scale_factor", 2.5)
+        self.scale_factor = kwargs.get("scale_factor", 1.0)
 
     def get_random_font_choice(self) -> Tuple[str, str]:
         """
         Chooses a random font from the available fonts
         """
+        font_list = list_fonts()
         if self.sketch_style.disable_font_mixture:
-            font_choice = "headstay"
+            font_choice = font_list[0]
         else:
-            font_choice = np.random.choice(list(FONT_PATHS.keys()))
-        return (font_choice, os.path.join(self.font_root_path, FONT_PATHS[font_choice]))
+            font_choice = np.random.choice(font_list)
+        return (font_choice, get_font_path(font_choice))
 
     def get_glyph_strokes(self, char) -> Tuple[OpsSet, float]:
         """

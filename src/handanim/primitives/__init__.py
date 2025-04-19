@@ -2,6 +2,8 @@ from .lines import Line
 from .curves import Curve
 from .polygons import Polygon, Rectangle, Square, NGon
 from .ellipse import Ellipse, Circle
+from .text import Text
+from .math import Math
 
 __all__ = [
     "Line",
@@ -12,4 +14,6 @@ __all__ = [
     "Circle",
     "Square",
     "NGon",
+    "Text",
+    "Math",
 ]
