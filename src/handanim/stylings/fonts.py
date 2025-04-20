@@ -6,7 +6,7 @@ FONT_PATHS = {
     "caveat": "Caveat-VariableFont_wght.ttf",
     "permanent_marker": "PermanentMarker-Regular.ttf",
     "feasibly": "FeasiblySingleLine-z8D90.ttf",
-    "noto_math": "NotoSansMath-Regular.ttf",
+    "notosans_math": "NotoSansMath-Regular.ttf",
 }
 
 

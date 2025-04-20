@@ -15,12 +15,17 @@ class CustomPen(BasePen):
         super().__init__(glyphSet)
         self.opsset = OpsSet(initial_set=[])
         self.scale = scale
+        self.min_x = self.min_y = float("inf")
+        self.max_x = self.max_y = -float("inf")
 
     def _scale_point(self, pt):
-        return (
-            pt[0] * self.scale,
-            -pt[1] * self.scale,
-        )
+        x, y = pt[0] * self.scale, -pt[1] * self.scale
+        # update bounding box
+        self.min_x = min(self.min_x, x)
+        self.min_y = min(self.min_y, y)
+        self.max_x = max(self.max_x, x)
+        self.max_y = max(self.max_y, y)
+        return (x, y)
 
     def _moveTo(self, pt):
         self.opsset.add(Ops(OpsType.MOVE_TO, data=[self._scale_point(pt)]))
