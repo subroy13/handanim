@@ -2,6 +2,16 @@
 
 **handanim** is a lightweight Python animation library for generating whiteboard-style animations — where shapes and text are drawn progressively in a hand-drawn, sketchy fashion. Perfect for educational videos, tutorials, or data storytelling.
 
+## Design Details
+
+1. `core`: Core capabilities.
+   - `drawable.py`: Defines the structure that can be drawn.
+   - `styles.py`: Defines the styling oriented options that can be configured.
+   - `draw_ops.py`: Defines the opsets, the basic structure that is used to draw. Along with the rendering logic for the opsset into the cairo context.
+   - `utils.py`: Some utility functions that does not fit anywhere else
+   - `animation.py`: Defines the animation structures.
+   - `scene.py`: Defines the scene, which is the main entry point for the user.
+
 ## 🔧 Features
 
 - ✅ **Primitive drawing operations**: Supports drawing paths using `MOVE_TO`, `LINE_TO`, `ELLIPSE`, etc.

@@ -2,6 +2,8 @@ from typing import Any, List, Union
 from enum import Enum
 import json
 import numpy as np
+import cairo
+from .utils import slice_bezier, get_bezier_points_from_quadcurve
 
 
 class OpsType(Enum):
@@ -17,6 +19,8 @@ class Ops:
     """
     Describes a drawing operation to be performed
     """
+
+    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO]
 
     def __init__(self, type: OpsType, data: Any, partial: float = 1.0):
         self.type = type
@@ -67,3 +71,67 @@ class OpsSet:
             else:
                 new_ops.append(ops)  # keep same ops
         self.opsset = new_ops
+
+    def render(self, ctx: cairo.Context, initial_mode: str = "stroke"):
+        """
+        Renders the opset on the cairo context
+        """
+        mode = initial_mode
+        has_path = False  # initially there is no path
+        for ops in self.opsset:
+            if ops.type == OpsType.MOVE_TO:
+                ctx.move_to(*ops.data[0])
+            elif ops.type == OpsType.LINE_TO:
+                has_path = True
+                if ops.partial < 1.0:
+                    x0, y0 = ctx.get_current_point()
+                    x1, y1 = ops.data[0]
+                    x = x0 + ops.partial * (x1 - x0)  # calculate vectors
+                    y = y0 + ops.partial * (y1 - y0)
+                    ctx.line_to(x, y)
+                else:
+                    ctx.line_to(*ops.data[0])
+            elif ops.type == OpsType.CURVE_TO:
+                has_path = True
+                if ops.partial < 1.0:
+                    p0 = ctx.get_current_point()
+                    p1, p2, p3 = ops.data[0], ops.data[1], ops.data[2]
+                    cp1, cp2, ep = slice_bezier(p0, p1, p2, p3, ops.partial)
+                    ctx.curve_to(*cp1, *cp2, *ep)
+                else:
+                    ctx.curve_to(*ops.data[0], *ops.data[1], *ops.data[2])
+            elif ops.type == OpsType.QUAD_CURVE_TO:
+                has_path = True
+                q1, q2 = ops.data[0], ops.data[1]
+                p0 = ctx.get_current_point()
+                p1, p2, p3 = get_bezier_points_from_quadcurve(p0, q1, q2)
+                if ops.partial < 1.0:
+                    cp1, cp2, ep = slice_bezier(p0, p1, p2, p3, ops.partial)
+                    ctx.curve_to(*cp1, *cp2, *ep)
+                else:
+                    ctx.curve_to(*p1, *p2, *p3)
+            elif ops.type == OpsType.CLOSE_PATH:
+                has_path = True
+                ctx.close_path()
+            elif ops.type == OpsType.SET_PEN:
+                if has_path and mode == "stroke":
+                    ctx.stroke()  # handle last stroke / fill performed
+                elif has_path and mode == "fill":
+                    ctx.fill()
+                has_path = False  # reset the path for this new pen setup
+                mode = ops.data.get(
+                    "mode", "stroke"
+                )  # update the mode based on current ops
+                if ops.data.get("color"):
+                    r, g, b = ops.data.get("color")
+                    ctx.set_source_rgba(r, g, b, ops.data.get("opacity", 1))
+                if ops.data.get("width"):
+                    ctx.set_line_width(ops.data.get("width"))
+            else:
+                raise NotImplementedError("Unknown operation type")
+
+        # at the end of everything, check if stroke or fill is needed to complete the drawing
+        if has_path and mode == "stroke":
+            ctx.stroke()
+        elif has_path and mode == "fill":
+            ctx.fill()

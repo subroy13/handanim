@@ -10,7 +10,7 @@ scene = Scene(width=800, height=608)
 #     center=(300, 300),
 #     radius=100,
 #     stroke_style=StrokeStyle(color=(1, 0.6, 0), width=2),
-#     sketch_style=SketchStyle(),
+#     sketch_style=SketchStyle(roughness=5),
 #     fill_style=FillStyle(color=(1, 0.6, 0), fill_pattern="hachure"),
 # )
 # event = AnimationEvent(
@@ -20,7 +20,7 @@ scene = Scene(width=800, height=608)
 
 text2 = Math2(
     tex_expression=r"$e^{i\pi} + 1 = 0$",
-    position=(100, 300),
+    position=(100, 400),
     stroke_style=StrokeStyle(color=(0, 0, 1)),
     sketch_style=SketchStyle(),
     font_size=96,

@@ -1,7 +1,7 @@
 from typing import List, Tuple, Optional
 from uuid import uuid4
 from .draw_ops import OpsSet
-from ..core.styles import FillStyle, SketchStyle, StrokeStyle
+from .styles import FillStyle, SketchStyle, StrokeStyle
 
 
 class Drawable:
@@ -52,3 +52,43 @@ class DrawableFill:
 
     def fill(self) -> OpsSet:
         raise NotImplementedError("fill method not implemented for base fill pattern")
+
+
+class DrawableCache:
+    """
+    A class that implements a cache for the opssets
+    related to various drawable objects
+    """
+
+    def __init__(self):
+        self.cache: dict[str, OpsSet] = {}
+
+    def has_drawable_oppset(self, drawable_id: str) -> bool:
+        return drawable_id in self.cache
+
+    def set_drawable_opsset(self, drawable: Drawable):
+        self.cache[drawable.id] = drawable.draw()  # calculate opsset and store
+
+    def get_drawable_opsset(self, drawable_id: str) -> OpsSet:
+        return self.cache.get(drawable_id, OpsSet(initial_set=[]))
+
+    def calculate_bounding_box(self, drawables: List[Drawable]):
+        """
+        Calculates the bounding box for a list of drawables
+        stored in the cache
+        """
+        opsset_list = [self.get_drawable_opsset(d.id) for d in drawables]
+        min_x = min_y = float("inf")
+        max_x = max_y = float("-inf")
+        for opset in opsset_list:
+            for ops in opset.opsset:
+                # TODO: modify this calculation for curves
+                data = ops.data
+                if isinstance(data, list):
+                    for point in data:
+                        # update bounding box
+                        min_x = min(min_x, point[0])
+                        min_y = min(min_y, point[1])
+                        max_x = max(max_x, point[0])
+                        max_y = max(max_y, point[1])
+        return min_x, min_y, max_x, max_y
