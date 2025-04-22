@@ -62,9 +62,11 @@ def get_animated_opsset(
     base_ops = opsset.opsset
 
     # apply sketching operations first if present
-    sketching_events = filter(
-        lambda x: x[0].type == AnimationEventType.SKETCH, animation_events
-    )
+    sketching_events = [
+        event
+        for event in animation_events
+        if event[0].type == AnimationEventType.SKETCH
+    ]
     for event, progress in sketching_events:
         if progress > 0:
             n_count = len(
@@ -93,6 +95,10 @@ def get_animated_opsset(
                         partial=progress * n_count - n_active,
                     )
                 )
+
+    if len(sketching_events) == 0:
+        # no sketching operations, so just add the base opset
+        new_opsset.extend(opsset)
 
     # add more event operations
     for event, progress in animation_events:

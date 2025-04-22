@@ -111,7 +111,7 @@ class Math2(Drawable):
         self.position = position
         self.scale_factor = font_size / 10  # base size is 10
         self.parser = MathTextParser("path")
-        self.font_name = "notosans_math"
+        self.font_name = "feasibly"
 
     def get_glyph_opsset(
         self, unicode: int, font_size: int

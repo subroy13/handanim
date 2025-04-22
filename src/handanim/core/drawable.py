@@ -79,5 +79,5 @@ class DrawableCache:
         """
         merge_opsset = OpsSet(initial_set=[])
         for drawable in drawables:
-            merge_opsset = merge_opsset.extend(self.get_drawable_opsset(drawable.id))
+            merge_opsset.extend(self.get_drawable_opsset(drawable.id))
         return merge_opsset.get_bbox()

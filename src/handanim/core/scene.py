@@ -53,7 +53,7 @@ class Scene:
 
     def get_active_objects(self, t: float):
         """
-        At a timepoint t, return the list of object_ids
+        At a timepoint t (in seconds), return the list of object_ids
         that needs to be active on the scene
         """
         active_list: List[str] = []
@@ -80,27 +80,28 @@ class Scene:
         key_frames = [event.start_time for event in events] + [
             event.end_time for event in events
         ]
-        key_frames.sort()
-        key_frames = np.round(
-            np.array(key_frames) * fps
-        ).tolist()  # this converts seconds to frames
         if max_length is None:
             max_length = np.round(key_frames[-1])
         else:
             max_length = np.round(max_length * fps)  # else convert to frames
-
+            key_frames.append(max_length)
+        key_frames = list(set(key_frames))
+        key_frames.sort()
+        key_frames = np.round(
+            np.array(key_frames) * fps
+        ).tolist()  # this converts seconds to frames
         scene_opsset_list: List[OpsSet] = []
         current_active_objects: List[str] = []
 
         # start calculating with a progress bar
-        for t in tqdm(range(0, max_length), desc="Calculating animation frames..."):
+        for t in tqdm(range(0, max_length + 1), desc="Calculating animation frames..."):
             frame_opsset = OpsSet(
                 initial_set=[]
             )  # initialize with blank opsset, will add more
 
             # for each frame, update the current active objects if it is a keyframe
             if t in key_frames:
-                current_active_objects = self.get_active_objects(t)
+                current_active_objects = self.get_active_objects(t / fps)
 
             # for each of these active objects, calculate partial opssets to draw
             for object_id in current_active_objects:
@@ -134,6 +135,7 @@ class Scene:
                     partial_opsset = get_animated_opsset(
                         object_opsset, active_events
                     )  # calculate the partial opsset
+
                     frame_opsset.extend(partial_opsset)
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
