@@ -107,29 +107,32 @@ class Scene:
                 object_opsset: OpsSet = self.drawable_cache.get_drawable_opsset(
                     object_id
                 )
-                active_event = None
+
+                # for every object, there could be multiple events associated
+                active_events = []
                 for event in events:
-                    # find the relevant event
+                    # find the relevant events
                     if (
                         event.drawable.id == object_id
                         and event.start_time <= t / fps
                         and t / fps <= event.end_time
                     ):
-                        active_event = event
-                        break
-                if active_event is None:
-                    # there is no event at this time, but object is active
+                        progress = np.clip(
+                            (t / fps - event.start_time) / event.duration,
+                            0,
+                            1,
+                        )
+                        active_events.append(
+                            (event, progress)
+                        )  # add the event with its progress
+                if len(active_events) == 0:
+                    # no active events, but object is active
                     # object is completely visible, so draw fully
                     frame_opsset.extend(object_opsset)
                 else:
-                    # there was an active event
-                    progress = np.clip(
-                        (t / fps - active_event.start_time) / active_event.duration,
-                        0,
-                        1,
-                    )
+                    # there are some active events, so animation needs to be calcualted
                     partial_opsset = get_animated_opsset(
-                        object_opsset, active_event.type, progress
+                        object_opsset, active_events
                     )  # calculate the partial opsset
                     frame_opsset.extend(partial_opsset)
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene

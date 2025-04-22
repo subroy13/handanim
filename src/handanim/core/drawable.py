@@ -77,18 +77,7 @@ class DrawableCache:
         Calculates the bounding box for a list of drawables
         stored in the cache
         """
-        opsset_list = [self.get_drawable_opsset(d.id) for d in drawables]
-        min_x = min_y = float("inf")
-        max_x = max_y = float("-inf")
-        for opset in opsset_list:
-            for ops in opset.opsset:
-                # TODO: modify this calculation for curves
-                data = ops.data
-                if isinstance(data, list):
-                    for point in data:
-                        # update bounding box
-                        min_x = min(min_x, point[0])
-                        min_y = min(min_y, point[1])
-                        max_x = max(max_x, point[0])
-                        max_y = max(max_y, point[1])
-        return min_x, min_y, max_x, max_y
+        merge_opsset = OpsSet(initial_set=[])
+        for drawable in drawables:
+            merge_opsset = merge_opsset.extend(self.get_drawable_opsset(drawable.id))
+        return merge_opsset.get_bbox()

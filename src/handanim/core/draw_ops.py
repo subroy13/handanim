@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Union, Tuple, Optional
 from enum import Enum
 import json
 import numpy as np
@@ -58,6 +58,34 @@ class OpsSet:
         else:
             raise TypeError("other value is not an opsset")
 
+    def get_bbox(self) -> Tuple[float, float, float, float]:
+        """
+        Get the bounding box for the opset
+        """
+        if len(self.opsset) == 0:
+            return (0, 0, 0, 0)
+        else:
+            min_x = min_y = float("inf")
+            max_x = max_y = float("-inf")
+            for ops in self.opsset:
+                # TODO: modify this calculation for curves
+                data = ops.data
+                if isinstance(data, list):
+                    for point in data:
+                        # update bounding box
+                        min_x = min(min_x, point[0])
+                        min_y = min(min_y, point[1])
+                        max_x = max(max_x, point[0])
+                        max_y = max(max_y, point[1])
+            return min_x, min_y, max_x, max_y
+
+    def get_center_of_gravity(self) -> Tuple[float, float]:
+        """
+        Get an approximate center of gravity of the opset
+        """
+        min_x, min_y, max_x, max_y = self.get_bbox()
+        return (min_x + max_x) / 2, (min_y + max_y) / 2
+
     def translate(self, offset_x: float, offset_y: float):
         """
         Translates every operation of the opsset by the (offset_x, offset_y) amount
@@ -71,6 +99,33 @@ class OpsSet:
             else:
                 new_ops.append(ops)  # keep same ops
         self.opsset = new_ops
+
+    def scale(self, scale_x: float, scale_y: Optional[float] = None):
+        """
+        Scales every operation of the opsset by the (scale_x, scale_y) amount
+        """
+        if scale_y is None:
+            scale_y = scale_x
+
+        # first translate so that center of gravity is at (0, 0)
+        center_of_gravity = self.get_center_of_gravity()
+
+        # now apply scaling
+        new_ops = []
+        for ops in self.opsset:
+            if isinstance(ops.data, list):
+                # ops.data is list means, everything is a point
+                new_data = [
+                    (
+                        center_of_gravity[0] + scale_x * (x - center_of_gravity[0]),
+                        center_of_gravity[1] + scale_y * (y - center_of_gravity[1]),
+                    )
+                    for x, y in ops.data
+                ]
+                new_ops.append(Ops(ops.type, new_data, ops.partial))
+            else:
+                new_ops.append(ops)  # keep same ops for set pen type operations
+        self.opsset = new_ops  # update the ops list
 
     def render(self, ctx: cairo.Context, initial_mode: str = "stroke"):
         """

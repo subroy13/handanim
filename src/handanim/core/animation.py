@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List, Tuple
 from .drawable import Drawable
 from .draw_ops import OpsType, OpsSet, Ops
 
@@ -47,72 +48,71 @@ class AnimationEvent:
 
 
 def get_animated_opsset(
-    self,
     opsset: OpsSet,
-    animation_type: AnimationEventType,
-    progress: float,
+    animation_events: List[Tuple[AnimationEvent, float]],
 ):
     """
-    Get the progress proportion of the OpsSets calculated for the
-    specific type of animation
+    Get the animated opset for the given animation event
+       -> Here we have a list of animation events, and for each we have a progress (between 0.0 and 1.0)
+
+    1. First, we need to apply if sketching operation is there => as that gives partial offset
     """
-    if progress <= 0:
-        return OpsSet(initial_set=[])
-    progress = min(progress, 1.0)
+
+    new_opsset = OpsSet(initial_set=[])
     base_ops = opsset.opsset
 
-    if animation_type == AnimationEventType.SKETCH:
-        n_count = len(
-            [op for op in base_ops if op.type not in Ops.SETUP_OPS_TYPES]
-        )  # counters are based on the non set-pen operations
-        n_active = int(progress * n_count)
-        counter = 0
-        last_op = None
-        new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
-        for op in base_ops:
-            if op.type not in Ops.SETUP_OPS_TYPES and counter < n_active:
-                new_opsset.add(op)
-                counter += 1
-            elif counter < n_active:
-                # set pen operations keep adding, but don't increase counter
-                new_opsset.add(op)
-            else:
-                last_op = op  # the last operation for which it stopped
-                break
-        if last_op is not None and (progress * n_count - n_active) > 0:
-            # need to calculate it partially
-            new_opsset.add(
-                Ops(
-                    type=last_op.type,
-                    data=last_op.data,
-                    partial=progress * n_count - n_active,
-                )
-            )
-        return new_opsset
-    elif animation_type in {
-        AnimationEventType.FADE_IN,
-        AnimationEventType.FADE_OUT,
-    }:
-        new_opsset = OpsSet(initial_set=[])
-        mod_opacity = (
-            progress if animation_type == AnimationEventType.FADE_IN else 1 - progress
-        )
-        for op in base_ops:
-            if op.type == OpsType.SET_PEN:
-                modifed_data = {
-                    k: mod_opacity if k == "opacity" else v for k, v in op.data.items()
-                }
+    # apply sketching operations first if present
+    sketching_events = filter(
+        lambda x: x[0].type == AnimationEventType.SKETCH, animation_events
+    )
+    for event, progress in sketching_events:
+        if progress > 0:
+            n_count = len(
+                [op for op in base_ops if op.type not in Ops.SETUP_OPS_TYPES]
+            )  # counters are based on the non set-pen operations
+            n_active = int(progress * n_count)
+            counter = 0
+            last_op = None
+            new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
+            for op in base_ops:
+                if op.type not in Ops.SETUP_OPS_TYPES and counter < n_active:
+                    new_opsset.add(op)
+                    counter += 1
+                elif counter < n_active:
+                    # set pen operations keep adding, but don't increase counter
+                    new_opsset.add(op)
+                else:
+                    last_op = op  # the last operation for which it stopped
+                    break
+            if last_op is not None and (progress * n_count - n_active) > 0:
+                # need to calculate it partially
                 new_opsset.add(
-                    Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial)
+                    Ops(
+                        type=last_op.type,
+                        data=last_op.data,
+                        partial=progress * n_count - n_active,
+                    )
                 )
-            else:
-                new_opsset.add(op)  # add as it is
-        return new_opsset
-    elif animation_type in {
-        AnimationEventType.ZOOM_IN,
-        AnimationEventType.ZOOM_OUT,
-    }:
-        # TODO: handle this case by sending proper set_pen event
-        return OpsSet(initial_set=[])
-    else:
-        raise NotImplementedError("Other animation methods are not yet implemented")
+
+    # add more event operations
+    for event, progress in animation_events:
+        if event.type in {AnimationEventType.FADE_IN, AnimationEventType.FADE_OUT}:
+            mod_opacity = (
+                progress if event.type == AnimationEventType.FADE_IN else 1 - progress
+            )
+            for i, op in enumerate(new_opsset.opsset):
+                if op.type == OpsType.SET_PEN:
+                    modifed_data = {
+                        k: mod_opacity if k == "opacity" else v
+                        for k, v in op.data.items()
+                    }
+                    new_opsset.opsset[i] = Ops(
+                        type=OpsType.SET_PEN, data=modifed_data, partial=op.partial
+                    )
+        elif event.type in {AnimationEventType.ZOOM_IN, AnimationEventType.ZOOM_OUT}:
+            mod_scale = (
+                progress if event.type == AnimationEventType.ZOOM_IN else 1 - progress
+            )
+            new_opsset.scale(mod_scale)  # perform scaling
+
+    return new_opsset
