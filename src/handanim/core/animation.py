@@ -1,8 +1,9 @@
 from enum import Enum
 from typing import List, Tuple
+import numpy as np
 from .drawable import Drawable
 from .draw_ops import OpsType, OpsSet, Ops
-from .styles import StrokeStyle, FillStyle
+from .styles import FillStyle
 from ..primitives.ellipse import GlowDot
 
 
@@ -115,17 +116,23 @@ def get_animated_opsset(
             sketching_opssets = get_sketching_opsset(opsset, progress)
             new_opsset.extend(sketching_opssets)
             # now we can optionally add a glowing dot for the sketching operation
-            if event.data.get("glowing_dot"):
+            if event.data.get("glowing_dot") or event.drawable.glow_dot_hint:
+                glow_dot_data = (
+                    event.data.get("glowing_dot") or event.drawable.glow_dot_hint
+                )
                 # we need to draw glowing dot
                 cx, cy = (
                     sketching_opssets.get_current_point()
                 )  # get the current point based on sketching
 
+                breathing_factor = 1 + 0.05 * np.sin(
+                    2 * np.pi * progress * glow_dot_data.get("frequency", 5)
+                )  # have a subtle breathing effect to increase or decrease glow
                 dot = GlowDot(
                     center=(cx, cy),
-                    radius=event.data["glowing_dot"].get("radius", 5),
+                    radius=glow_dot_data.get("radius", 5) * breathing_factor,
                     fill_style=FillStyle(
-                        color=event.data["glowing_dot"].get("color", (0.5, 0.5, 0.5))
+                        color=glow_dot_data.get("color", (0.5, 0.5, 0.5))
                     ),
                 )
                 new_opsset.extend(dot.draw())  # add this dot at the end of current path

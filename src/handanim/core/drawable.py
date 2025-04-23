@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 from uuid import uuid4
 from .draw_ops import OpsSet
 from .styles import FillStyle, SketchStyle, StrokeStyle
@@ -16,11 +16,13 @@ class Drawable:
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
         fill_style: Optional[FillStyle] = None,
+        glow_dot_hint: Optional[Dict] = None,
     ):
         self.id = uuid4().hex  # generates an hexadecimal random id
         self.stroke_style = stroke_style
         self.sketch_style = sketch_style
         self.fill_style = fill_style
+        self.glow_dot_hint = glow_dot_hint
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__}>"

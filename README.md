@@ -103,3 +103,12 @@ Inspired by:
 - Interactive teaching tools
 
 ## ✨ Made with love by Subhrajyoty Roy
+
+---
+
+1. Arrows
+2. Flowcharts diagrams
+3. Adding images
+4. Autofitting content based on the size of textbox
+5. Grafana graphs
+6. Tables with headers (using rectangles)

@@ -1,8 +1,10 @@
 from typing import List
 import numpy as np
 
+from ..core.styles import StrokePressure
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from ..core.drawable import Drawable
+from ..stylings.strokes import apply_stroke_pressure
 
 
 class Line(Drawable):
@@ -85,6 +87,11 @@ class Line(Drawable):
         # draw the sketchy lines
         opsset = self.draw_single_line(opsset, move=True, overlay=False)
         opsset = self.draw_single_line(opsset, move=True, overlay=True)
+
+        # apply stroke pressure if available
+        if self.stroke_style.stroke_pressure != StrokePressure.CONSTANT:
+            opsset = apply_stroke_pressure(opsset, self.stroke_style.stroke_pressure)
+
         return opsset
 
 

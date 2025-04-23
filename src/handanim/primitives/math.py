@@ -11,6 +11,8 @@ from ..core.drawable import Drawable
 from ..stylings.fonts import get_font_path
 from .text import CustomPen
 from .lines import Line
+from ..core.styles import StrokePressure
+from ..stylings.strokes import apply_stroke_pressure
 
 
 class Math(Drawable):
@@ -62,6 +64,11 @@ class Math(Drawable):
                 opsset.add(Ops(OpsType.CLOSE_PATH, data={}))
             else:
                 raise ValueError(f"Unknown path code: {code}")
+
+        # for the character strokes, apply pen pressures
+        if self.stroke_style.stroke_pressure != StrokePressure.CONSTANT:
+            opsset = apply_stroke_pressure(opsset, self.stroke_style.stroke_pressure)
+
         return opsset
 
     def draw(self) -> OpsSet:

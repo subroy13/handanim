@@ -5,6 +5,8 @@ from .curves import Curve
 from ..core.drawable import Drawable
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from ..stylings.fillpatterns import get_filler
+from ..stylings.strokes import apply_stroke_pressure
+from ..core.styles import StrokePressure
 
 
 class Ellipse(Drawable):
@@ -184,6 +186,10 @@ class Ellipse(Drawable):
         core_points, opsset = self.draw_ellipse_border(
             opsset
         )  # draw the ellipse border
+
+        # for the border, apply strokes
+        if self.stroke_style.stroke_pressure != StrokePressure.CONSTANT:
+            opsset = apply_stroke_pressure(opsset, self.stroke_style.stroke_pressure)
 
         if self.fill_style is not None:
             filler = get_filler([core_points], self.fill_style, self.sketch_style)

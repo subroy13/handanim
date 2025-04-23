@@ -1,6 +1,17 @@
+from enum import Enum
+
+
+class StrokePressure(Enum):
+    """
+    A class that defines the pressure of the strokes
+    """
+
+    CONSTANT = "constant"
+    PROPORTIONAL = "proportional"
+    INVERSE = "inverse"
+
+
 # defines the 3 major types of styling configurations
-
-
 class StrokeStyle:
     """
     A class that defines the styling configurations for the strokes
@@ -14,6 +25,7 @@ class StrokeStyle:
         self.color = kwargs.get("color", (0, 0, 0))
         self.width = kwargs.get("width", 1)
         self.opacity = kwargs.get("opacity", 1)
+        self.stroke_pressure = kwargs.get("stroke_pressure", StrokePressure.CONSTANT)
 
 
 class FillStyle:
