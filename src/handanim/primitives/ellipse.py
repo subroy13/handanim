@@ -207,3 +207,47 @@ class Circle(Ellipse):
             *args,
             **kwargs,
         )
+
+
+class GlowDot(Drawable):
+
+    def __init__(
+        self,
+        center: Tuple[float, float],
+        radius: float = 1,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self.center = center
+        self.radius = radius
+
+    def draw(self) -> OpsSet:
+        """
+        Draw a perfect glowing dot
+        """
+        opsset_list = []
+        dot_ranges = [(1, 1), (0.7, 1.2), (0.4, 1.5), (0.1, 1.8)]
+        for opacity_scale, radius_scale in dot_ranges:
+            opsset_list.append(
+                Ops(
+                    OpsType.SET_PEN,
+                    data={
+                        "color": self.fill_style.color,
+                        "width": self.stroke_style.width,
+                        "opacity": self.fill_style.opacity * opacity_scale,
+                        "mode": "fill",
+                    },
+                )
+            )
+            opsset_list.append(
+                Ops(
+                    OpsType.DOT,
+                    data={
+                        "center": self.center,
+                        "radius": self.radius * radius_scale,
+                    },
+                ),
+            )
+
+        return OpsSet(initial_set=opsset_list)

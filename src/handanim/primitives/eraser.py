@@ -26,7 +26,7 @@ class Eraser(Drawable):
                 OpsType.SET_PEN,
                 {
                     "color": self.stroke_style.color,
-                    "width": self.stroke_style.width * 5,  # make it like pastel blend
+                    "width": self.stroke_style.width * 10,  # make it like pastel blend
                     "opacity": self.stroke_style.opacity,
                 },
             )
@@ -37,8 +37,8 @@ class Eraser(Drawable):
         )
 
         # TODO: do the rotation, perform the zigzag motion here
-        spacing = self.stroke_style.width * 5
-        y = min_x
+        spacing = self.stroke_style.width * 10
+        y = min_y
         opsset.add(Ops(OpsType.MOVE_TO, [(min_x, min_y)]))  # move to top left corner
         while y <= max_y:
             opsset.add(Ops(OpsType.LINE_TO, [(max_x, y)]))

@@ -13,6 +13,7 @@ class OpsType(Enum):
     CURVE_TO = "curve_to"
     QUAD_CURVE_TO = "quad_curve_to"
     CLOSE_PATH = "close_path"
+    DOT = "dot"
 
 
 class Ops:
@@ -85,6 +86,67 @@ class OpsSet:
         """
         min_x, min_y, max_x, max_y = self.get_bbox()
         return (min_x + max_x) / 2, (min_y + max_y) / 2
+
+    def get_last_ops(
+        self, start_index: int = 0
+    ) -> Tuple[Optional[float], Optional[Ops]]:
+        """
+        Get valid last and second last ops
+        """
+        if start_index >= len(self.opsset):
+            return None, None
+        for index, ops in enumerate(self.opsset[::-1][start_index:]):
+            if ops.type in {
+                OpsType.MOVE_TO,
+                OpsType.LINE_TO,
+                OpsType.CURVE_TO,
+                OpsType.QUAD_CURVE_TO,
+            }:
+                return index, ops
+        return None, None
+
+    def get_current_point(self):
+        """
+        Given a opsset, get the current point of the drawing from last operation
+        """
+        if len(self.opsset) == 0:
+            return (0, 0)
+        else:
+            last_index, last_op = self.get_last_ops()
+            if last_op is None:
+                return (0, 0)
+
+            second_last_op = self.get_last_ops(last_index + 1)[1]
+            if second_last_op is None:
+                return last_op.data[0]
+            if last_op.type == OpsType.MOVE_TO:
+                return last_op.data[0]
+            elif last_op.type == OpsType.LINE_TO:
+                if last_op.partial < 1:
+                    x0, y0 = second_last_op.data[0]
+                    x1, y1 = last_op.data[0]
+                    x = x0 + last_op.partial * (x1 - x0)  # calculate vectors
+                    y = y0 + last_op.partial * (y1 - y0)
+                    return (x, y)
+                else:
+                    return last_op.data[0]
+            elif last_op.type == OpsType.CURVE_TO:
+                if last_op.partial < 1:
+                    p0 = second_last_op.data[0]
+                    p1, p2, p3 = last_op.data[0], last_op.data[1], last_op.data[2]
+                    cp1, cp2, ep = slice_bezier(p0, p1, p2, p3, last_op.partial)
+                    return ep
+                else:
+                    return last_op.data[-1]
+            elif last_op.type == OpsType.QUAD_CURVE_TO:
+                if last_op.partial < 1:
+                    p0 = second_last_op.data[0]
+                    q1, q2 = last_op.data[0], last_op.data[1]
+                    p1, p2, p3 = get_bezier_points_from_quadcurve(p0, q1, q2)
+                    cp1, cp2, ep = slice_bezier(p0, p1, p2, last_op.partial)
+                    return ep
+                else:
+                    return last_op.data[-1]
 
     def translate(self, offset_x: float, offset_y: float):
         """
@@ -182,6 +244,11 @@ class OpsSet:
                     ctx.set_source_rgba(r, g, b, ops.data.get("opacity", 1))
                 if ops.data.get("width"):
                     ctx.set_line_width(ops.data.get("width"))
+            elif ops.type == OpsType.DOT:
+                has_path = True
+                x, y = ops.data.get("center", (0, 0))
+                ctx.move_to(x, y)
+                ctx.arc(x, y, ops.data.get("radius", 1), 0, 2 * np.pi)
             else:
                 raise NotImplementedError("Unknown operation type")
 
