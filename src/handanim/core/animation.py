@@ -120,6 +120,8 @@ def get_animated_opsset(
                 glow_dot_data = (
                     event.data.get("glowing_dot") or event.drawable.glow_dot_hint
                 )
+                if not isinstance(glow_dot_data, dict):
+                    glow_dot_data = {}
                 # we need to draw glowing dot
                 cx, cy = (
                     sketching_opssets.get_current_point()

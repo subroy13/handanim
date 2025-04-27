@@ -25,7 +25,7 @@ class Eraser(Drawable):
             Ops(
                 OpsType.SET_PEN,
                 {
-                    "color": self.stroke_style.color,
+                    "color": self.stroke_style.options.get("color", (1, 1, 1)),
                     "width": self.stroke_style.width * 10,  # make it like pastel blend
                     "opacity": self.stroke_style.opacity,
                 },

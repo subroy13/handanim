@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 import numpy as np
 from tqdm import tqdm
 import cairo
@@ -8,6 +8,7 @@ from .utils import cairo_surface_to_numpy
 from .animation import AnimationEvent, AnimationEventType, get_animated_opsset
 from .drawable import Drawable, DrawableCache
 from .draw_ops import OpsSet
+from .viewport import Viewport
 
 
 class Scene:
@@ -17,16 +18,44 @@ class Scene:
 
     def __init__(
         self,
-        width: int = 800,
-        height: int = 608,
+        width: int = 1280,
+        height: int = 720,
+        fps: int = 24,
         background_color: tuple[float, float, float] = (1, 1, 1),
+        viewport: Optional[Viewport] = None,
     ):
         self.width = width
         self.height = height
+        self.fps = fps
         self.background_color = background_color
         self.drawable_cache = DrawableCache()
         self.events: List[AnimationEvent] = []
         self.object_timelines = {}
+
+        if viewport is not None:
+            self.viewport = viewport
+        else:
+            self.viewport = Viewport(
+                world_xrange=(
+                    0,
+                    1000 * (width / height),
+                ),  # adjusted to match aspect ratio
+                world_yrange=(0, 1000),
+                screen_width=width,
+                screen_height=height,
+                margin=20,
+            )
+
+    def get_viewport_bounds(self) -> Tuple[float, float, float, float]:
+        """
+        Returns the bounds of the viewport in world coordinates
+        """
+        return (
+            self.viewport.world_xrange[0],
+            self.viewport.world_xrange[1],
+            self.viewport.world_yrange[0],
+            self.viewport.world_yrange[1],
+        )
 
     def add(
         self,
@@ -144,17 +173,16 @@ class Scene:
         self,
         output_path: str,  # must be an svg file path
         frame: float,  # the precise second index for the frame to render
-        fps: int = 20,
         max_length: Optional[float] = None,  # number of seconds to create the video for
     ):
         """
         This is a helper function used to debug video snapshots
         """
         opsset_list = self.create_event_timeline(
-            fps, max_length
+            self.fps, max_length
         )  # create the animated video
         frame_index = np.clip(
-            np.round(frame * fps), 0, len(opsset_list) - 1
+            np.round(frame * self.fps), 0, len(opsset_list) - 1
         )  # get the frame index
         frame_ops: OpsSet = opsset_list[frame_index]
         with cairo.SVGSurface(output_path, self.width, self.height) as surface:
@@ -165,15 +193,14 @@ class Scene:
                 ctx.set_source_rgb(*self.background_color)
             ctx.paint()
 
+            self.viewport.apply_to_context(ctx)
             frame_ops.render(ctx)
             surface.finish()
 
-    def render(
-        self, output_path: str, fps: int = 20, max_length: Optional[float] = None
-    ):
+    def render(self, output_path: str, max_length: Optional[float] = None):
         # calculate the events
-        opsset_list = self.create_event_timeline(fps, max_length)
-        with imageio.get_writer(output_path, fps=fps, codec="libx264") as writer:
+        opsset_list = self.create_event_timeline(self.fps, max_length)
+        with imageio.get_writer(output_path, fps=self.fps, codec="libx264") as writer:
             for frame_ops in tqdm(opsset_list, desc="Rendering video..."):
                 surface = cairo.ImageSurface(
                     cairo.FORMAT_ARGB32, self.width, self.height
@@ -185,6 +212,7 @@ class Scene:
                     ctx.set_source_rgb(*self.background_color)
                 ctx.paint()
 
+                self.viewport.apply_to_context(ctx)
                 frame_ops.render(ctx)  # applies the operations to cairo context
 
                 frame_np = cairo_surface_to_numpy(surface)

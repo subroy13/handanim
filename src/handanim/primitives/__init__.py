@@ -3,7 +3,7 @@ from .curves import Curve
 from .polygons import Polygon, Rectangle, Square, NGon
 from .ellipse import Ellipse, Circle
 from .text import Text
-from .math import Math, Math2
+from .math import Math
 from .eraser import Eraser
 
 __all__ = [
@@ -17,6 +17,5 @@ __all__ = [
     "NGon",
     "Text",
     "Math",
-    "Math2",
     "Eraser",
 ]

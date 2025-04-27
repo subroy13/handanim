@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional, Dict
+from typing import List, Tuple, Optional, Dict, Union
 from uuid import uuid4
 from .draw_ops import OpsSet
 from .styles import FillStyle, SketchStyle, StrokeStyle
@@ -16,12 +16,14 @@ class Drawable:
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
         fill_style: Optional[FillStyle] = None,
-        glow_dot_hint: Optional[Dict] = None,
+        glow_dot_hint: Optional[Union[Dict, bool]] = None,
     ):
         self.id = uuid4().hex  # generates an hexadecimal random id
         self.stroke_style = stroke_style
         self.sketch_style = sketch_style
         self.fill_style = fill_style
+        if not isinstance(glow_dot_hint, dict):
+            glow_dot_hint = {}
         self.glow_dot_hint = glow_dot_hint
 
     def __repr__(self) -> str:
@@ -33,6 +35,66 @@ class Drawable:
         draw this particular drawable object on the canvas
         """
         raise NotImplementedError(f"No method for drawing {self.__class__.__name__}")
+
+    def translate(self, offset_x: float, offset_y: float):
+        """
+        Translates the drawable object by the given offset
+        """
+        return TransformedDrawable(
+            self, "translate", {"offset_x": offset_x, "offset_y": offset_y}
+        )
+
+    def scale(self, scale_x: float, scale_y: float):
+        """
+        Scales the drawable object by the given scale factors
+        """
+        return TransformedDrawable(
+            self, "scale", {"scale_x": scale_x, "scale_y": scale_y}
+        )
+
+    def rotate(self, angle: float):
+        """
+        Rotates the drawable object by the given angle
+        """
+        return TransformedDrawable(self, "rotate", {"angle": angle})
+
+
+class TransformedDrawable(Drawable):
+    """
+    Applies a transformation to a drawable object
+    and overrides the draw method to apply the transformation
+    """
+
+    def __init__(
+        self,
+        base_drawable: Drawable,
+        transformation_function: callable,
+        transformation_args: dict = {},
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.base_drawable = base_drawable
+        self.transformation_function = transformation_function
+        self.transformation_args = transformation_args
+
+    def draw(self) -> OpsSet:
+        """
+        Overrides the draw method of the base drawable object
+        """
+        # apply the base drawable's draw method
+        opsset = self.base_drawable.draw()
+        if not hasattr(opsset, self.transformation_function):
+            raise ValueError(
+                f"Invalid transformation function {self.transformation_function}"
+            )
+        elif not callable(getattr(opsset, self.transformation_function)):
+            raise ValueError(
+                f"Transformation function {self.transformation_function} is not callable"
+            )
+        else:
+            return getattr(opsset, self.transformation_function)(
+                **self.transformation_args
+            )
 
 
 class DrawableFill:

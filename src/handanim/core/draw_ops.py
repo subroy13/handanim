@@ -151,6 +151,7 @@ class OpsSet:
     def translate(self, offset_x: float, offset_y: float):
         """
         Translates every operation of the opsset by the (offset_x, offset_y) amount
+        in relative to its center of gravity
         """
         new_ops = []
         for ops in self.opsset:
@@ -165,6 +166,7 @@ class OpsSet:
     def scale(self, scale_x: float, scale_y: Optional[float] = None):
         """
         Scales every operation of the opsset by the (scale_x, scale_y) amount
+        in relative to its center of gravity
         """
         if scale_y is None:
             scale_y = scale_x
@@ -184,6 +186,35 @@ class OpsSet:
                     )
                     for x, y in ops.data
                 ]
+                new_ops.append(Ops(ops.type, new_data, ops.partial))
+            else:
+                new_ops.append(ops)  # keep same ops for set pen type operations
+        self.opsset = new_ops  # update the ops list
+
+    def rotate(self, angle: float):
+        """
+        Rotates every operation of the opsset by the angle amount of degrees
+        in relative to its center of gravity
+        """
+        # first translate so that center of gravity is at (0, 0)
+        center_of_gravity = self.get_center_of_gravity()
+        rotation_values = [np.cos(np.deg2rad(angle)), np.sin(np.deg2rad(angle))]
+
+        new_ops = []
+        for ops in self.opsset:
+            if isinstance(ops.data, list):
+                # ops.data is list means, everything is a point
+                new_data = [
+                    (
+                        center_of_gravity[0]
+                        + rotation_values[0] * (x - center_of_gravity[0])
+                        - rotation_values[1] * (y - center_of_gravity[1]),
+                        center_of_gravity[1]
+                        + rotation_values[1] * (x - center_of_gravity[0])
+                        + rotation_values[0] * (y - center_of_gravity[1]),
+                    )
+                    for x, y in ops.data
+                ]  # performs multiplication of rotation matrix explcitly
                 new_ops.append(Ops(ops.type, new_data, ops.partial))
             else:
                 new_ops.append(ops)  # keep same ops for set pen type operations
