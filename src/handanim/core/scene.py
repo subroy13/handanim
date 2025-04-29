@@ -172,7 +172,7 @@ class Scene:
     def render_snapshot(
         self,
         output_path: str,  # must be an svg file path
-        frame: float,  # the precise second index for the frame to render
+        frame_in_seconds: float,  # the precise second index for the frame to render
         max_length: Optional[float] = None,  # number of seconds to create the video for
     ):
         """
@@ -181,8 +181,8 @@ class Scene:
         opsset_list = self.create_event_timeline(
             self.fps, max_length
         )  # create the animated video
-        frame_index = np.clip(
-            np.round(frame * self.fps), 0, len(opsset_list) - 1
+        frame_index = int(
+            np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1)
         )  # get the frame index
         frame_ops: OpsSet = opsset_list[frame_index]
         with cairo.SVGSurface(output_path, self.width, self.height) as surface:
