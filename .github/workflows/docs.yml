@@ -18,6 +18,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install cairo dependencies
+        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev
+
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
 
