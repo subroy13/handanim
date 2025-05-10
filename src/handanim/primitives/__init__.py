@@ -4,6 +4,7 @@ from .polygons import Polygon, Rectangle, Square, NGon
 from .ellipse import Ellipse, Circle
 from .text import Text
 from .math import Math
+from .eraser import Eraser
 
 __all__ = [
     "Line",
@@ -16,4 +17,5 @@ __all__ = [
     "NGon",
     "Text",
     "Math",
+    "Eraser",
 ]

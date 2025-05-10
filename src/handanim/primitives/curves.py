@@ -6,6 +6,16 @@ from ..core.drawable import Drawable
 
 
 class Curve(Drawable):
+    """
+    A class representing a curve that can be drawn with a sketchy, hand-drawn style.
+
+    Allows creating curves with multiple points, supporting various drawing techniques
+    including single line, quadratic, and more complex multi-point curves with
+    randomization to simulate hand-drawn appearance.
+
+    Attributes:
+        points (List[np.ndarray]): List of points defining the curve's shape.
+    """
 
     def __init__(
         self,

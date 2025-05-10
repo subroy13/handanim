@@ -1,11 +1,25 @@
 from typing import List
 import numpy as np
 
+from ..core.styles import StrokePressure
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from ..core.drawable import Drawable
+from ..stylings.strokes import apply_stroke_pressure
 
 
 class Line(Drawable):
+    """
+    A drawable line primitive that generates hand-drawn style lines with randomized jitter and bowing effects.
+
+    Supports customizable stroke and sketch styles, with options for line curvature, roughness,
+    and multiple line passes to create a hand-drawn appearance. Allows for optional stroke pressure
+    variations and provides methods to draw single or overlapping lines.
+
+    Attributes:
+        start (np.ndarray): Starting point coordinates of the line
+        end (np.ndarray): Ending point coordinates of the line
+    """
+
     def __init__(
         self, start: tuple[float, float], end: tuple[float, float], *args, **kwargs
     ):
@@ -85,10 +99,29 @@ class Line(Drawable):
         # draw the sketchy lines
         opsset = self.draw_single_line(opsset, move=True, overlay=False)
         opsset = self.draw_single_line(opsset, move=True, overlay=True)
+
+        # apply stroke pressure if available
+        if self.stroke_style.stroke_pressure != StrokePressure.CONSTANT:
+            opsset = apply_stroke_pressure(opsset, self.stroke_style.stroke_pressure)
+
         return opsset
 
 
 class LinearPath(Drawable):
+    """
+    A drawable linear path that connects a series of points, with optional closing of the path.
+
+    Attributes:
+        points (List[tuple[float, float]]): A list of (x, y) coordinate points defining the path.
+        close (bool, optional): Whether to connect the last point back to the first point. Defaults to False.
+
+    Raises:
+        ValueError: If fewer than two points are provided.
+
+    The path is drawn by creating Line objects between consecutive points,
+    with optional path closure if specified.
+    """
+
     def __init__(
         self,
         points: List[tuple[float, float]],

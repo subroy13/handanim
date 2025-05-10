@@ -1,13 +1,10 @@
-from typing import Optional, List
 from enum import Enum
+from typing import List, Tuple
 import numpy as np
-import cairo
-import imageio.v2 as imageio
-from tqdm import tqdm
-
-from .renderer import cairo_surface_to_numpy, render_opsset
 from .drawable import Drawable
-from .draw_ops import OpsSet, OpsType, Ops
+from .draw_ops import OpsType, OpsSet, Ops
+from .styles import FillStyle
+from ..primitives.ellipse import GlowDot
 
 
 class AnimationEventType(Enum):
@@ -16,13 +13,36 @@ class AnimationEventType(Enum):
     FADE_OUT = "fade_out"  # disappear into opacity 0
     ZOOM_IN = "zoom_in"  # appear from point to object
     ZOOM_OUT = "zoom_out"  # appear from object into point
+    TRANSLATE_FROM_POINT = "translate_from_point"  # translate from point to object
+    TRANSLATE_TO_POINT = "translate_to_point"  # translate from object to point
 
 
 class AnimationEvent:
     """
-    Represents an animation event
-    happening on the scene
+    Represents an animation event occurring on a scene with configurable properties.
+
+    Attributes:
+        CREATION_EVENT_TYPES (List[AnimationEventType]): Animation types that signify object creation.
+        DESTROY_EVENT_TYPES (List[AnimationEventType]): Animation types that signify object destruction.
+
+    Args:
+        drawable (Drawable): The drawable object for which the animation is applied.
+        type (AnimationEventType): The type of animation to be performed.
+        start_time (float, optional): The starting time point of the animation in seconds. Defaults to 0.
+        duration (float, optional): The duration of the animation in seconds. Defaults to 0.
+        easing_fun (callable, optional): An optional easing function to modify animation progression. Defaults to None.
+        data (dict, optional): Additional configuration data specific to the animation type. Defaults to an empty dict.
     """
+
+    CREATION_EVENT_TYPES = [
+        AnimationEventType.SKETCH,
+        AnimationEventType.FADE_IN,
+        AnimationEventType.ZOOM_IN,
+    ]
+    DESTROY_EVENT_TYPES = [
+        AnimationEventType.FADE_OUT,
+        AnimationEventType.ZOOM_OUT,
+    ]
 
     def __init__(
         self,
@@ -31,6 +51,7 @@ class AnimationEvent:
         start_time: float = 0,  # the starting time point  (in seconds)
         duration: float = 0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
+        data={},  # additional data for the animation, depending on the animation type
     ):
         self.drawable = drawable
         self.type = type
@@ -38,6 +59,7 @@ class AnimationEvent:
         self.duration = duration
         self.end_time = start_time + duration
         self.easing_fun = easing_fun
+        self.data = data
 
     def __repr__(self) -> str:
         return (
@@ -46,256 +68,151 @@ class AnimationEvent:
         )
 
 
-class Scene:
+def get_sketching_opsset(
+    opsset: OpsSet,
+    progress: float,
+):
     """
-    Scene is a single snapshot of a
-    animation video using the primitives
+    Calculate a partial OpsSet representing the sketching progress of an operation set.
+
+    Args:
+        opsset (OpsSet): The original set of operations to be partially sketched.
+        progress (float): The progress of sketching, ranging from 0.0 to 1.0.
+
+    Returns:
+        OpsSet: A new OpsSet containing the operations up to the specified progress point,
+                with the last operation potentially being partially completed.
     """
-
-    CREATION_EVENT_TYPES = [
-        AnimationEventType.SKETCH,
-        AnimationEventType.FADE_IN,
-        AnimationEventType.ZOOM_IN,
-    ]
-    DESTROY_EVENT_TYPES = [AnimationEventType.FADE_OUT, AnimationEventType.ZOOM_OUT]
-    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO]
-
-    def __init__(
-        self,
-        width: int = 800,
-        height: int = 600,
-        background_color: tuple[float, float, float] = (1, 1, 1),
-    ):
-        self.width = width
-        self.height = height
-        self.background_color = background_color
-        self.objects = {}
-        self.objects_metadata = {}
-        self.events = []
-
-    def add(
-        self,
-        event: Optional[AnimationEvent] = None,
-        drawable: Optional[Drawable] = None,
-    ):
-        if event is None and drawable is None:
-            raise ValueError("Either event or drawable must be present")
-        elif event is None:
-            event = AnimationEvent(
-                drawable, type=AnimationEventType.SKETCH
-            )  # create the basic event
-        self.events.append(event)
-        object_id = event.drawable.id  # the id of the object to draw
-        if object_id not in self.objects:
-            self.objects[object_id] = event.drawable  # add the object to the scene
-            self.objects_metadata[object_id] = {
-                "active_timeline": [],
-                "opsset": event.drawable.draw(),
-            }  # initialize
-
-        # if creation type event
-        if event.type in self.CREATION_EVENT_TYPES:
-            self.objects_metadata[object_id]["active_timeline"].append(event.start_time)
-        elif event.type in self.DESTROY_EVENT_TYPES:
-            self.objects_metadata[object_id]["active_timeline"].append(event.end_time)
-
-    def get_active_objects(self, t: float):
-        """
-        At a timepoint t, return the list of object_ids
-        that needs to be active on the scene
-        """
-        active_list: List[str] = []
-        for object_id in self.objects_metadata:
-            active = False  # everything starts with blank screen
-            for time in self.objects_metadata[object_id]["active_timeline"]:
-                if t >= time:
-                    active = not active  # switch status
-                else:
-                    # time has increased beyond t
-                    break
-            if active:
-                active_list.append(object_id)
-        return active_list
-
-    def get_animated_opset(
-        self, opsset: OpsSet, animation_type: AnimationEventType, progress: float = 1.0
-    ):
-        """
-        Get the progress proportion of the OpsSets calculated for the
-        specific type of animation
-        """
-        if progress <= 0:
-            return OpsSet(initial_set=[])
-        progress = min(progress, 1.0)
-        base_ops = opsset.opsset
-
-        if animation_type == AnimationEventType.SKETCH:
-            n_count = len(
-                [op for op in base_ops if op.type not in self.SETUP_OPS_TYPES]
-            )  # counters are based on the non set-pen operations
-            n_active = int(progress * n_count)
-            counter = 0
-            last_op = None
-            new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
-            for op in base_ops:
-                if op.type not in self.SETUP_OPS_TYPES and counter < n_active:
-                    new_opsset.add(op)
-                    counter += 1
-                elif counter < n_active:
-                    # set pen operations keep adding, but don't increase counter
-                    new_opsset.add(op)
-                else:
-                    last_op = op  # the last operation for which it stopped
-                    break
-            if last_op is not None and (progress * n_count - n_active) > 0:
-                # need to calculate it partially
-                new_opsset.add(
-                    Ops(
-                        type=last_op.type,
-                        data=last_op.data,
-                        partial=progress * n_count - n_active,
-                    )
-                )
-            return new_opsset
-        elif animation_type in {
-            AnimationEventType.FADE_IN,
-            AnimationEventType.FADE_OUT,
-        }:
-            new_opsset = OpsSet(initial_set=[])
-            mod_opacity = (
-                progress
-                if animation_type == AnimationEventType.FADE_IN
-                else 1 - progress
+    base_ops = opsset.opsset
+    n_count = len(
+        [op for op in base_ops if op.type not in Ops.SETUP_OPS_TYPES]
+    )  # counters are based on the non set-pen operations
+    n_active = int(progress * n_count)
+    counter = 0
+    last_op = None
+    new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
+    for op in base_ops:
+        if op.type not in Ops.SETUP_OPS_TYPES and counter < n_active:
+            new_opsset.add(op)
+            counter += 1
+        elif counter < n_active:
+            # set pen operations keep adding, but don't increase counter
+            new_opsset.add(op)
+        else:
+            last_op = op  # the last operation for which it stopped
+            break
+    if last_op is not None and (progress * n_count - n_active) > 0:
+        # need to calculate it partially
+        new_opsset.add(
+            Ops(
+                type=last_op.type,
+                data=last_op.data,
+                partial=progress * n_count - n_active,
             )
-            for op in base_ops:
+        )
+    return new_opsset
+
+
+def get_animated_opsset(
+    opsset: OpsSet, animation_events: List[Tuple[AnimationEvent, float]]
+):
+    """
+    Animate an OpsSet based on a list of animation events.
+
+    Applies various animation transformations like sketching, fading, zooming, and translating
+    to the input OpsSet according to the specified animation events and their progress.
+
+    Key transformations include:
+    - Sketching operations with optional glowing dot
+    - Opacity changes (fade in/out)
+    - Scaling (zoom in/out)
+    - Translation from/to specific points
+
+
+    Args:
+        opsset (OpsSet): The original set of operations to be animated.
+        animation_events (List[Tuple[AnimationEvent, float]]): A list of animation events
+            with their corresponding progress values (0.0 to 1.0).
+
+    Returns:
+        OpsSet: A new OpsSet with applied animation transformations.
+    """
+
+    new_opsset = OpsSet(initial_set=[])  # initialize a blank opsset
+    # apply sketching operations first if present
+    sketching_events = [
+        event
+        for event in animation_events
+        if event[0].type == AnimationEventType.SKETCH
+    ]
+    for event, progress in sketching_events:
+        if progress > 0:
+            sketching_opssets = get_sketching_opsset(opsset, progress)
+            new_opsset.extend(sketching_opssets)
+            # now we can optionally add a glowing dot for the sketching operation
+            if event.data.get("glowing_dot") or event.drawable.glow_dot_hint:
+                glow_dot_data = (
+                    event.data.get("glowing_dot") or event.drawable.glow_dot_hint
+                )
+                if not isinstance(glow_dot_data, dict):
+                    glow_dot_data = {}
+                # we need to draw glowing dot
+                cx, cy = (
+                    sketching_opssets.get_current_point()
+                )  # get the current point based on sketching
+
+                breathing_factor = 1 + 0.05 * np.sin(
+                    2 * np.pi * progress * glow_dot_data.get("frequency", 5)
+                )  # have a subtle breathing effect to increase or decrease glow
+                dot = GlowDot(
+                    center=(cx, cy),
+                    radius=glow_dot_data.get("radius", 5) * breathing_factor,
+                    fill_style=FillStyle(
+                        color=glow_dot_data.get("color", (0.5, 0.5, 0.5))
+                    ),
+                )
+                new_opsset.extend(dot.draw())  # add this dot at the end of current path
+
+    if len(sketching_events) == 0:
+        # no sketching operations, so just add the base opset
+        new_opsset.extend(opsset)
+
+    # add more event operations
+    for event, progress in animation_events:
+        if event.type in {AnimationEventType.FADE_IN, AnimationEventType.FADE_OUT}:
+            mod_opacity = (
+                progress if event.type == AnimationEventType.FADE_IN else 1 - progress
+            )
+            for i, op in enumerate(new_opsset.opsset):
                 if op.type == OpsType.SET_PEN:
                     modifed_data = {
                         k: mod_opacity if k == "opacity" else v
                         for k, v in op.data.items()
                     }
-                    new_opsset.add(
-                        Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial)
+                    new_opsset.opsset[i] = Ops(
+                        type=OpsType.SET_PEN, data=modifed_data, partial=op.partial
                     )
-                else:
-                    new_opsset.add(op)  # add as it is
-            return new_opsset
-        elif animation_type in {
-            AnimationEventType.ZOOM_IN,
-            AnimationEventType.ZOOM_OUT,
+        elif event.type in {AnimationEventType.ZOOM_IN, AnimationEventType.ZOOM_OUT}:
+            mod_scale = (
+                progress if event.type == AnimationEventType.ZOOM_IN else 1 - progress
+            )
+            new_opsset.scale(mod_scale)  # perform scaling
+        elif event.type in {
+            AnimationEventType.TRANSLATE_FROM_POINT,
+            AnimationEventType.TRANSLATE_TO_POINT,
         }:
-            # TODO: handle this case by sending proper set_pen event
-            return OpsSet(initial_set=[])
-        else:
-            raise NotImplementedError("Other animation methods are not yet implemented")
+            # calculate the center of gravity for the opsset
+            gravity_x, gravity_y = opsset.get_center_of_gravity()
+            point_x, point_y = event.data.get("point", (0, 0))
+            coef = (
+                progress
+                if event.type == AnimationEventType.TRANSLATE_FROM_POINT
+                else 1 - progress
+            )
+            cur_x, cur_y = (
+                coef * point_x + (1 - coef) * gravity_x,
+                coef * point_y + (1 - coef) * gravity_y,
+            )
+            new_opsset.translate(cur_x - gravity_x, cur_y - gravity_y)
 
-    def create_event_timeline(
-        self,
-        fps: int = 20,
-        max_length: Optional[float] = None,  # number of seconds to create the video for
-    ) -> List[OpsSet]:
-        events: List[AnimationEvent] = self.events
-        events.sort(key=lambda x: x.start_time)  # sort events in place
-        key_frames = [event.start_time for event in events] + [
-            event.end_time for event in events
-        ]
-        key_frames.sort()
-        key_frames = np.round(
-            np.array(key_frames) * fps
-        ).tolist()  # this converts seconds to frames
-
-        scene_opsset_list: List[OpsSet] = []
-        current_active_objects = []
-        if max_length is None:
-            max_length = np.round(key_frames[-1])
-        else:
-            max_length = np.round(max_length * fps)  # else convert to frames
-        for t in tqdm(range(0, max_length), desc="Calculating animation frames..."):
-            frame_opsset = OpsSet(
-                initial_set=[]
-            )  # initialize with blank opsset, will add more
-
-            # for each frame need to compute the operation sets
-            if t in key_frames:
-                # there is some event change
-                current_active_objects = self.get_active_objects(t)
-
-            # for these active objects, calculate partial opssets to draw
-            for object_id in current_active_objects:
-                object_opsset: OpsSet = self.objects_metadata[object_id]["opsset"]
-                active_event = None
-                for event in events:
-                    # find the relevant event
-                    if (
-                        event.drawable.id == object_id
-                        and event.start_time <= t / fps
-                        and t / fps <= event.end_time
-                    ):
-                        active_event = event
-                        break
-                if active_event is None:
-                    # there is no event at this time, but object is active
-                    # object is completely visible, so draw fully
-                    frame_opsset.extend(object_opsset)
-                else:
-                    # there was an active event
-                    progress = np.clip(
-                        (t / fps - active_event.start_time) / active_event.duration,
-                        0,
-                        1,
-                    )
-                    partial_opsset = self.get_animated_opset(
-                        object_opsset, active_event.type, progress
-                    )
-                    frame_opsset.extend(partial_opsset)
-            scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
-        return scene_opsset_list
-
-    def render_snapshot(
-        self,
-        output_path: str,  # must be an svg file path
-        frame: float,  # the precise second index for the frame to render
-        fps: int = 20,
-        max_length: Optional[float] = None,  # number of seconds to create the video for
-    ):
-        """
-        This is a helper function used to debug video snapshots
-        """
-        opsset_list = self.create_event_timeline(
-            fps, max_length
-        )  # create the animated video
-        frame_index = np.clip(
-            np.round(frame * fps), 0, len(opsset_list) - 1
-        )  # get the frame index
-        frame_ops = opsset_list[frame_index]
-        with cairo.SVGSurface(output_path, self.width, self.height) as surface:
-            ctx = cairo.Context(surface)  # create cairo context
-
-            # set the background color
-            if self.background_color is not None:
-                ctx.set_source_rgb(*self.background_color)
-            ctx.paint()
-
-            render_opsset(ctx, frame_ops)
-            surface.finish()
-
-    def render(
-        self, output_path: str, fps: int = 20, max_length: Optional[float] = None
-    ):
-        # calculate the events
-        opsset_list = self.create_event_timeline(fps, max_length)
-        with imageio.get_writer(output_path, fps=fps, codec="libx264") as writer:
-            for frame_ops in tqdm(opsset_list, desc="Rendering video..."):
-                surface = cairo.ImageSurface(
-                    cairo.FORMAT_ARGB32, self.width, self.height
-                )
-                ctx = cairo.Context(surface)  # create cairo context
-
-                # optional background
-                if self.background_color is not None:
-                    ctx.set_source_rgb(*self.background_color)
-                ctx.paint()
-
-                render_opsset(ctx, frame_ops)  # applies the operations to cairo context
-
-                frame_np = cairo_surface_to_numpy(surface)
-                writer.append_data(frame_np)
+    return new_opsset

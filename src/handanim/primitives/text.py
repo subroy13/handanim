@@ -50,6 +50,24 @@ class CustomPen(BasePen):
 
 
 class Text(Drawable):
+    """
+    A Drawable text primitive that renders text using font glyphs with customizable styling.
+
+    Supports rendering text with random font selection, scaling, and sketch-style variations.
+    Converts text characters into drawing operations (OpsSet) that can be rendered.
+
+    Attributes:
+        text (str): The text to be rendered
+        position (Tuple[float, float]): Starting position for text rendering
+        font_size (int, optional): Size of the rendered text. Defaults to 12.
+        scale_factor (float, optional): Additional scaling factor. Defaults to 1.0.
+
+    Methods:
+        get_random_font_choice(): Selects a font for text rendering
+        get_glyph_strokes(char): Converts a character into drawing operations
+        get_glyph_space(): Calculates character and space widths
+        draw(): Generates the complete set of drawing operations for the text
+    """
 
     def __init__(
         self,
