@@ -1,0 +1,2028 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="handanim.primitives package" href="handanim.primitives.html" /><link rel="prev" title="handanim package" href="handanim.html" />
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>handanim.core package - handanim documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">handanim  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">handanim  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">handanim</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of handanim</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="handanim.html">handanim package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of handanim package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">handanim.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html">handanim.primitives package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html">handanim.stylings package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/handanim.core.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="handanim-core-package">
+<h1>handanim.core package<a class="headerlink" href="#handanim-core-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-handanim.core.animation">
+<span id="handanim-core-animation-module"></span><h2>handanim.core.animation module<a class="headerlink" href="#module-handanim.core.animation" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEvent">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.animation.</span></span><span class="sig-name descname"><span class="pre">AnimationEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.animation.AnimationEventType" title="handanim.core.animation.AnimationEventType"><span class="pre">AnimationEventType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.animation.AnimationEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an animation event occurring on a scene with configurable properties.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEvent.CREATION_EVENT_TYPES">
+<span class="sig-name descname"><span class="pre">CREATION_EVENT_TYPES</span></span><a class="headerlink" href="#handanim.core.animation.AnimationEvent.CREATION_EVENT_TYPES" title="Link to this definition">¶</a></dt>
+<dd><p>Animation types that signify object creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#handanim.core.animation.AnimationEventType" title="handanim.core.animation.AnimationEventType">AnimationEventType</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEvent.DESTROY_EVENT_TYPES">
+<span class="sig-name descname"><span class="pre">DESTROY_EVENT_TYPES</span></span><a class="headerlink" href="#handanim.core.animation.AnimationEvent.DESTROY_EVENT_TYPES" title="Link to this definition">¶</a></dt>
+<dd><p>Animation types that signify object destruction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#handanim.core.animation.AnimationEventType" title="handanim.core.animation.AnimationEventType">AnimationEventType</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drawable</strong> (<a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><em>Drawable</em></a>) – The drawable object for which the animation is applied.</p></li>
+<li><p><strong>type</strong> (<a class="reference internal" href="#handanim.core.animation.AnimationEventType" title="handanim.core.animation.AnimationEventType"><em>AnimationEventType</em></a>) – The type of animation to be performed.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em><em>, </em><em>optional</em>) – The starting time point of the animation in seconds. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<em>float</em><em>, </em><em>optional</em>) – The duration of the animation in seconds. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify animation progression. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional configuration data specific to the animation type. Defaults to an empty dict.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">CREATION_EVENT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AnimationEventType.SKETCH,</span> <span class="pre">AnimationEventType.FADE_IN,</span> <span class="pre">AnimationEventType.ZOOM_IN]</span></em><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">DESTROY_EVENT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AnimationEventType.FADE_OUT,</span> <span class="pre">AnimationEventType.ZOOM_OUT]</span></em><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.animation.</span></span><span class="sig-name descname"><span class="pre">AnimationEventType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.animation.AnimationEventType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.FADE_IN">
+<span class="sig-name descname"><span class="pre">FADE_IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fade_in'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.FADE_IN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.FADE_OUT">
+<span class="sig-name descname"><span class="pre">FADE_OUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fade_out'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.FADE_OUT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.SKETCH">
+<span class="sig-name descname"><span class="pre">SKETCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sketch'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.SKETCH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.TRANSLATE_FROM_POINT">
+<span class="sig-name descname"><span class="pre">TRANSLATE_FROM_POINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'translate_from_point'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.TRANSLATE_FROM_POINT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.TRANSLATE_TO_POINT">
+<span class="sig-name descname"><span class="pre">TRANSLATE_TO_POINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'translate_to_point'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.TRANSLATE_TO_POINT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.ZOOM_IN">
+<span class="sig-name descname"><span class="pre">ZOOM_IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'zoom_in'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.ZOOM_IN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.animation.AnimationEventType.ZOOM_OUT">
+<span class="sig-name descname"><span class="pre">ZOOM_OUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'zoom_out'</span></em><a class="headerlink" href="#handanim.core.animation.AnimationEventType.ZOOM_OUT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.core.animation.get_animated_opsset">
+<span class="sig-prename descclassname"><span class="pre">handanim.core.animation.</span></span><span class="sig-name descname"><span class="pre">get_animated_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><span class="pre">AnimationEvent</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.animation.get_animated_opsset" title="Link to this definition">¶</a></dt>
+<dd><p>Animate an OpsSet based on a list of animation events.</p>
+<p>Applies various animation transformations like sketching, fading, zooming, and translating
+to the input OpsSet according to the specified animation events and their progress.</p>
+<p>Key transformations include:
+- Sketching operations with optional glowing dot
+- Opacity changes (fade in/out)
+- Scaling (zoom in/out)
+- Translation from/to specific points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opsset</strong> (<a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>) – The original set of operations to be animated.</p></li>
+<li><p><strong>animation_events</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><a class="reference internal" href="#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><em>AnimationEvent</em></a><em>, </em><em>float</em><em>]</em><em>]</em>) – A list of animation events
+with their corresponding progress values (0.0 to 1.0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new OpsSet with applied animation transformations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.core.animation.get_sketching_opsset">
+<span class="sig-prename descclassname"><span class="pre">handanim.core.animation.</span></span><span class="sig-name descname"><span class="pre">get_sketching_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.animation.get_sketching_opsset" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate a partial OpsSet representing the sketching progress of an operation set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opsset</strong> (<a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>) – The original set of operations to be partially sketched.</p></li>
+<li><p><strong>progress</strong> (<em>float</em>) – The progress of sketching, ranging from 0.0 to 1.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A new OpsSet containing the operations up to the specified progress point,</dt><dd><p>with the last operation potentially being partially completed.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-handanim.core.draw_ops">
+<span id="handanim-core-draw-ops-module"></span><h2>handanim.core.draw_ops module<a class="headerlink" href="#module-handanim.core.draw_ops" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.Ops">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.draw_ops.</span></span><span class="sig-name descname"><span class="pre">Ops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.draw_ops.OpsType" title="handanim.core.draw_ops.OpsType"><span class="pre">OpsType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.Ops" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a drawing operation to be performed in the animation system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.Ops.SETUP_OPS_TYPES">
+<span class="sig-name descname"><span class="pre">SETUP_OPS_TYPES</span></span><a class="headerlink" href="#handanim.core.draw_ops.Ops.SETUP_OPS_TYPES" title="Link to this definition">¶</a></dt>
+<dd><p>Types of operations considered setup operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#handanim.core.draw_ops.OpsType" title="handanim.core.draw_ops.OpsType">OpsType</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.Ops.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#handanim.core.draw_ops.Ops.type" title="Link to this definition">¶</a></dt>
+<dd><p>The type of drawing operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.draw_ops.OpsType" title="handanim.core.draw_ops.OpsType">OpsType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.Ops.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#handanim.core.draw_ops.Ops.data" title="Link to this definition">¶</a></dt>
+<dd><p>The data used to perform the drawing operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.Ops.partial">
+<span class="sig-name descname"><span class="pre">partial</span></span><a class="headerlink" href="#handanim.core.draw_ops.Ops.partial" title="Link to this definition">¶</a></dt>
+<dd><p>Fraction of the operation to be performed, defaults to 1.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">SETUP_OPS_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[OpsType.SET_PEN,</span> <span class="pre">OpsType.MOVE_TO]</span></em><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.draw_ops.</span></span><span class="sig-name descname"><span class="pre">OpsSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#handanim.core.draw_ops.Ops" title="handanim.core.draw_ops.Ops"><span class="pre">Ops</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a collection of drawing operations with methods for manipulation and rendering.</p>
+<p>Provides functionality to:
+- Add, extend, and manage a list of drawing operations
+- Calculate bounding box and center of gravity
+- Perform transformations like translation, scaling, and rotation
+- Render operations to a Cairo context</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.opsset">
+<span class="sig-name descname"><span class="pre">opsset</span></span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.opsset" title="Link to this definition">¶</a></dt>
+<dd><p>A list of drawing operations to be performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#handanim.core.draw_ops.Ops" title="handanim.core.draw_ops.Ops">Ops</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.draw_ops.Ops" title="handanim.core.draw_ops.Ops"><span class="pre">Ops</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.add" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.extend" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.get_bbox">
+<span class="sig-name descname"><span class="pre">get_bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.get_bbox" title="Link to this definition">¶</a></dt>
+<dd><p>Get the bounding box for the opset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.get_center_of_gravity">
+<span class="sig-name descname"><span class="pre">get_center_of_gravity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.get_center_of_gravity" title="Link to this definition">¶</a></dt>
+<dd><p>Get an approximate center of gravity of the opset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.get_current_point">
+<span class="sig-name descname"><span class="pre">get_current_point</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.get_current_point" title="Link to this definition">¶</a></dt>
+<dd><p>Given a opsset, get the current point of the drawing from last operation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.get_last_ops">
+<span class="sig-name descname"><span class="pre">get_last_ops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#handanim.core.draw_ops.Ops" title="handanim.core.draw_ops.Ops"><span class="pre">Ops</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.get_last_ops" title="Link to this definition">¶</a></dt>
+<dd><p>Get valid last and second last ops</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'stroke'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.render" title="Link to this definition">¶</a></dt>
+<dd><p>Renders the opset on the cairo context</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.rotate" title="Link to this definition">¶</a></dt>
+<dd><p>Rotates every operation of the opsset by the angle amount of degrees
+in relative to its center of gravity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.scale" title="Link to this definition">¶</a></dt>
+<dd><p>Scales every operation of the opsset by the (scale_x, scale_y) amount
+in relative to its center of gravity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsSet.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsSet.translate" title="Link to this definition">¶</a></dt>
+<dd><p>Translates every operation of the opsset by the (offset_x, offset_y) amount
+in relative to its center of gravity</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.draw_ops.</span></span><span class="sig-name descname"><span class="pre">OpsType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.draw_ops.OpsType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.CLOSE_PATH">
+<span class="sig-name descname"><span class="pre">CLOSE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'close_path'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.CLOSE_PATH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.CURVE_TO">
+<span class="sig-name descname"><span class="pre">CURVE_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'curve_to'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.CURVE_TO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.DOT">
+<span class="sig-name descname"><span class="pre">DOT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'dot'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.DOT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.LINE_TO">
+<span class="sig-name descname"><span class="pre">LINE_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'line_to'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.LINE_TO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.MOVE_TO">
+<span class="sig-name descname"><span class="pre">MOVE_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'move_to'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.MOVE_TO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.QUAD_CURVE_TO">
+<span class="sig-name descname"><span class="pre">QUAD_CURVE_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'quad_curve_to'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.QUAD_CURVE_TO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.draw_ops.OpsType.SET_PEN">
+<span class="sig-name descname"><span class="pre">SET_PEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'set_pen'</span></em><a class="headerlink" href="#handanim.core.draw_ops.OpsType.SET_PEN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.core.drawable">
+<span id="handanim-core-drawable-module"></span><h2>handanim.core.drawable module<a class="headerlink" href="#module-handanim.core.drawable" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.drawable.</span></span><span class="sig-name descname"><span class="pre">Drawable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stroke_style:</span> <span class="pre">~handanim.core.styles.StrokeStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.StrokeStyle</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sketch_style:</span> <span class="pre">~handanim.core.styles.SketchStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.SketchStyle</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_style:</span> <span class="pre">~handanim.core.styles.FillStyle</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glow_dot_hint:</span> <span class="pre">~typing.Dict</span> <span class="pre">|</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.Drawable" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A base class representing a drawable object with drawing, transformation, and styling capabilities.</p>
+<p>This class provides a standard interface for creating drawable objects that can be drawn on a canvas.
+Subclasses must implement the draw() method to define specific drawing operations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#handanim.core.drawable.Drawable.id" title="Link to this definition">¶</a></dt>
+<dd><p>A unique hexadecimal identifier for the drawable object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.stroke_style">
+<span class="sig-name descname"><span class="pre">stroke_style</span></span><a class="headerlink" href="#handanim.core.drawable.Drawable.stroke_style" title="Link to this definition">¶</a></dt>
+<dd><p>Defines the stroke styling for the drawable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.styles.StrokeStyle" title="handanim.core.styles.StrokeStyle">StrokeStyle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.sketch_style">
+<span class="sig-name descname"><span class="pre">sketch_style</span></span><a class="headerlink" href="#handanim.core.drawable.Drawable.sketch_style" title="Link to this definition">¶</a></dt>
+<dd><p>Defines the sketch styling for the drawable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.styles.SketchStyle" title="handanim.core.styles.SketchStyle">SketchStyle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.fill_style">
+<span class="sig-name descname"><span class="pre">fill_style</span></span><a class="headerlink" href="#handanim.core.drawable.Drawable.fill_style" title="Link to this definition">¶</a></dt>
+<dd><p>Optional fill style for the drawable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#handanim.core.styles.FillStyle" title="handanim.core.styles.FillStyle">FillStyle</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.glow_dot_hint">
+<span class="sig-name descname"><span class="pre">glow_dot_hint</span></span><a class="headerlink" href="#handanim.core.drawable.Drawable.glow_dot_hint" title="Link to this definition">¶</a></dt>
+<dd><p>Optional configuration for glow dot rendering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.Drawable.draw" title="Link to this definition">¶</a></dt>
+<dd><p>Abstract method to generate drawing operations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.Drawable.translate" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a translated version of the drawable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.Drawable.scale" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a scaled version of the drawable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.Drawable.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.Drawable.rotate" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a rotated version of the drawable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dd><p>Provides the list of operations to be performed to
+draw this particular drawable object on the canvas</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<dd><p>Rotates the drawable object by the given angle</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<dd><p>Scales the drawable object by the given scale factors</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<dd><p>Translates the drawable object by the given offset</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableCache">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.drawable.</span></span><span class="sig-name descname"><span class="pre">DrawableCache</span></span><a class="headerlink" href="#handanim.core.drawable.DrawableCache" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that implements a cache for the opssets
+related to various drawable objects</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableCache.calculate_bounding_box">
+<span class="sig-name descname"><span class="pre">calculate_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.DrawableCache.calculate_bounding_box" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the bounding box for a list of drawables
+stored in the cache</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableCache.get_drawable_opsset">
+<span class="sig-name descname"><span class="pre">get_drawable_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawable_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.core.drawable.DrawableCache.get_drawable_opsset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableCache.has_drawable_oppset">
+<span class="sig-name descname"><span class="pre">has_drawable_oppset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawable_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#handanim.core.drawable.DrawableCache.has_drawable_oppset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableCache.set_drawable_opsset">
+<span class="sig-name descname"><span class="pre">set_drawable_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.DrawableCache.set_drawable_opsset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableFill">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.drawable.</span></span><span class="sig-name descname"><span class="pre">DrawableFill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bound_box_list:</span> <span class="pre">~typing.List[~typing.List[~typing.Tuple[float,</span> <span class="pre">float]]],</span> <span class="pre">fill_style:</span> <span class="pre">~handanim.core.styles.FillStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.FillStyle</span> <span class="pre">object&gt;,</span> <span class="pre">sketch_style:</span> <span class="pre">~handanim.core.styles.SketchStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.SketchStyle</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.DrawableFill" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the different fill styles that can be applied to a drawable object.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.DrawableFill.fill">
+<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.core.drawable.DrawableFill.fill" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.drawable.TransformedDrawable">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.drawable.</span></span><span class="sig-name descname"><span class="pre">TransformedDrawable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_drawable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.drawable.TransformedDrawable" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
+<p>Applies a transformation to a drawable object
+and overrides the draw method to apply the transformation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.drawable.TransformedDrawable.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.core.drawable.TransformedDrawable.draw" title="Link to this definition">¶</a></dt>
+<dd><p>Overrides the draw method of the base drawable object</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.core.scene">
+<span id="handanim-core-scene-module"></span><h2>handanim.core.scene module<a class="headerlink" href="#module-handanim.core.scene" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.scene.</span></span><span class="sig-name descname"><span class="pre">Scene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1280</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">720</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewport</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><span class="pre">Viewport</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.scene.Scene" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A Scene represents an animation composition where drawables and events are managed.</p>
+<p>Handles the creation, timeline, and rendering of animated graphics with configurable
+viewport, background, and frame settings. Supports creating snapshots and full video
+renders of animated sequences.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#handanim.core.scene.Scene.width" title="Link to this definition">¶</a></dt>
+<dd><p>Width of the rendering surface in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#handanim.core.scene.Scene.height" title="Link to this definition">¶</a></dt>
+<dd><p>Height of the rendering surface in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.fps">
+<span class="sig-name descname"><span class="pre">fps</span></span><a class="headerlink" href="#handanim.core.scene.Scene.fps" title="Link to this definition">¶</a></dt>
+<dd><p>Frames per second for video rendering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.background_color">
+<span class="sig-name descname"><span class="pre">background_color</span></span><a class="headerlink" href="#handanim.core.scene.Scene.background_color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB color for scene background.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.viewport">
+<span class="sig-name descname"><span class="pre">viewport</span></span><a class="headerlink" href="#handanim.core.scene.Scene.viewport" title="Link to this definition">¶</a></dt>
+<dd><p>Defines coordinate mapping between world and screen space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport">Viewport</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><span class="pre">AnimationEvent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.scene.Scene.add" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.create_event_timeline">
+<span class="sig-name descname"><span class="pre">create_event_timeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.scene.Scene.create_event_timeline" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the timeline of events in which order
+need to process the opssets and what to draw
+for each frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.get_active_objects">
+<span class="sig-name descname"><span class="pre">get_active_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.scene.Scene.get_active_objects" title="Link to this definition">¶</a></dt>
+<dd><p>At a timepoint t (in seconds), return the list of object_ids
+that needs to be active on the scene</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.get_viewport_bounds">
+<span class="sig-name descname"><span class="pre">get_viewport_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.core.scene.Scene.get_viewport_bounds" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the bounds of the viewport in world coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.scene.Scene.render" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.render_snapshot">
+<span class="sig-name descname"><span class="pre">render_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_in_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.scene.Scene.render_snapshot" title="Link to this definition">¶</a></dt>
+<dd><p>This is a helper function used to debug video snapshots</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.core.styles">
+<span id="handanim-core-styles-module"></span><h2>handanim.core.styles module<a class="headerlink" href="#module-handanim.core.styles" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.styles.</span></span><span class="sig-name descname"><span class="pre">FillStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.styles.FillStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the styling configurations for the fills of the primitives.</p>
+<p>Allows customization of fill appearance including color, opacity, fill pattern,
+hachure settings, and fill weight. Defaults to a black fill with full opacity
+and hachure pattern.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.options">
+<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.options" title="Link to this definition">¶</a></dt>
+<dd><p>Raw keyword arguments passed during initialization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.color">
+<span class="sig-name descname"><span class="pre">color</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB color tuple, defaults to black (0, 0, 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.opacity">
+<span class="sig-name descname"><span class="pre">opacity</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.opacity" title="Link to this definition">¶</a></dt>
+<dd><p>Fill opacity from 0-1, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.fill_pattern">
+<span class="sig-name descname"><span class="pre">fill_pattern</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.fill_pattern" title="Link to this definition">¶</a></dt>
+<dd><p>Pattern for filling, defaults to “hachure”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.hachure_angle">
+<span class="sig-name descname"><span class="pre">hachure_angle</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.hachure_angle" title="Link to this definition">¶</a></dt>
+<dd><p>Angle of hachure lines in degrees, defaults to 45</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.hachure_gap">
+<span class="sig-name descname"><span class="pre">hachure_gap</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.hachure_gap" title="Link to this definition">¶</a></dt>
+<dd><p>Gap between hachure lines, defaults to 4</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.hachure_line_width">
+<span class="sig-name descname"><span class="pre">hachure_line_width</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.hachure_line_width" title="Link to this definition">¶</a></dt>
+<dd><p>Width of hachure lines, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.zigzag_offset">
+<span class="sig-name descname"><span class="pre">zigzag_offset</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.zigzag_offset" title="Link to this definition">¶</a></dt>
+<dd><p>Offset for zigzag pattern, defaults to -1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.FillStyle.fill_weight">
+<span class="sig-name descname"><span class="pre">fill_weight</span></span><a class="headerlink" href="#handanim.core.styles.FillStyle.fill_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Weight/thickness of fill, defaults to 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.styles.</span></span><span class="sig-name descname"><span class="pre">SketchStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.styles.SketchStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the styling configurations for sketchy, hand-drawn style renderings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.bowing">
+<span class="sig-name descname"><span class="pre">bowing</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.bowing" title="Link to this definition">¶</a></dt>
+<dd><p>Amount of bowing/waviness in lines, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.max_random_offset">
+<span class="sig-name descname"><span class="pre">max_random_offset</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.max_random_offset" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum random offset for sketch lines, defaults to 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.roughness">
+<span class="sig-name descname"><span class="pre">roughness</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.roughness" title="Link to this definition">¶</a></dt>
+<dd><p>Roughness of sketch lines, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.curve_tightness">
+<span class="sig-name descname"><span class="pre">curve_tightness</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.curve_tightness" title="Link to this definition">¶</a></dt>
+<dd><p>Tightness of curves, defaults to 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.curve_fitting">
+<span class="sig-name descname"><span class="pre">curve_fitting</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.curve_fitting" title="Link to this definition">¶</a></dt>
+<dd><p>Curve fitting parameter, defaults to 0.95</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.curve_step_count">
+<span class="sig-name descname"><span class="pre">curve_step_count</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.curve_step_count" title="Link to this definition">¶</a></dt>
+<dd><p>Number of steps for curve rendering, defaults to 9</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.disable_multi_stroke">
+<span class="sig-name descname"><span class="pre">disable_multi_stroke</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.disable_multi_stroke" title="Link to this definition">¶</a></dt>
+<dd><p>Flag to disable multi-stroke rendering, defaults to False</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.SketchStyle.disable_font_mixture">
+<span class="sig-name descname"><span class="pre">disable_font_mixture</span></span><a class="headerlink" href="#handanim.core.styles.SketchStyle.disable_font_mixture" title="Link to this definition">¶</a></dt>
+<dd><p>Flag to disable font mixture, defaults to True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokePressure">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.styles.</span></span><span class="sig-name descname"><span class="pre">StrokePressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.styles.StrokePressure" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>A class that defines the pressure of the strokes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokePressure.CONSTANT">
+<span class="sig-name descname"><span class="pre">CONSTANT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'constant'</span></em><a class="headerlink" href="#handanim.core.styles.StrokePressure.CONSTANT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokePressure.INVERSE">
+<span class="sig-name descname"><span class="pre">INVERSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'inverse'</span></em><a class="headerlink" href="#handanim.core.styles.StrokePressure.INVERSE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokePressure.PROPORTIONAL">
+<span class="sig-name descname"><span class="pre">PROPORTIONAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'proportional'</span></em><a class="headerlink" href="#handanim.core.styles.StrokePressure.PROPORTIONAL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokeStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.styles.</span></span><span class="sig-name descname"><span class="pre">StrokeStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.styles.StrokeStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the styling configurations for the strokes
+of the boundaries of the primitives.</p>
+<p>Allows customization of stroke appearance including color, width, opacity,
+and pressure characteristics. Defaults to a black, 1-pixel wide constant
+pressure stroke with full opacity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokeStyle.options">
+<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#handanim.core.styles.StrokeStyle.options" title="Link to this definition">¶</a></dt>
+<dd><p>Raw keyword arguments passed during initialization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokeStyle.color">
+<span class="sig-name descname"><span class="pre">color</span></span><a class="headerlink" href="#handanim.core.styles.StrokeStyle.color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB color tuple, defaults to black (0, 0, 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokeStyle.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#handanim.core.styles.StrokeStyle.width" title="Link to this definition">¶</a></dt>
+<dd><p>Stroke width in pixels, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int/float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokeStyle.opacity">
+<span class="sig-name descname"><span class="pre">opacity</span></span><a class="headerlink" href="#handanim.core.styles.StrokeStyle.opacity" title="Link to this definition">¶</a></dt>
+<dd><p>Stroke opacity from 0-1, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.styles.StrokeStyle.stroke_pressure">
+<span class="sig-name descname"><span class="pre">stroke_pressure</span></span><a class="headerlink" href="#handanim.core.styles.StrokeStyle.stroke_pressure" title="Link to this definition">¶</a></dt>
+<dd><p>Pressure mode for stroke rendering,
+defaults to StrokePressure.CONSTANT</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.styles.StrokePressure" title="handanim.core.styles.StrokePressure">StrokePressure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.core.utils">
+<span id="handanim-core-utils-module"></span><h2>handanim.core.utils module<a class="headerlink" href="#module-handanim.core.utils" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.core.utils.cairo_surface_to_numpy">
+<span class="sig-prename descclassname"><span class="pre">handanim.core.utils.</span></span><span class="sig-name descname"><span class="pre">cairo_surface_to_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageSurface</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.utils.cairo_surface_to_numpy" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a Cairo surface to a numpy array</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.core.utils.get_bezier_points_from_quadcurve">
+<span class="sig-prename descclassname"><span class="pre">handanim.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_bezier_points_from_quadcurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.utils.get_bezier_points_from_quadcurve" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.core.utils.slice_bezier">
+<span class="sig-prename descclassname"><span class="pre">handanim.core.utils.</span></span><span class="sig-name descname"><span class="pre">slice_bezier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.utils.slice_bezier" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-handanim.core.viewport">
+<span id="handanim-core-viewport-module"></span><h2>handanim.core.viewport module<a class="headerlink" href="#module-handanim.core.viewport" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.viewport.</span></span><span class="sig-name descname"><span class="pre">Viewport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_xrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_yrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screen_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1920</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screen_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.viewport.Viewport" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A viewport that transforms mathematical coordinates to pixel coordinates for rendering.</p>
+<p>Handles scaling and translation between world coordinates and screen pixels,
+ensuring proper mapping and centering within a specified margin.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport.world_xrange">
+<span class="sig-name descname"><span class="pre">world_xrange</span></span><a class="headerlink" href="#handanim.core.viewport.Viewport.world_xrange" title="Link to this definition">¶</a></dt>
+<dd><p>The x-coordinate range in world space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport.world_yrange">
+<span class="sig-name descname"><span class="pre">world_yrange</span></span><a class="headerlink" href="#handanim.core.viewport.Viewport.world_yrange" title="Link to this definition">¶</a></dt>
+<dd><p>The y-coordinate range in world space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport.screen_width">
+<span class="sig-name descname"><span class="pre">screen_width</span></span><a class="headerlink" href="#handanim.core.viewport.Viewport.screen_width" title="Link to this definition">¶</a></dt>
+<dd><p>The width of the rendering surface in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport.screen_height">
+<span class="sig-name descname"><span class="pre">screen_height</span></span><a class="headerlink" href="#handanim.core.viewport.Viewport.screen_height" title="Link to this definition">¶</a></dt>
+<dd><p>The height of the rendering surface in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport.margin">
+<span class="sig-name descname"><span class="pre">margin</span></span><a class="headerlink" href="#handanim.core.viewport.Viewport.margin" title="Link to this definition">¶</a></dt>
+<dd><p>The margin around the rendered content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.viewport.Viewport.apply_to_context">
+<span class="sig-name descname"><span class="pre">apply_to_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.viewport.Viewport.apply_to_context" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the scaling and translation to the cairo context
+so that drawing in world coordinates will map to screen pixels</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.core">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-handanim.core" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.AnimationEvent">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.</span></span><span class="sig-name descname"><span class="pre">AnimationEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.animation.AnimationEventType" title="handanim.core.animation.AnimationEventType"><span class="pre">AnimationEventType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.AnimationEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an animation event occurring on a scene with configurable properties.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEvent.CREATION_EVENT_TYPES">
+<span class="sig-name descname"><span class="pre">CREATION_EVENT_TYPES</span></span><a class="headerlink" href="#handanim.core.AnimationEvent.CREATION_EVENT_TYPES" title="Link to this definition">¶</a></dt>
+<dd><p>Animation types that signify object creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#handanim.core.AnimationEventType" title="handanim.core.AnimationEventType">AnimationEventType</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEvent.DESTROY_EVENT_TYPES">
+<span class="sig-name descname"><span class="pre">DESTROY_EVENT_TYPES</span></span><a class="headerlink" href="#handanim.core.AnimationEvent.DESTROY_EVENT_TYPES" title="Link to this definition">¶</a></dt>
+<dd><p>Animation types that signify object destruction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#handanim.core.AnimationEventType" title="handanim.core.AnimationEventType">AnimationEventType</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drawable</strong> (<a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><em>Drawable</em></a>) – The drawable object for which the animation is applied.</p></li>
+<li><p><strong>type</strong> (<a class="reference internal" href="#handanim.core.AnimationEventType" title="handanim.core.AnimationEventType"><em>AnimationEventType</em></a>) – The type of animation to be performed.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em><em>, </em><em>optional</em>) – The starting time point of the animation in seconds. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<em>float</em><em>, </em><em>optional</em>) – The duration of the animation in seconds. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify animation progression. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional configuration data specific to the animation type. Defaults to an empty dict.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">CREATION_EVENT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AnimationEventType.SKETCH,</span> <span class="pre">AnimationEventType.FADE_IN,</span> <span class="pre">AnimationEventType.ZOOM_IN]</span></em><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">DESTROY_EVENT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AnimationEventType.FADE_OUT,</span> <span class="pre">AnimationEventType.ZOOM_OUT]</span></em><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.</span></span><span class="sig-name descname"><span class="pre">AnimationEventType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.AnimationEventType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.FADE_IN">
+<span class="sig-name descname"><span class="pre">FADE_IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fade_in'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.FADE_IN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.FADE_OUT">
+<span class="sig-name descname"><span class="pre">FADE_OUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fade_out'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.FADE_OUT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.SKETCH">
+<span class="sig-name descname"><span class="pre">SKETCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sketch'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.SKETCH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.TRANSLATE_FROM_POINT">
+<span class="sig-name descname"><span class="pre">TRANSLATE_FROM_POINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'translate_from_point'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.TRANSLATE_FROM_POINT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.TRANSLATE_TO_POINT">
+<span class="sig-name descname"><span class="pre">TRANSLATE_TO_POINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'translate_to_point'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.TRANSLATE_TO_POINT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.ZOOM_IN">
+<span class="sig-name descname"><span class="pre">ZOOM_IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'zoom_in'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.ZOOM_IN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.AnimationEventType.ZOOM_OUT">
+<span class="sig-name descname"><span class="pre">ZOOM_OUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'zoom_out'</span></em><a class="headerlink" href="#handanim.core.AnimationEventType.ZOOM_OUT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.FillStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.</span></span><span class="sig-name descname"><span class="pre">FillStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.FillStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the styling configurations for the fills of the primitives.</p>
+<p>Allows customization of fill appearance including color, opacity, fill pattern,
+hachure settings, and fill weight. Defaults to a black fill with full opacity
+and hachure pattern.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.options">
+<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#handanim.core.FillStyle.options" title="Link to this definition">¶</a></dt>
+<dd><p>Raw keyword arguments passed during initialization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.color">
+<span class="sig-name descname"><span class="pre">color</span></span><a class="headerlink" href="#handanim.core.FillStyle.color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB color tuple, defaults to black (0, 0, 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.opacity">
+<span class="sig-name descname"><span class="pre">opacity</span></span><a class="headerlink" href="#handanim.core.FillStyle.opacity" title="Link to this definition">¶</a></dt>
+<dd><p>Fill opacity from 0-1, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.fill_pattern">
+<span class="sig-name descname"><span class="pre">fill_pattern</span></span><a class="headerlink" href="#handanim.core.FillStyle.fill_pattern" title="Link to this definition">¶</a></dt>
+<dd><p>Pattern for filling, defaults to “hachure”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.hachure_angle">
+<span class="sig-name descname"><span class="pre">hachure_angle</span></span><a class="headerlink" href="#handanim.core.FillStyle.hachure_angle" title="Link to this definition">¶</a></dt>
+<dd><p>Angle of hachure lines in degrees, defaults to 45</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.hachure_gap">
+<span class="sig-name descname"><span class="pre">hachure_gap</span></span><a class="headerlink" href="#handanim.core.FillStyle.hachure_gap" title="Link to this definition">¶</a></dt>
+<dd><p>Gap between hachure lines, defaults to 4</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.hachure_line_width">
+<span class="sig-name descname"><span class="pre">hachure_line_width</span></span><a class="headerlink" href="#handanim.core.FillStyle.hachure_line_width" title="Link to this definition">¶</a></dt>
+<dd><p>Width of hachure lines, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.zigzag_offset">
+<span class="sig-name descname"><span class="pre">zigzag_offset</span></span><a class="headerlink" href="#handanim.core.FillStyle.zigzag_offset" title="Link to this definition">¶</a></dt>
+<dd><p>Offset for zigzag pattern, defaults to -1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.FillStyle.fill_weight">
+<span class="sig-name descname"><span class="pre">fill_weight</span></span><a class="headerlink" href="#handanim.core.FillStyle.fill_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Weight/thickness of fill, defaults to 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.Scene">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.</span></span><span class="sig-name descname"><span class="pre">Scene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1280</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">720</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewport</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><span class="pre">Viewport</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.Scene" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A Scene represents an animation composition where drawables and events are managed.</p>
+<p>Handles the creation, timeline, and rendering of animated graphics with configurable
+viewport, background, and frame settings. Supports creating snapshots and full video
+renders of animated sequences.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.Scene.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#handanim.core.Scene.width" title="Link to this definition">¶</a></dt>
+<dd><p>Width of the rendering surface in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.Scene.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#handanim.core.Scene.height" title="Link to this definition">¶</a></dt>
+<dd><p>Height of the rendering surface in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.Scene.fps">
+<span class="sig-name descname"><span class="pre">fps</span></span><a class="headerlink" href="#handanim.core.Scene.fps" title="Link to this definition">¶</a></dt>
+<dd><p>Frames per second for video rendering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.Scene.background_color">
+<span class="sig-name descname"><span class="pre">background_color</span></span><a class="headerlink" href="#handanim.core.Scene.background_color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB color for scene background.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.Scene.viewport">
+<span class="sig-name descname"><span class="pre">viewport</span></span><a class="headerlink" href="#handanim.core.Scene.viewport" title="Link to this definition">¶</a></dt>
+<dd><p>Defines coordinate mapping between world and screen space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport">Viewport</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><span class="pre">AnimationEvent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.Scene.add" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.create_event_timeline">
+<span class="sig-name descname"><span class="pre">create_event_timeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.Scene.create_event_timeline" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the timeline of events in which order
+need to process the opssets and what to draw
+for each frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.get_active_objects">
+<span class="sig-name descname"><span class="pre">get_active_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.Scene.get_active_objects" title="Link to this definition">¶</a></dt>
+<dd><p>At a timepoint t (in seconds), return the list of object_ids
+that needs to be active on the scene</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.get_viewport_bounds">
+<span class="sig-name descname"><span class="pre">get_viewport_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.core.Scene.get_viewport_bounds" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the bounds of the viewport in world coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.Scene.render" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.render_snapshot">
+<span class="sig-name descname"><span class="pre">render_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_in_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.Scene.render_snapshot" title="Link to this definition">¶</a></dt>
+<dd><p>This is a helper function used to debug video snapshots</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.</span></span><span class="sig-name descname"><span class="pre">SketchStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.SketchStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the styling configurations for sketchy, hand-drawn style renderings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.bowing">
+<span class="sig-name descname"><span class="pre">bowing</span></span><a class="headerlink" href="#handanim.core.SketchStyle.bowing" title="Link to this definition">¶</a></dt>
+<dd><p>Amount of bowing/waviness in lines, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.max_random_offset">
+<span class="sig-name descname"><span class="pre">max_random_offset</span></span><a class="headerlink" href="#handanim.core.SketchStyle.max_random_offset" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum random offset for sketch lines, defaults to 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.roughness">
+<span class="sig-name descname"><span class="pre">roughness</span></span><a class="headerlink" href="#handanim.core.SketchStyle.roughness" title="Link to this definition">¶</a></dt>
+<dd><p>Roughness of sketch lines, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.curve_tightness">
+<span class="sig-name descname"><span class="pre">curve_tightness</span></span><a class="headerlink" href="#handanim.core.SketchStyle.curve_tightness" title="Link to this definition">¶</a></dt>
+<dd><p>Tightness of curves, defaults to 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.curve_fitting">
+<span class="sig-name descname"><span class="pre">curve_fitting</span></span><a class="headerlink" href="#handanim.core.SketchStyle.curve_fitting" title="Link to this definition">¶</a></dt>
+<dd><p>Curve fitting parameter, defaults to 0.95</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.curve_step_count">
+<span class="sig-name descname"><span class="pre">curve_step_count</span></span><a class="headerlink" href="#handanim.core.SketchStyle.curve_step_count" title="Link to this definition">¶</a></dt>
+<dd><p>Number of steps for curve rendering, defaults to 9</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.disable_multi_stroke">
+<span class="sig-name descname"><span class="pre">disable_multi_stroke</span></span><a class="headerlink" href="#handanim.core.SketchStyle.disable_multi_stroke" title="Link to this definition">¶</a></dt>
+<dd><p>Flag to disable multi-stroke rendering, defaults to False</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.SketchStyle.disable_font_mixture">
+<span class="sig-name descname"><span class="pre">disable_font_mixture</span></span><a class="headerlink" href="#handanim.core.SketchStyle.disable_font_mixture" title="Link to this definition">¶</a></dt>
+<dd><p>Flag to disable font mixture, defaults to True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.core.StrokeStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.core.</span></span><span class="sig-name descname"><span class="pre">StrokeStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.core.StrokeStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines the styling configurations for the strokes
+of the boundaries of the primitives.</p>
+<p>Allows customization of stroke appearance including color, width, opacity,
+and pressure characteristics. Defaults to a black, 1-pixel wide constant
+pressure stroke with full opacity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.StrokeStyle.options">
+<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#handanim.core.StrokeStyle.options" title="Link to this definition">¶</a></dt>
+<dd><p>Raw keyword arguments passed during initialization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.StrokeStyle.color">
+<span class="sig-name descname"><span class="pre">color</span></span><a class="headerlink" href="#handanim.core.StrokeStyle.color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB color tuple, defaults to black (0, 0, 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.StrokeStyle.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#handanim.core.StrokeStyle.width" title="Link to this definition">¶</a></dt>
+<dd><p>Stroke width in pixels, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int/float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.StrokeStyle.opacity">
+<span class="sig-name descname"><span class="pre">opacity</span></span><a class="headerlink" href="#handanim.core.StrokeStyle.opacity" title="Link to this definition">¶</a></dt>
+<dd><p>Stroke opacity from 0-1, defaults to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.core.StrokeStyle.stroke_pressure">
+<span class="sig-name descname"><span class="pre">stroke_pressure</span></span><a class="headerlink" href="#handanim.core.StrokeStyle.stroke_pressure" title="Link to this definition">¶</a></dt>
+<dd><p>Pressure mode for stroke rendering,
+defaults to StrokePressure.CONSTANT</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#handanim.core.styles.StrokePressure" title="handanim.core.styles.StrokePressure">StrokePressure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="handanim.primitives.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">handanim.primitives package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="handanim.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">handanim package</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Subhrajyoty Roy
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">handanim.core package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-handanim.core.animation">handanim.core.animation module</a><ul>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEvent"><code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEvent.CREATION_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEvent.DESTROY_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType"><code class="docutils literal notranslate"><span class="pre">AnimationEventType</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.FADE_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_IN</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.FADE_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_OUT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.SKETCH"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.SKETCH</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.TRANSLATE_FROM_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_FROM_POINT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.TRANSLATE_TO_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_TO_POINT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.ZOOM_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_IN</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.AnimationEventType.ZOOM_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_OUT</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.animation.get_animated_opsset"><code class="docutils literal notranslate"><span class="pre">get_animated_opsset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.animation.get_sketching_opsset"><code class="docutils literal notranslate"><span class="pre">get_sketching_opsset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core.draw_ops">handanim.core.draw_ops module</a><ul>
+<li><a class="reference internal" href="#handanim.core.draw_ops.Ops"><code class="docutils literal notranslate"><span class="pre">Ops</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.draw_ops.Ops.SETUP_OPS_TYPES"><code class="docutils literal notranslate"><span class="pre">Ops.SETUP_OPS_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.Ops.type"><code class="docutils literal notranslate"><span class="pre">Ops.type</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.Ops.data"><code class="docutils literal notranslate"><span class="pre">Ops.data</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.Ops.partial"><code class="docutils literal notranslate"><span class="pre">Ops.partial</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Ops.SETUP_OPS_TYPES</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet"><code class="docutils literal notranslate"><span class="pre">OpsSet</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.opsset"><code class="docutils literal notranslate"><span class="pre">OpsSet.opsset</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.add"><code class="docutils literal notranslate"><span class="pre">OpsSet.add()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.extend"><code class="docutils literal notranslate"><span class="pre">OpsSet.extend()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.get_bbox"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_bbox()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.get_center_of_gravity"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_center_of_gravity()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.get_current_point"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_current_point()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.get_last_ops"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_last_ops()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.render"><code class="docutils literal notranslate"><span class="pre">OpsSet.render()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.rotate"><code class="docutils literal notranslate"><span class="pre">OpsSet.rotate()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.scale"><code class="docutils literal notranslate"><span class="pre">OpsSet.scale()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsSet.translate"><code class="docutils literal notranslate"><span class="pre">OpsSet.translate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType"><code class="docutils literal notranslate"><span class="pre">OpsType</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.CLOSE_PATH"><code class="docutils literal notranslate"><span class="pre">OpsType.CLOSE_PATH</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.CURVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.CURVE_TO</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.DOT"><code class="docutils literal notranslate"><span class="pre">OpsType.DOT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.LINE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.LINE_TO</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.MOVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.MOVE_TO</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.QUAD_CURVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.QUAD_CURVE_TO</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.draw_ops.OpsType.SET_PEN"><code class="docutils literal notranslate"><span class="pre">OpsType.SET_PEN</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core.drawable">handanim.core.drawable module</a><ul>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable"><code class="docutils literal notranslate"><span class="pre">Drawable</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.id"><code class="docutils literal notranslate"><span class="pre">Drawable.id</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.stroke_style"><code class="docutils literal notranslate"><span class="pre">Drawable.stroke_style</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.sketch_style"><code class="docutils literal notranslate"><span class="pre">Drawable.sketch_style</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.fill_style"><code class="docutils literal notranslate"><span class="pre">Drawable.fill_style</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.glow_dot_hint"><code class="docutils literal notranslate"><span class="pre">Drawable.glow_dot_hint</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.draw"><code class="docutils literal notranslate"><span class="pre">Drawable.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.translate"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.scale"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.Drawable.rotate"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Drawable.draw()</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableCache"><code class="docutils literal notranslate"><span class="pre">DrawableCache</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableCache.calculate_bounding_box"><code class="docutils literal notranslate"><span class="pre">DrawableCache.calculate_bounding_box()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableCache.get_drawable_opsset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.get_drawable_opsset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableCache.has_drawable_oppset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.has_drawable_oppset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableCache.set_drawable_opsset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.set_drawable_opsset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableFill"><code class="docutils literal notranslate"><span class="pre">DrawableFill</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.drawable.DrawableFill.fill"><code class="docutils literal notranslate"><span class="pre">DrawableFill.fill()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.drawable.TransformedDrawable"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.drawable.TransformedDrawable.draw"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable.draw()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core.scene">handanim.core.scene module</a><ul>
+<li><a class="reference internal" href="#handanim.core.scene.Scene"><code class="docutils literal notranslate"><span class="pre">Scene</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.width"><code class="docutils literal notranslate"><span class="pre">Scene.width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.height"><code class="docutils literal notranslate"><span class="pre">Scene.height</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.fps"><code class="docutils literal notranslate"><span class="pre">Scene.fps</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.background_color"><code class="docutils literal notranslate"><span class="pre">Scene.background_color</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.viewport"><code class="docutils literal notranslate"><span class="pre">Scene.viewport</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.create_event_timeline"><code class="docutils literal notranslate"><span class="pre">Scene.create_event_timeline()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.get_active_objects"><code class="docutils literal notranslate"><span class="pre">Scene.get_active_objects()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.get_viewport_bounds"><code class="docutils literal notranslate"><span class="pre">Scene.get_viewport_bounds()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core.styles">handanim.core.styles module</a><ul>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle"><code class="docutils literal notranslate"><span class="pre">FillStyle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.options"><code class="docutils literal notranslate"><span class="pre">FillStyle.options</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.color"><code class="docutils literal notranslate"><span class="pre">FillStyle.color</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.opacity"><code class="docutils literal notranslate"><span class="pre">FillStyle.opacity</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.fill_pattern"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_pattern</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.hachure_angle"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_angle</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.hachure_gap"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_gap</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.hachure_line_width"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_line_width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.zigzag_offset"><code class="docutils literal notranslate"><span class="pre">FillStyle.zigzag_offset</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.FillStyle.fill_weight"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_weight</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle"><code class="docutils literal notranslate"><span class="pre">SketchStyle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.bowing"><code class="docutils literal notranslate"><span class="pre">SketchStyle.bowing</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.max_random_offset"><code class="docutils literal notranslate"><span class="pre">SketchStyle.max_random_offset</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.roughness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.roughness</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.curve_tightness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_tightness</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.curve_fitting"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_fitting</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.curve_step_count"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_step_count</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.disable_multi_stroke"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_multi_stroke</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.SketchStyle.disable_font_mixture"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_font_mixture</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokePressure"><code class="docutils literal notranslate"><span class="pre">StrokePressure</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.styles.StrokePressure.CONSTANT"><code class="docutils literal notranslate"><span class="pre">StrokePressure.CONSTANT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokePressure.INVERSE"><code class="docutils literal notranslate"><span class="pre">StrokePressure.INVERSE</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokePressure.PROPORTIONAL"><code class="docutils literal notranslate"><span class="pre">StrokePressure.PROPORTIONAL</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokeStyle"><code class="docutils literal notranslate"><span class="pre">StrokeStyle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.styles.StrokeStyle.options"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.options</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokeStyle.color"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.color</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokeStyle.width"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokeStyle.opacity"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.opacity</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.styles.StrokeStyle.stroke_pressure"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.stroke_pressure</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core.utils">handanim.core.utils module</a><ul>
+<li><a class="reference internal" href="#handanim.core.utils.cairo_surface_to_numpy"><code class="docutils literal notranslate"><span class="pre">cairo_surface_to_numpy()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.utils.get_bezier_points_from_quadcurve"><code class="docutils literal notranslate"><span class="pre">get_bezier_points_from_quadcurve()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.utils.slice_bezier"><code class="docutils literal notranslate"><span class="pre">slice_bezier()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core.viewport">handanim.core.viewport module</a><ul>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport"><code class="docutils literal notranslate"><span class="pre">Viewport</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport.world_xrange"><code class="docutils literal notranslate"><span class="pre">Viewport.world_xrange</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport.world_yrange"><code class="docutils literal notranslate"><span class="pre">Viewport.world_yrange</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport.screen_width"><code class="docutils literal notranslate"><span class="pre">Viewport.screen_width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport.screen_height"><code class="docutils literal notranslate"><span class="pre">Viewport.screen_height</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport.margin"><code class="docutils literal notranslate"><span class="pre">Viewport.margin</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.viewport.Viewport.apply_to_context"><code class="docutils literal notranslate"><span class="pre">Viewport.apply_to_context()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.core">Module contents</a><ul>
+<li><a class="reference internal" href="#handanim.core.AnimationEvent"><code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.AnimationEvent.CREATION_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEvent.DESTROY_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType"><code class="docutils literal notranslate"><span class="pre">AnimationEventType</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.FADE_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_IN</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.FADE_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_OUT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.SKETCH"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.SKETCH</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.TRANSLATE_FROM_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_FROM_POINT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.TRANSLATE_TO_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_TO_POINT</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.ZOOM_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_IN</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.AnimationEventType.ZOOM_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_OUT</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.FillStyle"><code class="docutils literal notranslate"><span class="pre">FillStyle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.FillStyle.options"><code class="docutils literal notranslate"><span class="pre">FillStyle.options</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.color"><code class="docutils literal notranslate"><span class="pre">FillStyle.color</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.opacity"><code class="docutils literal notranslate"><span class="pre">FillStyle.opacity</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.fill_pattern"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_pattern</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.hachure_angle"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_angle</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.hachure_gap"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_gap</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.hachure_line_width"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_line_width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.zigzag_offset"><code class="docutils literal notranslate"><span class="pre">FillStyle.zigzag_offset</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.FillStyle.fill_weight"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_weight</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.Scene"><code class="docutils literal notranslate"><span class="pre">Scene</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.Scene.width"><code class="docutils literal notranslate"><span class="pre">Scene.width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.height"><code class="docutils literal notranslate"><span class="pre">Scene.height</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.fps"><code class="docutils literal notranslate"><span class="pre">Scene.fps</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.background_color"><code class="docutils literal notranslate"><span class="pre">Scene.background_color</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.viewport"><code class="docutils literal notranslate"><span class="pre">Scene.viewport</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.create_event_timeline"><code class="docutils literal notranslate"><span class="pre">Scene.create_event_timeline()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.get_active_objects"><code class="docutils literal notranslate"><span class="pre">Scene.get_active_objects()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.get_viewport_bounds"><code class="docutils literal notranslate"><span class="pre">Scene.get_viewport_bounds()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle"><code class="docutils literal notranslate"><span class="pre">SketchStyle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.bowing"><code class="docutils literal notranslate"><span class="pre">SketchStyle.bowing</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.max_random_offset"><code class="docutils literal notranslate"><span class="pre">SketchStyle.max_random_offset</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.roughness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.roughness</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.curve_tightness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_tightness</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.curve_fitting"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_fitting</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.curve_step_count"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_step_count</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.disable_multi_stroke"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_multi_stroke</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.SketchStyle.disable_font_mixture"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_font_mixture</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.core.StrokeStyle"><code class="docutils literal notranslate"><span class="pre">StrokeStyle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.core.StrokeStyle.options"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.options</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.StrokeStyle.color"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.color</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.StrokeStyle.width"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.width</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.StrokeStyle.opacity"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.opacity</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.StrokeStyle.stroke_pressure"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.stroke_pressure</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>

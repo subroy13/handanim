@@ -1,0 +1,780 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="handanim.core package" href="handanim.core.html" /><link rel="prev" title="handanim" href="modules.html" />
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>handanim package - handanim documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">handanim  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">handanim  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">handanim</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of handanim</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">handanim package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of handanim package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html">handanim.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html">handanim.primitives package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html">handanim.stylings package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/handanim.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="handanim-package">
+<h1>handanim package<a class="headerlink" href="#handanim-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="handanim.core.html">handanim.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.animation">handanim.core.animation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent"><code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent.CREATION_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent.DESTROY_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id0"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id1"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType"><code class="docutils literal notranslate"><span class="pre">AnimationEventType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.FADE_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_IN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.FADE_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_OUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.SKETCH"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.SKETCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.TRANSLATE_FROM_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_FROM_POINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.TRANSLATE_TO_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_TO_POINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.ZOOM_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_IN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.ZOOM_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_OUT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.get_animated_opsset"><code class="docutils literal notranslate"><span class="pre">get_animated_opsset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.get_sketching_opsset"><code class="docutils literal notranslate"><span class="pre">get_sketching_opsset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.draw_ops">handanim.core.draw_ops module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops"><code class="docutils literal notranslate"><span class="pre">Ops</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.SETUP_OPS_TYPES"><code class="docutils literal notranslate"><span class="pre">Ops.SETUP_OPS_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.type"><code class="docutils literal notranslate"><span class="pre">Ops.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.data"><code class="docutils literal notranslate"><span class="pre">Ops.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.partial"><code class="docutils literal notranslate"><span class="pre">Ops.partial</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id2"><code class="docutils literal notranslate"><span class="pre">Ops.SETUP_OPS_TYPES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet"><code class="docutils literal notranslate"><span class="pre">OpsSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.opsset"><code class="docutils literal notranslate"><span class="pre">OpsSet.opsset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.add"><code class="docutils literal notranslate"><span class="pre">OpsSet.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.extend"><code class="docutils literal notranslate"><span class="pre">OpsSet.extend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.get_bbox"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_bbox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.get_center_of_gravity"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_center_of_gravity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.get_current_point"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_current_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.get_last_ops"><code class="docutils literal notranslate"><span class="pre">OpsSet.get_last_ops()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.render"><code class="docutils literal notranslate"><span class="pre">OpsSet.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.rotate"><code class="docutils literal notranslate"><span class="pre">OpsSet.rotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.scale"><code class="docutils literal notranslate"><span class="pre">OpsSet.scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet.translate"><code class="docutils literal notranslate"><span class="pre">OpsSet.translate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType"><code class="docutils literal notranslate"><span class="pre">OpsType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.CLOSE_PATH"><code class="docutils literal notranslate"><span class="pre">OpsType.CLOSE_PATH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.CURVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.CURVE_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.DOT"><code class="docutils literal notranslate"><span class="pre">OpsType.DOT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.LINE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.LINE_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.MOVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.MOVE_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.QUAD_CURVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.QUAD_CURVE_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.SET_PEN"><code class="docutils literal notranslate"><span class="pre">OpsType.SET_PEN</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.drawable">handanim.core.drawable module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable"><code class="docutils literal notranslate"><span class="pre">Drawable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.id"><code class="docutils literal notranslate"><span class="pre">Drawable.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.stroke_style"><code class="docutils literal notranslate"><span class="pre">Drawable.stroke_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.sketch_style"><code class="docutils literal notranslate"><span class="pre">Drawable.sketch_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.fill_style"><code class="docutils literal notranslate"><span class="pre">Drawable.fill_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.glow_dot_hint"><code class="docutils literal notranslate"><span class="pre">Drawable.glow_dot_hint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.draw"><code class="docutils literal notranslate"><span class="pre">Drawable.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.translate"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.scale"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.rotate"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id3"><code class="docutils literal notranslate"><span class="pre">Drawable.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id4"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id5"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id6"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache"><code class="docutils literal notranslate"><span class="pre">DrawableCache</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.calculate_bounding_box"><code class="docutils literal notranslate"><span class="pre">DrawableCache.calculate_bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.get_drawable_opsset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.get_drawable_opsset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.has_drawable_oppset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.has_drawable_oppset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.set_drawable_opsset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.set_drawable_opsset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill"><code class="docutils literal notranslate"><span class="pre">DrawableFill</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill.fill"><code class="docutils literal notranslate"><span class="pre">DrawableFill.fill()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable.draw"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable.draw()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.scene">handanim.core.scene module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene"><code class="docutils literal notranslate"><span class="pre">Scene</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.width"><code class="docutils literal notranslate"><span class="pre">Scene.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.height"><code class="docutils literal notranslate"><span class="pre">Scene.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.fps"><code class="docutils literal notranslate"><span class="pre">Scene.fps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.background_color"><code class="docutils literal notranslate"><span class="pre">Scene.background_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.viewport"><code class="docutils literal notranslate"><span class="pre">Scene.viewport</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.create_event_timeline"><code class="docutils literal notranslate"><span class="pre">Scene.create_event_timeline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.get_active_objects"><code class="docutils literal notranslate"><span class="pre">Scene.get_active_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.get_viewport_bounds"><code class="docutils literal notranslate"><span class="pre">Scene.get_viewport_bounds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.styles">handanim.core.styles module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle"><code class="docutils literal notranslate"><span class="pre">FillStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.options"><code class="docutils literal notranslate"><span class="pre">FillStyle.options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.color"><code class="docutils literal notranslate"><span class="pre">FillStyle.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.opacity"><code class="docutils literal notranslate"><span class="pre">FillStyle.opacity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.fill_pattern"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.hachure_angle"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.hachure_gap"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_gap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.hachure_line_width"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_line_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.zigzag_offset"><code class="docutils literal notranslate"><span class="pre">FillStyle.zigzag_offset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle.fill_weight"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_weight</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle"><code class="docutils literal notranslate"><span class="pre">SketchStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.bowing"><code class="docutils literal notranslate"><span class="pre">SketchStyle.bowing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.max_random_offset"><code class="docutils literal notranslate"><span class="pre">SketchStyle.max_random_offset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.roughness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.roughness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.curve_tightness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_tightness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.curve_fitting"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_fitting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.curve_step_count"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_step_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.disable_multi_stroke"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_multi_stroke</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle.disable_font_mixture"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_font_mixture</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokePressure"><code class="docutils literal notranslate"><span class="pre">StrokePressure</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokePressure.CONSTANT"><code class="docutils literal notranslate"><span class="pre">StrokePressure.CONSTANT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokePressure.INVERSE"><code class="docutils literal notranslate"><span class="pre">StrokePressure.INVERSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokePressure.PROPORTIONAL"><code class="docutils literal notranslate"><span class="pre">StrokePressure.PROPORTIONAL</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokeStyle"><code class="docutils literal notranslate"><span class="pre">StrokeStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokeStyle.options"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokeStyle.color"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokeStyle.width"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokeStyle.opacity"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.opacity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.styles.StrokeStyle.stroke_pressure"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.stroke_pressure</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.utils">handanim.core.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.utils.cairo_surface_to_numpy"><code class="docutils literal notranslate"><span class="pre">cairo_surface_to_numpy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.utils.get_bezier_points_from_quadcurve"><code class="docutils literal notranslate"><span class="pre">get_bezier_points_from_quadcurve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.utils.slice_bezier"><code class="docutils literal notranslate"><span class="pre">slice_bezier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.viewport">handanim.core.viewport module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport"><code class="docutils literal notranslate"><span class="pre">Viewport</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport.world_xrange"><code class="docutils literal notranslate"><span class="pre">Viewport.world_xrange</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport.world_yrange"><code class="docutils literal notranslate"><span class="pre">Viewport.world_yrange</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport.screen_width"><code class="docutils literal notranslate"><span class="pre">Viewport.screen_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport.screen_height"><code class="docutils literal notranslate"><span class="pre">Viewport.screen_height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport.margin"><code class="docutils literal notranslate"><span class="pre">Viewport.margin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport.apply_to_context"><code class="docutils literal notranslate"><span class="pre">Viewport.apply_to_context()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent"><code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent.CREATION_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent.DESTROY_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id7"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id8"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType"><code class="docutils literal notranslate"><span class="pre">AnimationEventType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.FADE_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_IN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.FADE_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_OUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.SKETCH"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.SKETCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.TRANSLATE_FROM_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_FROM_POINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.TRANSLATE_TO_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_TO_POINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.ZOOM_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_IN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.ZOOM_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_OUT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle"><code class="docutils literal notranslate"><span class="pre">FillStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.options"><code class="docutils literal notranslate"><span class="pre">FillStyle.options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.color"><code class="docutils literal notranslate"><span class="pre">FillStyle.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.opacity"><code class="docutils literal notranslate"><span class="pre">FillStyle.opacity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.fill_pattern"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.hachure_angle"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.hachure_gap"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_gap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.hachure_line_width"><code class="docutils literal notranslate"><span class="pre">FillStyle.hachure_line_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.zigzag_offset"><code class="docutils literal notranslate"><span class="pre">FillStyle.zigzag_offset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle.fill_weight"><code class="docutils literal notranslate"><span class="pre">FillStyle.fill_weight</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.Scene"><code class="docutils literal notranslate"><span class="pre">Scene</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.width"><code class="docutils literal notranslate"><span class="pre">Scene.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.height"><code class="docutils literal notranslate"><span class="pre">Scene.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.fps"><code class="docutils literal notranslate"><span class="pre">Scene.fps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.background_color"><code class="docutils literal notranslate"><span class="pre">Scene.background_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.viewport"><code class="docutils literal notranslate"><span class="pre">Scene.viewport</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.create_event_timeline"><code class="docutils literal notranslate"><span class="pre">Scene.create_event_timeline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.get_active_objects"><code class="docutils literal notranslate"><span class="pre">Scene.get_active_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.get_viewport_bounds"><code class="docutils literal notranslate"><span class="pre">Scene.get_viewport_bounds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle"><code class="docutils literal notranslate"><span class="pre">SketchStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.bowing"><code class="docutils literal notranslate"><span class="pre">SketchStyle.bowing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.max_random_offset"><code class="docutils literal notranslate"><span class="pre">SketchStyle.max_random_offset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.roughness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.roughness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.curve_tightness"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_tightness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.curve_fitting"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_fitting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.curve_step_count"><code class="docutils literal notranslate"><span class="pre">SketchStyle.curve_step_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.disable_multi_stroke"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_multi_stroke</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.SketchStyle.disable_font_mixture"><code class="docutils literal notranslate"><span class="pre">SketchStyle.disable_font_mixture</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.StrokeStyle"><code class="docutils literal notranslate"><span class="pre">StrokeStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.StrokeStyle.options"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.StrokeStyle.color"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.StrokeStyle.width"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.StrokeStyle.opacity"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.opacity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.StrokeStyle.stroke_pressure"><code class="docutils literal notranslate"><span class="pre">StrokeStyle.stroke_pressure</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="handanim.primitives.html">handanim.primitives package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.curves">handanim.primitives.curves module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.curves.Curve"><code class="docutils literal notranslate"><span class="pre">Curve</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.curves.Curve.points"><code class="docutils literal notranslate"><span class="pre">Curve.points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.curves.Curve.draw"><code class="docutils literal notranslate"><span class="pre">Curve.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.curves.Curve.draw_single_curve"><code class="docutils literal notranslate"><span class="pre">Curve.draw_single_curve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.curves.Curve.draw_single_curve_with_randomization"><code class="docutils literal notranslate"><span class="pre">Curve.draw_single_curve_with_randomization()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.ellipse">handanim.primitives.ellipse module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Circle"><code class="docutils literal notranslate"><span class="pre">Circle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Ellipse"><code class="docutils literal notranslate"><span class="pre">Ellipse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Ellipse.center"><code class="docutils literal notranslate"><span class="pre">Ellipse.center</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Ellipse.width"><code class="docutils literal notranslate"><span class="pre">Ellipse.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Ellipse.height"><code class="docutils literal notranslate"><span class="pre">Ellipse.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Ellipse.draw"><code class="docutils literal notranslate"><span class="pre">Ellipse.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.Ellipse.draw_ellipse_border"><code class="docutils literal notranslate"><span class="pre">Ellipse.draw_ellipse_border()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.GlowDot"><code class="docutils literal notranslate"><span class="pre">GlowDot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.ellipse.GlowDot.draw"><code class="docutils literal notranslate"><span class="pre">GlowDot.draw()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.eraser">handanim.primitives.eraser module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.eraser.Eraser"><code class="docutils literal notranslate"><span class="pre">Eraser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.eraser.Eraser.objects_to_erase"><code class="docutils literal notranslate"><span class="pre">Eraser.objects_to_erase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.eraser.Eraser.drawable_cache"><code class="docutils literal notranslate"><span class="pre">Eraser.drawable_cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.eraser.Eraser.draw"><code class="docutils literal notranslate"><span class="pre">Eraser.draw()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.lines">handanim.primitives.lines module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.Line"><code class="docutils literal notranslate"><span class="pre">Line</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.Line.start"><code class="docutils literal notranslate"><span class="pre">Line.start</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.Line.end"><code class="docutils literal notranslate"><span class="pre">Line.end</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.Line.draw"><code class="docutils literal notranslate"><span class="pre">Line.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.Line.draw_single_line"><code class="docutils literal notranslate"><span class="pre">Line.draw_single_line()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.LinearPath"><code class="docutils literal notranslate"><span class="pre">LinearPath</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.LinearPath.points"><code class="docutils literal notranslate"><span class="pre">LinearPath.points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.LinearPath.close"><code class="docutils literal notranslate"><span class="pre">LinearPath.close</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.lines.LinearPath.draw"><code class="docutils literal notranslate"><span class="pre">LinearPath.draw()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.math">handanim.primitives.math module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math"><code class="docutils literal notranslate"><span class="pre">Math</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.tex_expression"><code class="docutils literal notranslate"><span class="pre">Math.tex_expression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.position"><code class="docutils literal notranslate"><span class="pre">Math.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.font_size"><code class="docutils literal notranslate"><span class="pre">Math.font_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.font_name"><code class="docutils literal notranslate"><span class="pre">Math.font_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id0"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id1"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.polygons">handanim.primitives.polygons module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.polygons.NGon"><code class="docutils literal notranslate"><span class="pre">NGon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.polygons.Polygon"><code class="docutils literal notranslate"><span class="pre">Polygon</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.polygons.Polygon.points"><code class="docutils literal notranslate"><span class="pre">Polygon.points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.polygons.Polygon.draw"><code class="docutils literal notranslate"><span class="pre">Polygon.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.polygons.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.polygons.Square"><code class="docutils literal notranslate"><span class="pre">Square</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives.text">handanim.primitives.text module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.CustomPen"><code class="docutils literal notranslate"><span class="pre">CustomPen</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.text"><code class="docutils literal notranslate"><span class="pre">Text.text</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.position"><code class="docutils literal notranslate"><span class="pre">Text.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.font_size"><code class="docutils literal notranslate"><span class="pre">Text.font_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.scale_factor"><code class="docutils literal notranslate"><span class="pre">Text.scale_factor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.get_random_font_choice"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.get_glyph_strokes"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.get_glyph_space"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.text.Text.draw"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id2"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id3"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id4"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id5"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.primitives.html#module-handanim.primitives">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Circle"><code class="docutils literal notranslate"><span class="pre">Circle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Curve"><code class="docutils literal notranslate"><span class="pre">Curve</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Curve.points"><code class="docutils literal notranslate"><span class="pre">Curve.points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Curve.draw"><code class="docutils literal notranslate"><span class="pre">Curve.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Curve.draw_single_curve"><code class="docutils literal notranslate"><span class="pre">Curve.draw_single_curve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Curve.draw_single_curve_with_randomization"><code class="docutils literal notranslate"><span class="pre">Curve.draw_single_curve_with_randomization()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Ellipse"><code class="docutils literal notranslate"><span class="pre">Ellipse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Ellipse.center"><code class="docutils literal notranslate"><span class="pre">Ellipse.center</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Ellipse.width"><code class="docutils literal notranslate"><span class="pre">Ellipse.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Ellipse.height"><code class="docutils literal notranslate"><span class="pre">Ellipse.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Ellipse.draw"><code class="docutils literal notranslate"><span class="pre">Ellipse.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Ellipse.draw_ellipse_border"><code class="docutils literal notranslate"><span class="pre">Ellipse.draw_ellipse_border()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Eraser"><code class="docutils literal notranslate"><span class="pre">Eraser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Eraser.objects_to_erase"><code class="docutils literal notranslate"><span class="pre">Eraser.objects_to_erase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Eraser.drawable_cache"><code class="docutils literal notranslate"><span class="pre">Eraser.drawable_cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Eraser.draw"><code class="docutils literal notranslate"><span class="pre">Eraser.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Line"><code class="docutils literal notranslate"><span class="pre">Line</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Line.start"><code class="docutils literal notranslate"><span class="pre">Line.start</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Line.end"><code class="docutils literal notranslate"><span class="pre">Line.end</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Line.draw"><code class="docutils literal notranslate"><span class="pre">Line.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Line.draw_single_line"><code class="docutils literal notranslate"><span class="pre">Line.draw_single_line()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math"><code class="docutils literal notranslate"><span class="pre">Math</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.tex_expression"><code class="docutils literal notranslate"><span class="pre">Math.tex_expression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.position"><code class="docutils literal notranslate"><span class="pre">Math.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.font_size"><code class="docutils literal notranslate"><span class="pre">Math.font_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.font_name"><code class="docutils literal notranslate"><span class="pre">Math.font_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id6"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id7"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.NGon"><code class="docutils literal notranslate"><span class="pre">NGon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Polygon"><code class="docutils literal notranslate"><span class="pre">Polygon</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Polygon.points"><code class="docutils literal notranslate"><span class="pre">Polygon.points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Polygon.draw"><code class="docutils literal notranslate"><span class="pre">Polygon.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Square"><code class="docutils literal notranslate"><span class="pre">Square</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.text"><code class="docutils literal notranslate"><span class="pre">Text.text</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.position"><code class="docutils literal notranslate"><span class="pre">Text.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.font_size"><code class="docutils literal notranslate"><span class="pre">Text.font_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.scale_factor"><code class="docutils literal notranslate"><span class="pre">Text.scale_factor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.get_random_font_choice"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.get_glyph_strokes"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.get_glyph_space"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Text.draw"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id8"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id9"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id10"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id11"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="handanim.stylings.html">handanim.stylings package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.color">handanim.stylings.color module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.fillpatterns">handanim.stylings.fillpatterns module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.render_fill_lines()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HatchFillPattern"><code class="docutils literal notranslate"><span class="pre">HatchFillPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HatchFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">HatchFillPattern.fill()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.fill()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.get_filler"><code class="docutils literal notranslate"><span class="pre">get_filler()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.fonts">handanim.stylings.fonts module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fonts.get_font_path"><code class="docutils literal notranslate"><span class="pre">get_font_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fonts.list_fonts"><code class="docutils literal notranslate"><span class="pre">list_fonts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.strokes">handanim.stylings.strokes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.strokes.apply_stroke_pressure"><code class="docutils literal notranslate"><span class="pre">apply_stroke_pressure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.strokes.apply_strokes_gradient"><code class="docutils literal notranslate"><span class="pre">apply_strokes_gradient()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.utils">handanim.stylings.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.utils.hachure_lines"><code class="docutils literal notranslate"><span class="pre">hachure_lines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.utils.polygon_hachure_lines"><code class="docutils literal notranslate"><span class="pre">polygon_hachure_lines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.utils.rotate_points"><code class="docutils literal notranslate"><span class="pre">rotate_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.utils.straight_hachure_lines"><code class="docutils literal notranslate"><span class="pre">straight_hachure_lines()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-handanim">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-handanim" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="handanim.core.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">handanim.core package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="modules.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">handanim</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Subhrajyoty Roy
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">handanim package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#module-handanim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>
