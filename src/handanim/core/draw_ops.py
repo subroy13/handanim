@@ -18,7 +18,13 @@ class OpsType(Enum):
 
 class Ops:
     """
-    Describes a drawing operation to be performed
+    Represents a drawing operation to be performed in the animation system.
+
+    Attributes:
+        SETUP_OPS_TYPES (List[OpsType]): Types of operations considered setup operations.
+        type (OpsType): The type of drawing operation.
+        data (Any): The data used to perform the drawing operation.
+        partial (float, optional): Fraction of the operation to be performed, defaults to 1.0.
     """
 
     SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO]
@@ -37,6 +43,18 @@ class Ops:
 
 
 class OpsSet:
+    """
+    Represents a collection of drawing operations with methods for manipulation and rendering.
+
+    Provides functionality to:
+    - Add, extend, and manage a list of drawing operations
+    - Calculate bounding box and center of gravity
+    - Perform transformations like translation, scaling, and rotation
+    - Render operations to a Cairo context
+
+    Attributes:
+        opsset (List[Ops]): A list of drawing operations to be performed.
+    """
 
     def __init__(self, initial_set: List[Union[dict, Ops]] = []):
         if len(initial_set) == 0 or isinstance(initial_set[0], Ops):

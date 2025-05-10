@@ -19,8 +19,19 @@ class AnimationEventType(Enum):
 
 class AnimationEvent:
     """
-    Represents an animation event
-    happening on the scene
+    Represents an animation event occurring on a scene with configurable properties.
+
+    Attributes:
+        CREATION_EVENT_TYPES (List[AnimationEventType]): Animation types that signify object creation.
+        DESTROY_EVENT_TYPES (List[AnimationEventType]): Animation types that signify object destruction.
+
+    Args:
+        drawable (Drawable): The drawable object for which the animation is applied.
+        type (AnimationEventType): The type of animation to be performed.
+        start_time (float, optional): The starting time point of the animation in seconds. Defaults to 0.
+        duration (float, optional): The duration of the animation in seconds. Defaults to 0.
+        easing_fun (callable, optional): An optional easing function to modify animation progression. Defaults to None.
+        data (dict, optional): Additional configuration data specific to the animation type. Defaults to an empty dict.
     """
 
     CREATION_EVENT_TYPES = [
@@ -62,7 +73,15 @@ def get_sketching_opsset(
     progress: float,
 ):
     """
-    Calculate and get the sketching opssets for the given drawable
+    Calculate a partial OpsSet representing the sketching progress of an operation set.
+
+    Args:
+        opsset (OpsSet): The original set of operations to be partially sketched.
+        progress (float): The progress of sketching, ranging from 0.0 to 1.0.
+
+    Returns:
+        OpsSet: A new OpsSet containing the operations up to the specified progress point,
+                with the last operation potentially being partially completed.
     """
     base_ops = opsset.opsset
     n_count = len(
@@ -98,10 +117,25 @@ def get_animated_opsset(
     opsset: OpsSet, animation_events: List[Tuple[AnimationEvent, float]]
 ):
     """
-    Get the animated opset for the given animation event
-       -> Here we have a list of animation events, and for each we have a progress (between 0.0 and 1.0)
+    Animate an OpsSet based on a list of animation events.
 
-    1. First, we need to apply if sketching operation is there => as that gives partial offset
+    Applies various animation transformations like sketching, fading, zooming, and translating
+    to the input OpsSet according to the specified animation events and their progress.
+
+    Key transformations include:
+    - Sketching operations with optional glowing dot
+    - Opacity changes (fade in/out)
+    - Scaling (zoom in/out)
+    - Translation from/to specific points
+
+
+    Args:
+        opsset (OpsSet): The original set of operations to be animated.
+        animation_events (List[Tuple[AnimationEvent, float]]): A list of animation events
+            with their corresponding progress values (0.0 to 1.0).
+
+    Returns:
+        OpsSet: A new OpsSet with applied animation transformations.
     """
 
     new_opsset = OpsSet(initial_set=[])  # initialize a blank opsset

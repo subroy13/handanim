@@ -12,6 +12,22 @@ from ..stylings.strokes import apply_stroke_pressure
 
 
 class Math(Drawable):
+    """
+    A Drawable class for rendering mathematical expressions using TeX notation.
+
+    This class parses a TeX expression and renders individual glyphs using a specified font,
+    supporting custom positioning, scaling, and stroke styling.
+
+    Attributes:
+        tex_expression (str): The TeX mathematical expression to render
+        position (Tuple[float, float]): The starting position for rendering the expression
+        font_size (int, optional): The size of the font, defaults to 12
+        font_name (str): The name of the font to use for rendering, defaults to "feasibly"
+
+    Methods:
+        get_glyph_opsset: Extracts the operations set for a single unicode glyph
+        draw: Renders the entire mathematical expression as a set of drawing operations
+    """
 
     def __init__(
         self,

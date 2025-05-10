@@ -15,7 +15,19 @@ class StrokePressure(Enum):
 class StrokeStyle:
     """
     A class that defines the styling configurations for the strokes
-    of the boundaries of the primitives
+    of the boundaries of the primitives.
+
+    Allows customization of stroke appearance including color, width, opacity,
+    and pressure characteristics. Defaults to a black, 1-pixel wide constant
+    pressure stroke with full opacity.
+
+    Attributes:
+        options (dict): Raw keyword arguments passed during initialization
+        color (tuple): RGB color tuple, defaults to black (0, 0, 0)
+        width (int/float): Stroke width in pixels, defaults to 1
+        opacity (float): Stroke opacity from 0-1, defaults to 1
+        stroke_pressure (StrokePressure): Pressure mode for stroke rendering,
+            defaults to StrokePressure.CONSTANT
     """
 
     def __init__(self, **kwargs):
@@ -30,8 +42,22 @@ class StrokeStyle:
 
 class FillStyle:
     """
-    A class that defines the styling configurations for the fills
-    of the primitives
+    A class that defines the styling configurations for the fills of the primitives.
+
+    Allows customization of fill appearance including color, opacity, fill pattern,
+    hachure settings, and fill weight. Defaults to a black fill with full opacity
+    and hachure pattern.
+
+    Attributes:
+        options (dict): Raw keyword arguments passed during initialization
+        color (tuple): RGB color tuple, defaults to black (0, 0, 0)
+        opacity (float): Fill opacity from 0-1, defaults to 1
+        fill_pattern (str): Pattern for filling, defaults to "hachure"
+        hachure_angle (int): Angle of hachure lines in degrees, defaults to 45
+        hachure_gap (int): Gap between hachure lines, defaults to 4
+        hachure_line_width (int): Width of hachure lines, defaults to 1
+        zigzag_offset (int): Offset for zigzag pattern, defaults to -1
+        fill_weight (int): Weight/thickness of fill, defaults to 2
     """
 
     def __init__(self, **kwargs):
@@ -50,8 +76,17 @@ class FillStyle:
 
 class SketchStyle:
     """
-    A class that defines the styling configurations for the
-    sketchy versions of the human-style drawings
+    A class that defines the styling configurations for sketchy, hand-drawn style renderings.
+
+    Attributes:
+        bowing (int): Amount of bowing/waviness in lines, defaults to 1
+        max_random_offset (int): Maximum random offset for sketch lines, defaults to 2
+        roughness (int): Roughness of sketch lines, defaults to 1
+        curve_tightness (int): Tightness of curves, defaults to 0
+        curve_fitting (float): Curve fitting parameter, defaults to 0.95
+        curve_step_count (int): Number of steps for curve rendering, defaults to 9
+        disable_multi_stroke (bool): Flag to disable multi-stroke rendering, defaults to False
+        disable_font_mixture (bool): Flag to disable font mixture, defaults to True
     """
 
     def __init__(self, **kwargs):

@@ -4,6 +4,16 @@ from ..core.draw_ops import OpsSet, Ops, OpsType
 
 
 class Eraser(Drawable):
+    """
+    A Drawable representing an eraser that can remove specified drawable objects.
+
+    Attributes:
+        objects_to_erase (List[Drawable]): The list of drawable objects to be erased.
+        drawable_cache (DrawableCache): Cache used for calculating bounding box of objects to erase.
+
+    The draw method generates a zigzag motion over the bounding box of the objects to be erased,
+    using an expanded pen width to create a pastel blend erasing effect.
+    """
 
     def __init__(
         self,

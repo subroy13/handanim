@@ -1,46 +1,42 @@
 # ✍️ handanim
 
-**handanim** is a lightweight Python animation library for generating whiteboard-style animations — where shapes and text are drawn progressively in a hand-drawn, sketchy fashion. Perfect for educational videos, tutorials, or data storytelling.
+> A Python library to create whiteboard-style, hand-drawn animations for educational videos, tutorials or data storytelling.
 
-## Design Details
+**handanim** lets you programmatically animate hand-drawn diagrams, geometric shapes, handwritten text, and visual explanations — ideal for online teaching, explainer videos, and mathematical illustrations.
 
-1. `core`: Core capabilities.
-   - `drawable.py`: Defines the structure that can be drawn.
-   - `styles.py`: Defines the styling oriented options that can be configured.
-   - `draw_ops.py`: Defines the opsets, the basic structure that is used to draw. Along with the rendering logic for the opsset into the cairo context.
-   - `utils.py`: Some utility functions that does not fit anywhere else
-   - `animation.py`: Defines the animation structures.
-   - `scene.py`: Defines the scene, which is the main entry point for the user.
+> ⭐️ If you like this project, please consider starring it on [GitHub](https://github.com/subroy13/handanim)! Your support helps the project grow.
 
-## 🔧 Features
+## ✨ Features
 
-- ✅ **Primitive drawing operations**: Supports drawing paths using `MOVE_TO`, `LINE_TO`, `ELLIPSE`, etc.
-- ✅ **Stroke-based animation engine**: Each object is animated stroke-by-stroke over frames.
-- ✅ **Layered drawing**: Animate multiple objects independently on the same scene.
-- ✅ **Handwritten ellipse and shape filling**: Draws ellipses and fills them using customizable stroke patterns (e.g., hatching).
-- ✅ **Frame-based scene rendering**: Define frame-by-frame drawing instructions using `OpsSet`.
-- ✅ **Composable animation**: Define reusable animation components and orchestrate them using a timeline.
-- ✅ **Randomized jitter**: Add natural imperfection to strokes for a human-like feel.
-- 📝 **Text support (in progress)**: Handwriting-style rendering of arbitrary text using mock fonts and real TTF font parsing.
-- 🎥 **Export to video (via matplotlib/FFmpeg)**: Turn frames into high-quality animations.
+- Draw and animate shapes (lines, ellipses, polygons) with a hand-drawn feel
+- Fill objects with sketch-style strokes (hatching, scribbles)
+- Animate handwritten text using custom fonts
+- Export vector images (SVG) or videos (MP4).
+- Intuitive Python API for creating scenes and timelines
 
-## 📦 Installation
+## 📷 Example Output
+
+<p align="center">
+  <img src="./examples/output/pythagoras.gif" width="500">
+</p>
+
+_(Example animation of a Pythagoras Theorem — see `examples/pythagoras.py`)_
+
+## 🚀 Quickstart
 
 ```bash
-pip install handanim
+# Install dependencies (requires Python 3.13+)
+poetry install
+
+# Run example animation
+poetry run python examples/pythagoras.py
 ```
 
-> Note: If you're using real font parsing, you may also need:
-
-```bash
-pip install fonttools freetype-py svgpathtools numpy
-```
-
-## ✏️ Basic Usage
+### ✏️ Basic Usage
 
 ```python
-from handanim.core.animation import Scene, AnimationEvent, AnimationEventType
-from handanim.primitives.polygons import NGon
+from handanim.core import Scene, AnimationEvent, AnimationEventType
+from handanim.primitives import NGon
 
 scene = Scene(width = 800, height = 608)
 triange = NGon(
@@ -58,40 +54,22 @@ scene.add(event)
 scene.render("triangle_anim.mp4", fps = 30)
 ```
 
----
-
-## 🧪 Showcases
-
-- 🎞️ Drawing shapes like triangles, circles, and ellipses
-- ✒️ Filling an ellipse using hatching stroke-by-stroke
-- 📖 Writing the word `"hello"` using mocked handwriting font, stroke by stroke
-- ✨ Multiple object animation with frame-wise timing and overlays
-
-## 🧠 Internals (Architecture)
-
-- `Ops` and `OpsSet`: Describe vector drawing instructions.
-- `Scene`: Collects objects and sequences them in time.
-- Drawing backend: Uses `cairo` (default), can be extended for other plotting libraries.
-- Handwriting: Converts strokes from mock or real fonts into draw operations.
-
-## 🚧 TODO / Roadmap
-
-- [ ] ✅ **Real TTF font parsing** to generate handwritten text strokes
-- [ ] 🎨 Support for colors, stroke width, opacity
-- [ ] ⏳ Parametric timing per stroke (e.g., fast/slow drawing)
-- [ ] 🔤 Text wrapping and multiline support
-- [ ] 📐 Bezier curve drawing support
-- [ ] 🪄 Export to SVG animation or Lottie
-- [ ] 🌐 Web demo / Playground
-- [ ] 🧩 Integration with tools like Manim, Streamlit or Jupyter
-
-## 🧑‍💻 Contributing
-
-Contributions welcome! If you have ideas, bug reports, or features you'd love to see — open an issue or pull request.
-
 ## 📄 License
 
-MIT License.
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+We welcome contributions!
+
+You can help by:
+
+- Adding new animation primitives (e.g., Bezier curves, arrows)
+- Improving rendering quality and styles, caching and optimization.
+- Writing example scripts or tutorials
+- Reporting bugs and suggesting features
+
+Please see `CONTRIBUTING.md` (coming soon) for guidelines.
 
 ## ❤️ Inspiration
 
@@ -102,13 +80,36 @@ Inspired by:
 - Whiteboard animation videos
 - Interactive teaching tools
 
-## ✨ Made with love by Subhrajyoty Roy
+⭐️ **Support handanim!**
+
+If you find this project useful, please give it a star on [GitHub](https://github.com/subroy13/handanim).
+
+It motivates me to keep improving it and helps others discover it!
+
+> ✨ Made with love by Subhrajyoty Roy
 
 ---
 
+## 🧠 Internals (Architecture)
+
+1. `core`: Core capabilities.
+
+   - `drawable.py`: Defines the structure that can be drawn.
+   - `styles.py`: Defines the styling oriented options that can be configured.
+   - `draw_ops.py`: Defines the opsets, the basic structure that is used to draw. Along with the rendering logic for the opsset into the cairo context.
+   - `utils.py`: Some utility functions that does not fit anywhere else
+   - `animation.py`: Defines the animation structures.
+   - `scene.py`: Defines the scene, which is the main entry point for the user.
+
+2. Models.
+   - `Ops` and `OpsSet`: Describe vector drawing instructions.
+   - `Scene`: Collects objects and sequences them in time.
+   - Handwriting: Converts strokes from mock or real fonts into draw operations.
+
+## 💡 Features Coming soon
+
 1. Arrows
 2. Flowcharts diagrams
-3. Adding images
+3. Importing images and videos into the scene.
 4. Autofitting content based on the size of textbox
-5. Grafana graphs
-6. Tables with headers (using rectangles)
+5. Showcasing tabular data with headers.

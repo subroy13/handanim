@@ -1,7 +1,14 @@
-from handanim.core.animation import AnimationEvent, AnimationEventType
-from handanim.core.scene import Scene
-from handanim.core.styles import StrokeStyle, SketchStyle, FillStyle
+import os
+from handanim.core import (
+    AnimationEvent,
+    AnimationEventType,
+    Scene,
+    SketchStyle,
+    StrokeStyle,
+    FillStyle,
+)
 from handanim.primitives import Text, Eraser, Polygon, Math
+from handanim.stylings.color import *
 
 scene = Scene(width=1920, height=1088)  # blank scene (viewport = 1777, 1000)
 
@@ -10,8 +17,8 @@ title_text = Text(
     text="Pythagoras' Theorem",
     position=(300, 500),
     font_size=192,
-    stroke_style=StrokeStyle(color=(0, 0, 1), width=2),
-    glow_dot_hint={"color": (0, 0, 1), "radius": 5},
+    stroke_style=StrokeStyle(color=BLUE, width=2),
+    glow_dot_hint={"color": BLUE, "radius": 5},
 )
 scene.add(
     AnimationEvent(
@@ -26,7 +33,7 @@ scene.add(
 eraser = Eraser(
     objects_to_erase=[title_text],
     drawable_cache=scene.drawable_cache,
-    glow_dot_hint={"color": (0.7, 0.7, 0.7), "radius": 10},
+    glow_dot_hint={"color": ERASER_HINT_COLOR, "radius": 10},
 )
 scene.add(
     AnimationEvent(
@@ -42,9 +49,9 @@ right_triangle = Polygon(
         (500, 700),
         (900, 700),
     ],
-    stroke_style=StrokeStyle(color=(0, 0, 0), width=2),
+    stroke_style=StrokeStyle(color=BLACK, width=2),
     sketch_style=SketchStyle(roughness=5),
-    fill_style=FillStyle(color=(1, 0, 0), hachure_gap=10),
+    fill_style=FillStyle(color=RED, hachure_gap=10),
 )
 scene.add(
     AnimationEvent(
@@ -73,7 +80,7 @@ pyth_form = Math(
     tex_expression=r"$a^2 + b^2 = c^2$",
     position=(900, 300),
     font_size=128,
-    stroke_style=StrokeStyle(color=(0, 0, 1), width=2),
+    stroke_style=StrokeStyle(color=BLUE, width=2),
 )
 scene.add(
     AnimationEvent(
@@ -84,7 +91,9 @@ scene.add(
     )
 )
 
-
 # save the scene
-scene.render("pythagoras.mp4", max_length=15)
+output_path = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "output", "pythagoras.mp4"
+)
+scene.render(output_path, max_length=15)
 # scene.render_snapshot("pythagoras.svg", frame_in_seconds=3, max_length=15)

@@ -8,6 +8,20 @@ from ..stylings.fillpatterns import get_filler
 
 
 class Polygon(Drawable):
+    """
+    A Polygon class representing a drawable polygon shape.
+
+    This class allows creating polygons with a list of points, drawing them with optional
+    stroke and fill styles. It ensures the polygon has at least three points and can
+    render the polygon using a closed linear path with optional filling.
+
+    Attributes:
+        points (List[tuple[float, float]]): A list of (x, y) coordinates defining the polygon vertices.
+
+    Raises:
+        ValueError: If fewer than three points are provided.
+    """
+
     def __init__(
         self,
         points: List[tuple[float, float]],
@@ -39,6 +53,19 @@ class Polygon(Drawable):
 
 
 class Rectangle(Polygon):
+    """
+    A Rectangle class representing a rectangular polygon shape.
+
+    This class creates a rectangle by specifying its top-left corner coordinates,
+    width, and height. It inherits from the Polygon class and generates the four
+    vertices of the rectangle automatically.
+
+    Args:
+        top_left (tuple[float, float]): Coordinates of the top-left corner of the rectangle.
+        width (float): Width of the rectangle.
+        height (float): Height of the rectangle.
+    """
+
     def __init__(
         self,
         top_left: tuple[float, float],

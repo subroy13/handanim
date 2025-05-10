@@ -6,9 +6,23 @@ from .styles import FillStyle, SketchStyle, StrokeStyle
 
 class Drawable:
     """
-    A base drawable class that defines the interface for all objects that can be drawn.
-    All primitives like Circle, Rectangle, etc. should inherit from this class.
-    and implement the draw() method
+    A base class representing a drawable object with drawing, transformation, and styling capabilities.
+
+    This class provides a standard interface for creating drawable objects that can be drawn on a canvas.
+    Subclasses must implement the draw() method to define specific drawing operations.
+
+    Attributes:
+        id (str): A unique hexadecimal identifier for the drawable object.
+        stroke_style (StrokeStyle): Defines the stroke styling for the drawable.
+        sketch_style (SketchStyle): Defines the sketch styling for the drawable.
+        fill_style (Optional[FillStyle]): Optional fill style for the drawable.
+        glow_dot_hint (Dict): Optional configuration for glow dot rendering.
+
+    Methods:
+        draw(): Abstract method to generate drawing operations.
+        translate(): Creates a translated version of the drawable.
+        scale(): Creates a scaled version of the drawable.
+        rotate(): Creates a rotated version of the drawable.
     """
 
     def __init__(

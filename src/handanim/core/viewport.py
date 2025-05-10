@@ -4,8 +4,17 @@ import cairo
 
 class Viewport:
     """
-    Viewport is a wrapper that transforms the
-    math coordinates to the pixel coordinates
+    A viewport that transforms mathematical coordinates to pixel coordinates for rendering.
+
+    Handles scaling and translation between world coordinates and screen pixels,
+    ensuring proper mapping and centering within a specified margin.
+
+    Attributes:
+        world_xrange (Tuple[float, float]): The x-coordinate range in world space.
+        world_yrange (Tuple[float, float]): The y-coordinate range in world space.
+        screen_width (int): The width of the rendering surface in pixels.
+        screen_height (int): The height of the rendering surface in pixels.
+        margin (int): The margin around the rendered content.
     """
 
     def __init__(

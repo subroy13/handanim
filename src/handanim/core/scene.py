@@ -13,7 +13,18 @@ from .viewport import Viewport
 
 class Scene:
     """
-    Scene is where all the magic happens
+    A Scene represents an animation composition where drawables and events are managed.
+
+    Handles the creation, timeline, and rendering of animated graphics with configurable
+    viewport, background, and frame settings. Supports creating snapshots and full video
+    renders of animated sequences.
+
+    Attributes:
+        width (int): Width of the rendering surface in pixels.
+        height (int): Height of the rendering surface in pixels.
+        fps (int): Frames per second for video rendering.
+        background_color (tuple): RGB color for scene background.
+        viewport (Viewport): Defines coordinate mapping between world and screen space.
     """
 
     def __init__(

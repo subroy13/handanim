@@ -10,6 +10,18 @@ from ..core.styles import StrokePressure
 
 
 class Ellipse(Drawable):
+    """
+    A drawable ellipse primitive with sketchy rendering capabilities.
+
+    Supports customizable center, width, height, and sketch-style rendering with optional multi-stroke and roughness effects.
+    Allows for generating ellipses with randomized point generation and stroke variations.
+
+    Attributes:
+        center (np.ndarray): The center point of the ellipse
+        width (float): The width of the ellipse
+        height (float): The height of the ellipse
+    """
+
     def __init__(
         self,
         center: Tuple[float, float],
@@ -199,6 +211,14 @@ class Ellipse(Drawable):
 
 
 class Circle(Ellipse):
+    """
+    A specialized Ellipse where the x and y radii are equal, creating a perfect circle.
+
+    Args:
+        center (tuple[float, float]): The center coordinates of the circle.
+        radius (float): The radius of the circle.
+    """
+
     def __init__(
         self,
         center: tuple[float, float],
@@ -216,6 +236,16 @@ class Circle(Ellipse):
 
 
 class GlowDot(Drawable):
+    """
+    A drawable glowing dot with customizable center, radius, and opacity scaling.
+
+    Renders a dot with multiple overlapping layers of decreasing opacity and increasing radius
+    to create a glowing effect.
+
+    Args:
+        center (Tuple[float, float]): The center coordinates of the dot.
+        radius (float, optional): The base radius of the dot. Defaults to 1.
+    """
 
     def __init__(
         self,
