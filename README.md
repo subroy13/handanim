@@ -1,5 +1,7 @@
 # ✍️ handanim
 
+[![Build and Deploy Docs](https://github.com/subroy13/handanim/actions/workflows/docs.yml/badge.svg)](https://github.com/subroy13/handanim/actions/workflows/docs.yml)
+
 > A Python library to create whiteboard-style, hand-drawn animations for educational videos, tutorials or data storytelling.
 
 **handanim** lets you programmatically animate hand-drawn diagrams, geometric shapes, handwritten text, and visual explanations — ideal for online teaching, explainer videos, and mathematical illustrations.
