@@ -36,7 +36,7 @@ class Math(Drawable):
         tex_expression: str,
         position: Tuple[float, float],
         font_size: int = 12,
-        font_name: str = "feasibly",
+        font_name: str = "handanimtype1",
         *args,
         **kwargs,
     ):
@@ -95,7 +95,8 @@ class Math(Drawable):
         self, unicode: int, font_size: int
     ) -> Tuple[OpsSet, float, float]:
         if str(unicode) not in self.font_details["glyphs"]:
-            raise ValueError(f"Glyph {chr(unicode)} not found in font")
+            print(f"Glyph {chr(unicode)}, unicode {unicode} not found in font")
+            return OpsSet(initial_set=[]), 1.0, 1.0
         glyph_svg_paths = self.font_details["glyphs"][str(unicode)]
         svg = SVG(svg_paths=glyph_svg_paths)
         svg_ops = svg.draw()

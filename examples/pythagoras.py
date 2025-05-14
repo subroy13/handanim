@@ -8,7 +8,7 @@ from handanim.core import (
     FillStyle,
 )
 from handanim.primitives import Text, Eraser, Polygon, Math
-from handanim.stylings.color import *
+from handanim.stylings.color import BLUE, RED, BLACK, ERASER_HINT_COLOR
 
 scene = Scene(width=1920, height=1088)  # blank scene (viewport = 1777, 1000)
 
