@@ -19,6 +19,10 @@ matplotlib = ">=3.7.0,<4.0.0"
 [tool.poetry.group.dev.dependencies]
 sphinx = "^8.2.3"
 furo = "^2024.8.6"
+vtracer = "^0.6.11"
+svgpathtools = "^1.7.0"
+opencv-python = "^4.11.0.86"
+scikit-image = "^0.25.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
