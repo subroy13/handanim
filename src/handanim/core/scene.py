@@ -115,32 +115,31 @@ class Scene:
         need to process the opssets and what to draw
         for each frame
         """
-        events: List[AnimationEvent] = self.events
-        events.sort(key=lambda x: x.start_time)  # sort events in place
+        events = sorted(self.events, key=lambda x: x.start_time)
         key_frames = [event.start_time for event in events] + [
             event.end_time for event in events
         ]
         if max_length is None:
-            max_length = np.round(key_frames[-1])
+            max_length = np.ceil(key_frames[-1])
         else:
-            max_length = np.round(max_length * fps)  # else convert to frames
             key_frames.append(max_length)
         key_frames = list(set(key_frames))
         key_frames.sort()
-        key_frames = np.round(
-            np.array(key_frames) * fps
-        ).tolist()  # this converts seconds to frames
+        key_frame_indices = np.round(np.array(key_frames) * fps).astype(int).tolist()
         scene_opsset_list: List[OpsSet] = []
         current_active_objects: List[str] = []
 
         # start calculating with a progress bar
-        for t in tqdm(range(0, max_length + 1), desc="Calculating animation frames..."):
+        frame_count = int(np.round(max_length * fps))
+        for t in tqdm(
+            range(0, frame_count + 1), desc="Calculating animation frames..."
+        ):
             frame_opsset = OpsSet(
                 initial_set=[]
             )  # initialize with blank opsset, will add more
 
             # for each frame, update the current active objects if it is a keyframe
-            if t in key_frames:
+            if t in key_frame_indices:
                 current_active_objects = self.get_active_objects(t / fps)
 
             # for each of these active objects, calculate partial opssets to draw

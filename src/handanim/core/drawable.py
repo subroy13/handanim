@@ -36,9 +36,7 @@ class Drawable:
         self.stroke_style = stroke_style
         self.sketch_style = sketch_style
         self.fill_style = fill_style
-        if not isinstance(glow_dot_hint, dict):
-            glow_dot_hint = {}
-        self.glow_dot_hint = glow_dot_hint
+        self.glow_dot_hint = glow_dot_hint if isinstance(glow_dot_hint, dict) else {}
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__}>"

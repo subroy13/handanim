@@ -51,7 +51,7 @@ class AnimationEvent:
         start_time: float = 0,  # the starting time point  (in seconds)
         duration: float = 0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
-        data={},  # additional data for the animation, depending on the animation type
+        data: dict = None,  # additional data for the animation, depending on the animation type
     ):
         self.drawable = drawable
         self.type = type
@@ -59,11 +59,11 @@ class AnimationEvent:
         self.duration = duration
         self.end_time = start_time + duration
         self.easing_fun = easing_fun
-        self.data = data
+        self.data = data or {}
 
     def __repr__(self) -> str:
         return (
-            f"AnimationEvent(type={self.type}, start_time={self.start_time},",
+            f"AnimationEvent(type={self.type}, start_time={self.start_time},"
             f"duration={self.duration}, end_time={self.end_time}) for {str(self.drawable)}",
         )
 
@@ -205,9 +205,9 @@ def get_animated_opsset(
             gravity_x, gravity_y = opsset.get_center_of_gravity()
             point_x, point_y = event.data.get("point", (0, 0))
             coef = (
-                progress
+                1 - progress
                 if event.type == AnimationEventType.TRANSLATE_FROM_POINT
-                else 1 - progress
+                else progress
             )
             cur_x, cur_y = (
                 coef * point_x + (1 - coef) * gravity_x,

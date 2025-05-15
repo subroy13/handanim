@@ -75,6 +75,7 @@ class Rectangle(Polygon):
         **kwargs,
     ):
         x, y = top_left
+        self.top_left = top_left
         super().__init__(
             [
                 (x, y),
@@ -113,4 +114,5 @@ class Square(Rectangle):
         *args,
         **kwargs,
     ):
+        self.side_length = side_length
         super().__init__(top_left, side_length, side_length, *args, **kwargs)
