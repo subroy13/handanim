@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import List, Tuple
 import numpy as np
-from .drawable import Drawable
 from .draw_ops import OpsType, OpsSet, Ops
 from .styles import FillStyle
 from ..primitives.ellipse import GlowDot
@@ -26,7 +25,6 @@ class AnimationEvent:
         DESTROY_EVENT_TYPES (List[AnimationEventType]): Animation types that signify object destruction.
 
     Args:
-        drawable (Drawable): The drawable object for which the animation is applied.
         type (AnimationEventType): The type of animation to be performed.
         start_time (float, optional): The starting time point of the animation in seconds. Defaults to 0.
         duration (float, optional): The duration of the animation in seconds. Defaults to 0.
@@ -46,14 +44,12 @@ class AnimationEvent:
 
     def __init__(
         self,
-        drawable: Drawable,  # the drawable object for which the animation happens
         type: AnimationEventType,  # the type of animation
         start_time: float = 0,  # the starting time point  (in seconds)
         duration: float = 0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
         data: dict = None,  # additional data for the animation, depending on the animation type
     ):
-        self.drawable = drawable
         self.type = type
         self.start_time = start_time
         self.duration = duration
@@ -64,8 +60,23 @@ class AnimationEvent:
     def __repr__(self) -> str:
         return (
             f"AnimationEvent(type={self.type}, start_time={self.start_time},"
-            f"duration={self.duration}, end_time={self.end_time}) for {str(self.drawable)}",
+            f"duration={self.duration}, end_time={self.end_time})",
         )
+
+    def subdivide(self, n_division: int):
+        """
+        Returns subdivision of an event into n_division segments
+        """
+        return [
+            AnimationEvent(
+                type=self.type,
+                start_time=self.start_time + i * self.duration / n_division,
+                easing_fun=self.easing_fun,
+                data=self.data,
+                duration=self.duration / n_division,
+            )
+            for i in range(n_division)
+        ]
 
 
 def get_sketching_opsset(
@@ -150,10 +161,8 @@ def get_animated_opsset(
             sketching_opssets = get_sketching_opsset(opsset, progress)
             new_opsset.extend(sketching_opssets)
             # now we can optionally add a glowing dot for the sketching operation
-            if event.data.get("glowing_dot") or event.drawable.glow_dot_hint:
-                glow_dot_data = (
-                    event.data.get("glowing_dot") or event.drawable.glow_dot_hint
-                )
+            if event.data.get("glowing_dot"):
+                glow_dot_data = event.data.get("glowing_dot")
                 if not isinstance(glow_dot_data, dict):
                     glow_dot_data = {}
                 # we need to draw glowing dot

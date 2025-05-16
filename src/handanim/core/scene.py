@@ -1,12 +1,12 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Dict
 import numpy as np
 from tqdm import tqdm
 import cairo
 import imageio.v2 as imageio
 
 from .utils import cairo_surface_to_numpy
-from .animation import AnimationEvent, AnimationEventType, get_animated_opsset
-from .drawable import Drawable, DrawableCache
+from .animation import AnimationEvent, get_animated_opsset
+from .drawable import Drawable, DrawableCache, DrawableGroup
 from .draw_ops import OpsSet
 from .viewport import Viewport
 
@@ -40,8 +40,8 @@ class Scene:
         self.fps = fps
         self.background_color = background_color
         self.drawable_cache = DrawableCache()
-        self.events: List[AnimationEvent] = []
-        self.object_timelines = {}
+        self.events: List[Tuple[AnimationEvent, str]] = []
+        self.object_timelines: Dict[str, List[int]] = {}
 
         if viewport is not None:
             self.viewport = viewport
@@ -70,26 +70,36 @@ class Scene:
 
     def add(
         self,
-        event: Optional[AnimationEvent] = None,
-        drawable: Optional[Drawable] = None,
+        event: AnimationEvent,
+        drawable: Drawable,
     ):
-        if event is None and drawable is None:
-            raise ValueError("Either event or drawable must be present")
-        elif event is None:
-            event = AnimationEvent(
-                drawable, type=AnimationEventType.SKETCH
-            )  # create the basic sketch event
-        self.events.append(event)
-        drawable = event.drawable
+        """
+        Applies an animation event to a drawable primitive and
+        adds it to the scene
+        """
+        # handle the case for drawable groups
+        if isinstance(drawable, DrawableGroup):
+            if drawable.grouping_method == "parallel":
+                for sub_drawable in drawable.elements:
+                    # recursively call add() method, as a syntantic sugar
+                    self.add(event, drawable=sub_drawable)
+            else:
+                segmented_events = event.subdivide(len(drawable.elements))
+                for sub_drawable, segment_event in zip(
+                    drawable.elements, segmented_events
+                ):
+                    # recursively call add(), but with the duration modified appropriately
+                    self.add(event=segment_event, drawable=sub_drawable)
+        else:
+            self.events.append((event, drawable.id))
+            if not self.drawable_cache.has_drawable_oppset(drawable.id):
+                self.drawable_cache.set_drawable_opsset(drawable)
+                self.object_timelines[drawable.id] = []
 
-        if not self.drawable_cache.has_drawable_oppset(drawable.id):
-            self.drawable_cache.set_drawable_opsset(drawable)
-            self.object_timelines[drawable.id] = []
-
-        if event.type in AnimationEvent.CREATION_EVENT_TYPES:
-            self.object_timelines[drawable.id].append(event.start_time)
-        elif event.type in AnimationEvent.DESTROY_EVENT_TYPES:
-            self.object_timelines[drawable.id].append(event.end_time)
+            if event.type in AnimationEvent.CREATION_EVENT_TYPES:
+                self.object_timelines[drawable.id].append(event.start_time)
+            elif event.type in AnimationEvent.DESTROY_EVENT_TYPES:
+                self.object_timelines[drawable.id].append(event.end_time)
 
     def get_active_objects(self, t: float):
         """
@@ -115,7 +125,14 @@ class Scene:
         need to process the opssets and what to draw
         for each frame
         """
-        events = sorted(self.events, key=lambda x: x.start_time)
+        event_drawable_ids = sorted(self.events, key=lambda x: x[0].start_time)
+        events = [event for event, _ in event_drawable_ids]
+        drawable_events_mapping: Dict[str, List[AnimationEvent]] = {}
+        for event, drawable_id in event_drawable_ids:
+            if drawable_id not in drawable_events_mapping:
+                drawable_events_mapping[drawable_id] = [event]
+            else:
+                drawable_events_mapping[drawable_id].append(event)
         key_frames = [event.start_time for event in events] + [
             event.end_time for event in events
         ]
@@ -147,16 +164,14 @@ class Scene:
                 object_opsset: OpsSet = self.drawable_cache.get_drawable_opsset(
                     object_id
                 )
+                object_drawable: Drawable = self.drawable_cache.get_drawable(object_id)
 
                 # for every object, there could be multiple events associated
                 active_events = []
-                for event in events:
-                    # find the relevant events
-                    if (
-                        event.drawable.id == object_id
-                        and event.start_time <= t / fps
-                        and t / fps <= event.end_time
-                    ):
+                for event in drawable_events_mapping[object_id]:
+                    if object_drawable.glow_dot_hint:
+                        event.data["glowing_dot"] = object_drawable.glow_dot_hint
+                    if event.start_time <= t / fps and t / fps <= event.end_time:
                         progress = np.clip(
                             (t / fps - event.start_time) / event.duration,
                             0,

@@ -138,12 +138,17 @@ class DrawableCache:
 
     def __init__(self):
         self.cache: dict[str, OpsSet] = {}
+        self.drawables: dict[str, Drawable] = {}
 
     def has_drawable_oppset(self, drawable_id: str) -> bool:
         return drawable_id in self.cache
 
     def set_drawable_opsset(self, drawable: Drawable):
+        self.drawables[drawable.id] = drawable
         self.cache[drawable.id] = drawable.draw()  # calculate opsset and store
+
+    def get_drawable(self, drawable_id: str) -> Drawable:
+        return self.drawables.get(drawable_id, None)
 
     def get_drawable_opsset(self, drawable_id: str) -> OpsSet:
         return self.cache.get(drawable_id, OpsSet(initial_set=[]))
@@ -157,3 +162,31 @@ class DrawableCache:
         for drawable in drawables:
             merge_opsset.extend(self.get_drawable_opsset(drawable.id))
         return merge_opsset.get_bbox()
+
+
+class DrawableGroup(Drawable):
+    """
+    A drawable class that takes in a list of primitives
+    and applies all the animations / transformation
+    on the entire group
+        - If grouping method is parallel, then all animations are applied parallelly
+        - If grouping method is
+    """
+
+    def __init__(
+        self, elements: List[Drawable], grouping_method="parallel", *args, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.elements = elements
+        assert grouping_method in ["parallel", "series"]
+        self.grouping_method = grouping_method
+
+    def draw(self) -> OpsSet:
+        """
+        This is useful to apply transformations
+        to the entire group of objects at once
+        """
+        final_set = OpsSet(initial_set=[])
+        for elem in self.elements:
+            final_set.extend(elem.draw())
+        return final_set
