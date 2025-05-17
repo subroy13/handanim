@@ -126,6 +126,7 @@ class OpsSet:
     def get_current_point(self):
         """
         Given a opsset, get the current point of the drawing from last operation
+        but without doing the actual drawing
         """
         if len(self.opsset) == 0:
             return (0, 0)
@@ -165,6 +166,46 @@ class OpsSet:
                     return ep
                 else:
                     return last_op.data[-1]
+
+    def get_partial(self, progress: float):
+        """
+        Calculate a partial OpsSet representing the sketching progress of an operation set.
+
+        Args:
+            progress (float): The progress of sketching, ranging from 0.0 to 1.0.
+
+        Returns:
+            OpsSet: A new OpsSet containing the operations up to the specified progress point,
+                    with the last operation potentially being partially completed.
+        """
+        base_ops = self.opsset
+        n_count = len(
+            [op for op in base_ops if op.type not in Ops.SETUP_OPS_TYPES]
+        )  # counters are based on the non set-pen operations
+        n_active = int(progress * n_count)
+        counter = 0
+        last_op = None
+        new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
+        for op in base_ops:
+            if op.type not in Ops.SETUP_OPS_TYPES and counter < n_active:
+                new_opsset.add(op)
+                counter += 1
+            elif counter < n_active:
+                # set pen operations keep adding, but don't increase counter
+                new_opsset.add(op)
+            else:
+                last_op = op  # the last operation for which it stopped
+                break
+        if last_op is not None and (progress * n_count - n_active) > 0:
+            # need to calculate it partially
+            new_opsset.add(
+                Ops(
+                    type=last_op.type,
+                    data=last_op.data,
+                    partial=progress * n_count - n_active,
+                )
+            )
+        return new_opsset
 
     def translate(self, offset_x: float, offset_y: float):
         """

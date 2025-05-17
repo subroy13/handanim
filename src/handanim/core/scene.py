@@ -5,7 +5,7 @@ import cairo
 import imageio.v2 as imageio
 
 from .utils import cairo_surface_to_numpy
-from .animation import AnimationEvent, get_animated_opsset
+from .animation import AnimationEvent, CompositeAnimationEvent, AnimationEventType
 from .drawable import Drawable, DrawableCache, DrawableGroup
 from .draw_ops import OpsSet
 from .viewport import Viewport
@@ -77,6 +77,14 @@ class Scene:
         Applies an animation event to a drawable primitive and
         adds it to the scene
         """
+        # handle the case for composite events if any
+        if isinstance(event, CompositeAnimationEvent):
+            for sub_event in event.events:
+                self.add(
+                    sub_event, drawable
+                )  # recursively call add() for the subevents
+            return
+
         # handle the case for drawable groups
         if isinstance(drawable, DrawableGroup):
             if drawable.grouping_method == "parallel":
@@ -90,16 +98,18 @@ class Scene:
                 ):
                     # recursively call add(), but with the duration modified appropriately
                     self.add(event=segment_event, drawable=sub_drawable)
-        else:
-            self.events.append((event, drawable.id))
-            if not self.drawable_cache.has_drawable_oppset(drawable.id):
-                self.drawable_cache.set_drawable_opsset(drawable)
-                self.object_timelines[drawable.id] = []
+            return
 
-            if event.type in AnimationEvent.CREATION_EVENT_TYPES:
-                self.object_timelines[drawable.id].append(event.start_time)
-            elif event.type in AnimationEvent.DESTROY_EVENT_TYPES:
-                self.object_timelines[drawable.id].append(event.end_time)
+        # handle the simple single event and drawable case
+        self.events.append((event, drawable.id))
+        if not self.drawable_cache.has_drawable_oppset(drawable.id):
+            self.drawable_cache.set_drawable_opsset(drawable)
+            self.object_timelines[drawable.id] = []
+
+        if event.type in AnimationEventType.CREATION:
+            self.object_timelines[drawable.id].append(event.start_time)
+        elif event.type in AnimationEventType.DELETION:
+            self.object_timelines[drawable.id].append(event.end_time)
 
     def get_active_objects(self, t: float):
         """
@@ -118,6 +128,18 @@ class Scene:
             if active:
                 active_list.append(object_id)
         return active_list
+
+    def get_animated_opsset(
+        self, opsset: OpsSet, animation_events: List[Tuple[AnimationEvent, float]]
+    ):
+        """
+        Returns the opsset with the events applied
+        """
+        # TODO: need to check later if the sketching events need to be applied first?
+        current_opsset = opsset
+        for event, progress in animation_events:
+            current_opsset = event.apply(current_opsset, progress)
+        return current_opsset
 
     def create_event_timeline(self, fps: int = 30, max_length: Optional[float] = None):
         """
@@ -185,12 +207,12 @@ class Scene:
                     # object is completely visible, so draw fully
                     frame_opsset.extend(object_opsset)
                 else:
-                    # there are some active events, so animation needs to be calcualted
-                    partial_opsset = get_animated_opsset(
+                    # there are some active events, so animation needs to be calculated
+                    animated_opsset = self.get_animated_opsset(
                         object_opsset, active_events
                     )  # calculate the partial opsset
 
-                    frame_opsset.extend(partial_opsset)
+                    frame_opsset.extend(animated_opsset)
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
 
