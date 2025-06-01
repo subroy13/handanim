@@ -1,10 +1,9 @@
 import os
 from handanim.core import (
-    AnimationEvent,
-    AnimationEventType,
     Scene,
     StrokeStyle,
 )
+from handanim.animations import SketchAnimation, FadeInAnimation
 from handanim.primitives import Math, Text
 from handanim.stylings.color import BLUE, GREEN
 
@@ -17,14 +16,7 @@ text1 = Math(
     font_size=96,
     stroke_style=StrokeStyle(color=GREEN, width=2),
 )
-scene.add(
-    AnimationEvent(
-        drawable=text1,
-        type=AnimationEventType.SKETCH,
-        start_time=0,
-        duration=3,
-    )
-)
+scene.add(event=SketchAnimation(start_time=0, duration=3), drawable=text1)
 
 text2 = Text(
     text="But, here's a great equation",
@@ -32,14 +24,7 @@ text2 = Text(
     font_size=96,
     stroke_style=StrokeStyle(color=GREEN, width=2),
 )
-scene.add(
-    AnimationEvent(
-        drawable=text2,
-        type=AnimationEventType.SKETCH,
-        start_time=3,
-        duration=3,
-    )
-)
+scene.add(event=FadeInAnimation(start_time=3, duration=3), drawable=text2)
 
 text1 = Math(
     tex_expression=r"$e^{i\pi} + 1 = 0$",
@@ -49,14 +34,7 @@ text1 = Math(
     glow_dot_hint={"color": BLUE, "radius": 5},
     font_name="handanimtype1",
 )
-scene.add(
-    AnimationEvent(
-        drawable=text1,
-        type=AnimationEventType.SKETCH,
-        start_time=6,
-        duration=3,
-    )
-)
+scene.add(event=SketchAnimation(start_time=6, duration=3), drawable=text1)
 
 # save the scene
 output_root_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "output")

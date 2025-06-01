@@ -204,6 +204,7 @@ class Ellipse(Drawable):
             opsset = apply_stroke_pressure(opsset, self.stroke_style.stroke_pressure)
 
         if self.fill_style is not None:
+            opsset.add(Ops(type=OpsType.METADATA, data={"drawing_mode": "fill"}))
             filler = get_filler([core_points], self.fill_style, self.sketch_style)
             opsset.extend(filler.fill())
 

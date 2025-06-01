@@ -106,9 +106,9 @@ class Scene:
             self.drawable_cache.set_drawable_opsset(drawable)
             self.object_timelines[drawable.id] = []
 
-        if event.type in AnimationEventType.CREATION:
+        if event.type is AnimationEventType.CREATION:
             self.object_timelines[drawable.id].append(event.start_time)
-        elif event.type in AnimationEventType.DELETION:
+        elif event.type is AnimationEventType.DELETION:
             self.object_timelines[drawable.id].append(event.end_time)
 
     def get_active_objects(self, t: float):
@@ -130,7 +130,10 @@ class Scene:
         return active_list
 
     def get_animated_opsset(
-        self, opsset: OpsSet, animation_events: List[Tuple[AnimationEvent, float]]
+        self,
+        opsset: OpsSet,
+        animation_events: List[Tuple[AnimationEvent, float]],
+        verbose: bool = False,
     ):
         """
         Returns the opsset with the events applied
@@ -139,9 +142,13 @@ class Scene:
         current_opsset = opsset
         for event, progress in animation_events:
             current_opsset = event.apply(current_opsset, progress)
+            if verbose:
+                print(f"{round(progress, 2)} of {str(event)}")
         return current_opsset
 
-    def create_event_timeline(self, fps: int = 30, max_length: Optional[float] = None):
+    def create_event_timeline(
+        self, fps: int = 30, max_length: Optional[float] = None, verbose: bool = False
+    ):
         """
         Calculates the timeline of events in which order
         need to process the opssets and what to draw
@@ -209,7 +216,7 @@ class Scene:
                 else:
                     # there are some active events, so animation needs to be calculated
                     animated_opsset = self.get_animated_opsset(
-                        object_opsset, active_events
+                        object_opsset, active_events, verbose
                     )  # calculate the partial opsset
 
                     frame_opsset.extend(animated_opsset)
@@ -221,12 +228,13 @@ class Scene:
         output_path: str,  # must be an svg file path
         frame_in_seconds: float,  # the precise second index for the frame to render
         max_length: Optional[float] = None,  # number of seconds to create the video for
+        verbose: bool = False,
     ):
         """
         This is a helper function used to debug video snapshots
         """
         opsset_list = self.create_event_timeline(
-            self.fps, max_length
+            self.fps, max_length, verbose
         )  # create the animated video
         frame_index = int(
             np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1)
@@ -244,9 +252,11 @@ class Scene:
             frame_ops.render(ctx)
             surface.finish()
 
-    def render(self, output_path: str, max_length: Optional[float] = None):
+    def render(
+        self, output_path: str, max_length: Optional[float] = None, verbose=False
+    ):
         # calculate the events
-        opsset_list = self.create_event_timeline(self.fps, max_length)
+        opsset_list = self.create_event_timeline(self.fps, max_length, verbose)
         with imageio.get_writer(output_path, fps=self.fps, codec="libx264") as writer:
             for frame_ops in tqdm(opsset_list, desc="Rendering video..."):
                 surface = cairo.ImageSurface(

@@ -1,14 +1,8 @@
 import os
-from handanim.core import (
-    AnimationEvent,
-    AnimationEventType,
-    Scene,
-    SketchStyle,
-    StrokeStyle,
-    FillStyle,
-)
+from handanim.core import Scene, SketchStyle, StrokeStyle, FillStyle, DrawableGroup
 from handanim.primitives import Text, Eraser, Polygon, Math
 from handanim.stylings.color import BLUE, RED, BLACK, ERASER_HINT_COLOR
+from handanim.animations import SketchAnimation
 
 scene = Scene(width=1920, height=1088)  # blank scene (viewport = 1777, 1000)
 FONT_NAME = "feasibly"
@@ -21,10 +15,8 @@ title_text = Text(
     stroke_style=StrokeStyle(color=BLUE, width=2),
     glow_dot_hint={"color": BLUE, "radius": 5},
 )
-scene.add(
-    event=AnimationEvent(type=AnimationEventType.SKETCH, start_time=0, duration=3),
-    drawable=title_text,
-)
+scene.add(SketchAnimation(duration=3), drawable=title_text)
+
 
 # then erase the title
 eraser = Eraser(
@@ -33,8 +25,7 @@ eraser = Eraser(
     glow_dot_hint={"color": ERASER_HINT_COLOR, "radius": 10},
 )
 scene.add(
-    event=AnimationEvent(type=AnimationEventType.SKETCH, start_time=3.5, duration=1.5),
-    drawable=eraser,
+    event=SketchAnimation(start_time=3.5, duration=1.5), drawable=eraser
 )  # ends at 5 seconds
 
 
@@ -49,27 +40,17 @@ right_triangle = Polygon(
     sketch_style=SketchStyle(roughness=5),
     fill_style=FillStyle(color=RED, hachure_gap=10),
 )
-scene.add(
-    event=AnimationEvent(
-        type=AnimationEventType.SKETCH,
-        start_time=6,
-        duration=3,
-    ),
-    drawable=right_triangle,
-)
+scene.add(event=SketchAnimation(start_time=6, duration=3), drawable=right_triangle)
 
 # draw line labels
 line_labels = [("a", (450, 600)), ("b", (700, 800)), ("c", (700, 550))]
-for label, pos in line_labels:
-    text = Text(text=label, position=pos, font_size=96)
-    scene.add(
-        event=AnimationEvent(
-            type=AnimationEventType.SKETCH,
-            start_time=8,
-            duration=2,
-        ),
-        drawable=text,
-    )
+label_group = DrawableGroup(
+    elements=[
+        Text(text=label, position=pos, font_size=96) for label, pos in line_labels
+    ]
+)
+scene.add(event=SketchAnimation(start_time=8, duration=2), drawable=label_group)
+
 
 # write pythagorus formula
 pyth_form = Math(
@@ -79,14 +60,7 @@ pyth_form = Math(
     stroke_style=StrokeStyle(color=BLUE, width=2),
     font_name=FONT_NAME,
 )
-scene.add(
-    AnimationEvent(
-        type=AnimationEventType.SKETCH,
-        start_time=10,
-        duration=3,
-    ),
-    drawable=pyth_form,
-)
+scene.add(event=SketchAnimation(start_time=10, duration=3), drawable=pyth_form)
 
 # save the scene
 output_path = os.path.join(

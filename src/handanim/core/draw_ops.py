@@ -9,6 +9,8 @@ from .utils import slice_bezier, get_bezier_points_from_quadcurve
 class OpsType(Enum):
     SET_PEN = "set_pen"
     MOVE_TO = "move_to"
+    METADATA = "metadata"
+    # this is a dummy opsset that does nothing except hold some metadata
     LINE_TO = "line_to"
     CURVE_TO = "curve_to"
     QUAD_CURVE_TO = "quad_curve_to"
@@ -27,7 +29,7 @@ class Ops:
         partial (float, optional): Fraction of the operation to be performed, defaults to 1.0.
     """
 
-    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO]
+    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO, OpsType.METADATA]
 
     def __init__(self, type: OpsType, data: Any, partial: float = 1.0):
         self.type = type
@@ -167,46 +169,6 @@ class OpsSet:
                 else:
                     return last_op.data[-1]
 
-    def get_partial(self, progress: float):
-        """
-        Calculate a partial OpsSet representing the sketching progress of an operation set.
-
-        Args:
-            progress (float): The progress of sketching, ranging from 0.0 to 1.0.
-
-        Returns:
-            OpsSet: A new OpsSet containing the operations up to the specified progress point,
-                    with the last operation potentially being partially completed.
-        """
-        base_ops = self.opsset
-        n_count = len(
-            [op for op in base_ops if op.type not in Ops.SETUP_OPS_TYPES]
-        )  # counters are based on the non set-pen operations
-        n_active = int(progress * n_count)
-        counter = 0
-        last_op = None
-        new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
-        for op in base_ops:
-            if op.type not in Ops.SETUP_OPS_TYPES and counter < n_active:
-                new_opsset.add(op)
-                counter += 1
-            elif counter < n_active:
-                # set pen operations keep adding, but don't increase counter
-                new_opsset.add(op)
-            else:
-                last_op = op  # the last operation for which it stopped
-                break
-        if last_op is not None and (progress * n_count - n_active) > 0:
-            # need to calculate it partially
-            new_opsset.add(
-                Ops(
-                    type=last_op.type,
-                    data=last_op.data,
-                    partial=progress * n_count - n_active,
-                )
-            )
-        return new_opsset
-
     def translate(self, offset_x: float, offset_y: float):
         """
         Translates every operation of the opsset by the (offset_x, offset_y) amount
@@ -334,13 +296,15 @@ class OpsSet:
                     ctx.set_source_rgba(r, g, b, ops.data.get("opacity", 1))
                 if ops.data.get("width"):
                     ctx.set_line_width(ops.data.get("width"))
+            elif ops.type == OpsType.METADATA:
+                pass  # ignore metadata ops
             elif ops.type == OpsType.DOT:
                 has_path = True
                 x, y = ops.data.get("center", (0, 0))
                 ctx.move_to(x, y)
                 ctx.arc(x, y, ops.data.get("radius", 1), 0, 2 * np.pi)
             else:
-                raise NotImplementedError("Unknown operation type")
+                raise NotImplementedError(f"Unknown operation type {ops.type}")
 
         # at the end of everything, check if stroke or fill is needed to complete the drawing
         if has_path and mode == "stroke":

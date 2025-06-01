@@ -22,6 +22,7 @@ class TranslateToAnimation(AnimationEvent):
             progress * point_y + (1 - progress) * gravity_y,
         )
         new_opsset.translate(cur_x - gravity_x, cur_y - gravity_y)
+        return new_opsset
 
     def apply(self, opsset: OpsSet, progress: float):
         return self._opsset_apply(opsset, progress)
@@ -33,9 +34,7 @@ class TranslateFromAnimation(TranslateToAnimation):
     """
 
     def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
-        super().__init__(
-            AnimationEventType.MUTATION, start_time, duration, easing_fun, data
-        )
+        super().__init__(start_time, duration, easing_fun, data)
 
     def apply(self, opsset, progress):
         return super().apply(opsset, 1 - progress)

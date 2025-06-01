@@ -37,9 +37,8 @@ class FadeOutAnimation(FadeInAnimation):
     """
 
     def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
-        super().__init__(
-            AnimationEventType.DELETION, start_time, duration, easing_fun, data
-        )
+        super().__init__(start_time, duration, easing_fun, data)
+        self.type = AnimationEventType.DELETION  # override the type
 
     def apply(self, opsset, progress):
         return super().apply(opsset, 1 - progress)

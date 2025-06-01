@@ -44,7 +44,7 @@ class AnimationEvent:
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(type={self.type}, start_time={self.start_time},"
-            f"duration={self.duration}, end_time={self.end_time})",
+            f"duration={self.duration}, end_time={self.end_time})"
         )
 
     def apply(self, opsset: OpsSet, progress: float) -> OpsSet:
