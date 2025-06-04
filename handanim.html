@@ -259,24 +259,21 @@
 <li class="toctree-l2"><a class="reference internal" href="handanim.core.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.animation">handanim.core.animation module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent"><code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent.CREATION_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent.DESTROY_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id0"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id1"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent.apply"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.apply()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent.subdivide"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.subdivide()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType"><code class="docutils literal notranslate"><span class="pre">AnimationEventType</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.FADE_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_IN</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.FADE_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_OUT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.SKETCH"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.SKETCH</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.TRANSLATE_FROM_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_FROM_POINT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.TRANSLATE_TO_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_TO_POINT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.ZOOM_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_IN</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.ZOOM_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_OUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.COMPOSITE"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.COMPOSITE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.CREATION"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.CREATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.DELETION"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.DELETION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEventType.MUTATION"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.MUTATION</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.get_animated_opsset"><code class="docutils literal notranslate"><span class="pre">get_animated_opsset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.get_sketching_opsset"><code class="docutils literal notranslate"><span class="pre">get_sketching_opsset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.animation.CompositeAnimationEvent"><code class="docutils literal notranslate"><span class="pre">CompositeAnimationEvent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.animation.CompositeAnimationEvent.events"><code class="docutils literal notranslate"><span class="pre">CompositeAnimationEvent.events</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core.draw_ops">handanim.core.draw_ops module</a><ul>
@@ -285,7 +282,7 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.type"><code class="docutils literal notranslate"><span class="pre">Ops.type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.data"><code class="docutils literal notranslate"><span class="pre">Ops.data</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.Ops.partial"><code class="docutils literal notranslate"><span class="pre">Ops.partial</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id2"><code class="docutils literal notranslate"><span class="pre">Ops.SETUP_OPS_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id0"><code class="docutils literal notranslate"><span class="pre">Ops.SETUP_OPS_TYPES</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet"><code class="docutils literal notranslate"><span class="pre">OpsSet</span></code></a><ul>
@@ -307,6 +304,7 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.CURVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.CURVE_TO</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.DOT"><code class="docutils literal notranslate"><span class="pre">OpsType.DOT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.LINE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.LINE_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.METADATA"><code class="docutils literal notranslate"><span class="pre">OpsType.METADATA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.MOVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.MOVE_TO</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.QUAD_CURVE_TO"><code class="docutils literal notranslate"><span class="pre">OpsType.QUAD_CURVE_TO</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsType.SET_PEN"><code class="docutils literal notranslate"><span class="pre">OpsType.SET_PEN</span></code></a></li>
@@ -325,24 +323,39 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.translate"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.scale"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable.rotate"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id3"><code class="docutils literal notranslate"><span class="pre">Drawable.draw()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id4"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id5"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id6"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id1"><code class="docutils literal notranslate"><span class="pre">Drawable.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id2"><code class="docutils literal notranslate"><span class="pre">Drawable.rotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id3"><code class="docutils literal notranslate"><span class="pre">Drawable.scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id4"><code class="docutils literal notranslate"><span class="pre">Drawable.translate()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache"><code class="docutils literal notranslate"><span class="pre">DrawableCache</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.cache"><code class="docutils literal notranslate"><span class="pre">DrawableCache.cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.drawables"><code class="docutils literal notranslate"><span class="pre">DrawableCache.drawables</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.calculate_bounding_box"><code class="docutils literal notranslate"><span class="pre">DrawableCache.calculate_bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.get_drawable"><code class="docutils literal notranslate"><span class="pre">DrawableCache.get_drawable()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.get_drawable_opsset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.get_drawable_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.has_drawable_oppset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.has_drawable_oppset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache.set_drawable_opsset"><code class="docutils literal notranslate"><span class="pre">DrawableCache.set_drawable_opsset()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill"><code class="docutils literal notranslate"><span class="pre">DrawableFill</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill.bound_box_list"><code class="docutils literal notranslate"><span class="pre">DrawableFill.bound_box_list</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill.fill_style"><code class="docutils literal notranslate"><span class="pre">DrawableFill.fill_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill.sketch_style"><code class="docutils literal notranslate"><span class="pre">DrawableFill.sketch_style</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill.fill"><code class="docutils literal notranslate"><span class="pre">DrawableFill.fill()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableGroup"><code class="docutils literal notranslate"><span class="pre">DrawableGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableGroup.elements"><code class="docutils literal notranslate"><span class="pre">DrawableGroup.elements</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableGroup.grouping_method"><code class="docutils literal notranslate"><span class="pre">DrawableGroup.grouping_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableGroup.draw"><code class="docutils literal notranslate"><span class="pre">DrawableGroup.draw()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable.base_drawable"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable.base_drawable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable.transformation_function"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable.transformation_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable.transformation_args"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable.transformation_args</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.TransformedDrawable.draw"><code class="docutils literal notranslate"><span class="pre">TransformedDrawable.draw()</span></code></a></li>
 </ul>
 </li>
@@ -358,6 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.create_event_timeline"><code class="docutils literal notranslate"><span class="pre">Scene.create_event_timeline()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.get_active_objects"><code class="docutils literal notranslate"><span class="pre">Scene.get_active_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.get_animated_opsset"><code class="docutils literal notranslate"><span class="pre">Scene.get_animated_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.get_viewport_bounds"><code class="docutils literal notranslate"><span class="pre">Scene.get_viewport_bounds()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.scene.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
@@ -425,20 +439,25 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="handanim.core.html#module-handanim.core">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent"><code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent.CREATION_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent.DESTROY_EVENT_TYPES"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id7"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.CREATION_EVENT_TYPES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#id8"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.DESTROY_EVENT_TYPES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent.apply"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.apply()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEvent.subdivide"><code class="docutils literal notranslate"><span class="pre">AnimationEvent.subdivide()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType"><code class="docutils literal notranslate"><span class="pre">AnimationEventType</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.FADE_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_IN</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.FADE_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.FADE_OUT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.SKETCH"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.SKETCH</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.TRANSLATE_FROM_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_FROM_POINT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.TRANSLATE_TO_POINT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.TRANSLATE_TO_POINT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.ZOOM_IN"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_IN</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.ZOOM_OUT"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.ZOOM_OUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.COMPOSITE"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.COMPOSITE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.CREATION"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.CREATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.DELETION"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.DELETION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.AnimationEventType.MUTATION"><code class="docutils literal notranslate"><span class="pre">AnimationEventType.MUTATION</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.CompositeAnimationEvent"><code class="docutils literal notranslate"><span class="pre">CompositeAnimationEvent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.CompositeAnimationEvent.events"><code class="docutils literal notranslate"><span class="pre">CompositeAnimationEvent.events</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.DrawableGroup"><code class="docutils literal notranslate"><span class="pre">DrawableGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.DrawableGroup.elements"><code class="docutils literal notranslate"><span class="pre">DrawableGroup.elements</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.DrawableGroup.grouping_method"><code class="docutils literal notranslate"><span class="pre">DrawableGroup.grouping_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.DrawableGroup.draw"><code class="docutils literal notranslate"><span class="pre">DrawableGroup.draw()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.core.html#handanim.core.FillStyle"><code class="docutils literal notranslate"><span class="pre">FillStyle</span></code></a><ul>
@@ -462,6 +481,7 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.create_event_timeline"><code class="docutils literal notranslate"><span class="pre">Scene.create_event_timeline()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.get_active_objects"><code class="docutils literal notranslate"><span class="pre">Scene.get_active_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.get_animated_opsset"><code class="docutils literal notranslate"><span class="pre">Scene.get_animated_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.get_viewport_bounds"><code class="docutils literal notranslate"><span class="pre">Scene.get_viewport_bounds()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.core.html#handanim.core.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
@@ -551,8 +571,11 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.font_name"><code class="docutils literal notranslate"><span class="pre">Math.font_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.custom_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.custom_glyph_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id0"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id1"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.load_font"><code class="docutils literal notranslate"><span class="pre">Math.load_font()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.math.Math.standard_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.standard_glyph_opsset()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -624,8 +647,11 @@
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.font_name"><code class="docutils literal notranslate"><span class="pre">Math.font_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.custom_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.custom_glyph_opsset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id6"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#id7"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.load_font"><code class="docutils literal notranslate"><span class="pre">Math.load_font()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.Math.standard_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.standard_glyph_opsset()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html#handanim.primitives.NGon"><code class="docutils literal notranslate"><span class="pre">NGon</span></code></a></li>
@@ -660,8 +686,12 @@
 <li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.color">handanim.stylings.color module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="handanim.stylings.html#module-handanim.stylings.fillpatterns">handanim.stylings.fillpatterns module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.fill_style"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.sketch_style"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.sketch_style</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.render_fill_lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#id0"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#id1"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.render_fill_lines()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.HatchFillPattern"><code class="docutils literal notranslate"><span class="pre">HatchFillPattern</span></code></a><ul>
@@ -669,6 +699,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern.bound_box_list"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.bound_box_list</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern.fill_style"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.fill_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern.sketch_style"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.sketch_style</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="handanim.stylings.html#handanim.stylings.fillpatterns.SolidFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.fill()</span></code></a></li>
 </ul>
 </li>

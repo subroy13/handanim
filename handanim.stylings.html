@@ -263,14 +263,52 @@
 <dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HachureFillPattern">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.stylings.fillpatterns.</span></span><span class="sig-name descname"><span class="pre">HachureFillPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bound_box_list:</span> <span class="pre">~typing.List[~typing.List[~typing.Tuple[float,</span> <span class="pre">float]]],</span> <span class="pre">fill_style:</span> <span class="pre">~handanim.core.styles.FillStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.FillStyle</span> <span class="pre">object&gt;,</span> <span class="pre">sketch_style:</span> <span class="pre">~handanim.core.styles.SketchStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.SketchStyle</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill" title="handanim.core.drawable.DrawableFill"><code class="xref py py-class docutils literal notranslate"><span class="pre">DrawableFill</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HachureFillPattern.fill">
-<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern.fill" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<p>A base class for hachure fill patterns that renders fill lines for polygons.</p>
+<p>This class provides methods to render hachure lines with a specific stroke style
+and sketch style. The render_fill_lines method converts a list of line points
+into drawable Line objects with the specified styling.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HachureFillPattern.fill_style">
+<span class="sig-name descname"><span class="pre">fill_style</span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern.fill_style" title="Link to this definition">¶</a></dt>
+<dd><p>Style parameters for the fill</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle" title="handanim.core.styles.FillStyle">FillStyle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HachureFillPattern.sketch_style">
+<span class="sig-name descname"><span class="pre">sketch_style</span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern.sketch_style" title="Link to this definition">¶</a></dt>
+<dd><p>Sketch style parameters for line rendering</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle" title="handanim.core.styles.SketchStyle">SketchStyle</a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines">
-<span class="sig-name descname"><span class="pre">render_fill_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">render_fill_lines</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines" title="Link to this definition">¶</a></dt>
+<dd><p>Converts line points to drawable Line objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HachureFillPattern.fill">
+<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.HachureFillPattern.fill" title="Link to this definition">¶</a></dt>
+<dd><p>Generates hachure lines for a set of polygons and renders them</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">render_fill_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -279,6 +317,17 @@
 <dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HatchFillPattern">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.stylings.fillpatterns.</span></span><span class="sig-name descname"><span class="pre">HatchFillPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bound_box_list:</span> <span class="pre">~typing.List[~typing.List[~typing.Tuple[float,</span> <span class="pre">float]]],</span> <span class="pre">fill_style:</span> <span class="pre">~handanim.core.styles.FillStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.FillStyle</span> <span class="pre">object&gt;,</span> <span class="pre">sketch_style:</span> <span class="pre">~handanim.core.styles.SketchStyle</span> <span class="pre">=</span> <span class="pre">&lt;handanim.core.styles.SketchStyle</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.HatchFillPattern" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern" title="handanim.stylings.fillpatterns.HachureFillPattern"><code class="xref py py-class docutils literal notranslate"><span class="pre">HachureFillPattern</span></code></a></p>
+<p>Generates a hatch fill pattern by rendering hachure lines at two perpendicular angles.</p>
+<p>Creates an OpsSet with two sets of hachure lines rotated 90 degrees from each other,
+creating a criss-cross fill pattern. Preserves the original fill style after rendering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A set of drawing operations representing the hatch fill pattern.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.stylings.fillpatterns.HatchFillPattern.fill">
 <span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.HatchFillPattern.fill" title="Link to this definition">¶</a></dt>
@@ -290,6 +339,51 @@
 <dt class="sig sig-object py" id="handanim.stylings.fillpatterns.SolidFillPattern">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.stylings.fillpatterns.</span></span><span class="sig-name descname"><span class="pre">SolidFillPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bound_box_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sketch_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.stylings.fillpatterns.SolidFillPattern" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableFill" title="handanim.core.drawable.DrawableFill"><code class="xref py py-class docutils literal notranslate"><span class="pre">DrawableFill</span></code></a></p>
+<p>A fill pattern implementation for solid color fills.</p>
+<p>This class extends DrawableFill and provides a method to create a solid color fill
+for a given set of bounding boxes. It sets the pen color, opacity, and fills the
+specified geometric shapes by drawing lines connecting the box vertices.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.SolidFillPattern.bound_box_list">
+<span class="sig-name descname"><span class="pre">bound_box_list</span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.SolidFillPattern.bound_box_list" title="Link to this definition">¶</a></dt>
+<dd><p>A list of bounding boxes to be filled</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.SolidFillPattern.fill_style">
+<span class="sig-name descname"><span class="pre">fill_style</span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.SolidFillPattern.fill_style" title="Link to this definition">¶</a></dt>
+<dd><p>Style parameters for the fill</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.styles.FillStyle" title="handanim.core.styles.FillStyle">FillStyle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.stylings.fillpatterns.SolidFillPattern.sketch_style">
+<span class="sig-name descname"><span class="pre">sketch_style</span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.SolidFillPattern.sketch_style" title="Link to this definition">¶</a></dt>
+<dd><p>Sketch style parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.styles.SketchStyle" title="handanim.core.styles.SketchStyle">SketchStyle</a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A set of drawing operations to render the solid fill</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.stylings.fillpatterns.SolidFillPattern.fill">
 <span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.stylings.fillpatterns.SolidFillPattern.fill" title="Link to this definition">¶</a></dt>
@@ -417,8 +511,12 @@ color values.</p>
 <li><a class="reference internal" href="#module-handanim.stylings.color">handanim.stylings.color module</a></li>
 <li><a class="reference internal" href="#module-handanim.stylings.fillpatterns">handanim.stylings.fillpatterns module</a><ul>
 <li><a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern.fill_style"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill_style</span></code></a></li>
+<li><a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern.sketch_style"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.sketch_style</span></code></a></li>
 <li><a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.render_fill_lines()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.stylings.fillpatterns.HachureFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.fill()</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">HachureFillPattern.render_fill_lines()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.stylings.fillpatterns.HatchFillPattern"><code class="docutils literal notranslate"><span class="pre">HatchFillPattern</span></code></a><ul>
@@ -426,6 +524,9 @@ color values.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.stylings.fillpatterns.SolidFillPattern"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.stylings.fillpatterns.SolidFillPattern.bound_box_list"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.bound_box_list</span></code></a></li>
+<li><a class="reference internal" href="#handanim.stylings.fillpatterns.SolidFillPattern.fill_style"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.fill_style</span></code></a></li>
+<li><a class="reference internal" href="#handanim.stylings.fillpatterns.SolidFillPattern.sketch_style"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.sketch_style</span></code></a></li>
 <li><a class="reference internal" href="#handanim.stylings.fillpatterns.SolidFillPattern.fill"><code class="docutils literal notranslate"><span class="pre">SolidFillPattern.fill()</span></code></a></li>
 </ul>
 </li>
