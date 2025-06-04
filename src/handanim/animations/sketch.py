@@ -7,7 +7,17 @@ from ..primitives.ellipse import GlowDot
 
 class SketchAnimation(AnimationEvent):
     """
-    A class representing a sketch animation event.
+    A class representing a sketch animation event that progressively renders drawing operations.
+
+    This animation supports partial rendering of drawing and fill operations with configurable timing
+    and optional glowing dot effects. It allows for smooth, incremental visualization of drawing sequences.
+
+    Attributes:
+        wait_before_fill (float): Delay in seconds before starting fill animation, capped at half the total duration.
+
+    Methods:
+        get_partial_sketch: Calculates a partial OpsSet representing the current sketching progress.
+        apply: Applies the sketch animation to a given OpsSet at a specific progress point.
     """
 
     def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
@@ -98,7 +108,17 @@ class SketchAnimation(AnimationEvent):
 
     def apply(self, opsset: OpsSet, progress: float):
         """
-        Apply the animation to the given opsset.
+        Apply the sketch animation to an operation set with a given progress.
+
+        This method progressively renders the operations in the opsset based on the current animation progress,
+        with an optional glowing dot effect to highlight the current drawing point.
+
+        Args:
+            opsset (OpsSet): The set of operations to animate
+            progress (float): Animation progress from 0.0 to 1.0
+
+        Returns:
+            OpsSet: A new operation set with partially or fully rendered operations
         """
         new_opsset = OpsSet(initial_set=[])
         if progress > 0:

@@ -37,22 +37,17 @@ poetry run python examples/pythagoras.py
 ### ✏️ Basic Usage
 
 ```python
-from handanim.core import Scene, AnimationEvent, AnimationEventType
+from handanim.core import Scene
+from handanim.animations import SketchAnimation
 from handanim.primitives import NGon
 
 scene = Scene(width = 800, height = 608)
-triange = NGon(
+triangle = NGon(
     center = (400, 304),
     radius = 100,
     n = 3
 )
-event = AnimationEvent(
-    triange,
-    AnimationEventType.SKETCH,
-    start_time = 0,
-    end_time = 5
-)
-scene.add(event)
+scene.add(SketchAnimation(start_time = 0, end_time = 5), drawable = triangle)
 scene.render("triangle_anim.mp4", fps = 30)
 ```
 

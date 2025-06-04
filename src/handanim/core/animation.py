@@ -76,6 +76,14 @@ class AnimationEvent:
 class CompositeAnimationEvent(AnimationEvent):
     """
     Represents a composite animation event that combines multiple animation events.
+
+    Args:
+        events (List[AnimationEvent]): A list of animation events to be combined.
+        easing_fun (callable, optional): An optional easing function to apply to the composite event.
+        data (dict, optional): Additional configuration data for the composite animation event.
+
+    Attributes:
+        events (List[AnimationEvent]): The list of animation events in the composite event.
     """
 
     def __init__(

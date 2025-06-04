@@ -4,7 +4,16 @@ from ..core.animation import AnimationEvent, AnimationEventType
 
 class FadeInAnimation(AnimationEvent):
     """
-    A class representing a fade-in animation event.
+    A class representing a fade-in animation event that gradually increases the opacity of elements.
+
+    This animation applies a progressive opacity change from 0 to 1 over a specified duration,
+    creating a smooth fade-in effect for graphical elements.
+
+    Args:
+        start_time (float, optional): The time at which the animation begins. Defaults to 0.
+        duration (float, optional): The total duration of the animation. Defaults to 0.
+        easing_fun (callable, optional): An optional function to modify the animation's progress curve. Defaults to None.
+        data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
     def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
@@ -33,7 +42,16 @@ class FadeInAnimation(AnimationEvent):
 
 class FadeOutAnimation(FadeInAnimation):
     """
-    A class representing a fade-out animation event.
+    A class representing a fade-out animation event that gradually decreases the opacity of elements.
+
+    This animation applies a progressive opacity change from 1 to 0 over a specified duration,
+    creating a smooth fade-out effect for graphical elements.
+
+    Args:
+        start_time (float, optional): The time at which the animation begins. Defaults to 0.
+        duration (float, optional): The total duration of the animation. Defaults to 0.
+        easing_fun (callable, optional): An optional function to modify the animation's progress curve. Defaults to None.
+        data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
     def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):

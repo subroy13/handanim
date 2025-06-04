@@ -59,7 +59,11 @@ class Scene:
 
     def get_viewport_bounds(self) -> Tuple[float, float, float, float]:
         """
-        Returns the bounds of the viewport in world coordinates
+        Retrieves the viewport's boundaries in world coordinates.
+
+        Returns:
+            Tuple[float, float, float, float]: A tuple containing (x_min, x_max, y_min, y_max)
+            representing the viewport's world coordinate boundaries.
         """
         return (
             self.viewport.world_xrange[0],
@@ -74,8 +78,18 @@ class Scene:
         drawable: Drawable,
     ):
         """
-        Applies an animation event to a drawable primitive and
-        adds it to the scene
+        Adds an animation event to a drawable primitive in the scene.
+
+        Handles different scenarios including:
+        - Composite animation events (recursively adding sub-events)
+        - Drawable groups with parallel or sequential event distribution
+        - Single event and drawable cases
+
+        Manages event tracking, drawable caching, and object timelines.
+
+        Args:
+            event (AnimationEvent): The animation event to be added.
+            drawable (Drawable): The drawable primitive to apply the event to.
         """
         # handle the case for composite events if any
         if isinstance(event, CompositeAnimationEvent):
@@ -113,8 +127,17 @@ class Scene:
 
     def get_active_objects(self, t: float):
         """
-        At a timepoint t (in seconds), return the list of object_ids
-        that needs to be active on the scene
+        Determines the list of object IDs that are active at a specific time point.
+
+        Calculates object visibility by toggling their active status based on their timeline.
+        An object becomes active when its timeline reaches a time point, and its status
+        alternates with each subsequent time point.
+
+        Args:
+            t (float): The time point (in seconds) to check object activity.
+
+        Returns:
+            List[str]: A list of object IDs that are active at the given time point.
         """
         active_list: List[str] = []
         for object_id in self.object_timelines:
@@ -136,7 +159,18 @@ class Scene:
         verbose: bool = False,
     ):
         """
-        Returns the opsset with the events applied
+        Applies a sequence of animation events to an OpsSet and returns the transformed result.
+
+        This method progressively modifies an initial OpsSet by applying a list of animation events
+        at specified progression points. Each event transforms the OpsSet based on its current progress.
+
+        Args:
+            opsset (OpsSet): The initial set of operations to be animated.
+            animation_events (List[Tuple[AnimationEvent, float]]): A list of animation events with their corresponding progress values.
+            verbose (bool, optional): If True, prints detailed information about each event application. Defaults to False.
+
+        Returns:
+            OpsSet: The final OpsSet after applying all specified animation events.
         """
         # TODO: need to check later if the sketching events need to be applied first?
         current_opsset = opsset
@@ -150,9 +184,18 @@ class Scene:
         self, fps: int = 30, max_length: Optional[float] = None, verbose: bool = False
     ):
         """
-        Calculates the timeline of events in which order
-        need to process the opssets and what to draw
-        for each frame
+        Creates a timeline of animation events and calculates the OpsSet for each frame.
+
+        This method processes all drawable events, determines active objects at each frame,
+        and generates a list of OpsSet operations representing the animation progression.
+
+        Args:
+            fps (int, optional): Frames per second for the animation. Defaults to 30.
+            max_length (Optional[float], optional): Maximum duration of the animation. Defaults to None.
+            verbose (bool, optional): If True, provides detailed logging during animation calculation. Defaults to False.
+
+        Returns:
+            List[OpsSet]: A list of OpsSet operations for each frame in the animation.
         """
         event_drawable_ids = sorted(self.events, key=lambda x: x[0].start_time)
         events = [event for event, _ in event_drawable_ids]
@@ -231,7 +274,17 @@ class Scene:
         verbose: bool = False,
     ):
         """
-        This is a helper function used to debug video snapshots
+        Render a snapshot of the animation at a specific time point as an SVG file.
+
+        This method is useful for debugging and inspecting the state of an animation
+        at a precise moment. It generates a single frame from the animation timeline
+        and saves it as an SVG image.
+
+        Args:
+            output_path (str): Path to the output SVG file.
+            frame_in_seconds (float): The exact time point (in seconds) to render.
+            max_length (Optional[float], optional): Total duration of the animation. Defaults to None.
+            verbose (bool, optional): Enable verbose logging. Defaults to False.
         """
         opsset_list = self.create_event_timeline(
             self.fps, max_length, verbose
@@ -255,6 +308,18 @@ class Scene:
     def render(
         self, output_path: str, max_length: Optional[float] = None, verbose=False
     ):
+        """
+        Render the animation as a video file.
+
+        This method generates a video by creating a timeline of animation events
+        and rendering each frame using Cairo graphics. The video is saved to the
+        specified output path with the configured frame rate.
+
+        Args:
+            output_path (str): Path to save the output video file.
+            max_length (Optional[float], optional): Maximum duration of the animation. Defaults to None.
+            verbose (bool, optional): Enable verbose logging for rendering process. Defaults to False.
+        """
         # calculate the events
         opsset_list = self.create_event_timeline(self.fps, max_length, verbose)
         with imageio.get_writer(output_path, fps=self.fps, codec="libx264") as writer:
