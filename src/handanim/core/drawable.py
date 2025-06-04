@@ -36,9 +36,7 @@ class Drawable:
         self.stroke_style = stroke_style
         self.sketch_style = sketch_style
         self.fill_style = fill_style
-        if not isinstance(glow_dot_hint, dict):
-            glow_dot_hint = {}
-        self.glow_dot_hint = glow_dot_hint
+        self.glow_dot_hint = glow_dot_hint if isinstance(glow_dot_hint, dict) else {}
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__}>"
@@ -75,8 +73,18 @@ class Drawable:
 
 class TransformedDrawable(Drawable):
     """
-    Applies a transformation to a drawable object
-    and overrides the draw method to apply the transformation
+    A drawable object that applies a transformation to a base drawable.
+
+    Allows dynamic transformation of drawable objects by applying a specified
+    transformation function to the base drawable's operation set.
+
+    Attributes:
+        base_drawable (Drawable): The original drawable object to be transformed
+        transformation_function (callable): Name of the transformation method to apply
+        transformation_args (dict): Arguments for the transformation method
+
+    Raises:
+        ValueError: If the transformation function is invalid or not callable
     """
 
     def __init__(
@@ -113,7 +121,17 @@ class TransformedDrawable(Drawable):
 
 class DrawableFill:
     """
-    A class that defines the different fill styles that can be applied to a drawable object.
+    A class representing a fill style for drawable objects, defining how an area should be filled.
+
+    Allows specification of bounding boxes, fill styles, and sketch styles for rendering.
+
+    Attributes:
+        bound_box_list (List[List[Tuple[float, float]]]): Defines the bounding boxes for filling
+        fill_style (FillStyle): Specifies the fill style parameters
+        sketch_style (SketchStyle): Specifies the sketch style parameters
+
+    Raises:
+        NotImplementedError: If the fill method is not implemented in a subclass
     """
 
     def __init__(
@@ -134,18 +152,31 @@ class DrawableFill:
 
 class DrawableCache:
     """
-    A class that implements a cache for the opssets
-    related to various drawable objects
+    A cache management class for storing and retrieving drawable objects and their corresponding operation sets.
+
+    Provides methods to:
+    - Store and retrieve drawable objects and their computed operation sets
+    - Check for existing drawable operation sets
+    - Calculate bounding boxes for multiple drawables
+
+    Attributes:
+        cache (dict[str, OpsSet]): A mapping of drawable IDs to their computed operation sets
+        drawables (dict[str, Drawable]): A mapping of drawable IDs to their drawable objects
     """
 
     def __init__(self):
         self.cache: dict[str, OpsSet] = {}
+        self.drawables: dict[str, Drawable] = {}
 
     def has_drawable_oppset(self, drawable_id: str) -> bool:
         return drawable_id in self.cache
 
     def set_drawable_opsset(self, drawable: Drawable):
+        self.drawables[drawable.id] = drawable
         self.cache[drawable.id] = drawable.draw()  # calculate opsset and store
+
+    def get_drawable(self, drawable_id: str) -> Drawable:
+        return self.drawables.get(drawable_id, None)
 
     def get_drawable_opsset(self, drawable_id: str) -> OpsSet:
         return self.cache.get(drawable_id, OpsSet(initial_set=[]))
@@ -159,3 +190,38 @@ class DrawableCache:
         for drawable in drawables:
             merge_opsset.extend(self.get_drawable_opsset(drawable.id))
         return merge_opsset.get_bbox()
+
+
+class DrawableGroup(Drawable):
+    """
+    A drawable group that manages a collection of drawable elements with specified grouping behavior.
+
+    Allows applying transformations or animations to multiple drawable objects either in parallel or series.
+
+    Args:
+        elements (List[Drawable]): A list of drawable objects to be grouped.
+        grouping_method (str, optional): Determines how animations are applied.
+            Can be 'parallel' (default) or 'series'. Defaults to 'parallel'.
+
+    Attributes:
+        elements (List[Drawable]): The list of drawable elements in the group.
+        grouping_method (str): The method used for applying transformations.
+    """
+
+    def __init__(
+        self, elements: List[Drawable], grouping_method="parallel", *args, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.elements = elements
+        assert grouping_method in ["parallel", "series"]
+        self.grouping_method = grouping_method
+
+    def draw(self) -> OpsSet:
+        """
+        This is useful to apply transformations
+        to the entire group of objects at once
+        """
+        final_set = OpsSet(initial_set=[])
+        for elem in self.elements:
+            final_set.extend(elem.draw())
+        return final_set

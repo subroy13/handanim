@@ -9,6 +9,8 @@ from .utils import slice_bezier, get_bezier_points_from_quadcurve
 class OpsType(Enum):
     SET_PEN = "set_pen"
     MOVE_TO = "move_to"
+    METADATA = "metadata"
+    # this is a dummy opsset that does nothing except hold some metadata
     LINE_TO = "line_to"
     CURVE_TO = "curve_to"
     QUAD_CURVE_TO = "quad_curve_to"
@@ -27,7 +29,7 @@ class Ops:
         partial (float, optional): Fraction of the operation to be performed, defaults to 1.0.
     """
 
-    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO]
+    SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO, OpsType.METADATA]
 
     def __init__(self, type: OpsType, data: Any, partial: float = 1.0):
         self.type = type
@@ -79,7 +81,15 @@ class OpsSet:
 
     def get_bbox(self) -> Tuple[float, float, float, float]:
         """
-        Get the bounding box for the opset
+        Calculate the bounding box that encompasses all points in the operations set.
+
+        Returns:
+            A tuple of (min_x, min_y, max_x, max_y) representing the coordinates
+            of the bounding box. Returns (0, 0, 0, 0) if the operations set is empty.
+
+        Note:
+            Currently supports only list-type point data. Curve calculations
+            are not fully implemented.
         """
         if len(self.opsset) == 0:
             return (0, 0, 0, 0)
@@ -100,7 +110,11 @@ class OpsSet:
 
     def get_center_of_gravity(self) -> Tuple[float, float]:
         """
-        Get an approximate center of gravity of the opset
+        Calculate the approximate geometric center of the operations set.
+
+        Returns:
+            A tuple of (x, y) coordinates representing the center point,
+            computed as the midpoint of the bounding box.
         """
         min_x, min_y, max_x, max_y = self.get_bbox()
         return (min_x + max_x) / 2, (min_y + max_y) / 2
@@ -109,7 +123,17 @@ class OpsSet:
         self, start_index: int = 0
     ) -> Tuple[Optional[float], Optional[Ops]]:
         """
-        Get valid last and second last ops
+        Retrieve the last valid operation from the operations set.
+
+        Args:
+            start_index (int, optional): Starting index for searching backwards. Defaults to 0.
+
+        Returns:
+            Tuple[Optional[float], Optional[Ops]]: A tuple containing the index and the last valid operation.
+            Returns (None, None) if no valid operation is found.
+
+        Note:
+            Valid operations include MOVE_TO, LINE_TO, CURVE_TO, and QUAD_CURVE_TO.
         """
         if start_index >= len(self.opsset):
             return None, None
@@ -125,7 +149,12 @@ class OpsSet:
 
     def get_current_point(self):
         """
-        Given a opsset, get the current point of the drawing from last operation
+        Retrieves the current drawing point from the last operation in the operations set.
+
+        Returns:
+            A tuple (x, y) representing the current drawing point, considering partial operations
+            and different types of drawing operations (move, line, curve, quadratic curve).
+            Returns (0, 0) if no valid point can be determined.
         """
         if len(self.opsset) == 0:
             return (0, 0)
@@ -168,8 +197,15 @@ class OpsSet:
 
     def translate(self, offset_x: float, offset_y: float):
         """
-        Translates every operation of the opsset by the (offset_x, offset_y) amount
-        in relative to its center of gravity
+        Translates all operations in the opsset by a specified (x, y) offset.
+
+        Applies the translation relative to the current center of gravity of the operations.
+        Modifies the operations in-place by adding the offset to each point's coordinates.
+        Non-point operations (like set pen type) are preserved without modification.
+
+        Args:
+            offset_x (float): The x-axis translation amount
+            offset_y (float): The y-axis translation amount
         """
         new_ops = []
         for ops in self.opsset:
@@ -183,8 +219,16 @@ class OpsSet:
 
     def scale(self, scale_x: float, scale_y: Optional[float] = None):
         """
-        Scales every operation of the opsset by the (scale_x, scale_y) amount
-        in relative to its center of gravity
+        Scales the operations in the opsset relative to its center of gravity.
+
+        Applies uniform or non-uniform scaling to all point-based operations. If only scale_x is provided,
+        the scaling is uniform in both x and y directions. The scaling is performed relative to the
+        current center of gravity of the operations.
+
+        Args:
+            scale_x (float): The scaling factor for the x-axis.
+            scale_y (float, optional): The scaling factor for the y-axis.
+                                        Defaults to the same value as scale_x for uniform scaling.
         """
         if scale_y is None:
             scale_y = scale_x
@@ -211,8 +255,13 @@ class OpsSet:
 
     def rotate(self, angle: float):
         """
-        Rotates every operation of the opsset by the angle amount of degrees
-        in relative to its center of gravity
+        Rotates the operations in the opsset by a specified angle around its center of gravity.
+
+        Applies a rotation transformation to all point-based operations relative to the current
+        center of gravity. The rotation is performed in degrees and uses a standard 2D rotation matrix.
+
+        Args:
+            angle (float): The rotation angle in degrees. Positive values rotate counterclockwise.
         """
         # first translate so that center of gravity is at (0, 0)
         center_of_gravity = self.get_center_of_gravity()
@@ -240,7 +289,19 @@ class OpsSet:
 
     def render(self, ctx: cairo.Context, initial_mode: str = "stroke"):
         """
-        Renders the opset on the cairo context
+        Renders the operation set on a Cairo graphics context.
+
+        This method iterates through a series of drawing operations and applies them to the
+        provided Cairo context. It supports various operation types including move, line,
+        curve, and quadratic curve drawing, as well as path closing and pen/style configuration.
+
+        Args:
+            ctx (cairo.Context): The Cairo graphics context to render operations on.
+            initial_mode (str, optional): The initial rendering mode, either "stroke" or "fill".
+                Defaults to "stroke".
+
+        Raises:
+            NotImplementedError: If an unsupported operation type is encountered.
         """
         mode = initial_mode
         has_path = False  # initially there is no path
@@ -293,13 +354,15 @@ class OpsSet:
                     ctx.set_source_rgba(r, g, b, ops.data.get("opacity", 1))
                 if ops.data.get("width"):
                     ctx.set_line_width(ops.data.get("width"))
+            elif ops.type == OpsType.METADATA:
+                pass  # ignore metadata ops
             elif ops.type == OpsType.DOT:
                 has_path = True
                 x, y = ops.data.get("center", (0, 0))
                 ctx.move_to(x, y)
                 ctx.arc(x, y, ops.data.get("radius", 1), 0, 2 * np.pi)
             else:
-                raise NotImplementedError("Unknown operation type")
+                raise NotImplementedError(f"Unknown operation type {ops.type}")
 
         # at the end of everything, check if stroke or fill is needed to complete the drawing
         if has_path and mode == "stroke":

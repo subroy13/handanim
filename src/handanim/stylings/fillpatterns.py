@@ -9,6 +9,21 @@ from ..core.draw_ops import OpsSet, Ops, OpsType
 
 
 class SolidFillPattern(DrawableFill):
+    """
+    A fill pattern implementation for solid color fills.
+
+    This class extends DrawableFill and provides a method to create a solid color fill
+    for a given set of bounding boxes. It sets the pen color, opacity, and fills the
+    specified geometric shapes by drawing lines connecting the box vertices.
+
+    Attributes:
+        bound_box_list (list): A list of bounding boxes to be filled
+        fill_style (FillStyle): Style parameters for the fill
+        sketch_style (SketchStyle, optional): Sketch style parameters
+
+    Returns:
+        OpsSet: A set of drawing operations to render the solid fill
+    """
 
     def __init__(self, bound_box_list, fill_style=..., sketch_style=...):
         super().__init__(bound_box_list, fill_style, sketch_style)
@@ -35,6 +50,21 @@ class SolidFillPattern(DrawableFill):
 
 
 class HachureFillPattern(DrawableFill):
+    """
+    A base class for hachure fill patterns that renders fill lines for polygons.
+
+    This class provides methods to render hachure lines with a specific stroke style
+    and sketch style. The render_fill_lines method converts a list of line points
+    into drawable Line objects with the specified styling.
+
+    Attributes:
+        fill_style (FillStyle): Style parameters for the fill
+        sketch_style (SketchStyle, optional): Sketch style parameters for line rendering
+
+    Methods:
+        render_fill_lines: Converts line points to drawable Line objects
+        fill: Generates hachure lines for a set of polygons and renders them
+    """
 
     def render_fill_lines(self, lines: List[List[Tuple[float, float]]]) -> OpsSet:
         line_stroke_style = StrokeStyle(
@@ -77,6 +107,15 @@ class HachureFillPattern(DrawableFill):
 
 
 class HatchFillPattern(HachureFillPattern):
+    """
+    Generates a hatch fill pattern by rendering hachure lines at two perpendicular angles.
+
+    Creates an OpsSet with two sets of hachure lines rotated 90 degrees from each other,
+    creating a criss-cross fill pattern. Preserves the original fill style after rendering.
+
+    Returns:
+        OpsSet: A set of drawing operations representing the hatch fill pattern.
+    """
 
     def fill(self):
         opsset = OpsSet(

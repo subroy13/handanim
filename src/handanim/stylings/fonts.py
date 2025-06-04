@@ -7,6 +7,7 @@ FONT_PATHS = {
     "caveat": "Caveat-VariableFont_wght.ttf",
     "permanent_marker": "PermanentMarker-Regular.ttf",
     "notosans_math": "NotoSansMath-Regular.ttf",
+    "handanimtype1": os.path.join("custom", "handanimtype1.json"),
 }
 
 

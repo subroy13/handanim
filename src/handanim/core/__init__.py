@@ -1,6 +1,7 @@
-from .animation import AnimationEvent, AnimationEventType
+from .animation import AnimationEvent, AnimationEventType, CompositeAnimationEvent
 from .scene import Scene
 from .styles import StrokeStyle, SketchStyle, FillStyle
+from .drawable import DrawableGroup
 
 __all__ = [
     "AnimationEvent",
@@ -9,4 +10,6 @@ __all__ = [
     "StrokeStyle",
     "SketchStyle",
     "FillStyle",
+    "DrawableGroup",
+    "CompositeAnimationEvent",
 ]

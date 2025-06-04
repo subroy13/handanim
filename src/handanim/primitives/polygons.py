@@ -2,7 +2,7 @@ from typing import List
 import numpy as np
 
 from ..core.drawable import Drawable
-from ..core.draw_ops import OpsSet
+from ..core.draw_ops import OpsSet, Ops, OpsType
 from .lines import LinearPath
 from ..stylings.fillpatterns import get_filler
 
@@ -47,6 +47,7 @@ class Polygon(Drawable):
         opsset.extend(linePath.draw())  # always close the path for a polygon
 
         if self.fill_style is not None:
+            opsset.add(Ops(type=OpsType.METADATA, data={"drawing_mode": "fill"}))
             filler = get_filler([self.points], self.fill_style, self.sketch_style)
             opsset.extend(filler.fill())
         return opsset
@@ -75,6 +76,7 @@ class Rectangle(Polygon):
         **kwargs,
     ):
         x, y = top_left
+        self.top_left = top_left
         super().__init__(
             [
                 (x, y),
@@ -113,4 +115,5 @@ class Square(Rectangle):
         *args,
         **kwargs,
     ):
+        self.side_length = side_length
         super().__init__(top_left, side_length, side_length, *args, **kwargs)

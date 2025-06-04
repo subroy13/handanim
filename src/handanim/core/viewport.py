@@ -33,8 +33,15 @@ class Viewport:
 
     def apply_to_context(self, ctx: cairo.Context):
         """
-        Apply the scaling and translation to the cairo context
-        so that drawing in world coordinates will map to screen pixels
+        Apply viewport scaling and translation to a cairo context.
+
+        Transforms world coordinates to screen pixels by:
+        1. Calculating scaling factors to fit content within screen margins
+        2. Translating the context to account for margins
+        3. Scaling the context to preserve aspect ratio and fit content
+
+        Args:
+            ctx (cairo.Context): The cairo drawing context to transform
         """
         world_width = self.world_xrange[1] - self.world_xrange[0]
         world_height = self.world_yrange[1] - self.world_yrange[0]
