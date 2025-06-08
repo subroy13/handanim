@@ -1,0 +1,6 @@
+sphinx==8.2.3
+furo==2024.8.6
+vtracer==0.6.11
+svgpathtools==1.7.0
+opencv-python==4.11.0.86
+scikit-image==0.25.2

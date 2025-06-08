@@ -18,13 +18,30 @@
 
 ## 📷 Example Output
 
+### Example 1: Pythagoras Theorem
+
 <p align="center">
   <img src="./examples/output/pythagoras.gif" width="500">
 </p>
 
 _(Example animation of a Pythagoras Theorem — see `examples/pythagoras.py`)_
 
+
+### Example 2: Square formula
+
+<p align="center">
+  <img src="./examples/output/a_plus_b_square.gif" width="500">
+</p>
+
+_(Example animation of proof of a plus b whole square — see `examples/a_plus_b_square.py`)_
+
+
+
 ## 🚀 Quickstart
+
+### 📦 Installation using Poetry
+
+The easiest way to install all the dependencies is to use [Poetry](https://python-poetry.org/).
 
 ```bash
 # Install dependencies (requires Python 3.13+)
@@ -50,6 +67,86 @@ triangle = NGon(
 scene.add(SketchAnimation(start_time = 0, end_time = 5), drawable = triangle)
 scene.render("triangle_anim.mp4", fps = 30)
 ```
+
+## 📦 Installation using pip
+
+If you prefer using `pip` instead of Poetry, you can install the main dependencies directly from the `requirements.txt` file. This method works well for lightweight setups or deployment environments.
+
+```bash
+# Create and activate a virtual environment (optional but recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install core dependencies
+pip install -r requirements.txt
+
+# (Optional) Install development dependencies
+pip install -r dev-requirements.txt
+
+# Run example animation
+python examples/pythagoras.py
+```
+
+Make sure you're using Python 3.11+ (as specified in the project). 
+
+## Installing Cairo 
+
+Your system must have the Cairo graphics library installed for `pycairo` or `cairocffi` to work correctly. This is a native C library and needs to be installed separately depending on your OS.
+
+#### ✅ On Ubuntu/Debian
+
+```bash
+sudo apt update
+sudo apt install libcairo2 libcairo2-dev
+```
+
+#### ✅ On macOS (using Homebrew)
+
+```bash
+brew install cairo
+```
+
+#### ✅ On Windows
+Use the precompiled binaries:
+
+1. Download the [GTK 3 Runtime](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases) (which includes Cairo).
+2. Install it and add its bin/ folder to your system PATH.
+3. Then install Python packages as usual:
+
+```bash
+pip install -r requirements.txt
+```
+
+Or use the cairocffi + pycairo + pip combo with wheels from [Gohlke's unofficial site](https://www.cgohlke.com/#pycairo) if needed.
+
+
+## 🎬 Installing FFmpeg (Required for Video Rendering)
+
+`moviepy` uses FFmpeg to write video files (e.g., .mp4). You must have FFmpeg installed and accessible in your system PATH.
+
+#### ✅ On Ubuntu/Debian
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+#### ✅ On macOS (using Homebrew)
+
+```bash
+brew install ffmpeg
+```
+
+#### ✅ On Windows
+
+1. Download FFmpeg from the [official site](https://ffmpeg.org/download.html) or a reliable Windows build like [gyan.dev](https://www.gyan.dev/ffmpeg/builds/).
+2. Extract the archive, and add the bin/ folder to your system PATH.
+3. Verify installation:
+
+```bash
+ffmpeg -version
+```
+
 
 ## 📄 License
 
