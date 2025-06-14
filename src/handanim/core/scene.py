@@ -3,6 +3,7 @@ import numpy as np
 from tqdm import tqdm
 import cairo
 import imageio.v2 as imageio
+import os
 
 from .utils import cairo_surface_to_numpy
 from .animation import AnimationEvent, CompositeAnimationEvent, AnimationEventType
@@ -322,8 +323,16 @@ class Scene:
         """
         # calculate the events
         opsset_list = self.create_event_timeline(self.fps, max_length, verbose)
-        with imageio.get_writer(output_path, fps=self.fps, codec="libx264") as writer:
-            for frame_ops in tqdm(opsset_list, desc="Rendering video..."):
+        output_file_ext = os.path.basename(output_path).split(os.path.extsep)[-1]
+        if output_file_ext.lower() == "gif":
+            tqdm_desc = "Rendering GIF..."
+            write_obj = imageio.get_writer(output_path, mode = "I", duration = max_length)
+        else:
+            tqdm_desc = "Rendering video..."
+            write_obj = imageio.get_writer(output_path, fps = self.fps, codec = "libx264")
+
+        with write_obj as writer:
+            for frame_ops in tqdm(opsset_list, desc=tqdm_desc):
                 surface = cairo.ImageSurface(
                     cairo.FORMAT_ARGB32, self.width, self.height
                 )
