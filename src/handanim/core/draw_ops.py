@@ -3,7 +3,7 @@ from enum import Enum
 import json
 import numpy as np
 import cairo
-from .utils import slice_bezier, get_bezier_points_from_quadcurve
+from .utils import slice_bezier, get_bezier_points_from_quadcurve, get_bezier_extreme_points
 
 
 class OpsType(Enum):
@@ -97,15 +97,27 @@ class OpsSet:
             min_x = min_y = float("inf")
             max_x = max_y = float("-inf")
             for ops in self.opsset:
-                # TODO: modify this calculation for curves
-                data = ops.data
-                if isinstance(data, list):
-                    for point in data:
-                        # update bounding box
-                        min_x = min(min_x, point[0])
-                        min_y = min(min_y, point[1])
-                        max_x = max(max_x, point[0])
-                        max_y = max(max_y, point[1])
+                if ops.type in [OpsType.CURVE_TO, OpsType.QUAD_CURVE_TO]:
+                    if ops.type == OpsType.CURVE_TO:
+                        p0, p1, p2, p3 = ops.data
+                    elif ops.type == OpsType.QUAD_CURVE_TO:
+                        p0, q1, q2 = ops.data
+                        p1, p2, p3 = get_bezier_points_from_quadcurve(p0, q1, q2)
+                    # now get the range
+                    xmin, xmax, ymin, ymax = get_bezier_extreme_points(p0, p1, p2, p3)
+                    min_x = min(min_x, xmin)
+                    max_x = max(max_x, xmax)
+                    min_y = min(min_y, ymin)
+                    max_y = max(max_y, ymax)
+                else:
+                    data = ops.data
+                    if isinstance(data, list):
+                        for point in data:
+                            # update bounding box
+                            min_x = min(min_x, point[0])
+                            min_y = min(min_y, point[1])
+                            max_x = max(max_x, point[0])
+                            max_y = max(max_y, point[1])
             return min_x, min_y, max_x, max_y
 
     def get_center_of_gravity(self) -> Tuple[float, float]:
@@ -253,7 +265,7 @@ class OpsSet:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
 
-    def rotate(self, angle: float):
+    def rotate(self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None):
         """
         Rotates the operations in the opsset by a specified angle around its center of gravity.
 
@@ -264,7 +276,8 @@ class OpsSet:
             angle (float): The rotation angle in degrees. Positive values rotate counterclockwise.
         """
         # first translate so that center of gravity is at (0, 0)
-        center_of_gravity = self.get_center_of_gravity()
+        if center_of_rotation is None:
+            center_of_rotation = self.get_center_of_gravity()
         rotation_values = [np.cos(np.deg2rad(angle)), np.sin(np.deg2rad(angle))]
 
         new_ops = []
@@ -273,12 +286,12 @@ class OpsSet:
                 # ops.data is list means, everything is a point
                 new_data = [
                     (
-                        center_of_gravity[0]
-                        + rotation_values[0] * (x - center_of_gravity[0])
-                        - rotation_values[1] * (y - center_of_gravity[1]),
-                        center_of_gravity[1]
-                        + rotation_values[1] * (x - center_of_gravity[0])
-                        + rotation_values[0] * (y - center_of_gravity[1]),
+                        center_of_rotation[0]
+                        + rotation_values[0] * (x - center_of_rotation[0])
+                        - rotation_values[1] * (y - center_of_rotation[1]),
+                        center_of_rotation[1]
+                        + rotation_values[1] * (x - center_of_rotation[0])
+                        + rotation_values[0] * (y - center_of_rotation[1]),
                     )
                     for x, y in ops.data
                 ]  # performs multiplication of rotation matrix explcitly

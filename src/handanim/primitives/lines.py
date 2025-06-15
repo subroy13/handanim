@@ -185,14 +185,15 @@ class Arrow(Drawable):
 
     def draw(self):
         opsset = OpsSet(initial_set=[])
-        angle = np.arctan((self.start[1] - self.end[1])/(self.end[0] - self.start[0]) )
+        angle = np.arctan((self.end[1] - self.start[1])/(self.end[0] - self.start[0]) )
+        arrow_head_angle = np.deg2rad(self.arrow_head_angle)
         arrow_line1 = LinearPath(
             points = [
                 self.start,
                 [self.end[0], self.start[1]], # we will rotate later
                 [
-                    self.end[0] - np.cos(self.arrow_head_angle) * self.arrow_head_size, 
-                    self.start[1] - np.sin(self.arrow_head_angle) * self.arrow_head_size
+                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size, 
+                    self.start[1] - np.sin(arrow_head_angle) * self.arrow_head_size
                 ]
             ],
             *self.args,
@@ -206,8 +207,8 @@ class Arrow(Drawable):
         arrow_line2 = Line(
             start=(self.end[0], self.start[1]),
             end=[
-                    self.end[0] - np.cos(self.arrow_head_angle) * self.arrow_head_size, 
-                    self.start[1] + np.sin(self.arrow_head_angle) * self.arrow_head_size
+                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size, 
+                    self.start[1] + np.sin(arrow_head_angle) * self.arrow_head_size
                 ]
         )
         opsset.extend(arrow_line2.draw())
@@ -222,16 +223,16 @@ class Arrow(Drawable):
                 arrow_line3 = Line(
                     start=(self.end[0] - self.arrow_head_size / 2, self.start[1]),
                     end=[
-                        self.end[0] - self.arrow_head_size / 2 - np.cos(self.arrow_head_angle) * self.arrow_head_size, 
-                        self.start[1] + arrow_scale * np.sin(self.arrow_head_angle) * self.arrow_head_size
+                        self.end[0] - self.arrow_head_size / 2 - np.cos(arrow_head_angle) * self.arrow_head_size, 
+                        self.start[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size
                     ]
                 )
                 opsset.extend(arrow_line3.draw())
         elif self.arrow_head_size == "-|>":
             for arrow_scale in [-1, 1]:
                 start_point = [
-                    self.end[0] - np.cos(self.arrow_head_angle) * self.arrow_head_size, 
-                    self.start[1] + arrow_scale * np.sin(self.arrow_head_angle) * self.arrow_head_size
+                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size, 
+                    self.start[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size
                 ]
                 opsset.add(Ops(
                     type=OpsType.MOVE_TO,
@@ -243,4 +244,5 @@ class Arrow(Drawable):
                 )
                 opsset.extend(arrow_line3.draw())
         
-        return opsset.rotate(angle)
+        opsset.rotate(np.rad2deg(angle), center_of_rotation=self.start)
+        return opsset

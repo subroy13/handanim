@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 import cairo
 import numpy as np
 
@@ -73,3 +73,36 @@ def cairo_surface_to_numpy(surface: cairo.ImageSurface):
     a = np.ndarray(shape=(h, w, 4), dtype=np.uint8, buffer=buf)
     # Cairo is ARGB, convert to RGBA for imageio
     return a[:, :, [2, 1, 0, 3]]  # BGR → RGB with alpha
+
+
+def solve_real_quad_eqn(a: float, b: float, c: float) -> Tuple[float, float]:
+    # solve a quadratic equation of form ax^2 + bx + c = 0
+    if a == 0:
+        return (-c / b) # as it is linear in this case
+    dis = b**2 - 4 * a * c
+    if dis < 0:
+        raise ValueError("The equation has complex roots")
+    else:
+        return (
+            (-b + np.sqrt(dis)) / (2 * a),
+            (-b - np.sqrt(dis)) / (2 * a)
+        )
+    
+def get_bezier_extreme_points(
+    p0: Tuple[float, float],  # initial point
+    p1: Tuple[float, float],  # control point 1
+    p2: Tuple[float, float],  # control point 2
+    p3: Tuple[float, float]   # end point
+) -> List[Tuple[float, float]]:
+    # the curve p(t) = (1-t)^3 p0 + 3(1-t)^2 * t * p1 + 3 (1-t) * t^2 * p2 + t^3 p3
+    # p'(t) = 3(1-t)^2 (p1 - p0) + 6(1-t)t (p2 - p1) + 3t^2 * (p3 - p2)
+    points = np.array([p0, p1, p2, p3])
+    a = 9 * (points[1] - points[0]) - 6 * (points[2] - points[1]) + 3 * (points[3] - points[2])
+    b = -6 * (points[1] - points[0]) + 6 * (points[2] - points[1])
+    c = 3 * (points[1] - points[0])
+    x1, x2 = solve_real_quad_eqn(a[0], b[0], c[0])
+    y1, y2 = solve_real_quad_eqn(a[1], b[1], c[1])
+    return [
+        min(x1, x2), max(x1, x2),
+        min(y1, y2), max(y1, y2)
+    ]

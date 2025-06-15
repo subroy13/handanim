@@ -38,4 +38,6 @@ scene.add(event=SketchAnimation(start_time=6, duration=3), drawable=text1)
 
 # save the scene
 output_root_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "output")
-scene.render(os.path.join(output_root_path, "custom_font.mp4"), max_length=10)
+# scene.render(os.path.join(output_root_path, "custom_font.mp4"), max_length=10)
+
+scene.render(os.path.join(output_root_path, "custom_font.gif"), max_length=10)

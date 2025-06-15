@@ -200,10 +200,3 @@ It motivates me to keep improving it and helps others discover it!
    - `Scene`: Collects objects and sequences them in time.
    - Handwriting: Converts strokes from mock or real fonts into draw operations.
 
-## 💡 Features Coming soon
-
-1. Arrows
-2. Flowcharts diagrams
-3. Importing images and videos into the scene.
-4. Autofitting content based on the size of textbox
-5. Showcasing tabular data with headers.
