@@ -114,9 +114,9 @@ class TransformedDrawable(Drawable):
                 f"Transformation function {self.transformation_function} is not callable"
             )
         else:
-            return getattr(opsset, self.transformation_function)(
-                **self.transformation_args
-            )
+            # call the transformation function with the provided arguments
+            getattr(opsset, self.transformation_function)(**self.transformation_args)
+            return opsset
 
 
 class DrawableFill:

@@ -22,8 +22,8 @@ During rendering, we calculate from the AnimationEvents object,
 ## 💡 Features to be added
 
 - [x] Linear Arrow
-- [ ] Curved Arrow
-- [ ] Rounded rect boxes
+- [x] Curved Arrow
+- [x] Rounded rect boxes
 - [ ] Implementation of flowcharts
 - [ ] Import images and videos into scene.
 - [ ] Showcasing tabular data

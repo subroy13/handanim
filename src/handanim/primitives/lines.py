@@ -4,6 +4,7 @@ import numpy as np
 from ..core.styles import StrokePressure
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from ..core.drawable import Drawable
+from ..core.utils import get_line_slope_angle
 from ..stylings.strokes import apply_stroke_pressure
 
 
@@ -172,7 +173,7 @@ class Arrow(Drawable):
         arrow_head_size: float = 10.0,
         arrow_head_angle: float = 45.0,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.args = args
@@ -185,64 +186,64 @@ class Arrow(Drawable):
 
     def draw(self):
         opsset = OpsSet(initial_set=[])
-        angle = np.arctan((self.end[1] - self.start[1])/(self.end[0] - self.start[0]) )
+        angle = get_line_slope_angle(self.start, self.end)
         arrow_head_angle = np.deg2rad(self.arrow_head_angle)
         arrow_line1 = LinearPath(
-            points = [
+            points=[
                 self.start,
-                [self.end[0], self.start[1]], # we will rotate later
+                [self.end[0], self.start[1]],  # we will rotate later
                 [
-                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size, 
-                    self.start[1] - np.sin(arrow_head_angle) * self.arrow_head_size
-                ]
+                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size,
+                    self.start[1] - np.sin(arrow_head_angle) * self.arrow_head_size,
+                ],
             ],
             *self.args,
-            **self.kwargs
+            **self.kwargs,
         )
         opsset.extend(arrow_line1.draw())
-        opsset.add(Ops(
-            type=OpsType.MOVE_TO,
-            data=[[self.end[0], self.start[1]]]
-        ))
+        opsset.add(Ops(type=OpsType.MOVE_TO, data=[[self.end[0], self.start[1]]]))
         arrow_line2 = Line(
             start=(self.end[0], self.start[1]),
             end=[
-                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size, 
-                    self.start[1] + np.sin(arrow_head_angle) * self.arrow_head_size
-                ]
+                self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size,
+                self.start[1] + np.sin(arrow_head_angle) * self.arrow_head_size,
+            ],
         )
         opsset.extend(arrow_line2.draw())
 
         # check for arrow_head type now
         if self.arrow_head_type == "->>":
             for arrow_scale in [-1, 1]:
-                opsset.add(Ops(
-                    type=OpsType.MOVE_TO,
-                    data=[(self.end[0] - self.arrow_head_size / 2, self.start[1])]
-                ))
+                opsset.add(
+                    Ops(
+                        type=OpsType.MOVE_TO,
+                        data=[(self.end[0] - self.arrow_head_size / 2, self.start[1])],
+                    )
+                )
                 arrow_line3 = Line(
                     start=(self.end[0] - self.arrow_head_size / 2, self.start[1]),
                     end=[
-                        self.end[0] - self.arrow_head_size / 2 - np.cos(arrow_head_angle) * self.arrow_head_size, 
-                        self.start[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size
-                    ]
+                        self.end[0]
+                        - self.arrow_head_size / 2
+                        - np.cos(arrow_head_angle) * self.arrow_head_size,
+                        self.start[1]
+                        + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size,
+                    ],
                 )
                 opsset.extend(arrow_line3.draw())
         elif self.arrow_head_size == "-|>":
             for arrow_scale in [-1, 1]:
                 start_point = [
-                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size, 
-                    self.start[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size
+                    self.end[0] - np.cos(arrow_head_angle) * self.arrow_head_size,
+                    self.start[1]
+                    + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size,
                 ]
-                opsset.add(Ops(
-                    type=OpsType.MOVE_TO,
-                    data=[start_point]
-                ))
+                opsset.add(Ops(type=OpsType.MOVE_TO, data=[start_point]))
                 arrow_line3 = Line(
                     start=start_point,
-                    end=(self.end[0] - self.arrow_head_size / 2, self.start[1])
+                    end=(self.end[0] - self.arrow_head_size / 2, self.start[1]),
                 )
                 opsset.extend(arrow_line3.draw())
-        
+
         opsset.rotate(np.rad2deg(angle), center_of_rotation=self.start)
         return opsset

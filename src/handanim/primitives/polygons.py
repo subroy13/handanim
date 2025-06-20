@@ -4,6 +4,7 @@ import numpy as np
 from ..core.drawable import Drawable
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from .lines import LinearPath
+from .curves import Curve
 from ..stylings.fillpatterns import get_filler
 
 
@@ -77,6 +78,8 @@ class Rectangle(Polygon):
     ):
         x, y = top_left
         self.top_left = top_left
+        self.width = width
+        self.height = height
         super().__init__(
             [
                 (x, y),
@@ -117,3 +120,67 @@ class Square(Rectangle):
     ):
         self.side_length = side_length
         super().__init__(top_left, side_length, side_length, *args, **kwargs)
+
+
+class RoundedRectangle(Drawable):
+
+    def __init__(
+        self,
+        top_left: tuple[float, float],
+        width: float,
+        height: float,
+        border_radius: float = 0.1,  # this is a percentage of the rectangle height or width
+        *args,
+        **kwargs,
+    ):
+        self.top_left = top_left
+        self.width = width
+        self.height = height
+        self.border_radius = border_radius
+        self.args = args
+        self.kwargs = kwargs
+
+    def draw(self) -> OpsSet:
+        opsset = OpsSet(initial_set=[])
+        x, y = self.top_left
+        border_radius = self.border_radius * min(self.width, self.height)
+        points = [
+            (x + border_radius, y),
+            (x + self.width - border_radius, y),
+            (x + self.width, y + border_radius),
+            (x + self.width, y + self.height - border_radius),
+            (x + self.width - border_radius, y + self.height),
+            (x + border_radius, y + self.height),
+            (x, y + self.height - border_radius),
+            (x, y + border_radius),
+            (x + border_radius, y),  # Closing the path
+        ]
+        curve = Curve(points, *self.args, **self.kwargs)
+        opsset.extend(curve.draw())
+
+        if self.fill_style is not None:
+            bound_box = [
+                (x, y),
+                (x + self.width, y),
+                (x + self.width, y + self.height),
+                (x, y + self.height),
+            ]
+            opsset.add(Ops(type=OpsType.METADATA, data={"drawing_mode": "fill"}))
+            filler = get_filler([bound_box], self.fill_style, self.sketch_style)
+            opsset.extend(filler.fill())
+        return opsset
+
+
+class RoundedSquare(RoundedRectangle):
+    def __init__(
+        self,
+        top_left: tuple[float, float],
+        side_length: float,
+        border_radius: float = 0.1,  # this is a percentage of the rectangle height or width
+        *args,
+        **kwargs,
+    ):
+        self.side_length = side_length
+        super().__init__(
+            top_left, side_length, side_length, border_radius, *args, **kwargs
+        )

@@ -3,7 +3,11 @@ from enum import Enum
 import json
 import numpy as np
 import cairo
-from .utils import slice_bezier, get_bezier_points_from_quadcurve, get_bezier_extreme_points
+from .utils import (
+    slice_bezier,
+    get_bezier_points_from_quadcurve,
+    get_bezier_extreme_points,
+)
 
 
 class OpsType(Enum):
@@ -96,13 +100,16 @@ class OpsSet:
         else:
             min_x = min_y = float("inf")
             max_x = max_y = float("-inf")
+            current_point = (0, 0)
             for ops in self.opsset:
                 if ops.type in [OpsType.CURVE_TO, OpsType.QUAD_CURVE_TO]:
+                    p0 = current_point  # current point is the start of the curve
                     if ops.type == OpsType.CURVE_TO:
-                        p0, p1, p2, p3 = ops.data
+                        p1, p2, p3 = ops.data
                     elif ops.type == OpsType.QUAD_CURVE_TO:
-                        p0, q1, q2 = ops.data
+                        q1, q2 = ops.data
                         p1, p2, p3 = get_bezier_points_from_quadcurve(p0, q1, q2)
+                    current_point = p3  # update current point to end of curve
                     # now get the range
                     xmin, xmax, ymin, ymax = get_bezier_extreme_points(p0, p1, p2, p3)
                     min_x = min(min_x, xmin)
@@ -113,6 +120,9 @@ class OpsSet:
                     data = ops.data
                     if isinstance(data, list):
                         for point in data:
+                            # update current point
+                            current_point = point
+
                             # update bounding box
                             min_x = min(min_x, point[0])
                             min_y = min(min_y, point[1])
@@ -265,7 +275,9 @@ class OpsSet:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
 
-    def rotate(self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None):
+    def rotate(
+        self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None
+    ):
         """
         Rotates the operations in the opsset by a specified angle around its center of gravity.
 
