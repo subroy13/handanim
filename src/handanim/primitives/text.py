@@ -161,4 +161,11 @@ class Text(Drawable):
                 offset_y += np.random.uniform(
                     -self.sketch_style.roughness, self.sketch_style.roughness
                 )
+        
+        # get the center of gravity for the opsset
+        cg = opsset.get_center_of_gravity()
+        opsset.translate(
+            self.position[0] - cg[0],
+            self.position[1] - cg[1]
+        ) # translate so that cg is at the proper position
         return opsset

@@ -139,7 +139,8 @@ class RoundedRectangle(Drawable):
         self.border_radius = border_radius
         self.args = args
         self.kwargs = kwargs
-
+        super().__init__(*args, **kwargs)
+        
     def draw(self) -> OpsSet:
         opsset = OpsSet(initial_set=[])
         x, y = self.top_left

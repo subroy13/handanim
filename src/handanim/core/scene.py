@@ -4,6 +4,8 @@ from tqdm import tqdm
 import cairo
 import imageio.v2 as imageio
 import os
+import subprocess
+import tempfile
 
 from .utils import cairo_surface_to_numpy
 from .animation import AnimationEvent, CompositeAnimationEvent, AnimationEventType
@@ -57,6 +59,18 @@ class Scene:
                 screen_height=height,
                 margin=20,
             )
+
+    def set_viewport_to_identity(self):
+        """
+        Resets the viewport to an identity transformation, mapping world coordinates directly to screen coordinates.
+        """
+        self.viewport = Viewport(
+            world_xrange=(0, self.width),
+            world_yrange=(0, self.height),
+            screen_width=self.width,
+            screen_height=self.height,
+            margin=0,
+        )
 
     def get_viewport_bounds(self) -> Tuple[float, float, float, float]:
         """
@@ -305,6 +319,48 @@ class Scene:
             self.viewport.apply_to_context(ctx)
             frame_ops.render(ctx)
             surface.finish()
+
+    def render2(self, output_path: str, max_length: Optional[float] = None, verbose=False):
+        """
+        Render the animation using Cairo and encode the video using FFmpeg.
+        """
+        opsset_list = self.create_event_timeline(self.fps, max_length, verbose)
+        num_frames = len(opsset_list)
+
+        # Create a temporary directory to store frames
+        with tempfile.TemporaryDirectory() as temp_dir:
+            
+            # Step 1: Render and save each frame as PNG
+            for idx, frame_ops in enumerate(tqdm(opsset_list, desc="Rendering frames")):
+                surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
+                ctx = cairo.Context(surface)
+
+                # optional background
+                if self.background_color is not None:
+                    ctx.set_source_rgb(*self.background_color)
+                ctx.paint()
+
+                self.viewport.apply_to_context(ctx)
+                frame_ops.render(ctx)  # applies the operations to cairo context
+
+                frame_path = os.path.join(temp_dir, f"frame_{idx:05d}.png")
+                surface.write_to_png(frame_path)
+
+            # Step 2: Use FFmpeg to combine frames into a video
+            ffmpeg_cmd = [
+                "ffmpeg",
+                "-y",  # overwrite output file
+                "-framerate", str(self.fps),
+                "-i", os.path.join(temp_dir, "frame_%05d.png"),
+                "-c:v", "libx264",
+                "-pix_fmt", "yuv420p",  # ensures compatibility
+                output_path,
+            ]
+
+            if verbose:
+                print("Running FFmpeg:", " ".join(ffmpeg_cmd))
+
+            subprocess.run(ffmpeg_cmd, check=True)
 
     def render(
         self, output_path: str, max_length: Optional[float] = None, verbose=False
