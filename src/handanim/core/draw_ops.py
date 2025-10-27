@@ -69,7 +69,11 @@ class OpsSet:
             self.opsset = [Ops(**d) for d in initial_set]
 
     def __repr__(self):
-        return "OpsSet:" + "\n\t".join([str(ops) for ops in self.opsset])
+        if len(self.opsset) <= 10:
+            return "OpsSet:" + "\n\t".join([str(ops) for ops in self.opsset])
+        else:
+            return "OpsSet:\n" + "\n".join([str(ops) for ops in self.opsset[:5]]) + f"\n\t(... {len(self.opsset) - 10} more rows)\n" + "\n".join([str(ops) for ops in self.opsset[-5:]])
+
 
     def add(self, ops: Union[Ops, dict]):
         if isinstance(ops, dict):

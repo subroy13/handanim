@@ -32,7 +32,7 @@ class Drawable:
         fill_style: Optional[FillStyle] = None,
         glow_dot_hint: Optional[Union[Dict, bool]] = None,
     ):
-        self.id = uuid4().hex  # generates an hexadecimal random id
+        self.id = uuid4().hex[:8]  # generates an hexadecimal random id
         self.stroke_style = stroke_style
         self.sketch_style = sketch_style
         self.fill_style = fill_style

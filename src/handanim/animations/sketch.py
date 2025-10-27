@@ -20,7 +20,7 @@ class SketchAnimation(AnimationEvent):
         apply: Applies the sketch animation to a given OpsSet at a specific progress point.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(
             AnimationEventType.CREATION, start_time, duration, easing_fun, data
         )
@@ -125,7 +125,8 @@ class SketchAnimation(AnimationEvent):
             sketching_opssets = self.get_partial_sketch(opsset, progress)
             new_opsset.extend(sketching_opssets)
             # now we can optionally add a glowing dot for the sketching operation
-            if self.data.get("glowing_dot"):
+            if self.data.get("glowing_dot") and progress < 1:
+                # the glowing dot should disappear at the end of the sketch
                 glow_dot_data = self.data.get("glowing_dot")
                 if not isinstance(glow_dot_data, dict):
                     glow_dot_data = {}
@@ -148,4 +149,5 @@ class SketchAnimation(AnimationEvent):
         else:
             # progress is 0, so nothing should be drawn
             pass
+        return new_opsset
         return new_opsset

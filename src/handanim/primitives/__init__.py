@@ -1,5 +1,6 @@
-from .lines import Line, LinearPath, Arrow
-from .curves import Curve, CurvedArrow
+from .lines import Line, LinearPath
+from .curves import Curve
+from .arrow import Arrow, CurvedArrow
 from .polygons import Polygon, Rectangle, Square, NGon, RoundedRectangle, RoundedSquare
 from .ellipse import Ellipse, Circle
 from .text import Text

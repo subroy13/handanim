@@ -16,7 +16,7 @@ class FadeInAnimation(AnimationEvent):
         data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(
             AnimationEventType.CREATION, start_time, duration, easing_fun, data
         )
@@ -54,7 +54,7 @@ class FadeOutAnimation(FadeInAnimation):
         data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(start_time, duration, easing_fun, data)
         self.type = AnimationEventType.DELETION  # override the type
 

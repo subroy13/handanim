@@ -1,29 +1,5 @@
-# Some Internal Items
+# Features
 
-## Architecture
-
-Let me give you the overview of the structure of handanim.
-
-1. Ops, OpsSet are the core classes that defines the basic operations of drawing, like line to, move to, etc.
-2. Drawables are the basic primitives. They implement a draw() method which provides a list of opsset on how to draw those primitives.
-
-- They also have some transformation functions which returns another drawable that modifies its own draw() method to apply the transformations on those opssets.
-
-3. AnimationEvents are objects that takes a drawable object, and a type of animation with start and end duration.
-4. In a scene, there are many AnimationEvents objects that takes place.
-
-During rendering, we calculate from the AnimationEvents object,
-
-- which Drawables are currently displayable on screen.
-- Then for each Drawable, get the progress for every type of animation assigned to it.
-- Call the draw() method of the Drawable to get the opsset that represent it.
-- Apply partial progress and transformation to the opsset as required by the animation type.
-
-## 💡 Features to be added
-
-- [x] Linear Arrow
-- [x] Curved Arrow
-- [x] Rounded rect boxes
 - [ ] Implementation of flowcharts
 - [ ] Import images and videos into scene.
 - [ ] Showcasing tabular data
@@ -31,5 +7,12 @@ During rendering, we calculate from the AnimationEvents object,
 
 ## Bug fixes to be performed
 
-- [x] Better calculation for bounding box.
 - [ ] Autofitting content based on rect boxes.
+- [ ] DrawableGroup (parallel) drawing.
+    * Transformations on DrawableGroup should apply w.r.t. its center of gravity.
+    * Even in a drawablegroup, individual drawables can be selectively transformed.
+    * Drawablegroup may not have a creation event. (Handled)
+    * If a drawablegroup has a deletion event, it destroys all its children as well.
+    * If a drawablegroup has an animation, then it must be applied after the persistent animations of all its children are applied first.
+    * What if? 2 objects have a persistent transformation, then they are grouped -> scale 0.5 -> one object is translated. The persistent animations should apply in order.
+    * Check `get_active_drawables`, `_add_and_cache_drawable` and `_get_opsset_at_time`.

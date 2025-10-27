@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from .draw_ops import OpsSet
 
 
@@ -29,17 +29,18 @@ class AnimationEvent:
     def __init__(
         self,
         type: AnimationEventType,  # the type of animation
-        start_time: float = 0,  # the starting time point  (in seconds)
-        duration: float = 0,  # the duration of the animation (in seconds)
+        start_time: float = 0.0,  # the starting time point  (in seconds)
+        duration: float = 0.0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
-        data: dict = None,  # additional data for the animation, depending on the animation type
+        data: Optional[dict] = None,  # additional data for the animation, depending on the animation type
     ):
         self.type = type
         self.start_time = start_time
         self.duration = duration
         self.end_time = start_time + duration
         self.easing_fun = easing_fun
-        self.data = data or {}
+        self.data: dict = data or {}
+        self.keep_final_state: bool = self.data.get("keep_final_state", True)  # keep the final state after animation, don't revert back
 
     def __repr__(self) -> str:
         return (

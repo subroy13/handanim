@@ -1,7 +1,9 @@
+from typing import List
 import os
+import numpy as np
 from handanim.core import (
     Scene, SketchStyle, StrokeStyle, FillStyle,
-    DrawableGroup, CompositeAnimationEvent
+    DrawableGroup, CompositeAnimationEvent, Drawable
 )
 from handanim.animations import (
     SketchAnimation, FadeInAnimation, FadeOutAnimation, ZoomInAnimation,
@@ -40,7 +42,7 @@ scene.add(SketchAnimation(start_time=2, duration=0.5), drawable=eraser)
 
 sun = Circle(
         center=(960, 600), 
-        radius=120, 
+        radius=80,
         stroke_style=StrokeStyle(color=WHITE),
         fill_style=FillStyle(color=YELLOW, hachure_gap=10), 
         sketch_style=planet_sketch
@@ -53,118 +55,127 @@ scene.add(
 
 # --------------- Scene 2: Planet Orbits ---------------
 planet_data = [
-    ("Mercury", 200, GRAY),
-    ("Venus", 240, ORANGE),
-    ("Earth", 280, BLUE),
-    ("Mars", 320, RED),
-    ("Jupiter", 400, LIGHT_GRAY),
-    ("Saturn", 470, LIGHT_GRAY),
-    ("Uranus", 540, LIGHT_GRAY),
-    ("Neptune", 600, LIGHT_GRAY),
+    # name, orbit_radius, planet_radius, color
+    ("Mercury", 150, 6, GRAY),
+    ("Venus", 180, 9, ORANGE),
+    ("Earth", 215, 10, BLUE),
+    ("Mars", 260, 7, RED),
+    ("Jupiter", 380, 25, LIGHT_GRAY),
+    ("Saturn", 480, 22, LIGHT_GRAY),
+    ("Uranus", 560, 15, LIGHT_GRAY),
+    ("Neptune", 620, 14, LIGHT_GRAY),
 ]
 
-planet_drawables = []
+planet_drawables: List[Drawable] = []
 start_time = 4
-for idx, (name, radius, color) in enumerate(planet_data):
+for name, orbit_radius, planet_radius, color in planet_data:
     planet = Circle(
-        center=(960 + radius, 600),
-        radius=8 + idx * 2,
+        center=(960 + orbit_radius, 600),
+        radius=planet_radius,
         stroke_style=StrokeStyle(color=WHITE),
         fill_style=FillStyle(color=color, hachure_gap=6),
         sketch_style=planet_sketch
     )
-    orbit = Circle(center=(960, 600), radius=radius, stroke_style=StrokeStyle(color=WHITE, width=1))
-    planet = planet.translate(offset_x=-800, offset_y=0)  # move off-screen to the left
-    scene.add(SketchAnimation(start_time=start_time, duration=0.5), drawable=orbit)
-    scene.add(SketchAnimation(start_time=start_time, duration=0.1), drawable=planet)
+
+    # Create a separate drawable for the animation, starting from off-screen
+    planet_for_anim = planet.translate(offset_x=-(1200 + orbit_radius), offset_y=0)
+    orbit = Circle(center=(960, 600), radius=orbit_radius, stroke_style=StrokeStyle(color=WHITE, width=1))
+
+    # Draw the planet and its orbit
+    scene.add(SketchAnimation(start_time=start_time, duration=0.1), drawable=planet_for_anim)
+    scene.add(SketchAnimation(start_time=start_time, duration=1.0), drawable=orbit) # Draw orbit at the same time
+
+    # Translate the planet to its final position and keep it there.
     scene.add(
-        TranslateToAnimation(start_time=start_time + 0.5, duration=1, 
-                             data={"point": (960 + radius, 600)}),
-        drawable=planet
+        event=TranslateToAnimation(
+            start_time=start_time + 0.1,
+            duration=1,
+            data={"point": (960 + orbit_radius, 600)},
+        ),
+        drawable=planet_for_anim
     )
+    # Add the animated planet and its orbit to the list for grouping
+    planet_drawables.extend([planet_for_anim, orbit])
+    start_time += 1.0
 
-    planet_drawables.extend([orbit, planet])
-    start_time += 0.7
+# Group them for future transformation
+planetary_system = DrawableGroup(elements=[sun] + planet_drawables, grouping_method="parallel")
 
-# # Group them for future transformation
-# planetary_system = DrawableGroup(elements=[sun] + planet_drawables)
+# --------------- Scene 3: Shrinking the Solar System ---------------
+msg = Text("But what does this mean for us?", position=(960, 540), font_size=48, stroke_style=text_style)
 
-# # --------------- Scene 3: Shrinking the Solar System ---------------
-# msg = Text("But what does this mean for us?", position=(960, 540), font_size=48, stroke_style=text_style)
+scene.add(ZoomOutAnimation(start_time=13, duration=2, data={"factor": 0.2}), drawable=planetary_system)
+scene.add(FadeOutAnimation(start_time=13, duration=2), drawable=planetary_system)
 
-# scene.add(CompositeAnimationEvent([
-#     ZoomOutAnimation(start_time=11, duration=2),
-# ]), drawable=planetary_system)
+scene.add(SketchAnimation(start_time=15, duration=1), drawable=msg)
+scene.add(FadeOutAnimation(start_time=16.5, duration=1), drawable=msg)
 
-# scene.add(SketchAnimation(start_time=13, duration=1), drawable=msg)
+# --------------- Scene 4: Earth-Moon-Sun Scale ---------------
+earth = Circle(center=(400, 500), radius=20, stroke_style=StrokeStyle(color=WHITE),
+               fill_style=FillStyle(color=BLUE, hachure_gap=8), sketch_style=planet_sketch)
 
-# # --------------- Scene 4: Earth-Moon-Sun Scale ---------------
-# earth = Circle(center=(400, 500), radius=20, stroke_style=StrokeStyle(color=BLACK),
-#                fill_style=FillStyle(color=BLUE, hachure_gap=8), sketch_style=planet_sketch)
+moon = Circle(center=(480, 500), radius=6, stroke_style=StrokeStyle(color=WHITE),
+              fill_style=FillStyle(color=GRAY, hachure_gap=6), sketch_style=planet_sketch)
 
-# moon = Circle(center=(480, 500), radius=6, stroke_style=StrokeStyle(color=BLACK),
-#               fill_style=FillStyle(color=GRAY, hachure_gap=6), sketch_style=planet_sketch)
+moon_line = Line(start=(400, 500), end=(480, 500), stroke_style=StrokeStyle(color=WHITE))
+moon_label = Text("384,400 km", position=(440, 530), font_size=24, stroke_style=text_style)
 
-# moon_line = Line(start=(400, 500), end=(480, 500), stroke_style=StrokeStyle(color=WHITE))
-# moon_label = Text("384,400 km", position=(440, 530), font_size=24, stroke_style=text_style)
+sun_far = Circle(center=(1600, 500), radius=200, stroke_style=StrokeStyle(color=WHITE),
+                 fill_style=FillStyle(color=YELLOW, hachure_gap=10), sketch_style=planet_sketch)
 
-# sun_far = Circle(center=(1600, 500), radius=200, stroke_style=StrokeStyle(color=BLACK),
-#                  fill_style=FillStyle(color=YELLOW, hachure_gap=10), sketch_style=planet_sketch)
+sun_label = Text("Sun ~150 million km", position=(1600, 750), font_size=24, stroke_style=text_style)
 
-# sun_label = Text("Sun ~150 million km", position=(1600, 750), font_size=24, stroke_style=text_style)
+scale_box = RoundedRectangle(
+    top_left=(300, 850), width=1400, height=100, border_radius=20,
+    stroke_style=StrokeStyle(color=WHITE), sketch_style=SketchStyle(roughness=2))
 
-# scale_box = RoundedRectangle(
-#     top_left=(300, 850), width=700, height=100,
-#     stroke_style=StrokeStyle(color=WHITE), sketch_style=SketchStyle(roughness=2))
+scale_text = Text("Not to scale, but you get the idea.", position=(950, 900), font_size=36, stroke_style=text_style)
 
-# scene.add(FadeInAnimation(start_time=15, duration=1), drawable=earth)
-# scene.add(FadeInAnimation(start_time=15.5, duration=1), drawable=moon)
-# scene.add(FadeInAnimation(start_time=15.7, duration=1), drawable=moon_line)
-# scene.add(FadeInAnimation(start_time=16, duration=1), drawable=moon_label)
-# scene.add(FadeInAnimation(start_time=16.3, duration=1), drawable=sun_far)
-# scene.add(FadeInAnimation(start_time=16.7, duration=1), drawable=sun_label)
-# scene.add(FadeInAnimation(start_time=17, duration=1), drawable=scale_box)
+scale_group = DrawableGroup(elements=[earth, moon, moon_line, moon_label, sun_far, sun_label, scale_box, scale_text])
 
-
-# # --------------- Scene 5: Cosmic Perspective ---------------
-# scene.add(FadeOutAnimation(start_time=18.5, duration=1), drawable=scale_box)
-
-# eraser = Eraser(
-#     objects_to_erase=[scale_box],
-#     drawable_cache=scene.drawable_cache,
-#     glow_dot_hint={"color": ERASER_HINT_COLOR, "radius": 10},
-# )
-# scene.add(SketchAnimation(start_time=20, duration=2), drawable=eraser)
-
-# stars = [Circle(center=(x, y), radius=2, stroke_style=StrokeStyle(color=WHITE)) for x, y in
-#          [(100, 200), (300, 400), (600, 150), (800, 500), (1100, 300), (1400, 650), (1700, 200)]]
-
-# text1 = Text("Humans are tiny...", position=(960, 440), font_size=42, stroke_style=text_style)
-# text2 = Text("...but our curiosity is infinite.", position=(960, 520), font_size=42, stroke_style=text_style)
-
-# for i, star in enumerate(stars):
-#     scene.add(FadeInAnimation(start_time=22 + i * 0.2, duration=1), drawable=star)
-
-# scene.add(SketchAnimation(start_time=24, duration=1), drawable=text1)
-# scene.add(SketchAnimation(start_time=25, duration=1), drawable=text2)
+scene.add(FadeInAnimation(start_time=18, duration=1), drawable=earth)
+scene.add(FadeInAnimation(start_time=18.5, duration=1), drawable=moon)
+scene.add(SketchAnimation(start_time=18.7, duration=1), drawable=moon_line)
+scene.add(FadeInAnimation(start_time=19, duration=1), drawable=moon_label)
+scene.add(FadeInAnimation(start_time=19.3, duration=1), drawable=sun_far)
+scene.add(FadeInAnimation(start_time=19.7, duration=1), drawable=sun_label)
+scene.add(SketchAnimation(start_time=20, duration=1), drawable=scale_box)
+scene.add(SketchAnimation(start_time=21, duration=1), drawable=scale_text)
 
 
-# # --------------- Scene 6: Final Zoomed View ---------------
-# tiny_earth = Circle(center=(200, 900), radius=10, stroke_style=StrokeStyle(color=BLUE), sketch_style=planet_sketch)
-# arrow_to_solar = Arrow(start_point=(200, 900), end_point=(800, 600), stroke_style=StrokeStyle(color=WHITE))
-# final_msg = Text("Keep exploring.", position=(960, 100), font_size=48, stroke_style=text_style)
+# --------------- Scene 5: Cosmic Perspective ---------------
+scene.add(FadeOutAnimation(start_time=22.5, duration=1), drawable=scale_group)
 
-# scene.add(SketchAnimation(start_time=27, duration=1), drawable=tiny_earth)
-# scene.add(SketchAnimation(start_time=27.5, duration=1), drawable=arrow_to_solar)
-# scene.add(FadeInAnimation(start_time=28, duration=1), drawable=final_msg)
+stars = [Circle(center=(np.random.randint(50, 1870), np.random.randint(50, 1038)), radius=np.random.uniform(1, 3), stroke_style=StrokeStyle(color=WHITE)) for _ in range(100)]
 
-# # --------------- End Message ---------------
-# end_text = Text("Let's keep exploring the universe.", position=(960, 1000), font_size=24, stroke_style=text_style)
-# scene.add(FadeInAnimation(start_time=29, duration=1.5), drawable=end_text)
+text1 = Text("Humans are tiny...", position=(960, 440), font_size=42, stroke_style=text_style)
+text2 = Text("...but our curiosity is infinite.", position=(960, 520), font_size=42, stroke_style=text_style)
+
+for i, star in enumerate(stars):
+    scene.add(FadeInAnimation(start_time=24 + i * 0.02, duration=1), drawable=star)
+
+scene.add(SketchAnimation(start_time=26, duration=1), drawable=text1)
+scene.add(SketchAnimation(start_time=27, duration=1), drawable=text2)
+
+
+# --------------- Scene 6: Final Zoomed View ---------------
+final_group = DrawableGroup(elements=stars + [text1, text2])
+scene.add(FadeOutAnimation(start_time=28.5, duration=1), drawable=final_group)
+
+tiny_earth = Circle(center=(200, 900), radius=10, fill_style=FillStyle(color=BLUE), sketch_style=planet_sketch)
+arrow_to_solar = Arrow(start_point=(250, 850), end_point=(800, 600), stroke_style=StrokeStyle(color=WHITE))
+final_msg = Text("Keep exploring.", position=(960, 100), font_size=48, stroke_style=text_style)
+
+scene.add(SketchAnimation(start_time=30, duration=1), drawable=tiny_earth)
+scene.add(SketchAnimation(start_time=30.5, duration=1), drawable=arrow_to_solar)
+scene.add(FadeInAnimation(start_time=31, duration=1), drawable=final_msg)
+
+# --------------- End Message ---------------
+end_text = Text("handanim", position=(960, 1000), font_size=24, stroke_style=text_style)
+scene.add(FadeInAnimation(start_time=32, duration=1.5), drawable=end_text)
 
 # --------------- Render All ---------------
 output_path = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "output", "solar_system_journey.mp4"
 )
-scene.render(output_path, max_length=17)
-
+scene.render(output_path, max_length=34)

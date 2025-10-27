@@ -20,7 +20,7 @@ class TranslateToAnimation(AnimationEvent):
         apply: Applies the translation to the given OpsSet at the specified progress.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(
             AnimationEventType.MUTATION, start_time, duration, easing_fun, data
         )

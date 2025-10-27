@@ -87,6 +87,35 @@ class Scene:
             self.viewport.world_yrange[1],
         )
 
+    def _add_and_cache_drawable(self, drawable: Drawable):
+        """Recursively adds a drawable and its children (if it's a group) to the cache."""
+        if self.drawable_cache.has_drawable_oppset(drawable.id):
+            return  # Already processed
+
+        if isinstance(drawable, DrawableGroup) and drawable.grouping_method == "parallel":
+            # First, ensure all children are added and cached
+            for elem in drawable.elements:
+                self._add_and_cache_drawable(elem)
+
+            # Now, build this group's OpsSet from its cached children
+            group_opsset = OpsSet(initial_set=[])
+            for elem in drawable.elements:
+                group_opsset.extend(self.drawable_cache.get_drawable_opsset(elem.id))
+            
+            self.drawable_cache.cache[drawable.id] = group_opsset
+            self.drawable_cache.drawables[drawable.id] = drawable
+        elif isinstance(drawable, DrawableGroup) and drawable.grouping_method == "series":
+            # do not add to cache, ignore processing
+            pass
+        else:
+            # For simple drawables, just call draw() and cache it
+            self.drawable_cache.set_drawable_opsset(drawable)
+        
+        # Initialize timeline for the new drawable
+        if drawable.id not in self.object_timelines:
+            self.object_timelines[drawable.id] = []
+
+
     def add(
         self,
         event: AnimationEvent,
@@ -115,29 +144,27 @@ class Scene:
             return
 
         # handle the case for drawable groups
-        if isinstance(drawable, DrawableGroup):
-            if drawable.grouping_method == "parallel":
-                for sub_drawable in drawable.elements:
-                    # recursively call add() method, as a syntantic sugar
-                    self.add(event, drawable=sub_drawable)
-            else:
-                segmented_events = event.subdivide(len(drawable.elements))
-                for sub_drawable, segment_event in zip(
-                    drawable.elements, segmented_events
-                ):
-                    # recursively call add(), but with the duration modified appropriately
-                    self.add(event=segment_event, drawable=sub_drawable)
+        if isinstance(drawable, DrawableGroup) and drawable.grouping_method == "series":
+            # Apply the event sequentially to each element in the group
+            segmented_events = event.subdivide(len(drawable.elements))
+            for sub_drawable, segment_event in zip(
+                drawable.elements, segmented_events
+            ):
+                # recursively call add(), but with the duration modified appropriately
+                self.add(event=segment_event, drawable=sub_drawable)
             return
 
-        # handle the simple single event and drawable case
+        # For regular drawables or parallel groups, add the drawable and its hierarchy
+        self._add_and_cache_drawable(drawable)
         self.events.append((event, drawable.id))
-        if not self.drawable_cache.has_drawable_oppset(drawable.id):
-            self.drawable_cache.set_drawable_opsset(drawable)
-            self.object_timelines[drawable.id] = []
 
         if event.type is AnimationEventType.CREATION:
             self.object_timelines[drawable.id].append(event.start_time)
         elif event.type is AnimationEventType.DELETION:
+            # any object cannot be deleted without being created
+            if len(self.object_timelines[drawable.id]) == 0:
+                self.object_timelines[drawable.id].append(event.start_time) # assume created at the beginning of deletion event
+
             self.object_timelines[drawable.id].append(event.end_time)
 
     def get_active_objects(self, t: float):
@@ -165,7 +192,63 @@ class Scene:
                     break
             if active:
                 active_list.append(object_id)
+
+        # however, if a parallel drawablegroup is active, all its children are made inactive
+        suppressed_ids = set()
+        for object_id in active_list:
+            if (
+                isinstance(self.drawable_cache.get_drawable(object_id), DrawableGroup) and 
+                self.drawable_cache.get_drawable(object_id).grouping_method == "parallel"
+            ):
+                suppressed_ids.update(self._get_all_suppressed_children(object_id))
+
+        return [id for id in active_list if id not in suppressed_ids]
+    
+
+    def _get_all_suppressed_children(self, group_id: str) -> List[str]:
+        """Recursively find all descendant IDs of a given group."""
+        active_list = []
+        group = self.drawable_cache.get_drawable(group_id)
+        if isinstance(group, DrawableGroup):
+            for elem in group.elements:
+                active_list.append(elem.id)
+                active_list.extend(self._get_all_suppressed_children(elem.id))
         return active_list
+
+    def _get_opsset_at_time(self, object_id: str, t: float, fps: int, drawable_events_mapping: Dict[str, List[AnimationEvent]]) -> OpsSet:
+        """
+        Recursively gets the final, transformed OpsSet for a drawable at a specific time,
+        accounting for its own persistent animations and those of its children if it's a group.
+        """
+        drawable = self.drawable_cache.get_drawable(object_id)
+        
+        # 1. Get the base OpsSet for the current object.
+        if isinstance(drawable, DrawableGroup) and drawable.grouping_method == "parallel":
+            # For a group, recursively build its OpsSet from its children's state at time t.
+            base_opsset = OpsSet(initial_set=[])
+            for elem in drawable.elements:
+                child_opsset = self._get_opsset_at_time(elem.id, t, fps, drawable_events_mapping)
+                base_opsset.extend(child_opsset)
+        else:
+            # For a simple drawable, get its original OpsSet from the cache.
+            base_opsset = self.drawable_cache.get_drawable_opsset(object_id)
+
+        # 2. Apply any persistent animations that have finished for THIS object.
+        persistent_events = [
+            e for e in drawable_events_mapping.get(object_id, [])
+            if e.keep_final_state and t / fps >= e.end_time
+        ]
+
+        final_state_opsset = base_opsset
+        if persistent_events:
+            # Sort by end_time to apply them in the correct chronological order
+            persistent_events.sort(key=lambda e: e.end_time)
+            for p_event in persistent_events:
+                # Sequentially apply the final state of each persistent event
+                final_state_opsset = p_event.apply(final_state_opsset, 1.0)
+        
+        return final_state_opsset
+
 
     def get_animated_opsset(
         self,
@@ -248,12 +331,12 @@ class Scene:
 
             # for each of these active objects, calculate partial opssets to draw
             for object_id in current_active_objects:
-                object_opsset: OpsSet = self.drawable_cache.get_drawable_opsset(
-                    object_id
-                )
-                object_drawable: Drawable = self.drawable_cache.get_drawable(object_id)
-
+                
+                # Get the final state of the object at this time, including all child transformations.
+                final_state_opsset = self._get_opsset_at_time(object_id, t, fps, drawable_events_mapping)
+                
                 # for every object, there could be multiple events associated
+                object_drawable: Drawable = self.drawable_cache.get_drawable(object_id)
                 active_events = []
                 for event in drawable_events_mapping[object_id]:
                     if object_drawable.glow_dot_hint:
@@ -267,14 +350,14 @@ class Scene:
                         active_events.append(
                             (event, progress)
                         )  # add the event with its progress
-                if len(active_events) == 0:
-                    # no active events, but object is active
-                    # object is completely visible, so draw fully
-                    frame_opsset.extend(object_opsset)
-                else:
+
+                if len(active_events) == 0: # No active animations
+                    # Draw the object in its final persistent state (or original if no persistent events)
+                    frame_opsset.extend(final_state_opsset)
+                else: # There are active animations
                     # there are some active events, so animation needs to be calculated
                     animated_opsset = self.get_animated_opsset(
-                        object_opsset, active_events, verbose
+                        final_state_opsset, active_events, verbose
                     )  # calculate the partial opsset
 
                     frame_opsset.extend(animated_opsset)
@@ -319,48 +402,6 @@ class Scene:
             self.viewport.apply_to_context(ctx)
             frame_ops.render(ctx)
             surface.finish()
-
-    def render2(self, output_path: str, max_length: Optional[float] = None, verbose=False):
-        """
-        Render the animation using Cairo and encode the video using FFmpeg.
-        """
-        opsset_list = self.create_event_timeline(self.fps, max_length, verbose)
-        num_frames = len(opsset_list)
-
-        # Create a temporary directory to store frames
-        with tempfile.TemporaryDirectory() as temp_dir:
-            
-            # Step 1: Render and save each frame as PNG
-            for idx, frame_ops in enumerate(tqdm(opsset_list, desc="Rendering frames")):
-                surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
-                ctx = cairo.Context(surface)
-
-                # optional background
-                if self.background_color is not None:
-                    ctx.set_source_rgb(*self.background_color)
-                ctx.paint()
-
-                self.viewport.apply_to_context(ctx)
-                frame_ops.render(ctx)  # applies the operations to cairo context
-
-                frame_path = os.path.join(temp_dir, f"frame_{idx:05d}.png")
-                surface.write_to_png(frame_path)
-
-            # Step 2: Use FFmpeg to combine frames into a video
-            ffmpeg_cmd = [
-                "ffmpeg",
-                "-y",  # overwrite output file
-                "-framerate", str(self.fps),
-                "-i", os.path.join(temp_dir, "frame_%05d.png"),
-                "-c:v", "libx264",
-                "-pix_fmt", "yuv420p",  # ensures compatibility
-                output_path,
-            ]
-
-            if verbose:
-                print("Running FFmpeg:", " ".join(ffmpeg_cmd))
-
-            subprocess.run(ffmpeg_cmd, check=True)
 
     def render(
         self, output_path: str, max_length: Optional[float] = None, verbose=False
