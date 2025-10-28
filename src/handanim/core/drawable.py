@@ -31,8 +31,12 @@ class Drawable:
         sketch_style: SketchStyle = SketchStyle(),
         fill_style: Optional[FillStyle] = None,
         glow_dot_hint: Optional[Union[Dict, bool]] = None,
+        id: Optional[str] = None,
     ):
-        self.id = uuid4().hex[:8]  # generates an hexadecimal random id
+        if id is not None:
+            self.id = id
+        else:
+            self.id = uuid4().hex[:8]  # generates an hexadecimal random id
         self.stroke_style = stroke_style
         self.sketch_style = sketch_style
         self.fill_style = fill_style
@@ -52,17 +56,13 @@ class Drawable:
         """
         Translates the drawable object by the given offset
         """
-        return TransformedDrawable(
-            self, "translate", {"offset_x": offset_x, "offset_y": offset_y}
-        )
+        return TransformedDrawable(self, "translate", {"offset_x": offset_x, "offset_y": offset_y})
 
     def scale(self, scale_x: float, scale_y: float):
         """
         Scales the drawable object by the given scale factors
         """
-        return TransformedDrawable(
-            self, "scale", {"scale_x": scale_x, "scale_y": scale_y}
-        )
+        return TransformedDrawable(self, "scale", {"scale_x": scale_x, "scale_y": scale_y})
 
     def rotate(self, angle: float):
         """
@@ -106,13 +106,9 @@ class TransformedDrawable(Drawable):
         # apply the base drawable's draw method
         opsset = self.base_drawable.draw()
         if not hasattr(opsset, self.transformation_function):
-            raise ValueError(
-                f"Invalid transformation function {self.transformation_function}"
-            )
+            raise ValueError(f"Invalid transformation function {self.transformation_function}")
         elif not callable(getattr(opsset, self.transformation_function)):
-            raise ValueError(
-                f"Transformation function {self.transformation_function} is not callable"
-            )
+            raise ValueError(f"Transformation function {self.transformation_function} is not callable")
         else:
             # call the transformation function with the provided arguments
             getattr(opsset, self.transformation_function)(**self.transformation_args)
@@ -136,9 +132,7 @@ class DrawableFill:
 
     def __init__(
         self,
-        bound_box_list: List[
-            List[Tuple[float, float]]
-        ],  # defines the bounding box for filling
+        bound_box_list: List[List[Tuple[float, float]]],  # defines the bounding box for filling
         fill_style: FillStyle = FillStyle(),
         sketch_style: SketchStyle = SketchStyle(),
     ):
@@ -153,6 +147,7 @@ class DrawableFill:
 class DrawableCache:
     """
     A cache management class for storing and retrieving drawable objects and their corresponding operation sets.
+    It caches the state of a drawable object after a choice of particular event, or at initialization.
 
     Provides methods to:
     - Store and retrieve drawable objects and their computed operation sets, at different key frames
@@ -168,20 +163,33 @@ class DrawableCache:
         self.cache: dict[str, OpsSet] = {}
         self.drawables: dict[str, Drawable] = {}
 
-    def has_drawable_oppset(self, drawable_id: str) -> bool:
-        return drawable_id in self.cache
+    def get_cachekey(self, drawable_id: str, event_id: Optional[str] = None):
+        if event_id is None:
+            return f"{drawable_id}__init"
+        else:
+            return f"{drawable_id}__{event_id}"
 
-    def set_drawable_opsset(self, drawable: Drawable, opsset: Optional[OpsSet] = None, frame: int = 0):
-        self.drawables[drawable.id] = drawable
+    def set_drawable_opsset(self, drawable: Drawable, opsset: Optional[OpsSet] = None):
+        cachekey = self.get_cachekey(drawable.id)
+        self.drawables[cachekey] = drawable
         if opsset is None:
             opsset = drawable.draw()
-        self.cache[drawable.id] = opsset  # calculate opsset and store
+        self.cache[cachekey] = opsset  # calculate opsset and store
+
+    def set_drawable_event_opsset(self, drawable_id: str, event_id: str, opsset: OpsSet):
+        cachekey = self.get_cachekey(drawable_id, event_id)
+        self.cache[cachekey] = opsset
 
     def get_drawable(self, drawable_id: str) -> Drawable:
-        return self.drawables.get(drawable_id, None)
+        return self.drawables[drawable_id]
 
-    def get_drawable_opsset(self, drawable_id: str) -> OpsSet:
-        return self.cache.get(drawable_id, OpsSet(initial_set=[]))
+    def exists_in_cache(self, drawable_id: str, event_id: Optional[str] = None) -> bool:
+        cachekey = self.get_cachekey(drawable_id, event_id)
+        return cachekey in self.cache
+
+    def get_drawable_opsset(self, drawable_id: str, event_id: Optional[str] = None) -> OpsSet:
+        cachekey = self.get_cachekey(drawable_id, event_id)
+        return self.cache.get(cachekey, OpsSet(initial_set=[]))
 
     def calculate_bounding_box(self, drawables: List[Drawable]):
         """
@@ -210,9 +218,7 @@ class DrawableGroup(Drawable):
         grouping_method (str): The method used for applying transformations.
     """
 
-    def __init__(
-        self, elements: List[Drawable], grouping_method="parallel", *args, **kwargs
-    ):
+    def __init__(self, elements: List[Drawable], grouping_method="parallel", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.elements = elements
         assert grouping_method in ["parallel", "series"]

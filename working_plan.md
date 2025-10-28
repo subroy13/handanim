@@ -21,21 +21,23 @@ This document outlines the core architecture of the `handanim` library and propo
     -   `AnimationEvent` connects a `Drawable` to a specific animation type (e.g., `SketchAnimation`) over a defined time interval (`start_time`, `end_time`).
     -   The event's `.apply()` method is responsible for modifying an `OpsSet` based on the animation's progress (a float from 0.0 to 1.0).
 
-4.  **The Conductor (`Scene`)**:
+4.  **The Conductor (`Scene` & Rendering Pipeline)**:
     -   The `Scene` class is the main user-facing entry point. It orchestrates the entire animation.
-    -   It maintains a list of all `AnimationEvent`s and a `DrawableCache` to store pre-calculated `OpsSet`s for performance.
-    -   **Rendering Pipeline**: When `render()` is called, the `Scene` calculates the state for each frame. For a given time `t`:
-        - It determines which `Drawable` objects are "active" (visible).
-        - For each active object, it finds any ongoing `AnimationEvent`s.
-        - It retrieves the base `OpsSet` from the cache.
-        - It applies the animation transformations to the `OpsSet` based on the current progress.
-        - The final, combined `OpsSet` for the frame is rendered to a Cairo surface.
+    -   It maintains a list of all `AnimationEvent`s, a `DrawableCache` for base `OpsSet`s, and manages the animation timeline.
+    -   **Rendering Pipeline**: The `create_event_timeline` method now uses a sophisticated recursive function, `get_animated_opsset_at_time`, to calculate the state for each object on each frame.
+        -   This function builds an object's state by sequentially applying its entire animation history (`event_and_progress`) up to the current time `t`.
+        -   **Group Animation Handling**: For `DrawableGroup`s with `grouping_method="parallel"`, the system now correctly handles group-level transformations.
+            -   It assembles a temporary, composite `OpsSet` from the current, fully-transformed state of all child elements.
+            -   It applies the group-level animation (e.g., `ZoomOutAnimation`) to this composite `OpsSet`, using the group's collective center of gravity.
+            -   It then uses metadata (`drawable_element_id`) to extract the transformed `OpsSet` for each individual child, ensuring correct rendering.
+        -   This recursive, context-aware approach ensures that transformations are applied in the correct order across complex hierarchies.
 
 ### Design Decisions & Strengths:
 
 -   **Decoupling**: The separation of `Drawable` (what to draw) from `AnimationEvent` (how to animate it) is a major strength. It allows for combining any shape with any animation.
 -   **Immutability**: The functional approach to transformations on `Drawable`s makes the system predictable.
 -   **Extensibility**: Adding a new shape requires creating a new `Drawable` subclass. Adding a new animation effect requires a new `AnimationEvent` subclass. The core `Scene` logic remains untouched.
+-   **Hierarchical Transformations**: The system now robustly handles nested `DrawableGroup`s and complex, time-ordered transformations that propagate through the hierarchy, which is a major architectural strength.
 
 ### Known Limitations & Future Considerations:
 
@@ -61,8 +63,10 @@ Based on the current structure and the "Features Coming Soon" in the `README.md`
 
 ### Phase 2: Advanced Features & Performance
 
-1.  **Caching & Performance Optimization**:
-    -   The current `create_event_timeline` re-calculates the `OpsSet` for every object on every frame. We can introduce a more sophisticated caching layer. For static objects (visible but not being animated), their `OpsSet` can be cached and reused across frames.
+1.  **Further Performance Optimization**:
+    -   A per-frame cache (`drawablegroup_frame_cache`) has been implemented to avoid re-calculating the "before" state of a group for every member.
+    -   The next step is to cache the result of the group transformation itself within a frame, so the expensive `event.apply()` on the large group `OpsSet` is only called once per frame per group animation.
+    -   For static objects (visible but not being animated), their final `OpsSet` can be cached and reused across frames to avoid any recalculation.
 2.  **Complex Animations**:
     -   Introduce more animation types, such as `FadeIn`, `FadeOut`, and `Transform`, which would animate properties like color, position, and scale between two states.
 3.  **Diagramming Tools**:

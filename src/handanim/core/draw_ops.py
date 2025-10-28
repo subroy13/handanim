@@ -3,11 +3,14 @@ from enum import Enum
 import json
 import numpy as np
 import cairo
+import tempfile
+import webbrowser
 from .utils import (
     slice_bezier,
     get_bezier_points_from_quadcurve,
     get_bezier_extreme_points,
 )
+from .viewport import Viewport
 
 
 class OpsType(Enum):
@@ -76,7 +79,12 @@ class OpsSet:
         if len(self.opsset) <= 10:
             return "OpsSet:" + "\n\t".join([str(ops) for ops in self.opsset])
         else:
-            return "OpsSet:\n" + "\n".join([str(ops) for ops in self.opsset[:5]]) + f"\n\t(... {len(self.opsset) - 10} more rows)\n" + "\n".join([str(ops) for ops in self.opsset[-5:]])
+            return (
+                "OpsSet:\n"
+                + "\n".join([str(ops) for ops in self.opsset[:5]])
+                + f"\n\t(... {len(self.opsset) - 10} more rows)\n"
+                + "\n".join([str(ops) for ops in self.opsset[-5:]])
+            )
 
     def add_meta(self, meta: dict = {}):
         for ops in self.opsset:
@@ -163,9 +171,7 @@ class OpsSet:
         min_x, min_y, max_x, max_y = self.get_bbox()
         return (min_x + max_x) / 2, (min_y + max_y) / 2
 
-    def get_last_ops(
-        self, start_index: int = 0
-    ) -> Tuple[Optional[float], Optional[Ops]]:
+    def get_last_ops(self, start_index: int = 0) -> Tuple[Optional[float], Optional[Ops]]:
         """
         Retrieve the last valid operation from the operations set.
 
@@ -256,7 +262,7 @@ class OpsSet:
             if isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [(x + offset_x, y + offset_y) for x, y in ops.data]
-                new_ops.append(Ops(ops.type, new_data, ops.partial))
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
             else:
                 new_ops.append(ops)  # keep same ops
         self.opsset = new_ops
@@ -292,14 +298,12 @@ class OpsSet:
                     )
                     for x, y in ops.data
                 ]
-                new_ops.append(Ops(ops.type, new_data, ops.partial))
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
             else:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
 
-    def rotate(
-        self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None
-    ):
+    def rotate(self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None):
         """
         Rotates the operations in the opsset by a specified angle around its center of gravity.
 
@@ -329,7 +333,7 @@ class OpsSet:
                     )
                     for x, y in ops.data
                 ]  # performs multiplication of rotation matrix explcitly
-                new_ops.append(Ops(ops.type, new_data, ops.partial))
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
             else:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
@@ -393,9 +397,7 @@ class OpsSet:
                 elif has_path and mode == "fill":
                     ctx.fill()
                 has_path = False  # reset the path for this new pen setup
-                mode = ops.data.get(
-                    "mode", "stroke"
-                )  # update the mode based on current ops
+                mode = ops.data.get("mode", "stroke")  # update the mode based on current ops
                 if ops.data.get("color"):
                     r, g, b = ops.data.get("color")
                     ctx.set_source_rgba(r, g, b, ops.data.get("opacity", 1))
@@ -416,3 +418,53 @@ class OpsSet:
             ctx.stroke()
         elif has_path and mode == "fill":
             ctx.fill()
+
+    def quick_view(
+        self,
+        width: int = 800,
+        height: int = 600,
+        background_color: Tuple[float, float, float] = (1, 1, 1),
+        block: bool = True,
+    ):
+        """
+        Renders the OpsSet to a temporary SVG file and opens it in a web browser for quick viewing.
+
+        This is a utility for debugging. It automatically creates a viewport that fits the content.
+
+        Args:
+            width (int): The width of the output SVG image.
+            height (int): The height of the output SVG image.
+            background_color (Tuple[float, float, float]): The RGB background color. Defaults to white.
+            block (bool): If True, the script will pause execution until Enter is pressed in the console.
+        """
+        if not self.opsset:
+            print("Cannot quick_view an empty OpsSet.")
+            return
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".svg", delete=False, encoding="utf-8") as tmp_file:
+            tmp_filename = tmp_file.name
+
+        # Get bounding box to create a viewport that fits the content
+        min_x, min_y, max_x, max_y = self.get_bbox()
+
+        padding = (max_x - min_x + max_y - min_y) * 0.05 + 10  # Add a small margin
+        world_xrange = (min_x - padding, max_x + padding)
+        world_yrange = (min_y - padding, max_y + padding)
+
+        viewport = Viewport(
+            world_xrange=world_xrange, world_yrange=world_yrange, screen_width=width, screen_height=height, margin=20
+        )
+
+        with cairo.SVGSurface(tmp_filename, width, height) as surface:
+            ctx = cairo.Context(surface)
+            ctx.set_source_rgb(*background_color)
+            ctx.paint()
+            viewport.apply_to_context(ctx)
+            self.render(ctx)
+            surface.finish()
+
+        webbrowser.open_new_tab(f"file://{tmp_filename}")
+
+        if block:
+            print(f"Quick view opened in browser. Press Enter in this console to continue...")
+            input()

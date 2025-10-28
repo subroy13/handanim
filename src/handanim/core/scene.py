@@ -46,6 +46,9 @@ class Scene:
         self.events: List[Tuple[AnimationEvent, str]] = []
         self.object_timelines: Dict[str, List[float]] = {}
         self.drawable_groups: dict[str, DrawableGroup] = {}  # stores drawable groups present in the scene
+        self.drawablegroup_frame_cache: Dict[str, OpsSet] = (
+            {}
+        )  # a temporary frame specific cache that resets for each frame
 
         if viewport is not None:
             self.viewport = viewport
@@ -110,19 +113,15 @@ class Scene:
         # handle the case for composite events if any
         if isinstance(event, CompositeAnimationEvent):
             for sub_event in event.events:
-                self.add(
-                    sub_event, drawable
-                )  # recursively call add() for the subevents
+                self.add(sub_event, drawable)  # recursively call add() for the subevents
             return
-        
+
         if isinstance(drawable, DrawableGroup):
             # drawable group are usually a syntactic sugar for applying the event to its elements
             if drawable.grouping_method == "series":
                 # Apply the event sequentially to each element in the group
                 segmented_events = event.subdivide(len(drawable.elements))
-                for sub_drawable, segment_event in zip(
-                    drawable.elements, segmented_events
-                ):
+                for sub_drawable, segment_event in zip(drawable.elements, segmented_events):
                     # recursively call add(), but with the duration modified appropriately
                     self.add(event=segment_event, drawable=sub_drawable)
                 return
@@ -136,7 +135,7 @@ class Scene:
                     self.add(event, elem)
 
                 return
-            
+
         else:
             # single simple drawable
             self.drawable_cache.set_drawable_opsset(drawable)
@@ -153,7 +152,9 @@ class Scene:
         elif event.type is AnimationEventType.DELETION:
             # any object cannot be deleted without being created
             if len(self.object_timelines[drawable.id]) == 0:
-                self.object_timelines[drawable.id].append(event.start_time) # assume created at the beginning of deletion event
+                self.object_timelines[drawable.id].append(
+                    event.start_time
+                )  # assume created at the beginning of deletion event
 
             self.object_timelines[drawable.id].append(event.end_time)
 
@@ -184,73 +185,16 @@ class Scene:
                 active_list.append(object_id)
         return active_list
 
-    def get_animated_opsset(
-        self, 
-        drawable_id: str,  # the drawable for which we are drawing this
-        opsset: OpsSet,
-        event: AnimationEvent,
-        progress: float = 1.0,
-        drawable_events_mapping: Dict[str, List[AnimationEvent]] = {}
-    ) -> OpsSet:
-        """
-            A function that applies a partial animation event to an OpsSet
-            Also handles if any drawable group has some partial animation performed on it
-        """
-        # check if event is applied normally or on a group
-        group_id = event.data.get("apply_to_group", None)
-        if group_id is None:
-            # simple animation, just apply the opsset blindly
-            return event.apply(opsset, progress)
-        else:
-            # this is a group animation
-            group = self.drawable_groups[group_id] # get the drawable group
-            group_opsset = OpsSet(initial_set=[])
-            for elem in group.elements:
-                # for each element of the group, get its final state so far before this event starts
-                elem_opsset = self.get_opsset_at_time(elem.id, np.ceil(self.fps * event.start_time) - 1, drawable_events_mapping)
-                if elem.id == drawable_id:
-                    # if the element id current drawable, then add a meta field to track it
-                    elem_opsset.add_meta({'drawable_element_id': elem.id})
-                    group_opsset.extend(elem_opsset)
-            
-            # apply the event on group opsset
-            group_opsset = event.apply(group_opsset, 1.0)
-            
-            # filter only relevant opsset that is useful
-            opsset = group_opsset.filter_by_meta_query('drawable_element_id', drawable_id)  
-            return opsset
-
-
-    def get_opsset_at_time(self, drawable_id: str, t: int, drawable_events_mapping: Dict[str, List[AnimationEvent]]) -> OpsSet:
-        """
-            For a drawable, recovers its current_state based on all previous completed events / transformations
-        """
-        if self.drawable_cache.has_drawable_oppset(drawable_id):
-            opsset = self.drawable_cache.get_drawable_opsset(drawable_id)
-            drawable = self.drawable_cache.get_drawable(drawable_id)
-
-            # calculate all the events that has happened for this object till now
-            persistent_new_events = [
-                e for e in drawable_events_mapping.get(drawable_id, [])
-                if e.keep_final_state and t / self.fps >= e.end_time
-            ]
-            if persistent_new_events:
-                persistent_new_events.sort(key = lambda e: e.end_time)
-                for event in persistent_new_events:
-                    opsset = self.get_animated_opsset(drawable.id, opsset, event, 1.0, drawable_events_mapping)
-            return opsset
-        else:
-            # it is not even added to drawable, so scene.add(...) has not happened for it
-            return OpsSet(initial_set=[])
-    
     def find_key_frames(self):
         """
-            Find the key frames that we need to calculate for the animation
-            Key frames are the frames where an object is created or deleted
+        Find the key frames that we need to calculate for the animation
+        Key frames are the frames where an object is created or deleted
         """
         event_drawable_ids = sorted(self.events, key=lambda x: x[0].start_time)
         events = [event for event, _ in event_drawable_ids]
-        drawable_events_mapping: Dict[str, List[AnimationEvent]] = {}  # track for each drawable, what all events are applied
+        drawable_events_mapping: Dict[str, List[AnimationEvent]] = (
+            {}
+        )  # track for each drawable, what all events are applied
         for event, drawable_id in event_drawable_ids:
             if drawable_id not in drawable_events_mapping:
                 drawable_events_mapping[drawable_id] = [event]
@@ -261,10 +205,100 @@ class Scene:
         key_frames.sort()
         return key_frames, drawable_events_mapping
 
+    def get_object_event_and_progress(
+        self, object_id: str, t: int, drawable_events_mapping: Dict[str, List[AnimationEvent]]
+    ) -> List[Tuple[AnimationEvent, float]]:
+        object_drawable: Drawable = self.drawable_cache.get_drawable(object_id)
+        event_and_progress = []
+        for event in drawable_events_mapping.get(object_id, []):
+            if object_drawable.glow_dot_hint:
+                event.data["glowing_dot"] = object_drawable.glow_dot_hint
+            if event.end_time <= t / self.fps:
+                event_and_progress.append((event, 1.0))  # add completed event
+            elif event.start_time <= t / self.fps:
+                # event has started, but not completed yet
+                progress = np.clip(
+                    (t / self.fps - event.start_time) / event.duration,
+                    0,
+                    1,
+                )
+                event_and_progress.append((event, progress))
+        return event_and_progress
 
-    def create_event_timeline(
-        self, max_length: Optional[float] = None, verbose: bool = False
-    ):
+    def get_animated_opsset_at_time(
+        self,
+        drawable_id: str,
+        t: int,
+        event_and_progress: List[Tuple[AnimationEvent, float]],
+        drawable_events_mapping: Dict[str, List[AnimationEvent]],
+    ) -> OpsSet:
+        # look at the last event, which if completed, will be tracked from cache
+        if len(event_and_progress) == 0:
+            return self.drawable_cache.get_drawable_opsset(drawable_id)
+        elif event_and_progress[-1][1] == 1:
+            if self.drawable_cache.exists_in_cache(drawable_id, event_and_progress[-1][0].id):
+                return self.drawable_cache.get_drawable_opsset(drawable_id, event_and_progress[-1][0].id)
+
+        if len(event_and_progress) > 1:
+            opsset = self.get_animated_opsset_at_time(
+                drawable_id, t, event_and_progress[:-1], drawable_events_mapping
+            )  # everything except the last event
+        else:
+            opsset = self.drawable_cache.get_drawable_opsset(drawable_id)  # get the initial draw opsset
+
+        # now we need to apply the last transformation only
+        event, progress = event_and_progress[-1]
+        group_id = event.data.get("apply_to_group", None)
+        if group_id is None:
+            # simple animation, just apply the opsset blindly
+            opsset = event.apply(opsset, progress)
+        else:
+            # this is a group animation
+            cachekey = f"{group_id}_{event.id}"
+            if cachekey in self.drawablegroup_frame_cache:
+                group_opsset = self.drawablegroup_frame_cache[cachekey]
+
+            else:
+                # calculate the group opsset for group level animation
+                group = self.drawable_groups[group_id]  # get the drawable group
+                group_opsset = OpsSet(initial_set=[])
+                for elem in group.elements:
+                    # for each element of the group, we need to figure out its animated opsset at time before the current event
+                    filtered_elem_events = []
+                    elem_event_and_progress = self.get_object_event_and_progress(elem.id, t, drawable_events_mapping)
+                    for elem_event, elem_progress in elem_event_and_progress:
+                        if elem_event.id == event.id:
+                            break
+                        filtered_elem_events.append(
+                            (elem_event, elem_progress)
+                        )  # keep appending until we reach the current event
+
+                    elem_opsset = self.get_animated_opsset_at_time(
+                        elem.id, t, filtered_elem_events, drawable_events_mapping
+                    )
+
+                    # append meta to track individual elements of the group later
+                    elem_opsset.add_meta({"drawable_element_id": elem.id})
+                    group_opsset.extend(elem_opsset)
+
+                # store in cache to be reused
+                self.drawablegroup_frame_cache[cachekey] = group_opsset
+
+            # apply the group transformation
+            group_opsset = event.apply(group_opsset, progress)
+
+            # now filter for the current drawable's opsset only
+            opsset = group_opsset.filter_by_meta_query("drawable_element_id", drawable_id)
+
+        if progress == 1:
+            if not self.drawable_cache.exists_in_cache(drawable_id, event.id):
+                self.drawable_cache.set_drawable_event_opsset(
+                    drawable_id, event.id, opsset
+                )  # save to cache for last event if progress = 1
+
+        return opsset
+
+    def create_event_timeline(self, max_length: Optional[float] = None):
         """
         Creates a timeline of animation events and calculates the OpsSet for each frame.
 
@@ -290,49 +324,26 @@ class Scene:
 
         # start calculating with a progress bar
         frame_count = int(np.round(max_length * self.fps))
-        for t in tqdm(
-            range(0, frame_count + 1), desc="Calculating animation frames..."
-        ):
-            frame_opsset = OpsSet(
-                initial_set=[]
-            )  # initialize with blank opsset, will add more
+        for t in tqdm(range(0, frame_count + 1), desc="Calculating animation frames..."):
+            frame_opsset = OpsSet(initial_set=[])  # initialize with blank opsset, will add more
 
             # for each frame, update the current active objects if it is a keyframe
             if t in key_frame_indices:
                 current_active_objects = self.get_active_objects(t / self.fps)
 
-            # for each of these active objects, calculate partial opssets to draw
+            # for each of these active objects, calculate what all events need to apply upto which progress
+            self.drawablegroup_frame_cache = {}  # reset this cache for each frame
             for object_id in current_active_objects:
-                
-                # Get the current state of the object at this time, including all previous transformations that has been applied
-                current_state_opsset = self.get_opsset_at_time(object_id, t, drawable_events_mapping)
-                
-                # for every object, there could be multiple events associated
-                object_drawable: Drawable = self.drawable_cache.get_drawable(object_id)
-                active_events = []
-                for event in drawable_events_mapping[object_id]:
-                    if object_drawable.glow_dot_hint:
-                        event.data["glowing_dot"] = object_drawable.glow_dot_hint
-                    if event.start_time <= t / self.fps and t / self.fps <= event.end_time:
-                        progress = np.clip(
-                            (t / self.fps - event.start_time) / event.duration,
-                            0,
-                            1,
-                        )
-                        active_events.append(
-                            (event, progress)
-                        )  # add the event with its progress
+                event_and_progress = self.get_object_event_and_progress(object_id, t, drawable_events_mapping)
 
-                if len(active_events) == 0: # No active animations
-                    # Draw the object in its final persistent state (or original if no persistent events)
-                    frame_opsset.extend(current_state_opsset)
-                else: 
-                    # there are some active events, so animation needs to be calculated
-                    animated_opsset = current_state_opsset
-                    for event, progress in active_events:
-                        animated_opsset = self.get_animated_opsset(object_id, animated_opsset, event, progress, drawable_events_mapping) # calculate the partial opsset
-
-                    frame_opsset.extend(animated_opsset)
+                # now we have all the events, so get the animated opsset
+                animated_opsset = self.get_animated_opsset_at_time(
+                    drawable_id=object_id,
+                    t=t,
+                    event_and_progress=event_and_progress,
+                    drawable_events_mapping=drawable_events_mapping,
+                )
+                frame_opsset.extend(animated_opsset)
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
 
@@ -341,7 +352,6 @@ class Scene:
         output_path: str,  # must be an svg file path
         frame_in_seconds: float,  # the precise second index for the frame to render
         max_length: Optional[float] = None,  # number of seconds to create the video for
-        verbose: bool = False,
     ):
         """
         Render a snapshot of the animation at a specific time point as an SVG file.
@@ -354,9 +364,8 @@ class Scene:
             output_path (str): Path to the output SVG file.
             frame_in_seconds (float): The exact time point (in seconds) to render.
             max_length (Optional[float], optional): Total duration of the animation. Defaults to None.
-            verbose (bool, optional): Enable verbose logging. Defaults to False.
         """
-        opsset_list = self.create_event_timeline(max_length, verbose)  # create the animated video
+        opsset_list = self.create_event_timeline(max_length)  # create the animated video
         frame_index = int(
             np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1)
         )  # get the frame index
@@ -373,9 +382,7 @@ class Scene:
             frame_ops.render(ctx)
             surface.finish()
 
-    def render(
-        self, output_path: str, max_length: Optional[float] = None, verbose=False
-    ):
+    def render(self, output_path: str, max_length: Optional[float] = None):
         """
         Render the animation as a video file.
 
@@ -386,23 +393,20 @@ class Scene:
         Args:
             output_path (str): Path to save the output video file.
             max_length (Optional[float], optional): Maximum duration of the animation. Defaults to None.
-            verbose (bool, optional): Enable verbose logging for rendering process. Defaults to False.
         """
         # calculate the events
-        opsset_list = self.create_event_timeline(max_length, verbose)
+        opsset_list = self.create_event_timeline(max_length)
         output_file_ext = os.path.basename(output_path).split(os.path.extsep)[-1]
         if output_file_ext.lower() == "gif":
             tqdm_desc = "Rendering GIF..."
-            write_obj = imageio.get_writer(output_path, mode = "I", duration = max_length)
+            write_obj = imageio.get_writer(output_path, mode="I", duration=max_length)
         else:
             tqdm_desc = "Rendering video..."
-            write_obj = imageio.get_writer(output_path, fps = self.fps, codec = "libx264")
+            write_obj = imageio.get_writer(output_path, fps=self.fps, codec="libx264")
 
         with write_obj as writer:
             for frame_ops in tqdm(opsset_list, desc=tqdm_desc):
-                surface = cairo.ImageSurface(
-                    cairo.FORMAT_ARGB32, self.width, self.height
-                )
+                surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
                 ctx = cairo.Context(surface)  # create cairo context
 
                 # optional background

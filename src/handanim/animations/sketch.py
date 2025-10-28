@@ -21,17 +21,13 @@ class SketchAnimation(AnimationEvent):
     """
 
     def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
-        super().__init__(
-            AnimationEventType.CREATION, start_time, duration, easing_fun, data
-        )
+        super().__init__(AnimationEventType.CREATION, start_time, duration, easing_fun, data)
         if data is None:
             data = {}
         self.wait_before_fill = data.get(
             "wait_before_fill", 0
         )  # seconds to wait before starting fill animation, if any
-        self.wait_before_fill = min(
-            self.wait_before_fill, self.duration / 2
-        )  # maximum wait is half of the duration
+        self.wait_before_fill = min(self.wait_before_fill, self.duration / 2)  # maximum wait is half of the duration
 
     def get_partial_sketch(self, opsset: OpsSet, progress: float) -> OpsSet:
         """
@@ -76,9 +72,7 @@ class SketchAnimation(AnimationEvent):
             n_active = draw_ops_count
         else:
             # filling is in progress
-            fill_progress = (progress * self.duration - fill_start_time) / (
-                self.duration - fill_start_time
-            )
+            fill_progress = (progress * self.duration - fill_start_time) / (self.duration - fill_start_time)
             n_active = draw_ops_count + int(fill_progress * fill_ops_count)
 
         # create a new opsset with the partial ops
@@ -131,9 +125,7 @@ class SketchAnimation(AnimationEvent):
                 if not isinstance(glow_dot_data, dict):
                     glow_dot_data = {}
                 # we need to draw glowing dot
-                cx, cy = (
-                    sketching_opssets.get_current_point()
-                )  # get the current point based on sketching
+                cx, cy = sketching_opssets.get_current_point()  # get the current point based on sketching
 
                 breathing_factor = 1 + 0.05 * np.sin(
                     2 * np.pi * progress * glow_dot_data.get("frequency", 5)
@@ -141,9 +133,7 @@ class SketchAnimation(AnimationEvent):
                 dot = GlowDot(
                     center=(cx, cy),
                     radius=glow_dot_data.get("radius", 5) * breathing_factor,
-                    fill_style=FillStyle(
-                        color=glow_dot_data.get("color", (0.5, 0.5, 0.5))
-                    ),
+                    fill_style=FillStyle(color=glow_dot_data.get("color", (0.5, 0.5, 0.5))),
                 )
                 new_opsset.extend(dot.draw())  # add this dot at the end of current path
         else:
