@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional, Dict, Union
+from typing import List, Tuple, Optional, Dict, Union, Callable
 from uuid import uuid4
 from .draw_ops import OpsSet
 from .styles import FillStyle, SketchStyle, StrokeStyle
@@ -155,7 +155,7 @@ class DrawableCache:
     A cache management class for storing and retrieving drawable objects and their corresponding operation sets.
 
     Provides methods to:
-    - Store and retrieve drawable objects and their computed operation sets
+    - Store and retrieve drawable objects and their computed operation sets, at different key frames
     - Check for existing drawable operation sets
     - Calculate bounding boxes for multiple drawables
 
@@ -171,9 +171,11 @@ class DrawableCache:
     def has_drawable_oppset(self, drawable_id: str) -> bool:
         return drawable_id in self.cache
 
-    def set_drawable_opsset(self, drawable: Drawable):
+    def set_drawable_opsset(self, drawable: Drawable, opsset: Optional[OpsSet] = None, frame: int = 0):
         self.drawables[drawable.id] = drawable
-        self.cache[drawable.id] = drawable.draw()  # calculate opsset and store
+        if opsset is None:
+            opsset = drawable.draw()
+        self.cache[drawable.id] = opsset  # calculate opsset and store
 
     def get_drawable(self, drawable_id: str) -> Drawable:
         return self.drawables.get(drawable_id, None)

@@ -1,4 +1,4 @@
-from typing import Any, List, Union, Tuple, Optional
+from typing import Any, List, Union, Tuple, Optional, Dict
 from enum import Enum
 import json
 import numpy as np
@@ -35,10 +35,11 @@ class Ops:
 
     SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO, OpsType.METADATA]
 
-    def __init__(self, type: OpsType, data: Any, partial: float = 1.0):
+    def __init__(self, type: OpsType, data: Any, partial: float = 1.0, meta: Optional[Dict] = None):
         self.type = type
         self.data = data  # the data to use to perform draw operation
         self.partial = partial  # how much of the ops needs to be performed
+        self.meta = meta
 
     def __repr__(self):
         if isinstance(self.data, list) or isinstance(self.data, np.ndarray):
@@ -62,11 +63,14 @@ class OpsSet:
         opsset (List[Ops]): A list of drawing operations to be performed.
     """
 
-    def __init__(self, initial_set: List[Union[dict, Ops]] = []):
-        if len(initial_set) == 0 or isinstance(initial_set[0], Ops):
-            self.opsset = initial_set
-        else:
-            self.opsset = [Ops(**d) for d in initial_set]
+    def __init__(self, initial_set: List[Dict | Ops] = []):
+        converted_set: List[Ops] = []
+        for ops in initial_set:
+            if isinstance(ops, dict):
+                converted_set.append(Ops(**ops))
+            else:
+                converted_set.append(ops)
+        self.opsset = converted_set
 
     def __repr__(self):
         if len(self.opsset) <= 10:
@@ -74,6 +78,20 @@ class OpsSet:
         else:
             return "OpsSet:\n" + "\n".join([str(ops) for ops in self.opsset[:5]]) + f"\n\t(... {len(self.opsset) - 10} more rows)\n" + "\n".join([str(ops) for ops in self.opsset[-5:]])
 
+    def add_meta(self, meta: dict = {}):
+        for ops in self.opsset:
+            if ops.meta is None:
+                ops.meta = meta
+            ops.meta.update(meta)  # merge the key and values
+
+    def filter_by_meta_query(self, meta_key: str, meta_value: Any):
+        new_opsset = []
+        for ops in self.opsset:
+            if ops.meta is None:
+                continue
+            if ops.meta.get(meta_key) == meta_value:
+                new_opsset.append(ops)
+        return OpsSet(new_opsset)
 
     def add(self, ops: Union[Ops, dict]):
         if isinstance(ops, dict):
