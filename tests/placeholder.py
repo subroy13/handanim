@@ -1,37 +1,26 @@
 import os
 import numpy as np
-from handanim.core import Scene
+from handanim.core import Scene, StrokeStyle
 from handanim.core.utils import get_line_slope_angle
-from handanim.primitives import CurvedArrow, Curve
+from handanim.primitives import CurvedArrow, Curve, Arrow, Circle
 from handanim.animations import SketchAnimation
+from handanim.stylings.color import BLACK, WHITE
 
-scene = Scene(
-    width=1920, height=1088, background_color=(1, 0.9, 0.9)
-)  # blank scene (viewport = 1777, 1000)
-pts = [(50, 100), (200, 300), (700, 600), (700, 1000)]
+# scene = Scene(width=1920, height=1088, background_color=(1, 1, 1))  # blank scene (viewport = 1777, 1000)
 
-end_point = pts[-1]
-angle = get_line_slope_angle(pts[-2], pts[-1])
-print(f"Angle of the line segment: {angle} radians")
+start_point = (600, 500)
+end_point = (100, 100)
+print(get_line_slope_angle(start_point, end_point))
 
-rotation_values = [np.cos(-angle), np.sin(-angle)]
+arrow = Arrow(
+    start_point=start_point, end_point=end_point, stroke_style=StrokeStyle(color=WHITE, width=10), arrow_head_size=50
+)
+circle = Circle(center=start_point, radius=100, stroke_style=StrokeStyle(color=WHITE, width=10, opacity=1))
 
-# do negative rotation for the points
-rotated_points = [
-    (
-        end_point[0]
-        + rotation_values[0] * (x - end_point[0])
-        - rotation_values[1] * (y - end_point[1]),
-        end_point[1]
-        + rotation_values[1] * (x - end_point[0])
-        + rotation_values[0] * (y - end_point[1]),
-    )
-    for x, y in pts
-]
-
-
-arrow = Curve(points=rotated_points).rotate(np.rad2deg(angle))
-print(arrow.draw())
+opsset = circle.draw()
+opsset.extend(arrow.draw())
+# print(opsset)
+opsset.quick_view(background_color=BLACK)
 
 # arrow = CurvedArrow(
 #     points=pts,

@@ -445,14 +445,12 @@ class OpsSet:
             tmp_filename = tmp_file.name
 
         # Get bounding box to create a viewport that fits the content
-        min_x, min_y, max_x, max_y = self.get_bbox()
-
-        padding = (max_x - min_x + max_y - min_y) * 0.05 + 10  # Add a small margin
-        world_xrange = (min_x - padding, max_x + padding)
-        world_yrange = (min_y - padding, max_y + padding)
-
         viewport = Viewport(
-            world_xrange=world_xrange, world_yrange=world_yrange, screen_width=width, screen_height=height, margin=20
+            world_xrange=(0, 1000 * (width / height)),
+            world_yrange=(0, 1000),
+            screen_width=width,
+            screen_height=height,
+            margin=20,
         )
 
         with cairo.SVGSurface(tmp_filename, width, height) as surface:
