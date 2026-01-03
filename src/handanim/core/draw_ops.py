@@ -1,9 +1,16 @@
-from typing import Any, List, Union, Tuple, Optional
+from typing import Any, List, Union, Tuple, Optional, Dict
 from enum import Enum
 import json
 import numpy as np
 import cairo
-from .utils import slice_bezier, get_bezier_points_from_quadcurve
+import tempfile
+import webbrowser
+from .utils import (
+    slice_bezier,
+    get_bezier_points_from_quadcurve,
+    get_bezier_extreme_points,
+)
+from .viewport import Viewport
 
 
 class OpsType(Enum):
@@ -31,10 +38,11 @@ class Ops:
 
     SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO, OpsType.METADATA]
 
-    def __init__(self, type: OpsType, data: Any, partial: float = 1.0):
+    def __init__(self, type: OpsType, data: Any, partial: float = 1.0, meta: Optional[Dict] = None):
         self.type = type
         self.data = data  # the data to use to perform draw operation
         self.partial = partial  # how much of the ops needs to be performed
+        self.meta = meta
 
     def __repr__(self):
         if isinstance(self.data, list) or isinstance(self.data, np.ndarray):
@@ -58,14 +66,40 @@ class OpsSet:
         opsset (List[Ops]): A list of drawing operations to be performed.
     """
 
-    def __init__(self, initial_set: List[Union[dict, Ops]] = []):
-        if len(initial_set) == 0 or isinstance(initial_set[0], Ops):
-            self.opsset = initial_set
-        else:
-            self.opsset = [Ops(**d) for d in initial_set]
+    def __init__(self, initial_set: List[Dict | Ops] = []):
+        converted_set: List[Ops] = []
+        for ops in initial_set:
+            if isinstance(ops, dict):
+                converted_set.append(Ops(**ops))
+            else:
+                converted_set.append(ops)
+        self.opsset = converted_set
 
     def __repr__(self):
-        return "OpsSet:" + "\n\t".join([str(ops) for ops in self.opsset])
+        if len(self.opsset) <= 10:
+            return "OpsSet:" + "\n\t".join([str(ops) for ops in self.opsset])
+        else:
+            return (
+                "OpsSet:\n"
+                + "\n".join([str(ops) for ops in self.opsset[:5]])
+                + f"\n\t(... {len(self.opsset) - 10} more rows)\n"
+                + "\n".join([str(ops) for ops in self.opsset[-5:]])
+            )
+
+    def add_meta(self, meta: dict = {}):
+        for ops in self.opsset:
+            if ops.meta is None:
+                ops.meta = meta
+            ops.meta.update(meta)  # merge the key and values
+
+    def filter_by_meta_query(self, meta_key: str, meta_value: Any):
+        new_opsset = []
+        for ops in self.opsset:
+            if ops.meta is None:
+                continue
+            if ops.meta.get(meta_key) == meta_value:
+                new_opsset.append(ops)
+        return OpsSet(new_opsset)
 
     def add(self, ops: Union[Ops, dict]):
         if isinstance(ops, dict):
@@ -96,16 +130,34 @@ class OpsSet:
         else:
             min_x = min_y = float("inf")
             max_x = max_y = float("-inf")
+            current_point = (0, 0)
             for ops in self.opsset:
-                # TODO: modify this calculation for curves
-                data = ops.data
-                if isinstance(data, list):
-                    for point in data:
-                        # update bounding box
-                        min_x = min(min_x, point[0])
-                        min_y = min(min_y, point[1])
-                        max_x = max(max_x, point[0])
-                        max_y = max(max_y, point[1])
+                if ops.type in [OpsType.CURVE_TO, OpsType.QUAD_CURVE_TO]:
+                    p0 = current_point  # current point is the start of the curve
+                    if ops.type == OpsType.CURVE_TO:
+                        p1, p2, p3 = ops.data
+                    elif ops.type == OpsType.QUAD_CURVE_TO:
+                        q1, q2 = ops.data
+                        p1, p2, p3 = get_bezier_points_from_quadcurve(p0, q1, q2)
+                    current_point = p3  # update current point to end of curve
+                    # now get the range
+                    xmin, xmax, ymin, ymax = get_bezier_extreme_points(p0, p1, p2, p3)
+                    min_x = min(min_x, xmin)
+                    max_x = max(max_x, xmax)
+                    min_y = min(min_y, ymin)
+                    max_y = max(max_y, ymax)
+                else:
+                    data = ops.data
+                    if isinstance(data, list):
+                        for point in data:
+                            # update current point
+                            current_point = point
+
+                            # update bounding box
+                            min_x = min(min_x, point[0])
+                            min_y = min(min_y, point[1])
+                            max_x = max(max_x, point[0])
+                            max_y = max(max_y, point[1])
             return min_x, min_y, max_x, max_y
 
     def get_center_of_gravity(self) -> Tuple[float, float]:
@@ -119,9 +171,7 @@ class OpsSet:
         min_x, min_y, max_x, max_y = self.get_bbox()
         return (min_x + max_x) / 2, (min_y + max_y) / 2
 
-    def get_last_ops(
-        self, start_index: int = 0
-    ) -> Tuple[Optional[float], Optional[Ops]]:
+    def get_last_ops(self, start_index: int = 0) -> Tuple[Optional[float], Optional[Ops]]:
         """
         Retrieve the last valid operation from the operations set.
 
@@ -212,7 +262,7 @@ class OpsSet:
             if isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [(x + offset_x, y + offset_y) for x, y in ops.data]
-                new_ops.append(Ops(ops.type, new_data, ops.partial))
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
             else:
                 new_ops.append(ops)  # keep same ops
         self.opsset = new_ops
@@ -248,12 +298,12 @@ class OpsSet:
                     )
                     for x, y in ops.data
                 ]
-                new_ops.append(Ops(ops.type, new_data, ops.partial))
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
             else:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
 
-    def rotate(self, angle: float):
+    def rotate(self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None):
         """
         Rotates the operations in the opsset by a specified angle around its center of gravity.
 
@@ -264,7 +314,8 @@ class OpsSet:
             angle (float): The rotation angle in degrees. Positive values rotate counterclockwise.
         """
         # first translate so that center of gravity is at (0, 0)
-        center_of_gravity = self.get_center_of_gravity()
+        if center_of_rotation is None:
+            center_of_rotation = self.get_center_of_gravity()
         rotation_values = [np.cos(np.deg2rad(angle)), np.sin(np.deg2rad(angle))]
 
         new_ops = []
@@ -273,16 +324,16 @@ class OpsSet:
                 # ops.data is list means, everything is a point
                 new_data = [
                     (
-                        center_of_gravity[0]
-                        + rotation_values[0] * (x - center_of_gravity[0])
-                        - rotation_values[1] * (y - center_of_gravity[1]),
-                        center_of_gravity[1]
-                        + rotation_values[1] * (x - center_of_gravity[0])
-                        + rotation_values[0] * (y - center_of_gravity[1]),
+                        center_of_rotation[0]
+                        + rotation_values[0] * (x - center_of_rotation[0])
+                        - rotation_values[1] * (y - center_of_rotation[1]),
+                        center_of_rotation[1]
+                        + rotation_values[1] * (x - center_of_rotation[0])
+                        + rotation_values[0] * (y - center_of_rotation[1]),
                     )
                     for x, y in ops.data
                 ]  # performs multiplication of rotation matrix explcitly
-                new_ops.append(Ops(ops.type, new_data, ops.partial))
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
             else:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
@@ -346,9 +397,7 @@ class OpsSet:
                 elif has_path and mode == "fill":
                     ctx.fill()
                 has_path = False  # reset the path for this new pen setup
-                mode = ops.data.get(
-                    "mode", "stroke"
-                )  # update the mode based on current ops
+                mode = ops.data.get("mode", "stroke")  # update the mode based on current ops
                 if ops.data.get("color"):
                     r, g, b = ops.data.get("color")
                     ctx.set_source_rgba(r, g, b, ops.data.get("opacity", 1))
@@ -369,3 +418,51 @@ class OpsSet:
             ctx.stroke()
         elif has_path and mode == "fill":
             ctx.fill()
+
+    def quick_view(
+        self,
+        width: int = 800,
+        height: int = 600,
+        background_color: Tuple[float, float, float] = (1, 1, 1),
+        block: bool = True,
+    ):
+        """
+        Renders the OpsSet to a temporary SVG file and opens it in a web browser for quick viewing.
+
+        This is a utility for debugging. It automatically creates a viewport that fits the content.
+
+        Args:
+            width (int): The width of the output SVG image.
+            height (int): The height of the output SVG image.
+            background_color (Tuple[float, float, float]): The RGB background color. Defaults to white.
+            block (bool): If True, the script will pause execution until Enter is pressed in the console.
+        """
+        if not self.opsset:
+            print("Cannot quick_view an empty OpsSet.")
+            return
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".svg", delete=False, encoding="utf-8") as tmp_file:
+            tmp_filename = tmp_file.name
+
+        # Get bounding box to create a viewport that fits the content
+        viewport = Viewport(
+            world_xrange=(0, 1000 * (width / height)),
+            world_yrange=(0, 1000),
+            screen_width=width,
+            screen_height=height,
+            margin=20,
+        )
+
+        with cairo.SVGSurface(tmp_filename, width, height) as surface:
+            ctx = cairo.Context(surface)
+            ctx.set_source_rgb(*background_color)
+            ctx.paint()
+            viewport.apply_to_context(ctx)
+            self.render(ctx)
+            surface.finish()
+
+        webbrowser.open_new_tab(f"file://{tmp_filename}")
+
+        if block:
+            print(f"Quick view opened in browser. Press Enter in this console to continue...")
+            input()

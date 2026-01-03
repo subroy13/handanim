@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import numpy as np
 
 from ..core.styles import StrokePressure
@@ -21,7 +21,11 @@ class Line(Drawable):
     """
 
     def __init__(
-        self, start: tuple[float, float], end: tuple[float, float], *args, **kwargs
+        self, 
+        start: Tuple[float, float] | np.ndarray, 
+        end: Tuple[float, float] | np.ndarray, 
+        *args, 
+        **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.start = np.array(start)
@@ -124,7 +128,7 @@ class LinearPath(Drawable):
 
     def __init__(
         self,
-        points: List[tuple[float, float]],
+        points: List[Tuple[float, float]],
         close: bool = False,
         *args,
         **kwargs,
@@ -160,3 +164,4 @@ class LinearPath(Drawable):
             )
             opsset.extend(line.draw())
         return opsset
+

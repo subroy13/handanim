@@ -1,5 +1,8 @@
 [tool.poetry]
-packages = [{ include = "handanim", from = "src" }]
+packages = [
+    { include = "handanim", from = "src" },
+    { include = "handanim_ai", from = "src" },
+]
 name = "handanim"
 version = "0.1.0"
 description = ""
@@ -28,3 +31,6 @@ scikit-image = "^0.25.2"
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.extras]
+ai = []

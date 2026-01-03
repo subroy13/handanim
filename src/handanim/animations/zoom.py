@@ -17,10 +17,8 @@ class ZoomInAnimation(AnimationEvent):
         data (Any, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
-        super().__init__(
-            AnimationEventType.CREATION, start_time, duration, easing_fun, data
-        )
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
+        super().__init__(AnimationEventType.CREATION, start_time, duration, easing_fun, data)
 
     def _apply_opsset(self, opsset: OpsSet, progress: float):
         new_opsset = OpsSet(initial_set=opsset.opsset)
@@ -46,7 +44,7 @@ class ZoomOutAnimation(ZoomInAnimation):
         data (Any, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(start_time, duration, easing_fun, data)
         self.type = AnimationEventType.DELETION
 
