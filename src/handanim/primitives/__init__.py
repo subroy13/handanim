@@ -6,6 +6,7 @@ from .ellipse import Ellipse, Circle
 from .text import Text
 from .math import Math
 from .eraser import Eraser
+from .vector_svg import VectorSVG
 from .svg import SVG
 
 __all__ = [
@@ -25,5 +26,6 @@ __all__ = [
     "Text",
     "Math",
     "Eraser",
+    "VectorSVG",
     "SVG",
 ]

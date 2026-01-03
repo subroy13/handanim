@@ -1,7 +1,7 @@
 from .sketch import SketchAnimation
 from .fade import FadeInAnimation, FadeOutAnimation
 from .zoom import ZoomInAnimation, ZoomOutAnimation
-from .translate import TranslateFromAnimation, TranslateToAnimation
+from .translate import TranslateFromAnimation, TranslateToAnimation, TranslateToPersistAnimation
 
 
 __all__ = [
@@ -12,4 +12,5 @@ __all__ = [
     "ZoomOutAnimation",
     "TranslateFromAnimation",
     "TranslateToAnimation",
+    "TranslateToPersistAnimation",
 ]
