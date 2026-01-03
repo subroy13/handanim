@@ -16,21 +16,15 @@ class FadeInAnimation(AnimationEvent):
         data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
-        super().__init__(
-            AnimationEventType.CREATION, start_time, duration, easing_fun, data
-        )
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
+        super().__init__(AnimationEventType.CREATION, start_time, duration, easing_fun, data)
 
     def _opsset_apply(self, opsset: OpsSet, progress: float):
         current_ops_list = []
         for op in opsset.opsset:
             if op.type == OpsType.SET_PEN:
-                modifed_data = {
-                    k: progress if k == "opacity" else v for k, v in op.data.items()
-                }
-                current_ops_list.append(
-                    Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial)
-                )
+                modifed_data = {k: progress if k == "opacity" else v for k, v in op.data.items()}
+                current_ops_list.append(Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial, meta=op.meta))
             else:
                 current_ops_list.append(op)
         new_opsset = OpsSet(initial_set=current_ops_list)
@@ -54,7 +48,7 @@ class FadeOutAnimation(FadeInAnimation):
         data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0, duration=0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(start_time, duration, easing_fun, data)
         self.type = AnimationEventType.DELETION  # override the type
 

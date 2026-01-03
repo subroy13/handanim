@@ -3,6 +3,7 @@ import numpy as np
 from .lines import Line
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from ..core.drawable import Drawable
+from ..core.utils import get_line_slope_angle
 
 
 class Curve(Drawable):
@@ -127,3 +128,4 @@ class Curve(Drawable):
                 opsset, self.points, 1.5 * (1 + self.sketch_style.roughness * 0.22)
             )
         return opsset
+

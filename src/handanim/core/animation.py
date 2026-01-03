@@ -1,5 +1,6 @@
+from uuid import uuid4
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from .draw_ops import OpsSet
 
 
@@ -29,17 +30,21 @@ class AnimationEvent:
     def __init__(
         self,
         type: AnimationEventType,  # the type of animation
-        start_time: float = 0,  # the starting time point  (in seconds)
-        duration: float = 0,  # the duration of the animation (in seconds)
+        start_time: float = 0.0,  # the starting time point  (in seconds)
+        duration: float = 0.0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
-        data: dict = None,  # additional data for the animation, depending on the animation type
+        data: Optional[dict] = None,  # additional data for the animation, depending on the animation type
     ):
+        self.id = uuid4().hex[:6]
         self.type = type
         self.start_time = start_time
         self.duration = duration
         self.end_time = start_time + duration
         self.easing_fun = easing_fun
-        self.data = data or {}
+        self.data: dict = data or {}
+        self.keep_final_state: bool = self.data.get(
+            "keep_final_state", True
+        )  # keep the final state after animation, don't revert back
 
     def __repr__(self) -> str:
         return (
@@ -52,9 +57,7 @@ class AnimationEvent:
         Applies the progress percentage of the given
         animation event to the given opsset
         """
-        raise NotImplementedError(
-            "apply() method not implemented for basic animation event"
-        )
+        raise NotImplementedError("apply() method not implemented for basic animation event")
 
     def subdivide(self, n_division: int):
         """
@@ -95,6 +98,4 @@ class CompositeAnimationEvent(AnimationEvent):
         self.events = events
         start_time = min([event.start_time for event in events])
         duration = max([event.duration for event in events])
-        super().__init__(
-            AnimationEventType.COMPOSITE, start_time, duration, easing_fun, data
-        )
+        super().__init__(AnimationEventType.COMPOSITE, start_time, duration, easing_fun, data)
