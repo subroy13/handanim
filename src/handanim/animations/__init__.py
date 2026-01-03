@@ -1,7 +1,6 @@
 from .sketch import SketchAnimation
 from .fade import FadeInAnimation, FadeOutAnimation
 from .zoom import ZoomInAnimation, ZoomOutAnimation
-from .translate import TranslateFromAnimation, TranslateToAnimation
 from .translate import TranslateFromAnimation, TranslateToAnimation, TranslateToPersistAnimation
 
 
