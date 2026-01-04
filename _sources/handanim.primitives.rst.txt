@@ -60,6 +60,14 @@ handanim.primitives.text module
    :show-inheritance:
    :undoc-members:
 
+handanim.primitives.vector_svg module
+-------------------------------
+
+.. automodule:: handanim.primitives.vector_svg
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Module contents
 ---------------
 

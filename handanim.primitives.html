@@ -811,6 +811,53 @@ draw this particular drawable object on the canvas</p>
 </dd></dl>
 
 </section>
+<section id="handanim-primitives-vector-svg-module">
+<h2>handanim.primitives.vector_svg module<a class="headerlink" href="#handanim-primitives-vector-svg-module" title="Link to this heading">¶</a></h2>
+<p id="module-handanim.primitives.vector_svg">Vector SVG - authored by Hamd Waseem (<a class="reference external" href="https://github.com/hamdivazim/">https://github.com/hamdivazim/</a>)</p>
+<p>A drawable class that accepts an SVG document and renders it as a Drawable
+as close to the original SVG as possible.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.vector_svg.</span></span><span class="sig-name descname"><span class="pre">VectorSVG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
+<p>A drawable class that accepts an SVG document and renders it as a Drawable
+as close to the original SVG as possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature was contributed by Hamd Waseem (<a class="reference external" href="https://github.com/hamdivazim">https://github.com/hamdivazim</a>).</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG.svg_doc">
+<span class="sig-name descname"><span class="pre">svg_doc</span></span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG.svg_doc" title="Link to this definition">¶</a></dt>
+<dd><p>The parsed SVG document object from svgelements.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG.position">
+<span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG.position" title="Link to this definition">¶</a></dt>
+<dd><p>The base (x, y) offset for the SVG.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG.draw" title="Link to this definition">¶</a></dt>
+<dd><p>Parse SVG elements and convert them into a set of drawing operations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG.from_svg_file">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_svg_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG" title="handanim.primitives.vector_svg.VectorSVG"><span class="pre">VectorSVG</span></a></span></span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG.from_svg_file" title="Link to this definition">¶</a></dt>
+<dd><p>Create a VectorSVG instance from a file path</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-handanim.primitives">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-handanim.primitives" title="Link to this heading">¶</a></h2>
 <dl class="py class">
@@ -1378,6 +1425,47 @@ draw this particular drawable object on the canvas</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.primitives.VectorSVG">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">VectorSVG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.VectorSVG" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
+<p>A drawable class that accepts an SVG document and renders it as a Drawable
+as close to the original SVG as possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature was contributed by Hamd Waseem (<a class="reference external" href="https://github.com/hamdivazim">https://github.com/hamdivazim</a>).</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.primitives.VectorSVG.svg_doc">
+<span class="sig-name descname"><span class="pre">svg_doc</span></span><a class="headerlink" href="#handanim.primitives.VectorSVG.svg_doc" title="Link to this definition">¶</a></dt>
+<dd><p>The parsed SVG document object from svgelements.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.primitives.VectorSVG.position">
+<span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#handanim.primitives.VectorSVG.position" title="Link to this definition">¶</a></dt>
+<dd><p>The base (x, y) offset for the SVG.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.VectorSVG.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.primitives.VectorSVG.draw" title="Link to this definition">¶</a></dt>
+<dd><p>Parse SVG elements and convert them into a set of drawing operations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.VectorSVG.from_svg_file">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_svg_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG" title="handanim.primitives.vector_svg.VectorSVG"><span class="pre">VectorSVG</span></a></span></span><a class="headerlink" href="#handanim.primitives.VectorSVG.from_svg_file" title="Link to this definition">¶</a></dt>
+<dd><p>Create a VectorSVG instance from a file path</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -1541,6 +1629,16 @@ draw this particular drawable object on the canvas</p>
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#handanim-primitives-vector-svg-module">handanim.primitives.vector_svg module</a><ul>
+<li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG"><code class="docutils literal notranslate"><span class="pre">VectorSVG</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.svg_doc"><code class="docutils literal notranslate"><span class="pre">VectorSVG.svg_doc</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.position"><code class="docutils literal notranslate"><span class="pre">VectorSVG.position</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.draw"><code class="docutils literal notranslate"><span class="pre">VectorSVG.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.from_svg_file"><code class="docutils literal notranslate"><span class="pre">VectorSVG.from_svg_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-handanim.primitives">Module contents</a><ul>
 <li><a class="reference internal" href="#handanim.primitives.Arrow"><code class="docutils literal notranslate"><span class="pre">Arrow</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.primitives.Arrow.draw"><code class="docutils literal notranslate"><span class="pre">Arrow.draw()</span></code></a></li>
@@ -1632,6 +1730,13 @@ draw this particular drawable object on the canvas</p>
 <li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
 <li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.primitives.VectorSVG"><code class="docutils literal notranslate"><span class="pre">VectorSVG</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.primitives.VectorSVG.svg_doc"><code class="docutils literal notranslate"><span class="pre">VectorSVG.svg_doc</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.VectorSVG.position"><code class="docutils literal notranslate"><span class="pre">VectorSVG.position</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.VectorSVG.draw"><code class="docutils literal notranslate"><span class="pre">VectorSVG.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.VectorSVG.from_svg_file"><code class="docutils literal notranslate"><span class="pre">VectorSVG.from_svg_file()</span></code></a></li>
 </ul>
 </li>
 </ul>
