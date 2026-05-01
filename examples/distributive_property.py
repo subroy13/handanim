@@ -8,7 +8,7 @@ from handanim.core import Scene, SketchStyle, StrokeStyle, FillStyle, DrawableGr
 from handanim.animations import (
     SketchAnimation,
     FadeInAnimation,
-    TranslateToPersistAnimation,
+    TranslateToAnimation,
 )
 from handanim.primitives import Math, Text, Rectangle
 from handanim.primitives.vector_svg import VectorSVG
@@ -17,9 +17,7 @@ from handanim.stylings.color import BLUE, BLACK, ORANGE
 scene = Scene(width=1920, height=1080)
 FONT_NAME = "feasibly"
 
-assets_dir = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), "assets"
-)
+assets_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
 
 # title and operator
 svg_path = os.path.join(assets_dir, "professor.svg")
@@ -28,7 +26,7 @@ operator = VectorSVG.from_svg_file(
     position=(1500, 700),
     glow_dot_hint={"color": BLUE, "radius": 5},
 )
-operator.scale(0.5, 0.5)
+operator = operator.scale(0.5, 0.5)
 scene.add(
     event=SketchAnimation(start_time=0.5, duration=2),
     drawable=operator,
@@ -90,27 +88,19 @@ scene.add(
 
 # assembly animation
 scene.add(
-    event=TranslateToPersistAnimation(
-        start_time=5.5, duration=1, data={"point": (1550, 600)}
-    ),
+    event=TranslateToAnimation(start_time=5.5, duration=1, data={"point": (1550, 600)}),
     drawable=operator,
 )
 scene.add(
-    event=TranslateToPersistAnimation(
-        start_time=7.0, duration=2, data={"point": (750, 575)}
-    ),
+    event=TranslateToAnimation(start_time=7.0, duration=2, data={"point": (750, 575)}),
     drawable=rect_ac,
 )
 scene.add(
-    event=TranslateToPersistAnimation(
-        start_time=7.0, duration=2, data={"point": (750, 450)}
-    ),
+    event=TranslateToAnimation(start_time=7.0, duration=2, data={"point": (750, 450)}),
     drawable=label_c,
 )
 scene.add(
-    event=TranslateToPersistAnimation(
-        start_time=7.0, duration=2, data={"point": (1000, 600)}
-    ),
+    event=TranslateToAnimation(start_time=7.0, duration=2, data={"point": (1000, 600)}),
     drawable=operator,
 )
 
@@ -128,7 +118,5 @@ scene.add(
 )
 
 # render
-output_path = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), "output", "distributive_property.mp4"
-)
+output_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "output", "distributive_property.gif")
 scene.render(output_path, max_length=12)

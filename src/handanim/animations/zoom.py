@@ -25,7 +25,7 @@ class ZoomInAnimation(AnimationEvent):
         new_opsset.scale(progress)
         return new_opsset
 
-    def apply(self, opsset, progress):
+    def _apply(self, opsset, progress):
         return self._apply_opsset(opsset, progress)
 
 
@@ -48,5 +48,5 @@ class ZoomOutAnimation(ZoomInAnimation):
         super().__init__(start_time, duration, easing_fun, data)
         self.type = AnimationEventType.DELETION
 
-    def apply(self, opsset, progress):
-        return super().apply(opsset, 1 - progress)
+    def _apply(self, opsset, progress):
+        return super()._apply(opsset, 1 - progress)

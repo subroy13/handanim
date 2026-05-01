@@ -13,7 +13,6 @@ readme = "README.md"
 python = "^3.11"
 cairocffi = ">=1.7.1,<2.0.0"
 numpy = ">=2.2.4,<3.0.0"
-svgwrite = ">=1.4.3,<2.0.0"
 moviepy = ">=2.1.2,<3.0.0"
 pycairo = ">=1.27.0,<2.0.0"
 fonttools = ">=4.47.0,<5.0.0"
@@ -27,6 +26,9 @@ vtracer = "^0.6.11"
 svgpathtools = "^1.7.0"
 opencv-python = "^4.11.0.86"
 scikit-image = "^0.25.2"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

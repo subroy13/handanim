@@ -1,3 +1,4 @@
+import warnings
 from typing import List, Tuple
 import xml.etree.ElementTree as ET
 from svgpathtools import parse_path, Line, QuadraticBezier, CubicBezier, Path
@@ -7,8 +8,11 @@ from ..core.drawable import Drawable
 
 class SVG(Drawable):
     """
-    A drawable class that takes either an SVG file path
-    or an SVG string and renders it as a Drawable.
+    Deprecated: use VectorSVG instead.
+
+    VectorSVG (primitives/vector_svg.py) supports full color, fill, and element
+    transforms and should be used for all new code. This class will be removed in a
+    future release.
     """
 
     def __init__(
@@ -18,6 +22,12 @@ class SVG(Drawable):
         *args,
         **kwargs,
     ):
+        warnings.warn(
+            "SVG is deprecated and will be removed in a future release. "
+            "Use VectorSVG instead, which supports color, fill, and transforms.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(*args, **kwargs)
         self.svg_paths = svg_paths
         self.position = position

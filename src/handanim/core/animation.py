@@ -52,12 +52,17 @@ class AnimationEvent:
             f"duration={self.duration}, end_time={self.end_time})"
         )
 
-    def apply(self, opsset: OpsSet, progress: float) -> OpsSet:
+    def apply(self, opsset: OpsSet, raw_progress: float) -> OpsSet:
         """
-        Applies the progress percentage of the given
-        animation event to the given opsset
+        Public entry point called by Scene. Applies easing (if any) then delegates to _apply().
+        Do not override in subclasses — implement _apply() instead.
         """
-        raise NotImplementedError("apply() method not implemented for basic animation event")
+        progress = self.easing_fun(raw_progress) if self.easing_fun else raw_progress
+        return self._apply(opsset, progress)
+
+    def _apply(self, opsset: OpsSet, progress: float) -> OpsSet:
+        """Subclasses must implement this with the actual animation logic."""
+        raise NotImplementedError("_apply() not implemented for this animation event")
 
     def subdivide(self, n_division: int):
         """
