@@ -9,7 +9,8 @@ import tempfile
 
 from .utils import cairo_surface_to_numpy
 from .animation import AnimationEvent, CompositeAnimationEvent, AnimationEventType
-from .drawable import Drawable, DrawableCache, DrawableGroup
+from .drawable import Drawable, DrawableGroup
+from .cache import DrawableCache, GroupFrameCache
 from .draw_ops import OpsSet
 from .viewport import Viewport
 
@@ -43,12 +44,10 @@ class Scene:
         self.fps = fps
         self.background_color = background_color
         self.drawable_cache = DrawableCache()
+        self.frame_cache = GroupFrameCache()
         self.events: List[Tuple[AnimationEvent, str]] = []
         self.object_timelines: Dict[str, List[float]] = {}
         self.drawable_groups: dict[str, DrawableGroup] = {}  # stores drawable groups present in the scene
-        self.drawablegroup_frame_cache: Dict[str, OpsSet] = (
-            {}
-        )  # a temporary frame specific cache that resets for each frame
 
         if viewport is not None:
             self.viewport = viewport
@@ -254,38 +253,44 @@ class Scene:
             opsset = event.apply(opsset, progress)
         else:
             # this is a group animation
-            cachekey = f"{group_id}_{event.id}"
-            if cachekey in self.drawablegroup_frame_cache:
-                group_opsset = self.drawablegroup_frame_cache[cachekey]
 
-            else:
-                # calculate the group opsset for group level animation
-                group = self.drawable_groups[group_id]  # get the drawable group
-                group_opsset = OpsSet(initial_set=[])
-                for elem in group.elements:
-                    # for each element of the group, we need to figure out its animated opsset at time before the current event
-                    filtered_elem_events = []
-                    elem_event_and_progress = self.get_object_event_and_progress(elem.id, t, drawable_events_mapping)
-                    for elem_event, elem_progress in elem_event_and_progress:
-                        if elem_event.id == event.id:
-                            break
-                        filtered_elem_events.append(
-                            (elem_event, elem_progress)
-                        )  # keep appending until we reach the current event
+            # first check if the transformed cached key exist already
+            group_opsset = self.frame_cache.get_transformed(group_id, event.id, progress)
+            if group_opsset is None:
+                # the transformed key does not exist, how about initial cache?
+                group_opsset = self.frame_cache.get_pretransform(group_id, event.id)
 
-                    elem_opsset = self.get_animated_opsset_at_time(
-                        elem.id, t, filtered_elem_events, drawable_events_mapping
-                    )
+                if group_opsset is None:
+                    # calculate the group opsset for group level animation
+                    group = self.drawable_groups[group_id]  # get the drawable group
+                    group_opsset = OpsSet(initial_set=[])
+                    for elem in group.elements:
+                        # for each element of the group, we need to figure out its animated opsset at time before the current event
+                        filtered_elem_events = []
+                        elem_event_and_progress = self.get_object_event_and_progress(
+                            elem.id, t, drawable_events_mapping
+                        )
+                        for elem_event, elem_progress in elem_event_and_progress:
+                            if elem_event.id == event.id:
+                                break
+                            filtered_elem_events.append(
+                                (elem_event, elem_progress)
+                            )  # keep appending until we reach the current event
 
-                    # append meta to track individual elements of the group later
-                    elem_opsset.add_meta({"drawable_element_id": elem.id})
-                    group_opsset.extend(elem_opsset)
+                        elem_opsset = self.get_animated_opsset_at_time(
+                            elem.id, t, filtered_elem_events, drawable_events_mapping
+                        )
 
-                # store in cache to be reused
-                self.drawablegroup_frame_cache[cachekey] = group_opsset
+                        # append meta to track individual elements of the group later
+                        elem_opsset.add_meta({"drawable_element_id": elem.id})
+                        group_opsset.extend(elem_opsset)
 
-            # apply the group transformation
-            group_opsset = event.apply(group_opsset, progress)
+                    # store in cache to be reused
+                    self.frame_cache.set_pretransform(group_id, event.id, group_opsset)
+
+                # here, we need to apply the group transformation
+                group_opsset = event.apply(group_opsset, progress)
+                self.frame_cache.set_transformed(group_id, event.id, progress, group_opsset)  # write back to the cache
 
             # now filter for the current drawable's opsset only
             opsset = group_opsset.filter_by_meta_query("drawable_element_id", drawable_id)
@@ -332,17 +337,25 @@ class Scene:
                 current_active_objects = self.get_active_objects(t / self.fps)
 
             # for each of these active objects, calculate what all events need to apply upto which progress
-            self.drawablegroup_frame_cache = {}  # reset this cache for each frame
+            self.frame_cache.reset()  # reset this cache for each frame
             for object_id in current_active_objects:
                 event_and_progress = self.get_object_event_and_progress(object_id, t, drawable_events_mapping)
 
-                # now we have all the events, so get the animated opsset
-                animated_opsset = self.get_animated_opsset_at_time(
-                    drawable_id=object_id,
-                    t=t,
-                    event_and_progress=event_and_progress,
-                    drawable_events_mapping=drawable_events_mapping,
-                )
+                # if all animations are complete for this object, we can draw from cache
+                all_complete = event_and_progress and all([p == 1.0 for _, p in event_and_progress])
+                last_event_id = event_and_progress[-1][0].id
+
+                if all_complete and self.drawable_cache.exists_in_cache(object_id, last_event_id):
+                    # a fully completed animation list exists in cache now, can fetch from last event's drawable
+                    animated_opsset = self.drawable_cache.get_drawable_opsset(object_id, last_event_id)
+                else:
+                    # now we have all the events, so get the animated opsset
+                    animated_opsset = self.get_animated_opsset_at_time(
+                        drawable_id=object_id,
+                        t=t,
+                        event_and_progress=event_and_progress,
+                        drawable_events_mapping=drawable_events_mapping,
+                    )
                 frame_opsset.extend(animated_opsset)
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list

@@ -42,7 +42,7 @@ def apply_stroke_pressure(
                 else:
                     scale_opacity = pressure_profile(i / n_opsset, min_val=1, max_val=0.7)  # reverse opacity
             if current_pen_ops is not None:
-                current_pen_data = current_pen_ops.data
+                current_pen_data = dict(current_pen_ops.data).copy()
                 current_pen_data["width"] = current_pen_data.get("width", 1) * scale_width
                 current_pen_data["opacity"] = current_pen_data.get("opacity", 1) * scale_opacity
                 new_opsset.add(Ops(type=OpsType.SET_PEN, data=current_pen_data))
@@ -76,7 +76,7 @@ def apply_strokes_gradient(
             current_pen_ops = ops
 
         if i >= switch_at_idx and current_pen_ops is not None:
-            current_pen_data = current_pen_ops.data
+            current_pen_data = dict(current_pen_ops.data).copy()
             current_pen_data["color"] = interpolate_color(
                 start_color, end_color, i / n_opsset
             )  # update current pen's color property

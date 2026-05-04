@@ -11,6 +11,9 @@
 - [x] **`svgwrite` unused dep** — remove from `requirements.txt` and `pyproject.toml`
 - [x] **Legacy `SVG` primitive** — move `svgpathtools` to runtime deps OR deprecate `SVG` in favour of `VectorSVG` and mark it clearly. `VectorSVG` is strictly more capable.
 - [x] **Wire up `easing_fun`** — `AnimationEvent` accepts an easing function but no `apply()` implementation ever calls it; either remove it or implement: `progress = easing_fun(raw_progress) if easing_fun else raw_progress` at the top of every `apply()`
+- [x] Immutability Violation in stylings/strokes.py: The functions apply_stroke_pressure and apply_strokes_gradient currently mutate the current_pen_data dictionaries directly (e.g., current_pen_data["width"] = ...). Because this dictionary is a reference to the Ops data, it mutates the original operations in place. This violates the core architectural invariant stated in CLAUDE.md that transformations and animations must be stateless. Fix: Use .copy() on current_pen_ops.data before applying new pressure or gradient values and emitting the new Ops.
+- [x] Incomplete Eraser Logic (primitives/eraser.py): At line 47, there is a # TODO: do the rotation, perform the zigzag motion here. Currently, the eraser just performs a horizontal bounding-box wipe without mimicking a human zigzag erasing motion or aligning to the stroke paths. This breaks the "hand-drawn" aesthetic constraint for this specific primitive.
+
 
 ---
 
@@ -20,24 +23,28 @@ These make the library reliable and testable before adding more features.
 
 ### Testing strategy
 Visual regression testing is the pragmatic approach for an animation library:
-- [ ] Render a small, deterministic scene to PNG (seed numpy random if needed)
-- [ ] Store a reference PNG hash (or use pixel-level SSIM comparison via `scikit-image`)
-- [ ] On subsequent runs, fail if the rendered output diverges beyond a threshold
-- [ ] Unit-test pure geometry separately: `OpsSet.translate/scale/rotate` are straightforward to assert on coordinates
-- [ ] Test `SketchAnimation.get_partial_sketch` with known op counts and progress values
-- [ ] Use `pytest` + `pytest-snapshot` for snapshot management
-- [ ] Add a `render_snapshot()` call in each test — cheap since these are single-frame SVG renders
+- [x] Render a small, deterministic scene to PNG (seed numpy random if needed)
+- [x] Store a reference PNG hash (or use pixel-level SSIM comparison via `scikit-image`)
+- [x] On subsequent runs, fail if the rendered output diverges beyond a threshold
+- [x] Unit-test pure geometry separately: `OpsSet.translate/scale/rotate` are straightforward to assert on coordinates
+- [x] Test `SketchAnimation.get_partial_sketch` with known op counts and progress values
+- [x] Use `pytest` + `pytest-snapshot` for snapshot management
+- [x] Add a `render_snapshot()` call in each test — cheap since these are single-frame SVG renders
 
 ### Caching improvements
-- [ ] **Static object cache** — if an object has no ongoing animation at frame `t`, reuse its final cached OpsSet without entering `get_animated_opsset_at_time` at all
-- [ ] **Group transform cache** — cache the result of `event.apply(group_opsset, progress)` per frame per group event (not just the "before" state); currently the group OpsSet build is cached but the transform is re-applied per member
-- [ ] **Dirty flag on Scene** — track whether `create_event_timeline()` needs re-running after `add()` calls; avoid full recompute on `render_snapshot()` calls
+- [x] **Static object cache** — if an object has no ongoing animation at frame `t`, reuse its final cached OpsSet without entering `get_animated_opsset_at_time` at all
+- [x] **Group transform cache** — cache the result of `event.apply(group_opsset, progress)` per frame per group event (not just the "before" state); currently the group OpsSet build is cached but the transform is re-applied per member
+- [ ] **Dirty flag on Scene** — track whether `create_event_timeline()` needs re-running after `add()` calls; avoid full recompute on `render_snapshot()` calls. 
+  *Note: Needs more thought on this!!*
 
 ### Content autofitting
 - [ ] Add a `BoundingBox` helper type representing a world-coordinate rectangle
 - [ ] Implement `Text.autofit(bbox: BoundingBox)` — use Cairo `text_extents()` to measure, then scale font size to fill the box
 - [ ] Implement multi-line text wrapping within a bounding box
 - [ ] Expose `Drawable.get_bbox()` uniformly so any drawable can report its extent (currently only `SVG` has this)
+
+### Bug
+- [ ] `get_bbox()` on an OpsSet that has ops but no point data (e.g. only SET_PEN) returns (inf, inf, -inf, -inf) rather than (0, 0, 0, 0). The empty-list early-return doesn't cover that case. The test documents this as the current behavior — worth fixing in a follow-up if `get_bbox()` is ever called on partially-constructed OpsSet objects.
 
 ---
 
@@ -66,6 +73,13 @@ Visual regression testing is the pragmatic approach for an animation library:
 - [ ] Named anchor methods on `Drawable`: `.anchor("top_left")`, `.anchor("center")`, `.anchor("bottom_right")` — returns `(x, y)` in world coordinates, computed from the bounding box
 - [ ] `Scene.place_relative(drawable_a, drawable_b, anchor_a, anchor_b, offset)` — helper to position `b` relative to `a` without manual coordinate arithmetic
 - [ ] **`scene.wait(duration, after=None)`** utility — adds blank time; syntactic sugar for advancing the timeline without adding a new drawable
+
+
+### Cleanup
+- [ ] Deprecate & Remove Legacy SVG: primitives/svg.py is marked as deprecated and relies on svgpathtools (which is a dev-only dependency according to repo_overview.md). It would be cleaner to remove this file entirely (or move it to a distinct legacy module) to ensure users don't accidentally import it and hit missing dependency errors, enforcing VectorSVG as the sole SVG handler.
+- [ ] Complete ZigZagLineFillPattern: In stylings/fillpatterns.py, the ZigZagLineFillPattern class is currently commented out entirely with a # TODO: Check and fix this. Completing this would provide a fantastic new sketchy fill style (like a back-and-forth colored pencil shading) to complement the existing hatching.
+
+
 
 ---
 

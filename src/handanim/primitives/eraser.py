@@ -44,7 +44,6 @@ class Eraser(Drawable):
 
         min_x, min_y, max_x, max_y = self.drawable_cache.calculate_bounding_box(self.objects_to_erase)
 
-        # TODO: do the rotation, perform the zigzag motion here
         spacing = self.stroke_style.width * 10
         y = min_y
         opsset.add(Ops(OpsType.MOVE_TO, [(min_x, min_y)]))  # move to top left corner
