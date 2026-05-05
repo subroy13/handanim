@@ -8,12 +8,12 @@ instances with known coordinates and assert exact output after transforms.
 import numpy as np
 import pytest
 
-from handanim.core.draw_ops import Ops, OpsSet, OpsType
-
+from handanim.core.draw_ops import Ops, OpsSet, OpsType, BoundingBox
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def make_move_line(x0, y0, x1, y1) -> OpsSet:
     """Minimal OpsSet: MOVE_TO then LINE_TO."""
@@ -35,6 +35,7 @@ def point_coords(opsset: OpsSet):
 # ---------------------------------------------------------------------------
 # translate
 # ---------------------------------------------------------------------------
+
 
 class TestTranslate:
     def test_shifts_all_points(self):
@@ -63,6 +64,7 @@ class TestTranslate:
 # ---------------------------------------------------------------------------
 # scale
 # ---------------------------------------------------------------------------
+
 
 class TestScale:
     def test_uniform_scale_doubles_distance_from_center(self):
@@ -105,11 +107,12 @@ class TestScale:
 # rotate
 # ---------------------------------------------------------------------------
 
+
 class TestRotate:
     def test_rotate_90_degrees(self):
         # Point at (100, 0) relative to center (50, 50) → after 90° CCW → (50, 100)
         ops = OpsSet()
-        ops.add(Ops(OpsType.MOVE_TO, [(50, 50)]))   # center point stays put
+        ops.add(Ops(OpsType.MOVE_TO, [(50, 50)]))  # center point stays put
         ops.add(Ops(OpsType.LINE_TO, [(100, 50)]))  # point 50 units right of center
         ops.rotate(90, center_of_rotation=(50, 50))
         coords = point_coords(ops)
@@ -144,9 +147,10 @@ class TestRotate:
 # get_bbox
 # ---------------------------------------------------------------------------
 
+
 class TestGetBbox:
     def test_empty_opsset_returns_zeros(self):
-        assert OpsSet().get_bbox() == (0, 0, 0, 0)
+        assert OpsSet().get_bbox() == BoundingBox(0, 0, 0, 0)
 
     def test_known_coords(self):
         ops = OpsSet()
@@ -154,28 +158,29 @@ class TestGetBbox:
         ops.add(Ops(OpsType.LINE_TO, [(80, 5)]))
         ops.add(Ops(OpsType.LINE_TO, [(80, 95)]))
         ops.add(Ops(OpsType.LINE_TO, [(10, 95)]))
-        min_x, min_y, max_x, max_y = ops.get_bbox()
-        assert min_x == 10
-        assert min_y == 5
-        assert max_x == 80
-        assert max_y == 95
+        bbox = ops.get_bbox()
+        assert bbox.min_x == 10
+        assert bbox.min_y == 5
+        assert bbox.max_x == 80
+        assert bbox.max_y == 95
+        assert bbox.width == 70
+        assert bbox.height == 90
+        assert bbox.center == (45, 50)
 
-    def test_set_pen_only_returns_sentinel_infinities(self):
+    def test_set_pen_only_returns_zeros(self):
         # get_bbox early-returns (0,0,0,0) only for a completely empty OpsSet.
         # An OpsSet with ops but no list-typed data (e.g. only SET_PEN) leaves
         # the min/max accumulators at their initial sentinel values.
+        # but it is updated to zeros later
         ops = OpsSet()
         ops.add(Ops(OpsType.SET_PEN, {"color": (0, 0, 0)}))
-        min_x, min_y, max_x, max_y = ops.get_bbox()
-        assert min_x == float("inf")
-        assert min_y == float("inf")
-        assert max_x == float("-inf")
-        assert max_y == float("-inf")
+        assert ops.get_bbox() == BoundingBox(0, 0, 0, 0)
 
 
 # ---------------------------------------------------------------------------
 # get_center_of_gravity
 # ---------------------------------------------------------------------------
+
 
 class TestGetCenterOfGravity:
     def test_symmetric_shape(self):
@@ -192,6 +197,7 @@ class TestGetCenterOfGravity:
 # ---------------------------------------------------------------------------
 # filter_by_meta_query
 # ---------------------------------------------------------------------------
+
 
 class TestFilterByMetaQuery:
     def test_returns_only_matching_ops(self):
@@ -212,7 +218,7 @@ class TestFilterByMetaQuery:
 
     def test_ops_without_meta_are_excluded(self):
         ops = OpsSet()
-        ops.add(Ops(OpsType.LINE_TO, [(0, 0)]))           # no meta
+        ops.add(Ops(OpsType.LINE_TO, [(0, 0)]))  # no meta
         ops.add(Ops(OpsType.LINE_TO, [(1, 1)], meta={"group": "A"}))
         result = ops.filter_by_meta_query("group", "A")
         assert len(result.opsset) == 1
@@ -221,6 +227,7 @@ class TestFilterByMetaQuery:
 # ---------------------------------------------------------------------------
 # extend
 # ---------------------------------------------------------------------------
+
 
 class TestExtend:
     def test_appends_ops_in_order(self):

@@ -72,6 +72,38 @@ poetry run python3 -m pytest -v
 
 ---
 
+## Test Coverage
+
+Coverage is measured with `pytest-cov`. The `--cov-report=term-missing` flag shows exact line numbers not covered — open the file alongside the report to see which branches are untested.
+
+### Terminal report (line numbers)
+
+```bash
+poetry run python3 -m pytest --cov=src/handanim --cov-report=term-missing
+```
+
+### HTML report (browsable, colour-coded per file)
+
+```bash
+poetry run python3 -m pytest --cov=src/handanim --cov-report=html
+open htmlcov/index.html        # macOS
+xdg-open htmlcov/index.html    # Linux
+```
+
+### Single module only
+
+```bash
+poetry run python3 -m pytest --cov=src/handanim/primitives/text --cov-report=term-missing
+```
+
+### Enforce a minimum threshold (useful in CI)
+
+```bash
+poetry run python3 -m pytest --cov=src/handanim --cov-fail-under=50
+```
+
+---
+
 ## Visual Regression Tests
 
 Visual regression tests live in `tests/test_visuals.py`. They render small deterministic scenes to PNG and compare them against reference files stored in `tests/snapshots/` using [SSIM](https://scikit-image.org/docs/stable/api/skimage.metrics.html#skimage.metrics.structural_similarity).

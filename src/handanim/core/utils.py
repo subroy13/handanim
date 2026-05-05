@@ -1,9 +1,11 @@
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import cairo
 import numpy as np
 
 
-def slice_bezier(p0, p1, p2, p3, t):
+def slice_bezier(
+    p0: Tuple[float, float], p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], t: float
+) -> List[Tuple[float, float]]:
     """
     Slice a Bezier curve at a given parameter t.
 
@@ -19,20 +21,18 @@ def slice_bezier(p0, p1, p2, p3, t):
     Returns:
         list: A list of three points representing the sliced Bezier curve segment
     """
-    p0, p1, p2, p3 = np.array(p0), np.array(p1), np.array(p2), np.array(p3)
-    p12 = (p1 - p0) * t + p0
-    p23 = (p2 - p1) * t + p1
-    p34 = (p3 - p2) * t + p2
+    q0, q1, q2, q3 = np.array(p0), np.array(p1), np.array(p2), np.array(p3)
+    p12 = (q1 - q0) * t + q0
+    p23 = (q2 - q1) * t + q1
+    p34 = (q3 - q2) * t + q2
     p123 = (p23 - p12) * t + p12
     p234 = (p34 - p23) * t + p23
     p1234 = (p234 - p123) * t + p123
 
-    return [p12, p123, p1234]
+    return [p12.tolist(), p123.tolist(), p1234.tolist()]
 
 
-def get_bezier_points_from_quadcurve(
-    p0: Tuple[float, float], q1: Tuple[float, float], q2: Tuple[float, float]
-):
+def get_bezier_points_from_quadcurve(p0: Tuple[float, float], q1: Tuple[float, float], q2: Tuple[float, float]):
     """
     Convert a quadratic Bezier curve to a cubic Bezier curve representation.
 
@@ -47,8 +47,8 @@ def get_bezier_points_from_quadcurve(
     Returns:
         Tuple[list, list, list]: Intermediate control points for the cubic Bezier curve
     """
-    p1 = (1 / 3 * np.array(p0) + 2 / 3 * np.array(q1)).tolist()
-    p2 = (1 / 3 * np.array(q1) + 2 / 3 * np.array(q2)).tolist()
+    p1: Tuple[float, float] = (1 / 3 * np.array(p0) + 2 / 3 * np.array(q1)).tolist()
+    p2: Tuple[float, float] = (1 / 3 * np.array(q1) + 2 / 3 * np.array(q2)).tolist()
     p3 = q2
     return p1, p2, p3
 
@@ -75,9 +75,7 @@ def cairo_surface_to_numpy(surface: cairo.ImageSurface):
     return a[:, :, [2, 1, 0, 3]]  # BGR → RGB with alpha
 
 
-def solve_quad_eqn(
-    a: float, b: float, c: float, ignore_error: bool = False
-) -> Tuple[float, float]:
+def solve_quad_eqn(a: float, b: float, c: float, ignore_error: bool = False) -> Tuple[Optional[float], Optional[float]]:
     # solve a quadratic equation of form ax^2 + bx + c = 0
     if a == 0 and not np.isclose(b, 0):
         return (-c / b, -c / b)  # as it is linear in this case
@@ -97,15 +95,11 @@ def get_bezier_extreme_points(
     p1: Tuple[float, float],  # control point 1
     p2: Tuple[float, float],  # control point 2
     p3: Tuple[float, float],  # end point
-) -> List[Tuple[float, float]]:
+) -> Tuple[float, float, float, float]:
     # the curve p(t) = (1-t)^3 p0 + 3(1-t)^2 * t * p1 + 3 (1-t) * t^2 * p2 + t^3 p3
     # p'(t) = 3(1-t)^2 (p1 - p0) + 6(1-t)t (p2 - p1) + 3t^2 * (p3 - p2)
     points = np.array([p0, p1, p2, p3])
-    a = (
-        9 * (points[1] - points[0])
-        - 6 * (points[2] - points[1])
-        + 3 * (points[3] - points[2])
-    )
+    a = 9 * (points[1] - points[0]) - 6 * (points[2] - points[1]) + 3 * (points[3] - points[2])
     b = -6 * (points[1] - points[0]) + 6 * (points[2] - points[1])
     c = 3 * (points[1] - points[0])
     tvals = [0, 1]

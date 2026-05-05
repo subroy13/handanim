@@ -1,5 +1,6 @@
 from typing import List
-from ..core.drawable import Drawable, DrawableCache
+from ..core.drawable import Drawable
+from ..core.cache import DrawableCache
 from ..core.draw_ops import OpsSet, Ops, OpsType
 
 

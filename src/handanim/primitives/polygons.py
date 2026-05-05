@@ -1,6 +1,8 @@
 from typing import List
 import numpy as np
 
+from handanim.core.draw_ops import BoundingBox
+
 from ..core.drawable import Drawable
 from ..core.draw_ops import OpsSet, Ops, OpsType
 from .lines import LinearPath
@@ -91,6 +93,14 @@ class Rectangle(Polygon):
             **kwargs,
         )
 
+    def get_bbox(self) -> BoundingBox:
+        return BoundingBox(
+            self.top_left[0],
+            self.top_left[1],
+            self.top_left[0] + self.width,
+            self.top_left[1] + self.height,
+        )
+
 
 class NGon(Polygon):
     def __init__(
@@ -102,10 +112,9 @@ class NGon(Polygon):
         **kwargs,
     ):
         points = []
-        center = np.array(center)
         for i in range(n):
             angle = 2 * np.pi * i / n
-            point = center + radius * np.array([np.cos(angle), np.sin(angle)])
+            point = np.array(center) + radius * np.array([np.cos(angle), np.sin(angle)])
             points.append(point)
         super().__init__(points, *args, **kwargs)
 
@@ -140,7 +149,15 @@ class RoundedRectangle(Drawable):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-        
+
+    def get_bbox(self) -> BoundingBox:
+        return BoundingBox(
+            self.top_left[0],
+            self.top_left[1],
+            self.top_left[0] + self.width,
+            self.top_left[1] + self.height,
+        )
+
     def draw(self) -> OpsSet:
         opsset = OpsSet(initial_set=[])
         x, y = self.top_left
@@ -182,6 +199,4 @@ class RoundedSquare(RoundedRectangle):
         **kwargs,
     ):
         self.side_length = side_length
-        super().__init__(
-            top_left, side_length, side_length, border_radius, *args, **kwargs
-        )
+        super().__init__(top_left, side_length, side_length, border_radius, *args, **kwargs)

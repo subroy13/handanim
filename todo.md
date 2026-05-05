@@ -38,13 +38,13 @@ Visual regression testing is the pragmatic approach for an animation library:
   *Note: Needs more thought on this!!*
 
 ### Content autofitting
-- [ ] Add a `BoundingBox` helper type representing a world-coordinate rectangle
-- [ ] Implement `Text.autofit(bbox: BoundingBox)` — use Cairo `text_extents()` to measure, then scale font size to fill the box
-- [ ] Implement multi-line text wrapping within a bounding box
-- [ ] Expose `Drawable.get_bbox()` uniformly so any drawable can report its extent (currently only `SVG` has this)
+- [x] Add a `BoundingBox` helper type representing a world-coordinate rectangle
+- [x] Implement `Text.autofit(bbox: BoundingBox)` — use Cairo `text_extents()` to measure, then scale font size to fill the box
+- [x] Implement multi-line text wrapping within a bounding box
+- [x] Expose `Drawable.get_bbox()` uniformly so any drawable can report its extent (currently only `SVG` has this)
 
 ### Bug
-- [ ] `get_bbox()` on an OpsSet that has ops but no point data (e.g. only SET_PEN) returns (inf, inf, -inf, -inf) rather than (0, 0, 0, 0). The empty-list early-return doesn't cover that case. The test documents this as the current behavior — worth fixing in a follow-up if `get_bbox()` is ever called on partially-constructed OpsSet objects.
+- [x] `get_bbox()` on an OpsSet that has ops but no point data (e.g. only SET_PEN) returns (inf, inf, -inf, -inf) rather than (0, 0, 0, 0). The empty-list early-return doesn't cover that case. The test documents this as the current behavior — worth fixing in a follow-up if `get_bbox()` is ever called on partially-constructed OpsSet objects.
 
 ---
 

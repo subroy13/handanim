@@ -29,6 +29,7 @@ opencv-python = "^4.11.0.86"
 scikit-image = "^0.25.2"
 pytest = "^8.0.0"
 pytest-snapshot = "^0.9.0"
+pytest-cov = "^7.1.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

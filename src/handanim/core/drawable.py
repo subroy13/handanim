@@ -1,6 +1,6 @@
 from typing import List, Tuple, Optional, Dict, Union, Callable
 from uuid import uuid4
-from .draw_ops import OpsSet
+from .draw_ops import OpsSet, BoundingBox
 from .styles import FillStyle, SketchStyle, StrokeStyle
 
 
@@ -69,6 +69,9 @@ class Drawable:
         Rotates the drawable object by the given angle
         """
         return TransformedDrawable(self, "rotate", {"angle": angle})
+
+    def get_bbox(self) -> BoundingBox:
+        return self.draw().get_bbox()
 
 
 class TransformedDrawable(Drawable):
