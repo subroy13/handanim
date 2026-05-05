@@ -160,7 +160,7 @@ You can help by:
 
 - Adding new animation primitives (e.g., Bezier curves, arrows)
 - Improving rendering quality and styles, caching and optimization.
-- Writing example scripts or tutorials
+- Writing example scripts or tutorials.
 - Reporting bugs and suggesting features
 
 Please see `CONTRIBUTING.md` (coming soon) for guidelines.
@@ -182,21 +182,4 @@ It motivates me to keep improving it and helps others discover it!
 
 > ✨ Made with love by Subhrajyoty Roy
 
----
-
-## 🧠 Internals (Architecture)
-
-1. `core`: Core capabilities.
-
-   - `drawable.py`: Defines the structure that can be drawn.
-   - `styles.py`: Defines the styling oriented options that can be configured.
-   - `draw_ops.py`: Defines the opsets, the basic structure that is used to draw. Along with the rendering logic for the opsset into the cairo context.
-   - `utils.py`: Some utility functions that does not fit anywhere else
-   - `animation.py`: Defines the animation structures.
-   - `scene.py`: Defines the scene, which is the main entry point for the user.
-
-2. Models.
-   - `Ops` and `OpsSet`: Describe vector drawing instructions.
-   - `Scene`: Collects objects and sequences them in time.
-   - Handwriting: Converts strokes from mock or real fonts into draw operations.
 

@@ -30,7 +30,7 @@ class FadeInAnimation(AnimationEvent):
         new_opsset = OpsSet(initial_set=current_ops_list)
         return new_opsset
 
-    def apply(self, opsset: OpsSet, progress: float):
+    def _apply(self, opsset: OpsSet, progress: float):
         return self._opsset_apply(opsset, progress)
 
 
@@ -52,5 +52,5 @@ class FadeOutAnimation(FadeInAnimation):
         super().__init__(start_time, duration, easing_fun, data)
         self.type = AnimationEventType.DELETION  # override the type
 
-    def apply(self, opsset, progress):
-        return super().apply(opsset, 1 - progress)
+    def _apply(self, opsset, progress):
+        return super()._apply(opsset, 1 - progress)

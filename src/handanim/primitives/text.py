@@ -1,9 +1,9 @@
-from typing import Tuple
+from typing import List, Optional, Tuple
 from fontTools.ttLib import TTFont
 from fontTools.pens.basePen import BasePen
 import numpy as np
 
-from ..core.draw_ops import Ops, OpsSet, OpsType
+from ..core.draw_ops import Ops, OpsSet, OpsType, BoundingBox
 from ..core.drawable import Drawable
 from ..stylings.fonts import list_fonts, get_font_path
 
@@ -82,6 +82,8 @@ class Text(Drawable):
         self.position = position
         self.font_size = font_size
         self.scale_factor = kwargs.get("scale_factor", 1.0)
+        self._wrapped_lines: Optional[List[str]] = None
+        self._line_height: Optional[float] = None
 
     def get_random_font_choice(self) -> Tuple[str, str]:
         """
@@ -104,12 +106,10 @@ class Text(Drawable):
         cmap = font.getBestCmap()
         glyph_name = cmap.get(ord(char))
         if glyph_name is None:
-            return OpsSet(initial_set=[])
+            return (OpsSet(initial_set=[]), 0)
 
         units_per_em = font["head"].unitsPerEm  # usually 1000
-        scale = (
-            self.scale_factor * self.font_size / units_per_em
-        )  # normalize to desired size
+        scale = self.scale_factor * self.font_size / units_per_em  # normalize to desired size
         glyph = glyph_set[glyph_name]
         pen = CustomPen(glyph_set, scale=scale)
         glyph.draw(pen)
@@ -128,10 +128,85 @@ class Text(Drawable):
         scale = self.scale_factor * self.font_size / units_per_em
 
         avg_char_width = font["hhea"].advanceWidthMax * scale * 0.5
-        space_width = (
-            glyph_set["space"].width * scale if "space" in glyph_set else avg_char_width
-        )
+        space_width = glyph_set["space"].width * scale if "space" in glyph_set else avg_char_width
         return space_width, scale
+
+    def _measure_text_width(self, text: str) -> float:
+        """Return the total world-space width of a single line of text at the current font_size."""
+        space_width, glyph_scale = self.get_glyph_space()
+        total = 0.0
+        for char in text:
+            if char == " ":
+                total += space_width
+            else:
+                _, glyph_width = self.get_glyph_strokes(char)
+                total += glyph_width + glyph_scale * 5
+        return total
+
+    def wrap(self, bbox: BoundingBox, line_height_factor: float = 1.5):
+        """
+        Pre-compute line breaks so that no line of text exceeds bbox.width.
+
+        Splits self.text on spaces and greedily accumulates words onto the current
+        line until adding the next word would exceed bbox.width, then starts a new
+        line. The text block is anchored at bbox.top_left.
+
+        Args:
+            bbox: The bounding box to wrap text within.
+            line_height_factor: Multiplier on font_size for the vertical gap between
+                lines. 1.5 gives comfortable spacing; 1.2 is tighter.
+        """
+        words = self.text.split(" ")
+        lines: List[str] = []
+        current_words: List[str] = []
+
+        for word in words:
+            candidate = " ".join(current_words + [word])
+            if current_words and self._measure_text_width(candidate) > bbox.width:
+                lines.append(" ".join(current_words))
+                current_words = [word]
+            else:
+                current_words.append(word)
+
+        if current_words:
+            lines.append(" ".join(current_words))
+
+        self._wrapped_lines = lines
+        self._line_height = self.font_size * line_height_factor
+        self.position = bbox.top_left
+
+    def autofit(self, bbox: BoundingBox):
+        reference_size = 10
+        self.font_size = reference_size
+        self.position = (0, 0)  # set position at top left of the screen
+
+        draw_ops = self.draw()  # run draw at the reference size
+        draw_bbox = draw_ops.get_bbox()
+
+        # we want draw_bbox.top_left to match up with bbox.top_left
+        # we want draw_bbox.width to match up with bbox.width
+        scale_x = bbox.width / draw_bbox.width
+        scale_y = bbox.height / draw_bbox.height
+
+        # set final font size and position
+        self.font_size = min(reference_size * scale_x, reference_size * scale_y)
+        self.position = (bbox.top_left[0] - draw_bbox.top_left[0], bbox.top_left[1] - draw_bbox.top_left[1])
+
+    def _draw_line(self, opsset: OpsSet, line: str, start_x: float, start_y: float):
+        """Render a single line of text into opsset, starting at (start_x, start_y)."""
+        space_width, glyph_scale = self.get_glyph_space()
+        offset_x, offset_y = start_x, start_y
+        for char in line:
+            if char == " ":
+                offset_x += space_width
+            else:
+                glyph_opsset, glyph_width = self.get_glyph_strokes(char)
+                glyph_opsset.translate(offset_x, offset_y)
+                opsset.extend(glyph_opsset)
+                offset_x += glyph_width + glyph_scale * 5
+                offset_y += np.random.uniform(
+                    -self.sketch_style.roughness, self.sketch_style.roughness
+                )
 
     def draw(self) -> OpsSet:
         opsset = OpsSet(initial_set=[])
@@ -145,27 +220,20 @@ class Text(Drawable):
                 },
             )
         )
-        offset_x, offset_y = self.position
-        space_width, glyph_scale = self.get_glyph_space()
-        for char in self.text:
-            if char == " ":
-                offset_x += space_width
-                continue
-            else:
-                glyph_opsset, glyph_width = self.get_glyph_strokes(char)
-                glyph_opsset.translate(offset_x, offset_y)
-                opsset.extend(glyph_opsset)
 
-                # add small padding
-                offset_x += glyph_width + glyph_scale * 5
-                offset_y += np.random.uniform(
-                    -self.sketch_style.roughness, self.sketch_style.roughness
-                )
-        
-        # get the center of gravity for the opsset
-        cg = opsset.get_center_of_gravity()
-        opsset.translate(
-            self.position[0] - cg[0],
-            self.position[1] - cg[1]
-        ) # translate so that cg is at the proper position
+        if self._wrapped_lines is not None:
+            # Multi-line mode: position is the top-left anchor set by wrap().
+            # Each line is placed at an increasing y offset; no CG re-centering
+            # because the caller explicitly laid out the text within a bbox.
+            line_height = self._line_height or self.font_size * 1.5
+            start_x, start_y = self.position
+            for i, line in enumerate(self._wrapped_lines):
+                self._draw_line(opsset, line, start_x, start_y + i * line_height)
+        else:
+            # Single-line mode: draw at position (0,0) then translate so the
+            # center of gravity lands at self.position, matching original behaviour.
+            self._draw_line(opsset, self.text, 0, 0)
+            cg = opsset.get_center_of_gravity()
+            opsset.translate(self.position[0] - cg[0], self.position[1] - cg[1])
+
         return opsset

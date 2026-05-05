@@ -1,5 +1,6 @@
 from typing import Any, List, Union, Tuple, Optional, Dict
 from enum import Enum
+from dataclasses import dataclass
 import json
 import numpy as np
 import cairo
@@ -50,6 +51,38 @@ class Ops:
         else:
             rounded_data = self.data
         return f"Ops({self.type}, {json.dumps(rounded_data)}, {self.partial})"
+
+
+@dataclass
+class BoundingBox:
+    """
+    A simple container representing a bounding box
+    """
+
+    min_x: float
+    min_y: float
+    max_x: float
+    max_y: float
+
+    @property
+    def width(self) -> float:
+        return self.max_x - self.min_x
+
+    @property
+    def height(self) -> float:
+        return self.max_y - self.min_y
+
+    @property
+    def center(self) -> Tuple[float, float]:
+        return (self.min_x + self.max_x) / 2, (self.min_y + self.max_y) / 2
+
+    @property
+    def top_left(self) -> Tuple[float, float]:
+        return self.min_x, self.min_y
+
+    @property
+    def bottom_right(self) -> Tuple[float, float]:
+        return self.max_x, self.max_y
 
 
 class OpsSet:
@@ -113,7 +146,7 @@ class OpsSet:
         else:
             raise TypeError("other value is not an opsset")
 
-    def get_bbox(self) -> Tuple[float, float, float, float]:
+    def get_bbox(self) -> BoundingBox:
         """
         Calculate the bounding box that encompasses all points in the operations set.
 
@@ -126,7 +159,7 @@ class OpsSet:
             are not fully implemented.
         """
         if len(self.opsset) == 0:
-            return (0, 0, 0, 0)
+            return BoundingBox(0, 0, 0, 0)
         else:
             min_x = min_y = float("inf")
             max_x = max_y = float("-inf")
@@ -158,7 +191,22 @@ class OpsSet:
                             min_y = min(min_y, point[1])
                             max_x = max(max_x, point[0])
                             max_y = max(max_y, point[1])
-            return min_x, min_y, max_x, max_y
+
+            # if it is still -inf, and inf, update to 0
+            if min_x == float("inf") and max_x == float("-inf") and min_y == float("inf") and max_y == float("-inf"):
+                return BoundingBox(0, 0, 0, 0)
+
+            if min_x == float("inf"):
+                min_x = max_x if max_x != float("-inf") else 0
+            if max_x == float("-inf"):
+                max_x = min_x if min_x != float("inf") else 0
+
+            if min_y == float("inf"):
+                min_y = max_y if max_y != float("-inf") else 0
+            if max_y == float("-inf"):
+                max_y = min_y if min_y != float("inf") else 0
+
+            return BoundingBox(min_x, min_y, max_x, max_y)
 
     def get_center_of_gravity(self) -> Tuple[float, float]:
         """
@@ -168,10 +216,9 @@ class OpsSet:
             A tuple of (x, y) coordinates representing the center point,
             computed as the midpoint of the bounding box.
         """
-        min_x, min_y, max_x, max_y = self.get_bbox()
-        return (min_x + max_x) / 2, (min_y + max_y) / 2
+        return self.get_bbox().center
 
-    def get_last_ops(self, start_index: int = 0) -> Tuple[Optional[float], Optional[Ops]]:
+    def get_last_ops(self, start_index: int = 0) -> Tuple[Optional[int], Optional[Ops]]:
         """
         Retrieve the last valid operation from the operations set.
 
@@ -240,7 +287,7 @@ class OpsSet:
                     p0 = second_last_op.data[0]
                     q1, q2 = last_op.data[0], last_op.data[1]
                     p1, p2, p3 = get_bezier_points_from_quadcurve(p0, q1, q2)
-                    cp1, cp2, ep = slice_bezier(p0, p1, p2, last_op.partial)
+                    cp1, cp2, ep = slice_bezier(p0, p1, p2, p3, last_op.partial)
                     return ep
                 else:
                     return last_op.data[-1]

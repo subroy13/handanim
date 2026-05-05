@@ -100,7 +100,7 @@ class SketchAnimation(AnimationEvent):
             )
         return new_opsset
 
-    def apply(self, opsset: OpsSet, progress: float):
+    def _apply(self, opsset: OpsSet, progress: float):
         """
         Apply the sketch animation to an operation set with a given progress.
 
@@ -139,5 +139,4 @@ class SketchAnimation(AnimationEvent):
         else:
             # progress is 0, so nothing should be drawn
             pass
-        return new_opsset
         return new_opsset

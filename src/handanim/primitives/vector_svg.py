@@ -8,9 +8,10 @@ as close to the original SVG as possible.
 """
 
 
+import io
 from typing import List, Tuple, Optional, Union
 from svgelements import (
-    SVG as SVGParser, Path, Shape, Color, 
+    SVG as SVGParser, Path, Shape, Color,
     Line, QuadraticBezier, CubicBezier, Move, Close
 )
 
@@ -48,6 +49,14 @@ class VectorSVG(Drawable):
         Create a VectorSVG instance from a file path
         """
         svg_doc = SVGParser.parse(svg_file_path)
+        return cls(svg_doc=svg_doc, *args, **kwargs)
+
+    @classmethod
+    def from_svg_string(cls, svg_string: str, *args, **kwargs) -> "VectorSVG":
+        """
+        Create a VectorSVG instance from an SVG string
+        """
+        svg_doc = SVGParser.parse(io.StringIO(svg_string))
         return cls(svg_doc=svg_doc, *args, **kwargs)
 
     def _parse_color_and_opacity(

@@ -50,6 +50,10 @@ class Viewport:
         scale_y = (self.screen_height - self.margin * 2) / world_height
         scale = min(scale_x, scale_y)  # scale to fit the smaller dimension
 
-        # translation to account for margin and centering
-        ctx.translate(self.margin, self.margin)
+        # translate so world_xrange[0]/world_yrange[0] maps to the margin edge,
+        # not the screen origin — handles non-zero world origins correctly
+        ctx.translate(
+            self.margin - self.world_xrange[0] * scale,
+            self.margin - self.world_yrange[0] * scale,
+        )
         ctx.scale(scale, scale)
