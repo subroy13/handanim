@@ -273,13 +273,6 @@ creating a smooth fade-in effect for graphical elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.fade.FadeInAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.fade.FadeInAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -299,13 +292,6 @@ creating a smooth fade-out effect for graphical elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.fade.FadeOutAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.fade.FadeOutAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -343,29 +329,7 @@ and optional glowing dot effects. It allows for smooth, incremental visualizatio
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
-<dd><p>Apply the sketch animation to an operation set with a given progress.</p>
-<p>This method progressively renders the operations in the opsset based on the current animation progress,
-with an optional glowing dot effect to highlight the current drawing point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opsset</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>) – The set of operations to animate</p></li>
-<li><p><strong>progress</strong> (<em>float</em>) – Animation progress from 0.0 to 1.0</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A new operation set with partially or fully rendered operations</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate a partial OpsSet representing the sketching progress of an operation set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -416,13 +380,6 @@ over the course of the animation’s duration, using an optional easing function
 <dd><p>Applies the translation from the specified point to the OpsSet’s center of gravity.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -454,55 +411,6 @@ over the course of the animation’s duration, using an optional easing function
 <dd><p>Applies the translation to the given OpsSet at the specified progress.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="handanim.animations.translate.TranslateToPersistAnimation">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.animations.translate.</span></span><span class="sig-name descname"><span class="pre">TranslateToPersistAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.translate.TranslateToPersistAnimation" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
-<p>A class representing a translate to a point animation event, persisting its final point.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This feature was contributed by Hamd Waseem (<a class="reference external" href="https://github.com/hamdivazim">https://github.com/hamdivazim</a>)</p>
-</div>
-<p>This animation translates an OpsSet from its current center of gravity to a specified point
-over the course of the animation’s duration, using an optional easing function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_time</strong> (<em>float</em><em>, </em><em>optional</em>) – The start time of the animation. Defaults to 0.</p></li>
-<li><p><strong>duration</strong> (<em>float</em><em>, </em><em>optional</em>) – The duration of the animation. Defaults to 0.</p></li>
-<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify animation progress. Defaults to None.</p></li>
-<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary containing animation data, including the target ‘point’. Defaults to None.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.translate.TranslateToPersistAnimation._opsset_apply">
-<span class="sig-name descname"><span class="pre">_opsset_apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.translate.TranslateToPersistAnimation._opsset_apply" title="Link to this definition">¶</a></dt>
-<dd><p>Calculates and applies the translation of the OpsSet.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.translate.TranslateToPersistAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.translate.TranslateToPersistAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the translation to the given OpsSet at the specified progress.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -526,13 +434,6 @@ expanding visual elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.zoom.ZoomInAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.zoom.ZoomInAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -553,13 +454,6 @@ removing visual elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.zoom.ZoomOutAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.zoom.ZoomOutAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -582,13 +476,6 @@ creating a smooth fade-in effect for graphical elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.FadeInAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.FadeInAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -608,13 +495,6 @@ creating a smooth fade-out effect for graphical elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.FadeOutAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.FadeOutAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -648,30 +528,8 @@ and optional glowing dot effects. It allows for smooth, incremental visualizatio
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
-<dd><p>Apply the sketch animation to an operation set with a given progress.</p>
-<p>This method progressively renders the operations in the opsset based on the current animation progress,
-with an optional glowing dot effect to highlight the current drawing point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opsset</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>) – The set of operations to animate</p></li>
-<li><p><strong>progress</strong> (<em>float</em>) – Animation progress from 0.0 to 1.0</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A new operation set with partially or fully rendered operations</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate a partial OpsSet representing the sketching progress of an operation set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -719,13 +577,6 @@ over the course of the animation’s duration, using an optional easing function
 <dd><p>Applies the translation from the specified point to the OpsSet’s center of gravity.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -757,55 +608,6 @@ over the course of the animation’s duration, using an optional easing function
 <dd><p>Applies the translation to the given OpsSet at the specified progress.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="handanim.animations.TranslateToPersistAnimation">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.animations.</span></span><span class="sig-name descname"><span class="pre">TranslateToPersistAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.TranslateToPersistAnimation" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
-<p>A class representing a translate to a point animation event, persisting its final point.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This feature was contributed by Hamd Waseem (<a class="reference external" href="https://github.com/hamdivazim">https://github.com/hamdivazim</a>)</p>
-</div>
-<p>This animation translates an OpsSet from its current center of gravity to a specified point
-over the course of the animation’s duration, using an optional easing function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_time</strong> (<em>float</em><em>, </em><em>optional</em>) – The start time of the animation. Defaults to 0.</p></li>
-<li><p><strong>duration</strong> (<em>float</em><em>, </em><em>optional</em>) – The duration of the animation. Defaults to 0.</p></li>
-<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify animation progress. Defaults to None.</p></li>
-<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary containing animation data, including the target ‘point’. Defaults to None.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.TranslateToPersistAnimation._opsset_apply">
-<span class="sig-name descname"><span class="pre">_opsset_apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.TranslateToPersistAnimation._opsset_apply" title="Link to this definition">¶</a></dt>
-<dd><p>Calculates and applies the translation of the OpsSet.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.TranslateToPersistAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.TranslateToPersistAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the translation to the given OpsSet at the specified progress.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -826,13 +628,6 @@ expanding visual elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.ZoomInAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.ZoomInAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -853,13 +648,6 @@ removing visual elements.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.animations.ZoomOutAnimation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.ZoomOutAnimation.apply" title="Link to this definition">¶</a></dt>
-<dd><p>Applies the progress percentage of the given
-animation event to the given opsset</p>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -905,14 +693,8 @@ animation event to the given opsset</p>
 <li><a class="reference internal" href="#">handanim.animations package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-handanim.animations.fade">handanim.animations.fade module</a><ul>
-<li><a class="reference internal" href="#handanim.animations.fade.FadeInAnimation"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.fade.FadeInAnimation.apply"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation.apply()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#handanim.animations.fade.FadeOutAnimation"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.fade.FadeOutAnimation.apply"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation.apply()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#handanim.animations.fade.FadeInAnimation"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.fade.FadeOutAnimation"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-handanim.animations.sketch">handanim.animations.sketch module</a><ul>
@@ -920,8 +702,7 @@ animation event to the given opsset</p>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.wait_before_fill"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.wait_before_fill</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.get_partial_sketch"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.apply"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -929,76 +710,41 @@ animation event to the given opsset</p>
 <li><a class="reference internal" href="#module-handanim.animations.translate">handanim.animations.translate module</a><ul>
 <li><a class="reference internal" href="#handanim.animations.translate.TranslateFromAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.animations.translate.TranslateFromAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation.apply()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation._opsset_apply"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation._opsset_apply()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation.apply()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#handanim.animations.translate.TranslateToPersistAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.translate.TranslateToPersistAnimation._opsset_apply"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation._opsset_apply()</span></code></a></li>
-<li><a class="reference internal" href="#handanim.animations.translate.TranslateToPersistAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation.apply()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-handanim.animations.zoom">handanim.animations.zoom module</a><ul>
-<li><a class="reference internal" href="#handanim.animations.zoom.ZoomInAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.zoom.ZoomInAnimation.apply"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation.apply()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#handanim.animations.zoom.ZoomOutAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.zoom.ZoomOutAnimation.apply"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation.apply()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#handanim.animations.zoom.ZoomInAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.zoom.ZoomOutAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-handanim.animations">Module contents</a><ul>
-<li><a class="reference internal" href="#handanim.animations.FadeInAnimation"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.FadeInAnimation.apply"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation.apply()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#handanim.animations.FadeOutAnimation"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.FadeOutAnimation.apply"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation.apply()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#handanim.animations.FadeInAnimation"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.FadeOutAnimation"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.SketchAnimation"><code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.animations.SketchAnimation.wait_before_fill"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.wait_before_fill</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.SketchAnimation.get_partial_sketch"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.SketchAnimation.apply"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.animations.TranslateFromAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.animations.TranslateFromAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation.apply()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.animations.TranslateToAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.animations.TranslateToAnimation._opsset_apply"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation._opsset_apply()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.TranslateToAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation.apply()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#handanim.animations.TranslateToPersistAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.TranslateToPersistAnimation._opsset_apply"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation._opsset_apply()</span></code></a></li>
-<li><a class="reference internal" href="#handanim.animations.TranslateToPersistAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">TranslateToPersistAnimation.apply()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#handanim.animations.ZoomInAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.ZoomInAnimation.apply"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation.apply()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#handanim.animations.ZoomOutAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation</span></code></a><ul>
-<li><a class="reference internal" href="#handanim.animations.ZoomOutAnimation.apply"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation.apply()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#handanim.animations.ZoomInAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.ZoomOutAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation</span></code></a></li>
 </ul>
 </li>
 </ul>

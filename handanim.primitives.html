@@ -394,7 +394,7 @@ to create a glowing effect.</p>
 <span id="handanim-primitives-eraser-module"></span><h2>handanim.primitives.eraser module<a class="headerlink" href="#module-handanim.primitives.eraser" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="handanim.primitives.eraser.Eraser">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.eraser.</span></span><span class="sig-name descname"><span class="pre">Eraser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects_to_erase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache" title="handanim.core.drawable.DrawableCache"><span class="pre">DrawableCache</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.eraser.Eraser" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.eraser.</span></span><span class="sig-name descname"><span class="pre">Eraser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects_to_erase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DrawableCache</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.eraser.Eraser" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
 <p>A Drawable representing an eraser that can remove specified drawable objects.</p>
 <dl class="py attribute">
@@ -414,7 +414,7 @@ to create a glowing effect.</p>
 <dd><p>Cache used for calculating bounding box of objects to erase.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache" title="handanim.core.drawable.DrawableCache">DrawableCache</a></p>
+<dd class="field-odd"><p>DrawableCache</p>
 </dd>
 </dl>
 </dd></dl>
@@ -672,6 +672,11 @@ vertices of the rectangle automatically.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.polygons.Rectangle.get_bbox">
+<span class="sig-name descname"><span class="pre">get_bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></span><a class="headerlink" href="#handanim.primitives.polygons.Rectangle.get_bbox" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -684,6 +689,11 @@ vertices of the rectangle automatically.</p>
 <dd><p>Provides the list of operations to be performed to
 draw this particular drawable object on the canvas</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.polygons.RoundedRectangle.get_bbox">
+<span class="sig-name descname"><span class="pre">get_bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></span><a class="headerlink" href="#handanim.primitives.polygons.RoundedRectangle.get_bbox" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -784,6 +794,11 @@ Converts text characters into drawing operations (OpsSet) that can be rendered.<
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.text.Text.autofit">
+<span class="sig-name descname"><span class="pre">autofit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.text.Text.autofit" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="id2">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
 <dd><p>Provides the list of operations to be performed to
@@ -806,6 +821,24 @@ draw this particular drawable object on the canvas</p>
 <dt class="sig sig-object py" id="id5">
 <span class="sig-name descname"><span class="pre">get_random_font_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
 <dd><p>Chooses a random font from the available fonts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.text.Text.wrap">
+<span class="sig-name descname"><span class="pre">wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_height_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.text.Text.wrap" title="Link to this definition">¶</a></dt>
+<dd><p>Pre-compute line breaks so that no line of text exceeds bbox.width.</p>
+<p>Splits self.text on spaces and greedily accumulates words onto the current
+line until adding the next word would exceed bbox.width, then starts a new
+line. The text block is anchored at bbox.top_left.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bbox</strong> – The bounding box to wrap text within.</p></li>
+<li><p><strong>line_height_factor</strong> – Multiplier on font_size for the vertical gap between
+lines. 1.5 gives comfortable spacing; 1.2 is tighter.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -853,6 +886,12 @@ as close to the original SVG as possible.</p>
 <dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG.from_svg_file">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_svg_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG" title="handanim.primitives.vector_svg.VectorSVG"><span class="pre">VectorSVG</span></a></span></span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG.from_svg_file" title="Link to this definition">¶</a></dt>
 <dd><p>Create a VectorSVG instance from a file path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.vector_svg.VectorSVG.from_svg_string">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_svg_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG" title="handanim.primitives.vector_svg.VectorSVG"><span class="pre">VectorSVG</span></a></span></span><a class="headerlink" href="#handanim.primitives.vector_svg.VectorSVG.from_svg_string" title="Link to this definition">¶</a></dt>
+<dd><p>Create a VectorSVG instance from an SVG string</p>
 </dd></dl>
 
 </dd></dl>
@@ -995,7 +1034,7 @@ Allows for generating ellipses with randomized point generation and stroke varia
 
 <dl class="py class">
 <dt class="sig sig-object py" id="handanim.primitives.Eraser">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">Eraser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects_to_erase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache" title="handanim.core.drawable.DrawableCache"><span class="pre">DrawableCache</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Eraser" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">Eraser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects_to_erase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><span class="pre">Drawable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DrawableCache</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Eraser" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
 <p>A Drawable representing an eraser that can remove specified drawable objects.</p>
 <dl class="py attribute">
@@ -1015,7 +1054,7 @@ Allows for generating ellipses with randomized point generation and stroke varia
 <dd><p>Cache used for calculating bounding box of objects to erase.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.drawable.DrawableCache" title="handanim.core.drawable.DrawableCache">DrawableCache</a></p>
+<dd class="field-odd"><p>DrawableCache</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1264,6 +1303,11 @@ vertices of the rectangle automatically.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.Rectangle.get_bbox">
+<span class="sig-name descname"><span class="pre">get_bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></span><a class="headerlink" href="#handanim.primitives.Rectangle.get_bbox" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1277,6 +1321,11 @@ vertices of the rectangle automatically.</p>
 draw this particular drawable object on the canvas</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.RoundedRectangle.get_bbox">
+<span class="sig-name descname"><span class="pre">get_bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></span><a class="headerlink" href="#handanim.primitives.RoundedRectangle.get_bbox" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1289,8 +1338,10 @@ draw this particular drawable object on the canvas</p>
 <dt class="sig sig-object py" id="handanim.primitives.SVG">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">SVG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.SVG" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
-<p>A drawable class that takes either an SVG file path
-or an SVG string and renders it as a Drawable.</p>
+<p>Deprecated: use VectorSVG instead.</p>
+<p>VectorSVG (primitives/vector_svg.py) supports full color, fill, and element
+transforms and should be used for all new code. This class will be removed in a
+future release.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.primitives.SVG.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.primitives.SVG.draw" title="Link to this definition">¶</a></dt>
@@ -1399,6 +1450,11 @@ Converts text characters into drawing operations (OpsSet) that can be rendered.<
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.Text.autofit">
+<span class="sig-name descname"><span class="pre">autofit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Text.autofit" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="id8">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
 <dd><p>Provides the list of operations to be performed to
@@ -1421,6 +1477,24 @@ draw this particular drawable object on the canvas</p>
 <dt class="sig sig-object py" id="id11">
 <span class="sig-name descname"><span class="pre">get_random_font_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
 <dd><p>Chooses a random font from the available fonts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.Text.wrap">
+<span class="sig-name descname"><span class="pre">wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.BoundingBox" title="handanim.core.draw_ops.BoundingBox"><span class="pre">BoundingBox</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_height_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Text.wrap" title="Link to this definition">¶</a></dt>
+<dd><p>Pre-compute line breaks so that no line of text exceeds bbox.width.</p>
+<p>Splits self.text on spaces and greedily accumulates words onto the current
+line until adding the next word would exceed bbox.width, then starts a new
+line. The text block is anchored at bbox.top_left.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bbox</strong> – The bounding box to wrap text within.</p></li>
+<li><p><strong>line_height_factor</strong> – Multiplier on font_size for the vertical gap between
+lines. 1.5 gives comfortable spacing; 1.2 is tighter.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1462,6 +1536,12 @@ as close to the original SVG as possible.</p>
 <dt class="sig sig-object py" id="handanim.primitives.VectorSVG.from_svg_file">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_svg_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG" title="handanim.primitives.vector_svg.VectorSVG"><span class="pre">VectorSVG</span></a></span></span><a class="headerlink" href="#handanim.primitives.VectorSVG.from_svg_file" title="Link to this definition">¶</a></dt>
 <dd><p>Create a VectorSVG instance from a file path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.VectorSVG.from_svg_string">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_svg_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">svg_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG" title="handanim.primitives.vector_svg.VectorSVG"><span class="pre">VectorSVG</span></a></span></span><a class="headerlink" href="#handanim.primitives.VectorSVG.from_svg_string" title="Link to this definition">¶</a></dt>
+<dd><p>Create a VectorSVG instance from an SVG string</p>
 </dd></dl>
 
 </dd></dl>
@@ -1601,9 +1681,13 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.polygons.Polygon.draw"><code class="docutils literal notranslate"><span class="pre">Polygon.draw()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#handanim.primitives.polygons.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.polygons.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.primitives.polygons.Rectangle.get_bbox"><code class="docutils literal notranslate"><span class="pre">Rectangle.get_bbox()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#handanim.primitives.polygons.RoundedRectangle"><code class="docutils literal notranslate"><span class="pre">RoundedRectangle</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.primitives.polygons.RoundedRectangle.draw"><code class="docutils literal notranslate"><span class="pre">RoundedRectangle.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.polygons.RoundedRectangle.get_bbox"><code class="docutils literal notranslate"><span class="pre">RoundedRectangle.get_bbox()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.primitives.polygons.RoundedSquare"><code class="docutils literal notranslate"><span class="pre">RoundedSquare</span></code></a></li>
@@ -1621,10 +1705,12 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.get_glyph_strokes"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.get_glyph_space"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.draw"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.text.Text.autofit"><code class="docutils literal notranslate"><span class="pre">Text.autofit()</span></code></a></li>
 <li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
 <li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
 <li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.text.Text.wrap"><code class="docutils literal notranslate"><span class="pre">Text.wrap()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1635,6 +1721,7 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.position"><code class="docutils literal notranslate"><span class="pre">VectorSVG.position</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.draw"><code class="docutils literal notranslate"><span class="pre">VectorSVG.draw()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.from_svg_file"><code class="docutils literal notranslate"><span class="pre">VectorSVG.from_svg_file()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.vector_svg.VectorSVG.from_svg_string"><code class="docutils literal notranslate"><span class="pre">VectorSVG.from_svg_string()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1703,9 +1790,13 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.Polygon.draw"><code class="docutils literal notranslate"><span class="pre">Polygon.draw()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#handanim.primitives.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.primitives.Rectangle.get_bbox"><code class="docutils literal notranslate"><span class="pre">Rectangle.get_bbox()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#handanim.primitives.RoundedRectangle"><code class="docutils literal notranslate"><span class="pre">RoundedRectangle</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.primitives.RoundedRectangle.draw"><code class="docutils literal notranslate"><span class="pre">RoundedRectangle.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.RoundedRectangle.get_bbox"><code class="docutils literal notranslate"><span class="pre">RoundedRectangle.get_bbox()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.primitives.RoundedSquare"><code class="docutils literal notranslate"><span class="pre">RoundedSquare</span></code></a></li>
@@ -1726,10 +1817,12 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.Text.get_glyph_strokes"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Text.get_glyph_space"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Text.draw"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.Text.autofit"><code class="docutils literal notranslate"><span class="pre">Text.autofit()</span></code></a></li>
 <li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
 <li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
 <li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.Text.wrap"><code class="docutils literal notranslate"><span class="pre">Text.wrap()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.primitives.VectorSVG"><code class="docutils literal notranslate"><span class="pre">VectorSVG</span></code></a><ul>
@@ -1737,6 +1830,7 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.VectorSVG.position"><code class="docutils literal notranslate"><span class="pre">VectorSVG.position</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.VectorSVG.draw"><code class="docutils literal notranslate"><span class="pre">VectorSVG.draw()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.VectorSVG.from_svg_file"><code class="docutils literal notranslate"><span class="pre">VectorSVG.from_svg_file()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.VectorSVG.from_svg_string"><code class="docutils literal notranslate"><span class="pre">VectorSVG.from_svg_string()</span></code></a></li>
 </ul>
 </li>
 </ul>
