@@ -2,19 +2,17 @@
 # This program allows you to create a database of glyphs from a single filled in grid image
 #############
 
-import os
 import json
+import os
+import xml.etree.ElementTree as ET
+
+import cv2
 import numpy as np
 from PIL import Image
-
-# import vtracer
-import cv2
-import xml.etree.ElementTree as ET
-from svgpathtools import svg2paths
-from tqdm import tqdm
-from skimage.morphology import skeletonize
 from skimage import measure
-import svgwrite
+from skimage.morphology import skeletonize
+from svgelements import Path as SVGPath
+from tqdm import tqdm
 
 from symbols import SYMBOL_LABELS
 
@@ -91,16 +89,14 @@ def extract_svg_paths(svg_file):
     return paths
 
 
-def compute_combined_bbox(paths):
-    """Compute bounding box of all paths combined."""
-    min_x, min_y, max_x, max_y = (
-        float("inf"),
-        float("inf"),
-        -float("inf"),
-        -float("inf"),
-    )
-    for path in paths:
-        xmin, xmax, ymin, ymax = path.bbox()
+def compute_combined_bbox(path_strings: list[str]) -> tuple[float, float, float, float]:
+    """Compute bounding box of all SVG path strings combined."""
+    min_x, min_y, max_x, max_y = float("inf"), float("inf"), -float("inf"), -float("inf")
+    for path_str in path_strings:
+        bbox = SVGPath(path_str).bbox()
+        if bbox is None:
+            continue
+        xmin, ymin, xmax, ymax = bbox
         min_x = min(min_x, xmin)
         max_x = max(max_x, xmax)
         min_y = min(min_y, ymin)
@@ -110,6 +106,7 @@ def compute_combined_bbox(paths):
 
 def convert_png_to_svg(img_path: str, svg_path: str):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+    h, w = img.shape
 
     # Convert to binary (invert so handwriting is white on black)
     _, binary = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
@@ -123,17 +120,22 @@ def convert_png_to_svg(img_path: str, svg_path: str):
     # Find contours from skeleton
     contours = measure.find_contours(skeleton, level=0.5)
 
-    # Create SVG from contours
-    dwg = svgwrite.Drawing(size=(img.shape[1], img.shape[0]))
+    # Build SVG manually — avoids the svgwrite dependency
+    path_elements = []
     for contour in contours:
         if len(contour) < 2:
             continue
-        path_data = f"M{contour[0][1]},{contour[0][0]}"
+        d = f"M{contour[0][1]:.2f},{contour[0][0]:.2f}"
         for pt in contour[1:]:
-            path_data += f" L{pt[1]},{pt[0]}"
-        dwg.add(dwg.path(d=path_data, stroke="black", fill="none", stroke_width=1))
+            d += f" L{pt[1]:.2f},{pt[0]:.2f}"
+        path_elements.append(f'  <path d="{d}" stroke="black" fill="none" stroke-width="1"/>')
 
-    dwg.saveas(svg_path)
+    svg_content = f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}">\n'
+    svg_content += "\n".join(path_elements)
+    svg_content += "\n</svg>\n"
+
+    with open(svg_path, "w") as f:
+        f.write(svg_content)
 
 
 if __name__ == "__main__":
@@ -162,17 +164,16 @@ if __name__ == "__main__":
         # Run tracing
         convert_png_to_svg(png_path, svg_path)
         try:
-            paths, attributes = svg2paths(svg_path)
-            min_x, min_y, max_x, max_y = compute_combined_bbox(paths)
+            path_list = extract_svg_paths(svg_path)
+            min_x, min_y, max_x, max_y = compute_combined_bbox(path_list)
             bbox_height = max_y - min_y
             if bbox_height > glyph_max_size:
                 glyph_max_size = bbox_height
 
-            path_list = extract_svg_paths(svg_path)
             unicode_code = ord(label)
             glyph_database[str(unicode_code)] = path_list  # use string keys in JSON
         except Exception as e:
-            print(f"⚠️ Failed to extract paths for {label}: {e}")
+            print(f"Failed to extract paths for {label}: {e}")
 
     # === Save glyph database ===
     glyph_details = {

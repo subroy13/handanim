@@ -119,16 +119,148 @@ The `handanim_ai` module already has the two-prompt pipeline scaffolded. Expand 
 
 ---
 
-## Phase 4 — Handwriting Font Generation
+## Phase 4 — Neural Handwriting Font Generation
 
-Goal: generate a usable single-line stroke font from a handful of hand-written samples.
+**Goal:** replace the static TTF/JSON font lookup in `Text` and `Math` with a neural stroke model that generates natural-looking handwritten strokes per character or symbol on demand. The model runs as a lightweight optional extra (`pip install handanim[stroke]`) with no PyTorch dependency at inference time.
 
-- [ ] **Data collection tool** — a simple web/tablet UI (could be a Jupyter widget using `ipycanvas`) that records pen strokes per character as `(x, y, time)` sequences
-- [ ] **Preprocessing pipeline** — normalize scale, resample to uniform arc-length, center each glyph; output to the existing `handanimtype1.json` format
-- [ ] **Stroke-RNN baseline** — adapt [Sketch-RNN](https://github.com/magenta/magenta/tree/main/magenta/models/sketch_rnn) or Ha & Eck (2017) to condition on character identity; train on collected samples
-- [ ] **Transformer alternative** — sequence-to-sequence transformer conditioned on a character token; generates stroke deltas `(dx, dy, pen_up)` autoregressively
-- [ ] **Export pipeline** — sample from trained model per character → smooth with Bezier fitting → write to `fonts/custom/<name>.json`
-- [ ] **Quality metric** — DTW distance between generated and reference strokes; character recognition accuracy using a frozen classifier
+**Branch:** `feat/font-modelling`
+
+---
+
+### Code layout to create
+
+```
+tools/stroke_model/          # PyTorch lives here — training only, not installed
+├── model.py                 # SketchRNN architecture (PyTorch)
+├── preprocess.py            # raw stroke data → normalised training tensors
+├── train.py                 # training loop + checkpoint saving
+├── export.py                # PyTorch checkpoint → ONNX file
+└── collect.py               # data collection UI (Jupyter widget)
+
+src/handanim/fonts/
+└── stroke_model.py          # ONNX inference wrapper — no torch import
+```
+
+`text.draw()` and `math.draw()` import only from `src/handanim/fonts/stroke_model.py`. The PyTorch architecture in `tools/` is a training-time artifact only; once the `.onnx` is exported it is no longer needed at runtime.
+
+---
+
+### Step 1 — Data sourcing and format
+
+**Stroke format (standard across all sources):**
+Every sample is a variable-length sequence of tuples `(dx, dy, pen_state)` where:
+- `dx`, `dy` — displacement from previous point (delta encoding, normalised to unit variance)
+- `pen_state` — `0` = pen drawing, `1` = pen lifted / start next stroke, `2` = end of sequence
+
+**Data sources (use all three together):**
+
+- [ ] **HASYv2** ([paper](https://arxiv.org/abs/1701.08380), [download](https://zenodo.org/record/259444)) — 32,116 handwritten samples of 369 LaTeX math symbols (`\alpha`, `\sum`, `\int`, `\frac`, Greek letters, operators, etc.). This is the primary source for math coverage. License: CC BY 4.0. Each sample is a 32×32 PNG + ground-truth LaTeX label. Convert bitmaps to stroke sequences via thinning + vectorisation (`skimage.morphology.skeletonize` → chain-code → delta encoding); store results in the canonical `(dx, dy, pen_state)` format.
+
+- [ ] **QuickDraw** ([download](https://github.com/googlecreativelab/quickdraw-dataset)) — ~50M stroke samples across 345 categories. Use the `full/simplified/` NDJSON files for the alphanumeric categories (`a`–`z`, `0`–`9`). Already in stroke-delta format — just filter, normalise, and trim to max sequence length. License: CC BY 4.0.
+
+- [ ] **Synthetic bootstrap from existing JSON font** — convert `fonts/handanimtype1.json` SVG path strings to stroke sequences using the same `_svg_paths_to_opsset` pipeline in `math.py`: sample uniform points along each path segment, compute deltas, encode pen state from path structure. Free; gives immediate coverage for ASCII. Label each stroke with its character. Use as a low-weight supplement (not a primary source — strokes will be too smooth).
+
+- [ ] **Store all preprocessed data** in a single `.npz` file per dataset split (`train.npz`, `val.npz`) with arrays: `strokes` (ragged, stored as object array or padded), `labels` (integer character/symbol ids), `lengths` (sequence lengths before padding). Define a shared `vocab.json` mapping character/LaTeX-symbol strings to integer ids; keep it in `tools/stroke_model/vocab.json` and also copy it alongside any exported ONNX file.
+
+---
+
+### Step 2 — Preprocessing (`tools/stroke_model/preprocess.py`)
+
+- [ ] **Normalise scale** — for each glyph, scale so that the bounding box height = 1.0 (preserve aspect ratio)
+- [ ] **Resample to uniform arc-length** — interpolate so consecutive points are equidistant; use 96 points per glyph as the default target length (configurable)
+- [ ] **Compute deltas** — convert absolute `(x, y)` to `(dx, dy)`; clip outlier deltas at ±3σ
+- [ ] **Pad / truncate** to a fixed max length (e.g. 200 steps); store `lengths` array to mask padding in the loss
+- [ ] **Augment during training only** — small random rotation (±15°), scale jitter (0.9–1.1×), time-stretch (resample to ±10% of target length then re-pad); do NOT augment val/test
+
+---
+
+### Step 3 — Model architecture (`tools/stroke_model/model.py`)
+
+Use a **Sketch-RNN** (Ha & Eck, 2018 — [paper](https://arxiv.org/abs/1704.03477)) conditioned on a character identity token. Rationale: generates `(dx, dy, pen_state)` natively, checkpoint size ~3–8 MB, fast autoregressive inference (no KV-cache complexity), well-understood failure modes.
+
+- [ ] **Encoder** — single-layer bidirectional LSTM, hidden size 256; reads the input stroke sequence; outputs a latent vector `z` via reparameterisation (VAE-style); condition on character id by concatenating a learned embedding (vocab size × 64) to the input at every step
+- [ ] **Decoder** — single-layer LSTM, hidden size 512; at each step takes `(prev_point, z, char_embedding)` as input; outputs parameters of a Gaussian Mixture Model (20 components) over `(dx, dy)` plus a 3-way categorical over `pen_state`
+- [ ] **Loss** — reconstruction loss = negative log-likelihood of the MDN output + cross-entropy over pen state; KL divergence term on `z` with KL annealing (start weight 0 → 1 over first 20% of training)
+- [ ] **Config** — expose all hyperparameters via a YAML config file (`tools/stroke_model/config.yaml`): hidden sizes, num mixtures, latent dim, max sequence length, learning rate, batch size, KL weight schedule
+
+---
+
+### Step 4 — Training (`tools/stroke_model/train.py`)
+
+- [ ] Self-contained script; no external trainer framework (standard PyTorch training loop is sufficient for this model size)
+- [ ] Dependencies (training only, never installed by `pip install handanim`): `torch>=2.0`, `numpy`, `pyyaml`, `tqdm`
+- [ ] Save checkpoint every N epochs as `checkpoints/epoch_{n}.pt`; also save `best.pt` tracking lowest val loss
+- [ ] Log train loss, val loss, and KL weight to a simple CSV (`training_log.csv`) so progress is inspectable without tensorboard
+- [ ] Provide a `--resume` flag to continue from a checkpoint
+- [ ] Target: val NLL < 0.5 on HASYv2 + QuickDraw combined; typically achieved in ~50 epochs on a laptop GPU
+
+---
+
+### Step 5 — Export to ONNX (`tools/stroke_model/export.py`)
+
+- [ ] Load `best.pt`; run `torch.onnx.export` with `opset_version=17`
+- [ ] Export the **decoder only** (the encoder is only needed at training time for the VAE; at inference, sample `z` from the prior `N(0, I)` or use a fixed `z=0` for deterministic output)
+- [ ] Verify the ONNX model output matches the PyTorch output to within 1e-4 (use `onnxruntime` to run both)
+- [ ] Bundle `vocab.json` alongside the ONNX file — they must be versioned together
+- [ ] Output: `stroke_model_v1.onnx` + `vocab.json` ready for upload to Hugging Face Hub
+
+---
+
+### Step 6 — Hugging Face Hub hosting
+
+- [ ] Create a model repo at `huggingface.co/subroy13/handanim-stroke-model`
+- [ ] Upload `stroke_model_v1.onnx` and `vocab.json` to the repo; use git tags for versioning (`v1`, `v2`, …)
+- [ ] Write a model card (`README.md` in the HF repo) describing: training data, character coverage, performance metrics, how to use via `handanim[stroke]`
+- [ ] Add `huggingface_hub` as an optional runtime dependency alongside `onnxruntime` in `pyproject.toml`:
+  ```toml
+  [tool.poetry.extras]
+  stroke = ["onnxruntime", "huggingface-hub"]
+  ```
+
+---
+
+### Step 7 — Inference integration (`src/handanim/fonts/stroke_model.py`)
+
+- [ ] **`StrokeModel` class** with:
+  - `StrokeModel.load(model_name="subroy13/handanim-stroke-model", revision="v1")` — downloads `stroke_model_v1.onnx` and `vocab.json` to `~/.handanim/models/` via `huggingface_hub.hf_hub_download`; caches locally; no re-download on subsequent calls
+  - `StrokeModel.generate(char: str, temperature: float = 0.8) -> OpsSet` — runs one autoregressive decode pass through the ONNX session; converts `(dx, dy, pen_state)` output to an OpsSet (`MOVE_TO`, `LINE_TO`, `CLOSE_PATH` ops); scales to match the requested font size
+  - Raises `ImportError` with `pip install handanim[stroke]` message if `onnxruntime` is not installed
+
+- [ ] **Fallback in `Text.draw()` and `Math.custom_glyph_opsset()`**:
+  ```python
+  try:
+      from ..fonts.stroke_model import StrokeModel
+      model = StrokeModel.load()
+      return model.generate(char)
+  except (ImportError, FileNotFoundError):
+      return self._legacy_font_draw(char)   # existing TTF / JSON path
+  ```
+  Stroke model is opt-in; existing behaviour is the default until `handanim[stroke]` is installed.
+
+- [ ] **`StrokeModel` is not imported at module load time** — use a lazy import inside `draw()` so that importing `handanim` never triggers an `onnxruntime` import or a network call
+
+---
+
+### Step 8 — Data collection tool for custom handwriting (`tools/stroke_model/collect.py`)
+
+- [ ] Jupyter widget using `ipycanvas` — display one character prompt at a time; record raw `(x, y, timestamp)` on pen-down events; save each sample as JSON on pen-up
+- [ ] Collect at least 5 samples per character; show a progress bar over the full target character set (configurable subset — e.g. Latin only, or Latin + digits + common math)
+- [ ] Save collected data to `data/my_style/raw/{char_id}/{sample_n}.json`
+- [ ] `preprocess.py` can be pointed at this directory: `python preprocess.py --data data/my_style/raw --out data/my_style/train.npz`
+- [ ] `train.py --config config.yaml --data data/my_style/train.npz --pretrained best.pt` — fine-tune from the public pretrained checkpoint on the user's collected samples; typically 10–20 epochs sufficient for style transfer
+- [ ] `export.py` outputs `my_style_v1.onnx`; user places it in `~/.handanim/models/` and sets `font="my_style"` in their scene:
+  ```python
+  Text("Hello", font="my_style", ...)
+  ```
+
+---
+
+### Step 9 — Quality metrics
+
+- [ ] **DTW distance** — Dynamic Time Warping between generated stroke and nearest reference stroke in the val set; lower is better; use `dtaidistance` library
+- [ ] **Recognisability** — run generated strokes through a frozen CNN classifier (train a simple ResNet-18 on the HASYv2 bitmaps); target top-1 accuracy > 85% on math symbols
+- [ ] **Diversity** — generate 10 samples per character; compute mean pairwise DTW; a good model should show variation, not copy a single template
+- [ ] Log all three metrics in `train.py` at the end of each epoch alongside the NLL loss
 
 ---
 
@@ -146,7 +278,7 @@ Long-term: a companion module (possibly a separate repo) that adds audio/voice t
 
 ## Architectural Improvements (ongoing)
 
-- [ ] **Deprecate legacy `SVG`** — funnel all SVG import through `VectorSVG`; remove `svgpathtools` as a hard requirement
+- [x] **Deprecate legacy `SVG`** — funnel all SVG import through `VectorSVG`; remove `svgpathtools` as a hard requirement
 - [ ] **Unify style location** — `core/styles.py` has type definitions, `stylings/` has utility functions; add a top-level note in each file pointing to the other; consider moving `color.py` constants into `core/styles.py` so a single import suffices
 - [ ] **`Scene.add()` return value** — return the `drawable` (or a handle) so calls can be chained: `handle = scene.add(event, rect)`
 - [ ] **Type annotations audit** — several functions use `Any` loosely; tighten with `TypeVar` for `Drawable` subclasses and overloads for `OpsSet` transforms

@@ -33,12 +33,37 @@ sudo apt-get install libcairo2-dev pkg-config python3-dev
 git clone <repo-url>
 cd handanim
 
-# Install all dependencies (runtime + dev)
-poetry install --with dev
+# Install runtime + dev dependencies (default for contributors)
+poetry install
 
 # Activate the virtual environment (optional, for a plain shell)
 poetry shell
 ```
+
+### Optional dependency groups
+
+handanim has two optional groups you install on top of the base setup:
+
+| Group | What it adds | When you need it |
+|---|---|---|
+| `stroke` | `onnxruntime`, `huggingface-hub` | Running neural handwriting font inference |
+| `train` | everything in `stroke` + `torch`, `torchvision`, `onnx`, `pandas`, `tqdm`, `vtracer`, `opencv-python` | Training/exporting the stroke model, or running the fontmaker tools |
+
+```bash
+# Neural font inference only (end-users / contributors testing the stroke font)
+poetry install --extras stroke
+
+# Model training / ONNX export (ML contributors only)
+poetry install --with train
+```
+
+End-users installing from PyPI can pull the `stroke` group via:
+
+```bash
+pip install handanim[stroke]
+```
+
+The `train` group is **not** exposed as a pip extra — it is development-only and never installed by library users.
 
 ---
 
