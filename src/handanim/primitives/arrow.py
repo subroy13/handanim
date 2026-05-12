@@ -1,19 +1,19 @@
-from typing import Tuple, List
+
 import numpy as np
 
-from ..core.draw_ops import OpsSet, Ops, OpsType
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
 from ..core.utils import get_line_slope_angle
-from .lines import Line, LinearPath
 from .curves import Curve
+from .lines import Line, LinearPath
 
 
 class Arrow(Drawable):
 
     def __init__(
         self,
-        start_point: Tuple[float, float],
-        end_point: Tuple[float, float],
+        start_point: tuple[float, float],
+        end_point: tuple[float, float],
         arrow_head_type: str = "->",  # valid values are: ->, ->>, -|>
         arrow_head_size: float = 10.0,
         arrow_head_angle: float = 45.0,
@@ -38,7 +38,7 @@ class Arrow(Drawable):
         arrow_head_angle = np.deg2rad(self.arrow_head_angle)
 
         # now draw the main length
-        arrow_line = Line(start=(0, 0), end=(arrow_length, 0), *self.args, **self.kwargs)
+        arrow_line = Line(start=(0, 0), end=(arrow_length, 0), **self.kwargs)
         opsset.extend(arrow_line.draw())
 
         # now draw the arrowhead
@@ -65,7 +65,6 @@ class Arrow(Drawable):
                     np.sin(arrow_head_angle) * self.arrow_head_size,
                 ),
             ],
-            *self.args,
             **self.kwargs,
         )
         opsset.extend(arrow_head.draw())
@@ -98,7 +97,6 @@ class Arrow(Drawable):
                         np.sin(arrow_head_angle) * self.arrow_head_size,
                     ),
                 ],
-                *self.args,
                 **self.kwargs,
             )
             opsset.extend(arrow_head2.draw())
@@ -112,7 +110,7 @@ class CurvedArrow(Drawable):
 
     def __init__(
         self,
-        points: List[Tuple[float, float]],  # the list of points that defines the curve
+        points: list[tuple[float, float]],  # the list of points that defines the curve
         arrow_head_type: str = "->",  # valid values are: ->, ->>, -|>
         arrow_head_size: float = 10.0,
         arrow_head_angle: float = 45.0,
@@ -149,7 +147,7 @@ class CurvedArrow(Drawable):
         ]
 
         # draw the curve
-        curve = Curve(rotated_points, *self.args, **self.kwargs)
+        curve = Curve(rotated_points, **self.kwargs)
         opsset.extend(curve.draw())
 
         # draw the arrow head
@@ -160,7 +158,6 @@ class CurvedArrow(Drawable):
                     end_point[0] - np.cos(arrow_head_angle) * self.arrow_head_size,
                     end_point[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size,
                 ),
-                *self.args,
                 **self.kwargs,
             )
             opsset.extend(arrow_line.draw())
@@ -175,7 +172,6 @@ class CurvedArrow(Drawable):
                         end_point[0] - self.arrow_head_size / 2 - np.cos(arrow_head_angle) * self.arrow_head_size,
                         end_point[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size,
                     ),
-                    *self.args,
                     **self.kwargs,
                 )
                 opsset.extend(arrow_line.draw())
@@ -189,7 +185,6 @@ class CurvedArrow(Drawable):
                         end_point[0] - np.cos(arrow_head_angle) * self.arrow_head_size,
                         end_point[1] + arrow_scale * np.sin(arrow_head_angle) * self.arrow_head_size,
                     ),
-                    *self.args,
                     **self.kwargs,
                 )
                 opsset.extend(arrow_line.draw())

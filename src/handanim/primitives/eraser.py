@@ -1,7 +1,7 @@
-from typing import List
-from ..core.drawable import Drawable
+
 from ..core.cache import DrawableCache
-from ..core.draw_ops import OpsSet, Ops, OpsType
+from ..core.draw_ops import Ops, OpsSet, OpsType
+from ..core.drawable import Drawable
 
 
 class Eraser(Drawable):
@@ -18,7 +18,7 @@ class Eraser(Drawable):
 
     def __init__(
         self,
-        objects_to_erase: List[Drawable],
+        objects_to_erase: list[Drawable],
         drawable_cache: DrawableCache,
         *args,
         **kwargs,

@@ -1,6 +1,7 @@
-from typing import List, Tuple, Optional, Dict, Union, Callable
+from collections.abc import Sequence
 from uuid import uuid4
-from .draw_ops import OpsSet, BoundingBox
+
+from .draw_ops import BoundingBox, OpsSet
 from .styles import FillStyle, SketchStyle, StrokeStyle
 
 
@@ -29,9 +30,9 @@ class Drawable:
         self,
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
-        fill_style: Optional[FillStyle] = None,
-        glow_dot_hint: Optional[Union[Dict, bool]] = None,
-        id: Optional[str] = None,
+        fill_style: FillStyle | None = None,
+        glow_dot_hint: dict | bool | None = None,
+        id: str | None = None,
     ):
         if id is not None:
             self.id = id
@@ -93,14 +94,14 @@ class TransformedDrawable(Drawable):
     def __init__(
         self,
         base_drawable: Drawable,
-        transformation_function: callable,
-        transformation_args: dict = {},
+        transformation_function: str,
+        transformation_args: dict | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.base_drawable = base_drawable
         self.transformation_function = transformation_function
-        self.transformation_args = transformation_args
+        self.transformation_args = transformation_args if transformation_args is not None else {}
 
     def draw(self) -> OpsSet:
         """
@@ -135,7 +136,7 @@ class DrawableFill:
 
     def __init__(
         self,
-        bound_box_list: List[List[Tuple[float, float]]],  # defines the bounding box for filling
+        bound_box_list: list[list[tuple[float, float]]],  # defines the bounding box for filling
         fill_style: FillStyle = FillStyle(),
         sketch_style: SketchStyle = SketchStyle(),
     ):
@@ -163,7 +164,7 @@ class DrawableGroup(Drawable):
         grouping_method (str): The method used for applying transformations.
     """
 
-    def __init__(self, elements: List[Drawable], grouping_method="parallel", *args, **kwargs):
+    def __init__(self, elements: Sequence[Drawable], grouping_method="parallel", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.elements = elements
         assert grouping_method in ["parallel", "series"]

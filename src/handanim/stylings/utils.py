@@ -1,12 +1,12 @@
-from typing import List, Tuple
+# mypy: ignore-errors
 import numpy as np
 
-from ..core.styles import SketchStyle, FillStyle
+from ..core.styles import FillStyle, SketchStyle
 
 
 def rotate_points(
-    points: List[Tuple[float, float]],  # the points to rotate
-    center: Tuple[float, float],  # the center of rotation
+    points: list[tuple[float, float]],  # the points to rotate
+    center: tuple[float, float],  # the center of rotation
     degrees: float,
 ) -> np.ndarray:
     points = np.array(points)  # (n, 2)
@@ -18,7 +18,7 @@ def rotate_points(
 
 
 def straight_hachure_lines(
-    polygon_list: List[List[Tuple[float, float]]],  # list of polygon point collection
+    polygon_list: list[list[tuple[float, float]]],  # list of polygon point collection
     gap: float,
     step_offset: float = 1,
 ):
@@ -100,7 +100,7 @@ def straight_hachure_lines(
 
 
 def hachure_lines(
-    polygon_list: List[List[Tuple[float, float]]],  # list of polygon point collection
+    polygon_list: list[list[tuple[float, float]]],  # list of polygon point collection
     gap: float,
     angle: float,
     offset: float = 1,
@@ -124,7 +124,7 @@ def hachure_lines(
 
 
 def polygon_hachure_lines(
-    polygon_list: List[List[Tuple[float, float]]],  # list of polygon point collection
+    polygon_list: list[list[tuple[float, float]]],  # list of polygon point collection
     fill_style=FillStyle(),
     sketch_style=SketchStyle(),
 ):

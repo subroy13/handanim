@@ -1,15 +1,14 @@
-from typing import Tuple
 
-from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.animation import AnimationEvent, AnimationEventType
+from ..core.draw_ops import Ops, OpsSet, OpsType
 
 
 def _lerp_color(
-    a: Tuple[float, float, float],
-    b: Tuple[float, float, float],
+    a: tuple[float, float, float],
+    b: tuple[float, float, float],
     t: float,
-) -> Tuple[float, float, float]:
-    return tuple((1 - t) * ca + t * cb for ca, cb in zip(a, b))  # type: ignore[return-value]
+) -> tuple[float, float, float]:
+    return tuple((1 - t) * ca + t * cb for ca, cb in zip(a, b, strict=False))  # type: ignore[return-value]
 
 
 class ColorTransitionAnimation(AnimationEvent):
@@ -30,8 +29,8 @@ class ColorTransitionAnimation(AnimationEvent):
 
     def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(AnimationEventType.MUTATION, start_time, duration, easing_fun, data)
-        self.start_color: Tuple[float, float, float] = self.data.get("start_color", (0.0, 0.0, 0.0))
-        self.end_color: Tuple[float, float, float] = self.data.get("end_color", (1.0, 1.0, 1.0))
+        self.start_color: tuple[float, float, float] = self.data.get("start_color", (0.0, 0.0, 0.0))
+        self.end_color: tuple[float, float, float] = self.data.get("end_color", (1.0, 1.0, 1.0))
 
     def _apply(self, opsset: OpsSet, progress: float) -> OpsSet:
         current_color = _lerp_color(self.start_color, self.end_color, progress)

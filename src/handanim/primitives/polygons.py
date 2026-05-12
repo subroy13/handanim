@@ -1,13 +1,13 @@
-from typing import List
+
 import numpy as np
 
 from handanim.core.draw_ops import BoundingBox
 
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..core.draw_ops import OpsSet, Ops, OpsType
-from .lines import LinearPath
-from .curves import Curve
 from ..stylings.fillpatterns import get_filler
+from .curves import Curve
+from .lines import LinearPath
 
 
 class Polygon(Drawable):
@@ -27,7 +27,7 @@ class Polygon(Drawable):
 
     def __init__(
         self,
-        points: List[tuple[float, float]],
+        points: list[tuple[float, float]],
         *args,
         **kwargs,
     ):
@@ -116,7 +116,7 @@ class NGon(Polygon):
             angle = 2 * np.pi * i / n
             point = np.array(center) + radius * np.array([np.cos(angle), np.sin(angle)])
             points.append(point)
-        super().__init__(points, *args, **kwargs)
+        super().__init__(points, *args, **kwargs)  # type: ignore[arg-type]
 
 
 class Square(Rectangle):

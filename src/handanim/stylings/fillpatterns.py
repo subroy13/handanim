@@ -1,11 +1,10 @@
-from typing import List, Tuple
-import numpy as np
 
+
+from ..core.draw_ops import Ops, OpsSet, OpsType
+from ..core.drawable import DrawableFill
+from ..core.styles import FillStyle, SketchStyle, StrokeStyle
 from ..primitives.lines import Line
 from .utils import polygon_hachure_lines
-from ..core.styles import FillStyle, SketchStyle, StrokeStyle
-from ..core.drawable import DrawableFill
-from ..core.draw_ops import OpsSet, Ops, OpsType
 
 
 class SolidFillPattern(DrawableFill):
@@ -45,7 +44,7 @@ class SolidFillPattern(DrawableFill):
             opsset.add(Ops(OpsType.MOVE_TO, data=[box[0]]))
             for i in range(1, len(box)):
                 opsset.add(Ops(OpsType.LINE_TO, data=[box[i]]))
-            opsset.add(Ops(OpsType.CLOSE_PATH))
+            opsset.add(Ops(OpsType.CLOSE_PATH, data={}))
         return opsset
 
 
@@ -66,21 +65,21 @@ class HachureFillPattern(DrawableFill):
         fill: Generates hachure lines for a set of polygons and renders them
     """
 
-    def render_fill_lines(self, lines: List[List[Tuple[float, float]]]) -> OpsSet:
+    def render_fill_lines(self, lines: list[list[tuple[float, float]]]) -> OpsSet:
         line_stroke_style = StrokeStyle(
             color=self.fill_style.color,
             line_width=self.fill_style.hachure_line_width,
             opacity=self.fill_style.opacity,
         )
         opsset = OpsSet(initial_set=[])
-        for line in lines:
-            line = Line(
-                line[0],
-                line[1],
+        for line_pts in lines:
+            line_drawable = Line(
+                line_pts[0],
+                line_pts[1],
                 stroke_style=line_stroke_style,
                 sketch_style=self.sketch_style,
             )
-            opsset.extend(line.draw())
+            opsset.extend(line_drawable.draw())
         return opsset
 
     def fill(self):
@@ -233,7 +232,7 @@ class HatchFillPattern(HachureFillPattern):
 
 
 def get_filler(
-    bound_box_list: List[List[Tuple[float, float]]],
+    bound_box_list: list[list[tuple[float, float]]],
     fill_style: FillStyle = FillStyle(),
     sketch_style=SketchStyle(),
 ) -> DrawableFill:
@@ -243,7 +242,7 @@ def get_filler(
     elif fill_style.fill_pattern == "hatch":
         cls_name = HatchFillPattern
     elif fill_style.fill_pattern == "solid":
-        cls_name = SolidFillPattern
+        cls_name = SolidFillPattern  # type: ignore[assignment]
     else:
         raise ValueError(f"fill pattern {fill_style.fill_pattern} not supported")
     return cls_name(bound_box_list, fill_style, sketch_style)

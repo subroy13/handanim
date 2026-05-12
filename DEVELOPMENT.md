@@ -53,9 +53,9 @@ poetry run python3 -m pytest
 ### Run a specific test file
 
 ```bash
-poetry run python3 -m pytest tests/test_opsset.py
-poetry run python3 -m pytest tests/test_sketch.py
-poetry run python3 -m pytest tests/test_visuals.py
+poetry run python3 -m pytest tests/core/test_opsset.py
+poetry run python3 -m pytest tests/animations/test_sketch.py
+poetry run python3 -m pytest tests/drawables/test_primitives.py
 ```
 
 ### Run a single test by name
@@ -106,7 +106,7 @@ poetry run python3 -m pytest --cov=src/handanim --cov-fail-under=50
 
 ## Visual Regression Tests
 
-Visual regression tests live in `tests/test_visuals.py`. They render small deterministic scenes to PNG and compare them against reference files stored in `tests/snapshots/` using [SSIM](https://scikit-image.org/docs/stable/api/skimage.metrics.html#skimage.metrics.structural_similarity).
+Visual regression tests live in `tests/animations/`, `tests/drawables/`, etc. They render small deterministic scenes to PNG and compare them against reference files stored in `tests/snapshots/` using [SSIM](https://scikit-image.org/docs/stable/api/skimage.metrics.html#skimage.metrics.structural_similarity).
 
 **How numpy seeding makes renders deterministic:** every test runs with `numpy.random.seed(42)` (set via the `seed_numpy` autouse fixture in `conftest.py`). This makes the random jitter in rough primitives (Line, Rectangle, etc.) identical across runs.
 
@@ -115,7 +115,7 @@ Visual regression tests live in `tests/test_visuals.py`. They render small deter
 Run this after intentionally changing rendering output — for example, after modifying a primitive's draw method or a style default:
 
 ```bash
-poetry run python3 -m pytest tests/test_visuals.py --snapshot-update
+poetry run python3 -m pytest tests/ --snapshot-update
 ```
 
 Review the diff in `tests/snapshots/` before committing to make sure the visual change is intentional.
@@ -224,19 +224,69 @@ rect.draw().quick_view(block=False)
 src/handanim/
 ├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, styles
 ├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, …
-├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate
+├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate, ColorTransition, Camera
 └── stylings/      # color constants, fill patterns, stroke utilities
 
 tests/
-├── conftest.py          # shared fixtures (seed_numpy, render_to_png_bytes)
-├── snapshots/           # reference PNGs for visual regression
-├── test_opsset.py       # geometry unit tests (no Cairo)
-├── test_sketch.py       # SketchAnimation logic tests (no Cairo)
-└── test_visuals.py      # visual regression tests (Cairo + pytest-snapshot)
+├── conftest.py             # shared fixtures (seed_numpy, render_to_png_bytes)
+├── snapshots/              # reference PNGs for visual regression
+├── core/                   # OpsSet, Scene unit tests (no Cairo)
+├── animations/             # per-animation tests (sketch, rotate, color_transition, camera, …)
+└── drawables/              # visual regression tests for primitives, table, flowchart, …
 
 examples/        # runnable end-to-end scene scripts
 docs/            # Sphinx source and build output
 ```
+
+---
+
+## Linting & Formatting
+
+We use [Ruff](https://docs.astral.sh/ruff/) for linting and formatting — it replaces black, isort, and flake8 in a single fast tool.
+
+```bash
+# Check for violations
+poetry run ruff check src/
+
+# Auto-fix fixable violations
+poetry run ruff check --fix src/
+
+# Format code
+poetry run ruff format src/
+```
+
+Configuration lives in `pyproject.toml` under `[tool.ruff]` and `[tool.ruff.lint]`.
+
+---
+
+## Type Checking
+
+We use [mypy](https://mypy.readthedocs.io/) for static type analysis (non-strict mode).
+
+```bash
+poetry run mypy src/handanim --no-strict-optional
+```
+
+Configuration lives in `pyproject.toml` under `[tool.mypy]`.
+
+---
+
+## Pre-commit Hooks
+
+[pre-commit](https://pre-commit.com/) runs ruff automatically before every commit.
+
+```bash
+# Install pre-commit (once per machine)
+pip install pre-commit
+
+# Install the hooks into this repo (once per clone)
+pre-commit install
+
+# Run hooks manually against all files
+pre-commit run --all-files
+```
+
+After `pre-commit install`, every `git commit` will run ruff and fix/format staged Python files before the commit lands.
 
 ---
 
@@ -250,7 +300,7 @@ poetry run python3 -c "import handanim; print('ok')"
 poetry run python3 -m pytest --collect-only -q
 
 # Run only tests that don't touch Cairo (fast pure-logic subset)
-poetry run python3 -m pytest tests/test_opsset.py tests/test_sketch.py
+poetry run python3 -m pytest tests/core/ tests/animations/test_sketch.py -k "not Visual"
 
 # Show which snapshot files exist
 ls tests/snapshots/

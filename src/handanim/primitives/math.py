@@ -1,16 +1,39 @@
-from typing import Tuple
-from matplotlib.mathtext import MathTextParser
-from fontTools.ttLib import TTFont
 import json
+from typing import Any
 
-from ..core.draw_ops import Ops, OpsType, OpsSet
+from fontTools.ttLib import TTFont
+from matplotlib.mathtext import MathTextParser
+from svgelements import Close as SVGClose
+from svgelements import CubicBezier as SVGCubicBezier
+from svgelements import Line as SVGLine
+from svgelements import Move as SVGMove
+from svgelements import Path as SVGPath
+from svgelements import QuadraticBezier as SVGQuadBezier
+
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..stylings.fonts import get_font_path
-from .text import CustomPen
-from .lines import Line
-from .svg import SVG
 from ..core.styles import StrokePressure
+from ..stylings.fonts import get_font_path
 from ..stylings.strokes import apply_stroke_pressure
+from .lines import Line
+from .text import CustomPen
+
+
+def _svg_paths_to_opsset(svg_path_strings: list[str]) -> OpsSet:
+    opsset = OpsSet(initial_set=[])
+    for path_str in svg_path_strings:
+        for seg in SVGPath(path_str).segments():
+            if isinstance(seg, SVGMove):
+                opsset.add(Ops(OpsType.MOVE_TO, [(seg.end.x, seg.end.y)]))
+            elif isinstance(seg, SVGLine):
+                opsset.add(Ops(OpsType.LINE_TO, [(seg.end.x, seg.end.y)]))
+            elif isinstance(seg, SVGQuadBezier):
+                opsset.add(Ops(OpsType.QUAD_CURVE_TO, [(seg.control.x, seg.control.y), (seg.end.x, seg.end.y)]))
+            elif isinstance(seg, SVGCubicBezier):
+                opsset.add(Ops(OpsType.CURVE_TO, [(seg.control1.x, seg.control1.y), (seg.control2.x, seg.control2.y), (seg.end.x, seg.end.y)]))
+            elif isinstance(seg, SVGClose):
+                opsset.add(Ops(OpsType.CLOSE_PATH, data={}))
+    return opsset
 
 
 class Math(Drawable):
@@ -34,7 +57,7 @@ class Math(Drawable):
     def __init__(
         self,
         tex_expression: str,
-        position: Tuple[float, float],
+        position: tuple[float, float],
         font_size: int = 12,
         font_name: str = "handanimtype1",
         *args,
@@ -46,14 +69,14 @@ class Math(Drawable):
         self.scale_factor = font_size / 10  # base size is 10
         self.parser = MathTextParser("path")
         self.font_name = font_name
-        self.font_details = {}
+        self.font_details: dict[str, Any] = {}
         self.load_font()
 
     def load_font(self):
         font_path = get_font_path(self.font_name)
         if font_path.endswith(".json"):
             # this is custom-made svg font
-            with open(font_path, "r") as f:
+            with open(font_path) as f:
                 self.font_details = json.load(f)
                 self.font_details["type"] = "custom"
         else:
@@ -70,7 +93,7 @@ class Math(Drawable):
 
     def standard_glyph_opsset(
         self, unicode: int, font_size: int
-    ) -> Tuple[OpsSet, float, float]:
+    ) -> tuple[OpsSet, float, float]:
         glyph_set = self.font_details["glyph_set"]
         cmap = self.font_details["cmap"]
         units_per_em = self.font_details["units_per_em"]
@@ -93,26 +116,24 @@ class Math(Drawable):
 
     def custom_glyph_opsset(
         self, unicode: int, font_size: int
-    ) -> Tuple[OpsSet, float, float]:
+    ) -> tuple[OpsSet, float, float]:
         if str(unicode) not in self.font_details["glyphs"]:
             print(f"Glyph {chr(unicode)}, unicode {unicode} not found in font")
             return OpsSet(initial_set=[]), 1.0, 1.0
         glyph_svg_paths = self.font_details["glyphs"][str(unicode)]
-        svg = SVG(svg_paths=glyph_svg_paths)
-        svg_ops = svg.draw()
+        svg_ops = _svg_paths_to_opsset(glyph_svg_paths)
         font_units = self.font_details["metadata"]["font_size"]
         font_scale = font_size / font_units
+        bbox = svg_ops.get_bbox()
+        width = bbox.width * font_scale
+        height = bbox.height * font_scale
         svg_ops.scale(font_scale)
-
-        min_x, min_y, max_x, max_y = svg.get_bbox()
-        width = (max_x - min_x) * font_scale
-        height = (max_y - min_y) * font_scale
-        svg_ops.translate(-min_x, -min_y)  # top-left corner must be at (0, 0)
+        svg_ops.translate(-bbox.min_x * font_scale, -bbox.min_y * font_scale)
         return svg_ops, height, width
 
     def get_glyph_opsset(
         self, unicode: int, font_size: int
-    ) -> Tuple[OpsSet, float, float]:
+    ) -> tuple[OpsSet, float, float]:
         """
         Returns the opset for a single glyph of a unicode number
         """
@@ -148,8 +169,7 @@ class Math(Drawable):
             font, font_size, unicode, offset_x, offset_y = glyph
             glyph_opsset, glyph_height, glyph_width = self.get_glyph_opsset(
                 unicode,
-                font_size=font_size
-                * self.scale_factor,  # scale the font size appropriately
+                font_size=font_size * self.scale_factor,  # type: ignore[arg-type]
             )
             draw_x = offset_x * self.scale_factor + self.position[0]
             draw_y = (

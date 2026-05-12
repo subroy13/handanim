@@ -1,9 +1,9 @@
-from typing import List, Tuple
+
 import numpy as np
 
-from ..core.styles import StrokePressure
-from ..core.draw_ops import OpsSet, Ops, OpsType
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
+from ..core.styles import StrokePressure
 from ..stylings.strokes import apply_stroke_pressure
 
 
@@ -21,10 +21,10 @@ class Line(Drawable):
     """
 
     def __init__(
-        self, 
-        start: Tuple[float, float] | np.ndarray, 
-        end: Tuple[float, float] | np.ndarray, 
-        *args, 
+        self,
+        start: tuple[float, float] | np.ndarray,
+        end: tuple[float, float] | np.ndarray,
+        *args,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
@@ -51,11 +51,8 @@ class Line(Drawable):
         mid_disp = np.array([mid_disp[1], mid_disp[0]])  # this is normal to the line
 
         # random generator functions
-        random_jitter = (
-            lambda x: np.random.uniform(low=-offset, high=offset, size=(x,))
-            * roughness_gain
-            * self.sketch_style.roughness
-        )
+        def random_jitter(x):
+            return np.random.uniform(low=-offset, high=offset, size=(x,)) * roughness_gain * self.sketch_style.roughness
         jitter_scale = 0.5 if overlay else 1
 
         # draw the curved lines, based on move and overlay
@@ -128,7 +125,7 @@ class LinearPath(Drawable):
 
     def __init__(
         self,
-        points: List[Tuple[float, float]],
+        points: list[tuple[float, float]],
         close: bool = False,
         *args,
         **kwargs,

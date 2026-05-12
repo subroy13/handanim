@@ -1,12 +1,10 @@
-from typing import Any, Dict, List, Optional, Tuple
-import numpy as np
+from typing import Any
 
+from ..core.draw_ops import BoundingBox, OpsSet
 from ..core.drawable import Drawable, DrawableGroup
-from ..core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
 from ..core.styles import FillStyle, SketchStyle, StrokeStyle
-from ..core.utils import get_line_slope_angle
 from .arrow import Arrow
-from .lines import Line, LinearPath
+from .lines import Line
 from .polygons import Polygon, Rectangle
 from .text import Text
 
@@ -23,12 +21,12 @@ class FlowchartNode(DrawableGroup):
     def __init__(
         self,
         label: str,
-        position: Tuple[float, float],
-        size: Tuple[float, float] = (100.0, 50.0),
+        position: tuple[float, float],
+        size: tuple[float, float] = (100.0, 50.0),
         font_size: int = 12,
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
-        fill_style: Optional[FillStyle] = None,
+        fill_style: FillStyle | None = None,
         **kwargs,
     ):
         cx, cy = position
@@ -60,7 +58,7 @@ class FlowchartNode(DrawableGroup):
             **kwargs,
         )
 
-    def get_anchor(self, side: str = "center") -> Tuple[float, float]:
+    def get_anchor(self, side: str = "center") -> tuple[float, float]:
         cx, cy = self.position
         w, h = self.size
         anchors = {
@@ -90,12 +88,12 @@ class FlowchartDiamond(DrawableGroup):
     def __init__(
         self,
         label: str,
-        position: Tuple[float, float],
-        size: Tuple[float, float] = (100.0, 60.0),
+        position: tuple[float, float],
+        size: tuple[float, float] = (100.0, 60.0),
         font_size: int = 12,
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
-        fill_style: Optional[FillStyle] = None,
+        fill_style: FillStyle | None = None,
         **kwargs,
     ):
         cx, cy = position
@@ -131,7 +129,7 @@ class FlowchartDiamond(DrawableGroup):
             **kwargs,
         )
 
-    def get_anchor(self, side: str = "center") -> Tuple[float, float]:
+    def get_anchor(self, side: str = "center") -> tuple[float, float]:
         cx, cy = self.position
         hw, hh = self.size[0] / 2, self.size[1] / 2
         anchors = {
@@ -172,7 +170,7 @@ class FlowchartConnector(Drawable):
         to_node: "FlowchartNode | FlowchartDiamond",
         from_side: str = "bottom",
         to_side: str = "top",
-        label: Optional[str] = None,
+        label: str | None = None,
         label_font_size: int = 10,
         arrow_head_type: str = "->",
         arrow_head_size: float = 10.0,
@@ -199,11 +197,11 @@ class FlowchartConnector(Drawable):
 
     def _compute_waypoints(
         self,
-        from_pt: Tuple[float, float],
+        from_pt: tuple[float, float],
         from_side: str,
-        to_pt: Tuple[float, float],
+        to_pt: tuple[float, float],
         to_side: str,
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         fx, fy = from_pt
         tx, ty = to_pt
 
@@ -279,16 +277,16 @@ class Flowchart(DrawableGroup):
 
     def __init__(
         self,
-        nodes: List[DrawableGroup],
-        connectors: List[FlowchartConnector],
+        nodes: list[DrawableGroup],
+        connectors: list[FlowchartConnector],
         **kwargs,
     ):
         self.nodes = nodes
         self.connectors = connectors
-        super().__init__(elements=nodes + connectors, grouping_method="parallel", **kwargs)
+        super().__init__(elements=[*nodes, *connectors], grouping_method="parallel", **kwargs)
 
     @classmethod
-    def from_dict(cls, spec: Dict[str, Any], **kwargs) -> "Flowchart":
+    def from_dict(cls, spec: dict[str, Any], **kwargs) -> "Flowchart":
         """
         Build a Flowchart from a declarative spec dict.
 
@@ -324,8 +322,8 @@ class Flowchart(DrawableGroup):
         _NODE_RESERVED = {"id", "type", "label", "position", "size", "font_size"}
         _EDGE_RESERVED = {"from", "to", "from_side", "to_side", "label"}
 
-        node_map: Dict[str, "FlowchartNode | FlowchartDiamond"] = {}
-        node_objects: List[DrawableGroup] = []
+        node_map: dict[str, FlowchartNode | FlowchartDiamond] = {}
+        node_objects: list[DrawableGroup] = []
 
         for node_spec in spec.get("nodes", []):
             node_id = node_spec["id"]
@@ -336,6 +334,7 @@ class Flowchart(DrawableGroup):
             font_size = node_spec.get("font_size", 12)
             extra = {k: v for k, v in node_spec.items() if k not in _NODE_RESERVED}
 
+            node: FlowchartDiamond | FlowchartNode
             if node_type == "diamond":
                 node = FlowchartDiamond(
                     label=label,
@@ -356,7 +355,7 @@ class Flowchart(DrawableGroup):
             node_map[node_id] = node
             node_objects.append(node)
 
-        connectors: List[FlowchartConnector] = []
+        connectors: list[FlowchartConnector] = []
         for edge_spec in spec.get("edges", []):
             from_id = edge_spec["from"]
             to_id = edge_spec["to"]

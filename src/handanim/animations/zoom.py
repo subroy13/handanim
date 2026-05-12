@@ -1,5 +1,5 @@
-from ..core.draw_ops import OpsSet
 from ..core.animation import AnimationEvent, AnimationEventType
+from ..core.draw_ops import OpsSet
 
 
 class ZoomInAnimation(AnimationEvent):

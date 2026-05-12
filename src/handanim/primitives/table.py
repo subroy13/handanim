@@ -1,8 +1,8 @@
-from typing import Any, Callable, List, Optional, Tuple, Type
+from typing import Any
 
 from ..core.animation import CompositeAnimationEvent
+from ..core.draw_ops import BoundingBox
 from ..core.drawable import DrawableGroup
-from ..core.draw_ops import BoundingBox, OpsSet
 from ..core.styles import FillStyle, SketchStyle, StrokeStyle
 from .polygons import Rectangle
 from .text import Text
@@ -29,7 +29,7 @@ class TableRevealEvent(CompositeAnimationEvent):
             scene.add(event, drawable)
     """
 
-    def __init__(self, pairs: List[Tuple[Any, DrawableGroup]]):
+    def __init__(self, pairs: list[tuple[Any, DrawableGroup]]):
         self.pairs = pairs
         super().__init__(events=[e for e, _ in pairs])
 
@@ -71,20 +71,20 @@ class Table(DrawableGroup):
 
     def __init__(
         self,
-        top_left: Tuple[float, float],
+        top_left: tuple[float, float],
         n_rows: int,
         n_cols: int,
         cell_width: float,
         cell_height: float,
-        data: Optional[List[List[str]]] = None,
-        headers: Optional[List[str]] = None,
+        data: list[list[str]] | None = None,
+        headers: list[str] | None = None,
         cell_font_size: int = 12,
         header_font_size: int = 14,
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
-        fill_style: Optional[FillStyle] = None,
-        header_fill_style: Optional[FillStyle] = None,
-        header_stroke_style: Optional[StrokeStyle] = None,
+        fill_style: FillStyle | None = None,
+        header_fill_style: FillStyle | None = None,
+        header_stroke_style: StrokeStyle | None = None,
         **kwargs,
     ):
         self.top_left = top_left
@@ -97,12 +97,12 @@ class Table(DrawableGroup):
         _hfs = header_fill_style if header_fill_style is not None else fill_style
 
         # Build rect and text primitives for each cell
-        self._rects: List[List[Rectangle]] = []
-        self._texts: List[List[Text]] = []
+        self._rects: list[list[Rectangle]] = []
+        self._texts: list[list[Text]] = []
 
         for r in range(n_rows):
-            row_rects: List[Rectangle] = []
-            row_texts: List[Text] = []
+            row_rects: list[Rectangle] = []
+            row_texts: list[Text] = []
             is_header_row = headers is not None and r == 0
 
             for c in range(n_cols):
@@ -116,7 +116,7 @@ class Table(DrawableGroup):
                 fs_size = header_font_size if is_header_row else cell_font_size
 
                 if is_header_row:
-                    label = headers[c] if c < len(headers) else ""  # type: ignore
+                    label = headers[c] if c < len(headers) else ""
                 elif data is not None:
                     data_row = r if headers is None else r - 1
                     row_data = data[data_row] if data_row < len(data) else []
@@ -146,7 +146,7 @@ class Table(DrawableGroup):
             self._texts.append(row_texts)
 
         # Cell groups: DrawableGroup([rect, text]) — only leaf drawables inside
-        self.cells: List[List[DrawableGroup]] = [
+        self.cells: list[list[DrawableGroup]] = [
             [
                 DrawableGroup(
                     elements=[self._rects[r][c], self._texts[r][c]],
@@ -160,7 +160,7 @@ class Table(DrawableGroup):
         # Row groups: flat list of all leaf drawables in that row (no nesting).
         # This ensures scene.add(event, row_group) sets apply_to_group correctly
         # without being overwritten by a deeper DrawableGroup level.
-        self.row_groups: List[DrawableGroup] = [
+        self.row_groups: list[DrawableGroup] = [
             DrawableGroup(
                 elements=[item for c in range(n_cols) for item in (self._rects[r][c], self._texts[r][c])],
                 grouping_method="parallel",
@@ -191,7 +191,7 @@ class Table(DrawableGroup):
 
     def animate_by_row(
         self,
-        anim_class: Type,
+        anim_class: type,
         start_time: float = 0.0,
         total_duration: float = 1.0,
         **anim_kwargs,
@@ -227,7 +227,7 @@ class Table(DrawableGroup):
 
     def animate_by_cell(
         self,
-        anim_class: Type,
+        anim_class: type,
         start_time: float = 0.0,
         total_duration: float = 1.0,
         **anim_kwargs,

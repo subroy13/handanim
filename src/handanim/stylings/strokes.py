@@ -1,4 +1,3 @@
-from typing import Tuple, List
 import numpy as np
 
 from ..core.draw_ops import Ops, OpsSet, OpsType
@@ -52,7 +51,7 @@ def apply_stroke_pressure(
 
 
 def apply_strokes_gradient(
-    opsset: OpsSet, start_color: Tuple[float, float, float], end_color: Tuple[float, float, float], n_steps: int = 10
+    opsset: OpsSet, start_color: tuple[float, float, float], end_color: tuple[float, float, float], n_steps: int = 10
 ) -> OpsSet:
     """
     This function applies gradient coloring to the strokes
@@ -61,11 +60,11 @@ def apply_strokes_gradient(
     """
 
     def interpolate_color(
-        color_start: Tuple[float, float, float],
-        color_end: Tuple[float, float, float],
+        color_start: tuple[float, float, float],
+        color_end: tuple[float, float, float],
         t: float,
     ):
-        return tuple((1 - t) * a + t * b for a, b in zip(color_start, color_end))
+        return tuple((1 - t) * a + t * b for a, b in zip(color_start, color_end, strict=False))
 
     new_opsset = OpsSet(initial_set=[])
     current_pen_ops = None

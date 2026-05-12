@@ -1,7 +1,6 @@
-from typing import Optional, Tuple
 
-from ..core.draw_ops import OpsSet
 from ..core.animation import AnimationEvent, AnimationEventType
+from ..core.draw_ops import OpsSet
 
 
 class RotateAnimation(AnimationEvent):
@@ -23,7 +22,7 @@ class RotateAnimation(AnimationEvent):
     def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
         super().__init__(AnimationEventType.MUTATION, start_time, duration, easing_fun, data)
         self.angle = self.data.get("angle", 360)
-        self.center: Optional[Tuple[float, float]] = self.data.get("center", None)
+        self.center: tuple[float, float] | None = self.data.get("center", None)
 
     def _apply(self, opsset: OpsSet, progress: float) -> OpsSet:
         new_opsset = OpsSet(initial_set=opsset.opsset)

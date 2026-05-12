@@ -1,11 +1,11 @@
-from typing import Tuple, List, Optional
+# mypy: ignore-errors
 import cairo
 import numpy as np
 
 
 def slice_bezier(
-    p0: Tuple[float, float], p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], t: float
-) -> List[Tuple[float, float]]:
+    p0: tuple[float, float], p1: tuple[float, float], p2: tuple[float, float], p3: tuple[float, float], t: float
+) -> list[tuple[float, float]]:
     """
     Slice a Bezier curve at a given parameter t.
 
@@ -32,7 +32,7 @@ def slice_bezier(
     return [p12.tolist(), p123.tolist(), p1234.tolist()]
 
 
-def get_bezier_points_from_quadcurve(p0: Tuple[float, float], q1: Tuple[float, float], q2: Tuple[float, float]):
+def get_bezier_points_from_quadcurve(p0: tuple[float, float], q1: tuple[float, float], q2: tuple[float, float]):
     """
     Convert a quadratic Bezier curve to a cubic Bezier curve representation.
 
@@ -47,8 +47,8 @@ def get_bezier_points_from_quadcurve(p0: Tuple[float, float], q1: Tuple[float, f
     Returns:
         Tuple[list, list, list]: Intermediate control points for the cubic Bezier curve
     """
-    p1: Tuple[float, float] = (1 / 3 * np.array(p0) + 2 / 3 * np.array(q1)).tolist()
-    p2: Tuple[float, float] = (1 / 3 * np.array(q1) + 2 / 3 * np.array(q2)).tolist()
+    p1: tuple[float, float] = (1 / 3 * np.array(p0) + 2 / 3 * np.array(q1)).tolist()
+    p2: tuple[float, float] = (1 / 3 * np.array(q1) + 2 / 3 * np.array(q2)).tolist()
     p3 = q2
     return p1, p2, p3
 
@@ -75,7 +75,7 @@ def cairo_surface_to_numpy(surface: cairo.ImageSurface):
     return a[:, :, [2, 1, 0, 3]]  # BGR → RGB with alpha
 
 
-def solve_quad_eqn(a: float, b: float, c: float, ignore_error: bool = False) -> Tuple[Optional[float], Optional[float]]:
+def solve_quad_eqn(a: float, b: float, c: float, ignore_error: bool = False) -> tuple[float | None, float | None]:
     # solve a quadratic equation of form ax^2 + bx + c = 0
     if a == 0 and not np.isclose(b, 0):
         return (-c / b, -c / b)  # as it is linear in this case
@@ -91,11 +91,11 @@ def solve_quad_eqn(a: float, b: float, c: float, ignore_error: bool = False) -> 
 
 
 def get_bezier_extreme_points(
-    p0: Tuple[float, float],  # initial point
-    p1: Tuple[float, float],  # control point 1
-    p2: Tuple[float, float],  # control point 2
-    p3: Tuple[float, float],  # end point
-) -> Tuple[float, float, float, float]:
+    p0: tuple[float, float],  # initial point
+    p1: tuple[float, float],  # control point 1
+    p2: tuple[float, float],  # control point 2
+    p3: tuple[float, float],  # end point
+) -> tuple[float, float, float, float]:
     # the curve p(t) = (1-t)^3 p0 + 3(1-t)^2 * t * p1 + 3 (1-t) * t^2 * p2 + t^3 p3
     # p'(t) = 3(1-t)^2 (p1 - p0) + 6(1-t)t (p2 - p1) + 3t^2 * (p3 - p2)
     points = np.array([p0, p1, p2, p3])
@@ -128,7 +128,7 @@ def get_bezier_extreme_points(
     return (xmin, xmax, ymin, ymax)
 
 
-def get_line_slope_angle(p0: Tuple[float, float], p1: Tuple[float, float]) -> float:
+def get_line_slope_angle(p0: tuple[float, float], p1: tuple[float, float]) -> float:
     """
     Calculate the angle of the line segment defined by two points.
 

@@ -1,4 +1,4 @@
-from typing import Tuple
+
 import cairo
 
 
@@ -19,8 +19,8 @@ class Viewport:
 
     def __init__(
         self,
-        world_xrange: Tuple[float, float],
-        world_yrange: Tuple[float, float],
+        world_xrange: tuple[float, float],
+        world_yrange: tuple[float, float],
         screen_width: int = 1920,
         screen_height: int = 1080,
         margin: int = 50,

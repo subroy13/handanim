@@ -1,15 +1,14 @@
-from .lines import Line, LinearPath
-from .curves import Curve
 from .arrow import Arrow, CurvedArrow
-from .polygons import Polygon, Rectangle, Square, NGon, RoundedRectangle, RoundedSquare
-from .ellipse import Ellipse, Circle
-from .text import Text
-from .math import Math
+from .curves import Curve
+from .ellipse import Circle, Ellipse
 from .eraser import Eraser
-from .vector_svg import VectorSVG
-from .svg import SVG
 from .flowchart import Flowchart, FlowchartConnector, FlowchartDiamond, FlowchartNode
+from .lines import Line, LinearPath
+from .math import Math
+from .polygons import NGon, Polygon, Rectangle, RoundedRectangle, RoundedSquare, Square
 from .table import Table, TableRevealEvent
+from .text import Text
+from .vector_svg import VectorSVG
 
 __all__ = [
     "Line",
@@ -29,7 +28,6 @@ __all__ = [
     "Math",
     "Eraser",
     "VectorSVG",
-    "SVG",
     "FlowchartNode",
     "FlowchartDiamond",
     "FlowchartConnector",

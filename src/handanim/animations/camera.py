@@ -1,4 +1,3 @@
-from typing import Tuple
 
 from ..core.animation import AnimationEvent, AnimationEventType
 from ..core.draw_ops import OpsSet
@@ -57,10 +56,10 @@ class CameraAnimation(AnimationEvent):
         Returns:
             A new Viewport instance with interpolated world ranges.
         """
-        from_xrange: Tuple[float, float] = self.data.get("from_xrange", current.world_xrange)
-        from_yrange: Tuple[float, float] = self.data.get("from_yrange", current.world_yrange)
-        to_xrange: Tuple[float, float] = self.data.get("to_xrange", from_xrange)
-        to_yrange: Tuple[float, float] = self.data.get("to_yrange", from_yrange)
+        from_xrange: tuple[float, float] = self.data.get("from_xrange", current.world_xrange)
+        from_yrange: tuple[float, float] = self.data.get("from_yrange", current.world_yrange)
+        to_xrange: tuple[float, float] = self.data.get("to_xrange", from_xrange)
+        to_yrange: tuple[float, float] = self.data.get("to_yrange", from_yrange)
 
         new_xrange = (
             (1 - progress) * from_xrange[0] + progress * to_xrange[0],
