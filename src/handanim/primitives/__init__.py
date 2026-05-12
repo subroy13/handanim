@@ -8,6 +8,8 @@ from .math import Math
 from .eraser import Eraser
 from .vector_svg import VectorSVG
 from .svg import SVG
+from .flowchart import Flowchart, FlowchartConnector, FlowchartDiamond, FlowchartNode
+from .table import Table, TableRevealEvent
 
 __all__ = [
     "Line",
@@ -28,4 +30,10 @@ __all__ = [
     "Eraser",
     "VectorSVG",
     "SVG",
+    "FlowchartNode",
+    "FlowchartDiamond",
+    "FlowchartConnector",
+    "Flowchart",
+    "Table",
+    "TableRevealEvent",
 ]

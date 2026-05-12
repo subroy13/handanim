@@ -48,6 +48,7 @@ class Scene:
         self.events: List[Tuple[AnimationEvent, str]] = []
         self.object_timelines: Dict[str, List[float]] = {}
         self.drawable_groups: dict[str, DrawableGroup] = {}  # stores drawable groups present in the scene
+        self.camera_events: List = []  # CameraAnimation events; typed as List to avoid circular import
 
         if viewport is not None:
             self.viewport = viewport
@@ -156,6 +157,53 @@ class Scene:
                 )  # assume created at the beginning of deletion event
 
             self.object_timelines[drawable.id].append(event.end_time)
+
+    def add_camera(self, event) -> None:
+        """
+        Register a CameraAnimation that controls the viewport over time.
+
+        Camera events are kept separate from drawable events and are applied
+        per-frame in the render loop without touching any drawable's OpsSet.
+
+        Args:
+            event: A CameraAnimation instance (or any object with an
+                   apply_to_viewport(viewport, progress) method).
+        """
+        self.camera_events.append(event)
+
+    def _get_viewport_at(self, t: float) -> Viewport:
+        """
+        Return the viewport state at time t by replaying all camera events.
+
+        Events are processed in start-time order.  Each completed event advances
+        the running viewport state to its target; an in-progress event interpolates
+        from the current state toward its target.  If from_xrange / from_yrange are
+        not specified on an event, the camera starts from wherever it currently is.
+
+        Args:
+            t: Time in seconds.
+
+        Returns:
+            A Viewport instance representing the camera position at time t.
+        """
+        if not self.camera_events:
+            return self.viewport
+
+        sorted_events = sorted(self.camera_events, key=lambda e: e.start_time)
+        current = self.viewport
+
+        for event in sorted_events:
+            if t < event.start_time:
+                break  # sorted — nothing later will have started either
+            raw_progress = (
+                np.clip((t - event.start_time) / event.duration, 0.0, 1.0)
+                if event.duration > 0
+                else 1.0
+            )
+            progress = event.easing_fun(raw_progress) if event.easing_fun else raw_progress
+            current = event.apply_to_viewport(current, progress)
+
+        return current
 
     def get_active_objects(self, t: float):
         """
@@ -391,7 +439,7 @@ class Scene:
                 ctx.set_source_rgb(*self.background_color)
             ctx.paint()
 
-            self.viewport.apply_to_context(ctx)
+            self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
             frame_ops.render(ctx)
             surface.finish()
 
@@ -418,7 +466,7 @@ class Scene:
             write_obj = imageio.get_writer(output_path, fps=self.fps, codec="libx264")
 
         with write_obj as writer:
-            for frame_ops in tqdm(opsset_list, desc=tqdm_desc):
+            for i, frame_ops in enumerate(tqdm(opsset_list, desc=tqdm_desc)):
                 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
                 ctx = cairo.Context(surface)  # create cairo context
 
@@ -427,7 +475,7 @@ class Scene:
                     ctx.set_source_rgb(*self.background_color)
                 ctx.paint()
 
-                self.viewport.apply_to_context(ctx)
+                self._get_viewport_at(i / self.fps).apply_to_context(ctx)
                 frame_ops.render(ctx)  # applies the operations to cairo context
 
                 frame_np = cairo_surface_to_numpy(surface)
