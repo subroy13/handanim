@@ -24,18 +24,23 @@ handanim/
 │   │   │   ├── sketch.py       # SketchAnimation — progressive stroke reveal
 │   │   │   ├── fade.py         # FadeInAnimation, FadeOutAnimation
 │   │   │   ├── zoom.py         # ZoomInAnimation, ZoomOutAnimation
-│   │   │   └── translate.py    # TranslateToAnimation, TranslateFromAnimation
+│   │   │   ├── translate.py    # TranslateToAnimation, TranslateFromAnimation, TranslateToPersistAnimation
+│   │   │   ├── rotate.py       # RotateAnimation — angle interpolation around a pivot
+│   │   │   ├── color_transition.py  # ColorTransitionAnimation — SET_PEN color interpolation
+│   │   │   └── camera.py       # CameraAnimation — viewport pan/zoom (scene-level)
 │   │   ├── primitives/         # Drawable subclasses (shapes)
 │   │   │   ├── lines.py        # Line, LinearPath
 │   │   │   ├── curves.py       # Curve
 │   │   │   ├── arrow.py        # Arrow, CurvedArrow
 │   │   │   ├── polygons.py     # Polygon, Rectangle, Square, NGon, Rounded variants
 │   │   │   ├── ellipse.py      # Ellipse, Circle, GlowDot
-│   │   │   ├── text.py         # Text — handwritten font rendering
+│   │   │   ├── text.py         # Text — handwritten font rendering; autofit() for bbox-fitting
 │   │   │   ├── math.py         # Math — LaTeX expression rendering via matplotlib
-│   │   │   ├── eraser.py       # Eraser — whiteout animation over existing drawables
+│   │   │   ├── eraser.py       # Eraser — whiteout animation with zigzag human-like motion
 │   │   │   ├── vector_svg.py   # VectorSVG — full-fidelity SVG import (color, fill, transforms)
-│   │   │   └── svg.py          # SVG — legacy path-only SVG import (dev-only dependency)
+│   │   │   ├── svg.py          # SVG — legacy path-only SVG import (deprecated)
+│   │   │   ├── flowchart.py    # FlowchartNode, FlowchartDiamond, FlowchartConnector, Flowchart
+│   │   │   └── table.py        # Table — grid of Rectangle+Text cells with row/cell animations
 │   │   └── stylings/           # Style utility functions
 │   │       ├── color.py        # Named color constants (BLUE, RED, BLACK, …)
 │   │       ├── fillpatterns.py # Hachure/fill pattern generation → OpsSet
@@ -79,6 +84,7 @@ An `OpsSet` is an ordered list of `Ops` that Cairo renders directly. `OpsSet` al
 `Scene` maintains:
 - `DrawableCache` — stores each drawable's initial OpsSet and caches the OpsSet after every completed event (keyed by `drawable_id + event_id`)
 - Event list and object timelines (toggle-based visibility via creation/deletion events)
+- `camera_events` list — separate pipeline for `CameraAnimation` events; `_get_viewport_at(t)` interpolates the viewport per-frame without touching drawable OpsSet data
 - `create_event_timeline()` — iterates every frame, calls the recursive `get_animated_opsset_at_time()` to compose the full animation history for each active object, assembles per-frame OpsSet lists, and renders to Cairo
 
 The **key architectural invariant** is the recursive cache pattern: when an event completes (`progress == 1`), its output OpsSet is saved. All subsequent events on that drawable receive this cached OpsSet as input, so animation chains are stateless and composable — no mutation needed.
@@ -104,12 +110,13 @@ The **key architectural invariant** is the recursive cache pattern: when an even
 | `matplotlib` | LaTeX math expression rendering (Math primitive) |
 | `moviepy` / `imageio` | Video encoding (MP4, GIF) |
 | `svgelements` | Full-fidelity SVG parsing (VectorSVG) |
-| `svgwrite` | SVG output (currently unused — candidate for removal) |
 | `tqdm` | Progress bars during rendering |
 
 Dev-only (not required at runtime):
 | `svgpathtools` | Used by legacy `SVG` primitive only |
 | `vtracer`, `opencv-python`, `scikit-image` | Font generation utilities |
+| `ruff` | Linting and formatting |
+| `mypy` | Static type checking |
 
 ---
 
@@ -131,14 +138,8 @@ poetry run python examples/distributive_property.py
 
 ---
 
-## Known Issues
+## Known Limitations
 
-| # | Issue | Location |
+| # | Limitation | Location |
 |---|---|---|
-| 1 | Duplicate unreachable `return` statement | `animations/sketch.py:143` |
-| 2 | `apply_strokes_gradient` is an unfinished stub — returns empty OpsSet | `stylings/strokes.py:62` |
-| 3 | `Drawable.scale()` / `.translate()` / `.rotate()` return a new object — assigning back is required; the example `operator.scale(0.5, 0.5)` discards the result | `examples/distributive_property.py:31` |
-| 4 | `SVG` (legacy) depends on `svgpathtools` which is a dev-only dependency; not safe for end users | `primitives/svg.py` |
-| 5 | `easing_fun` is accepted by `AnimationEvent` but never called in any `apply()` | `core/animation.py` |
-| 6 | `Viewport` ignores world origin offset — assumes world range starts at (0, 0) | `core/viewport.py:46` |
-| 7 | `svgwrite` is listed as a runtime dependency but is not used in source | `requirements.txt` |
+| 1 | `ZigZagLineFillPattern` is commented out — a sketchy back-and-forth pencil fill style pending implementation | `stylings/fillpatterns.py` |

@@ -1,6 +1,7 @@
 import numpy as np
-from ..core.draw_ops import OpsSet, Ops, OpsType
+
 from ..core.animation import AnimationEvent, AnimationEventType
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.styles import FillStyle
 from ..primitives.ellipse import GlowDot
 

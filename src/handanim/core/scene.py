@@ -1,17 +1,15 @@
-from typing import Optional, List, Tuple, Dict
-import numpy as np
-from tqdm import tqdm
+import os
+
 import cairo
 import imageio.v2 as imageio
-import os
-import subprocess
-import tempfile
+import numpy as np
+from tqdm import tqdm
 
-from .utils import cairo_surface_to_numpy
-from .animation import AnimationEvent, CompositeAnimationEvent, AnimationEventType
-from .drawable import Drawable, DrawableGroup
+from .animation import AnimationEvent, AnimationEventType, CompositeAnimationEvent
 from .cache import DrawableCache, GroupFrameCache
 from .draw_ops import OpsSet
+from .drawable import Drawable, DrawableGroup
+from .utils import cairo_surface_to_numpy
 from .viewport import Viewport
 
 
@@ -37,7 +35,7 @@ class Scene:
         height: int = 720,
         fps: int = 24,
         background_color: tuple[float, float, float] = (1, 1, 1),
-        viewport: Optional[Viewport] = None,
+        viewport: Viewport | None = None,
     ):
         self.width = width
         self.height = height
@@ -45,9 +43,10 @@ class Scene:
         self.background_color = background_color
         self.drawable_cache = DrawableCache()
         self.frame_cache = GroupFrameCache()
-        self.events: List[Tuple[AnimationEvent, str]] = []
-        self.object_timelines: Dict[str, List[float]] = {}
+        self.events: list[tuple[AnimationEvent, str]] = []
+        self.object_timelines: dict[str, list[float]] = {}
         self.drawable_groups: dict[str, DrawableGroup] = {}  # stores drawable groups present in the scene
+        self.camera_events: list = []  # CameraAnimation events; typed as List to avoid circular import
 
         if viewport is not None:
             self.viewport = viewport
@@ -75,7 +74,7 @@ class Scene:
             margin=0,
         )
 
-    def get_viewport_bounds(self) -> Tuple[float, float, float, float]:
+    def get_viewport_bounds(self) -> tuple[float, float, float, float]:
         """
         Retrieves the viewport's boundaries in world coordinates.
 
@@ -120,7 +119,7 @@ class Scene:
             if drawable.grouping_method == "series":
                 # Apply the event sequentially to each element in the group
                 segmented_events = event.subdivide(len(drawable.elements))
-                for sub_drawable, segment_event in zip(drawable.elements, segmented_events):
+                for sub_drawable, segment_event in zip(drawable.elements, segmented_events, strict=False):
                     # recursively call add(), but with the duration modified appropriately
                     self.add(event=segment_event, drawable=sub_drawable)
                 return
@@ -157,6 +156,53 @@ class Scene:
 
             self.object_timelines[drawable.id].append(event.end_time)
 
+    def add_camera(self, event) -> None:
+        """
+        Register a CameraAnimation that controls the viewport over time.
+
+        Camera events are kept separate from drawable events and are applied
+        per-frame in the render loop without touching any drawable's OpsSet.
+
+        Args:
+            event: A CameraAnimation instance (or any object with an
+                   apply_to_viewport(viewport, progress) method).
+        """
+        self.camera_events.append(event)
+
+    def _get_viewport_at(self, t: float) -> Viewport:
+        """
+        Return the viewport state at time t by replaying all camera events.
+
+        Events are processed in start-time order.  Each completed event advances
+        the running viewport state to its target; an in-progress event interpolates
+        from the current state toward its target.  If from_xrange / from_yrange are
+        not specified on an event, the camera starts from wherever it currently is.
+
+        Args:
+            t: Time in seconds.
+
+        Returns:
+            A Viewport instance representing the camera position at time t.
+        """
+        if not self.camera_events:
+            return self.viewport
+
+        sorted_events = sorted(self.camera_events, key=lambda e: e.start_time)
+        current = self.viewport
+
+        for event in sorted_events:
+            if t < event.start_time:
+                break  # sorted — nothing later will have started either
+            raw_progress = (
+                np.clip((t - event.start_time) / event.duration, 0.0, 1.0)
+                if event.duration > 0
+                else 1.0
+            )
+            progress = event.easing_fun(raw_progress) if event.easing_fun else raw_progress
+            current = event.apply_to_viewport(current, progress)
+
+        return current
+
     def get_active_objects(self, t: float):
         """
         Determines the list of object IDs that are active at a specific time point.
@@ -171,7 +217,7 @@ class Scene:
         Returns:
             List[str]: A list of object IDs that are active at the given time point.
         """
-        active_list: List[str] = []
+        active_list: list[str] = []
         for object_id in self.object_timelines:
             active = False  # everything starts with blank screen
             for time in self.object_timelines[object_id]:
@@ -191,7 +237,7 @@ class Scene:
         """
         event_drawable_ids = sorted(self.events, key=lambda x: x[0].start_time)
         events = [event for event, _ in event_drawable_ids]
-        drawable_events_mapping: Dict[str, List[AnimationEvent]] = (
+        drawable_events_mapping: dict[str, list[AnimationEvent]] = (
             {}
         )  # track for each drawable, what all events are applied
         for event, drawable_id in event_drawable_ids:
@@ -205,8 +251,8 @@ class Scene:
         return key_frames, drawable_events_mapping
 
     def get_object_event_and_progress(
-        self, object_id: str, t: int, drawable_events_mapping: Dict[str, List[AnimationEvent]]
-    ) -> List[Tuple[AnimationEvent, float]]:
+        self, object_id: str, t: int, drawable_events_mapping: dict[str, list[AnimationEvent]]
+    ) -> list[tuple[AnimationEvent, float]]:
         object_drawable: Drawable = self.drawable_cache.get_drawable(object_id)
         event_and_progress = []
         for event in drawable_events_mapping.get(object_id, []):
@@ -228,8 +274,8 @@ class Scene:
         self,
         drawable_id: str,
         t: int,
-        event_and_progress: List[Tuple[AnimationEvent, float]],
-        drawable_events_mapping: Dict[str, List[AnimationEvent]],
+        event_and_progress: list[tuple[AnimationEvent, float]],
+        drawable_events_mapping: dict[str, list[AnimationEvent]],
     ) -> OpsSet:
         # look at the last event, which if completed, will be tracked from cache
         if len(event_and_progress) == 0:
@@ -303,7 +349,7 @@ class Scene:
 
         return opsset
 
-    def create_event_timeline(self, max_length: Optional[float] = None):
+    def create_event_timeline(self, max_length: float | None = None):
         """
         Creates a timeline of animation events and calculates the OpsSet for each frame.
 
@@ -324,8 +370,8 @@ class Scene:
         else:
             key_frames.append(max_length)
         key_frame_indices = np.round(np.array(key_frames) * self.fps).astype(int).tolist()
-        scene_opsset_list: List[OpsSet] = []
-        current_active_objects: List[str] = []
+        scene_opsset_list: list[OpsSet] = []
+        current_active_objects: list[str] = []
 
         # start calculating with a progress bar
         frame_count = int(np.round(max_length * self.fps))
@@ -364,7 +410,7 @@ class Scene:
         self,
         output_path: str,  # must be an svg file path
         frame_in_seconds: float,  # the precise second index for the frame to render
-        max_length: Optional[float] = None,  # number of seconds to create the video for
+        max_length: float | None = None,  # number of seconds to create the video for
     ):
         """
         Render a snapshot of the animation at a specific time point as an SVG file.
@@ -391,11 +437,11 @@ class Scene:
                 ctx.set_source_rgb(*self.background_color)
             ctx.paint()
 
-            self.viewport.apply_to_context(ctx)
+            self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
             frame_ops.render(ctx)
             surface.finish()
 
-    def render(self, output_path: str, max_length: Optional[float] = None):
+    def render(self, output_path: str, max_length: float | None = None):
         """
         Render the animation as a video file.
 
@@ -418,7 +464,7 @@ class Scene:
             write_obj = imageio.get_writer(output_path, fps=self.fps, codec="libx264")
 
         with write_obj as writer:
-            for frame_ops in tqdm(opsset_list, desc=tqdm_desc):
+            for i, frame_ops in enumerate(tqdm(opsset_list, desc=tqdm_desc)):
                 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
                 ctx = cairo.Context(surface)  # create cairo context
 
@@ -427,8 +473,8 @@ class Scene:
                     ctx.set_source_rgb(*self.background_color)
                 ctx.paint()
 
-                self.viewport.apply_to_context(ctx)
+                self._get_viewport_at(i / self.fps).apply_to_context(ctx)
                 frame_ops.render(ctx)  # applies the operations to cairo context
 
                 frame_np = cairo_surface_to_numpy(surface)
-                writer.append_data(frame_np)
+                writer.append_data(frame_np)  # type: ignore[attr-defined]

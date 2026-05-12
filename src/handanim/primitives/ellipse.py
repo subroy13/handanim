@@ -1,12 +1,12 @@
-from typing import Tuple
+
 import numpy as np
 
-from .curves import Curve
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..core.draw_ops import OpsSet, Ops, OpsType
+from ..core.styles import StrokePressure
 from ..stylings.fillpatterns import get_filler
 from ..stylings.strokes import apply_stroke_pressure
-from ..core.styles import StrokePressure
+from .curves import Curve
 
 
 class Ellipse(Drawable):
@@ -24,7 +24,7 @@ class Ellipse(Drawable):
 
     def __init__(
         self,
-        center: Tuple[float, float],
+        center: tuple[float, float],
         width: float,
         height: float,
         *args,
@@ -84,7 +84,8 @@ class Ellipse(Drawable):
         core_points = []
         all_points = []
 
-        get_ellipse_arc = lambda a: np.array([np.cos(a), np.sin(a)])
+        def get_ellipse_arc(a):
+            return np.array([np.cos(a), np.sin(a)])
 
         if core_only:
             # compute only the core points
@@ -132,7 +133,7 @@ class Ellipse(Drawable):
 
         return core_points, all_points
 
-    def draw_ellipse_border(self, opsset: OpsSet) -> Tuple[list, OpsSet]:
+    def draw_ellipse_border(self, opsset: OpsSet) -> tuple[list, OpsSet]:
         # compute the ellipse parameters
         rx, ry, increment = self._get_ellipse_params(self.width, self.height)
         ap1, cp1 = self._compute_ellipse_points(
@@ -250,7 +251,7 @@ class GlowDot(Drawable):
 
     def __init__(
         self,
-        center: Tuple[float, float],
+        center: tuple[float, float],
         radius: float = 1,
         *args,
         **kwargs,

@@ -1,4 +1,3 @@
-from typing import Optional, List, Dict, Tuple
 
 from .draw_ops import OpsSet
 from .drawable import Drawable
@@ -23,13 +22,13 @@ class DrawableCache:
         self.cache: dict[str, OpsSet] = {}
         self.drawables: dict[str, Drawable] = {}
 
-    def get_cachekey(self, drawable_id: str, event_id: Optional[str] = None):
+    def get_cachekey(self, drawable_id: str, event_id: str | None = None):
         if event_id is None:
             return f"{drawable_id}__init"
         else:
             return f"{drawable_id}__{event_id}"
 
-    def set_drawable_opsset(self, drawable: Drawable, opsset: Optional[OpsSet] = None):
+    def set_drawable_opsset(self, drawable: Drawable, opsset: OpsSet | None = None):
         cachekey = self.get_cachekey(drawable.id)
         self.drawables[cachekey] = drawable
         if opsset is None:
@@ -43,15 +42,15 @@ class DrawableCache:
     def get_drawable(self, drawable_id: str) -> Drawable:
         return self.drawables[drawable_id]
 
-    def exists_in_cache(self, drawable_id: str, event_id: Optional[str] = None) -> bool:
+    def exists_in_cache(self, drawable_id: str, event_id: str | None = None) -> bool:
         cachekey = self.get_cachekey(drawable_id, event_id)
         return cachekey in self.cache
 
-    def get_drawable_opsset(self, drawable_id: str, event_id: Optional[str] = None) -> OpsSet:
+    def get_drawable_opsset(self, drawable_id: str, event_id: str | None = None) -> OpsSet:
         cachekey = self.get_cachekey(drawable_id, event_id)
         return self.cache.get(cachekey, OpsSet(initial_set=[]))
 
-    def calculate_bounding_box(self, drawables: List[Drawable]):
+    def calculate_bounding_box(self, drawables: list[Drawable]):
         """
         Calculates the bounding box for a list of drawables
         stored in the cache
@@ -71,16 +70,16 @@ class GroupFrameCache:
     """
 
     def __init__(self):
-        self._pretransform: Dict[Tuple[str, str], OpsSet] = {}
-        self._transformed: Dict[Tuple[str, str, int], OpsSet] = {}
+        self._pretransform: dict[tuple[str, str], OpsSet] = {}
+        self._transformed: dict[tuple[str, str, int], OpsSet] = {}
 
-    def get_pretransform(self, group_id: str, event_id: str) -> Optional[OpsSet]:
+    def get_pretransform(self, group_id: str, event_id: str) -> OpsSet | None:
         return self._pretransform.get((group_id, event_id))
 
     def set_pretransform(self, group_id: str, event_id: str, opsset: OpsSet):
         self._pretransform[(group_id, event_id)] = opsset
 
-    def get_transformed(self, group_id: str, event_id: str, progress: float) -> Optional[OpsSet]:
+    def get_transformed(self, group_id: str, event_id: str, progress: float) -> OpsSet | None:
         return self._transformed.get((group_id, event_id, int(progress * 1000)))
 
     def set_transformed(self, group_id: str, event_id: str, progress: float, opsset: OpsSet):

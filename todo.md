@@ -17,6 +17,30 @@
 
 ---
 
+## Developer Workflow & Release
+
+### CI / CD
+- [ ] **CI test workflow** — add `.github/workflows/ci.yml` that runs `pytest --cov` on every push and PR; currently only the docs-deploy workflow exists
+- [ ] **Code coverage reporting** — pipe `pytest-cov` output to Codecov (free for OSS) and add a coverage badge to the README; `pytest-cov` is already in dev deps, just needs wiring
+
+### Code quality
+- [x] **Ruff** — add `[tool.ruff]` section to `pyproject.toml`; replaces black + isort + flake8 in one fast tool; enforce in CI and document in DEVELOPMENT.md
+- [x] **Pre-commit hooks** — add `.pre-commit-config.yaml` running ruff (and optionally mypy) before every commit; add setup one-liner to DEVELOPMENT.md so contributors pick it up automatically
+- [x] **Type checking with mypy** — add `[tool.mypy]` section to `pyproject.toml` (start with `strict = false`); run on CI; tighten incrementally as the codebase stabilises
+
+### Package ergonomics
+- [ ] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
+- [ ] **PyPI publication** — fill in the empty `description` field and add `classifiers` / `keywords` to `pyproject.toml`; publish `v0.1.0` to PyPI so `pip install handanim` works and the package is discoverable
+- [ ] **Semantic versioning** — adopt SemVer; tag releases in git; use `poetry version patch/minor/major` for bumps; document the release process in DEVELOPMENT.md
+
+### Docs & community files
+- [x] **CHANGELOG.md** — create with an "Unreleased" section and retroactively document current feature set; follow the [Keep a Changelog](https://keepachangelog.com) format
+- [x] **GitHub issue templates** — add `.github/ISSUE_TEMPLATE/bug_report.md` and `feature_request.md` so incoming issues arrive with the right context filled in
+- [x] **PR template** — add `.github/pull_request_template.md` with a checklist (tests updated, docs updated, example added if relevant)
+- [x] **Update repo_overview.md** — currently describes the architecture before Phase 2; update to reflect the Flowchart, Table, and new animation types
+
+---
+
 ## Phase 1 — Core Hardening & Foundations
 
 These make the library reliable and testable before adding more features.
@@ -51,23 +75,23 @@ Visual regression testing is the pragmatic approach for an animation library:
 ## Phase 2 — New Primitives & Animations
 
 ### Flowcharts
-- [ ] `FlowchartNode` — `Rectangle` + `Text`, anchored together as a `DrawableGroup`; takes `label`, `position`, `size`
-- [ ] `FlowchartDiamond` — decision node (rotated square + text)
-- [ ] `FlowchartConnector` — `Arrow` that auto-routes between two `FlowchartNode` anchors (by reference, not hard-coded coords)
-- [ ] `Flowchart.from_dict(spec)` — factory that builds the full graph from a declarative dict `{"nodes": [...], "edges": [...]}`
+- [x] `FlowchartNode` — `Rectangle` + `Text`, anchored together as a `DrawableGroup`; takes `label`, `position`, `size`
+- [x] `FlowchartDiamond` — decision node (rotated square + text)
+- [x] `FlowchartConnector` — `Arrow` that auto-routes between two `FlowchartNode` anchors (by reference, not hard-coded coords)
+- [x] `Flowchart.from_dict(spec)` — factory that builds the full graph from a declarative dict `{"nodes": [...], "edges": [...]}`
 
 ### Tables
-- [ ] `Table` drawable — grid of `Rectangle` + `Text` cells; configurable `n_rows`, `n_cols`, `cell_width`, `cell_height`, header styling
-- [ ] `Table.animate_by_row()` / `.animate_by_cell()` — returns a `CompositeAnimationEvent` that reveals cells in sequence
+- [x] `Table` drawable — grid of `Rectangle` + `Text` cells; configurable `n_rows`, `n_cols`, `cell_width`, `cell_height`, header styling
+- [x] `Table.animate_by_row()` / `.animate_by_cell()` — returns a `CompositeAnimationEvent` that reveals cells in sequence
 
 ### Image & Video import
 - [ ] `RasterImage` drawable — load PNG/JPG via Pillow, render to Cairo surface as an OpsSet-compatible operation (needs a new `OpsType.RASTER_IMAGE` or direct Cairo `set_source_surface`)
 - [ ] `VideoClip` drawable — extract frames from a video file via `moviepy`, render the frame matching the current scene time; useful for compositing hand-drawn annotations over real footage
 
 ### New animation types
-- [ ] **`RotateAnimation`** — animates `OpsSet.rotate(angle * progress)` around the center of gravity; useful for spinning diagrams
-- [ ] **`ColorTransitionAnimation`** — interpolates `SET_PEN` color between two RGB values across `progress`; complete the `apply_strokes_gradient` stub as a building block
-- [ ] **`CameraAnimation`** (scene-level) — animate `Viewport` pan/zoom over time; lets the "camera" drift across a large canvas or zoom into a detail
+- [x] **`RotateAnimation`** — animates `OpsSet.rotate(angle * progress)` around the center of gravity; useful for spinning diagrams
+- [x] **`ColorTransitionAnimation`** — interpolates `SET_PEN` color between two RGB values across `progress`; complete the `apply_strokes_gradient` stub as a building block
+- [x] **`CameraAnimation`** (scene-level) — animate `Viewport` pan/zoom over time; lets the "camera" drift across a large canvas or zoom into a detail
 
 ### Coordinate helpers
 - [ ] Named anchor methods on `Drawable`: `.anchor("top_left")`, `.anchor("center")`, `.anchor("bottom_right")` — returns `(x, y)` in world coordinates, computed from the bounding box
@@ -76,7 +100,7 @@ Visual regression testing is the pragmatic approach for an animation library:
 
 
 ### Cleanup
-- [ ] Deprecate & Remove Legacy SVG: primitives/svg.py is marked as deprecated and relies on svgpathtools (which is a dev-only dependency according to repo_overview.md). It would be cleaner to remove this file entirely (or move it to a distinct legacy module) to ensure users don't accidentally import it and hit missing dependency errors, enforcing VectorSVG as the sole SVG handler.
+- [x] Deprecate & Remove Legacy SVG: primitives/svg.py is marked as deprecated and relies on svgpathtools (which is a dev-only dependency according to repo_overview.md). It would be cleaner to remove this file entirely (or move it to a distinct legacy module) to ensure users don't accidentally import it and hit missing dependency errors, enforcing VectorSVG as the sole SVG handler.
 - [ ] Complete ZigZagLineFillPattern: In stylings/fillpatterns.py, the ZigZagLineFillPattern class is currently commented out entirely with a # TODO: Check and fix this. Completing this would provide a fantastic new sketchy fill style (like a back-and-forth colored pencil shading) to complement the existing hatching.
 
 
@@ -127,3 +151,26 @@ Long-term: a companion module (possibly a separate repo) that adds audio/voice t
 - [ ] **`Scene.add()` return value** — return the `drawable` (or a handle) so calls can be chained: `handle = scene.add(event, rect)`
 - [ ] **Type annotations audit** — several functions use `Any` loosely; tighten with `TypeVar` for `Drawable` subclasses and overloads for `OpsSet` transforms
 - [ ] **`handanim_ai` as proper subpackage** — rename import path from `handanim_ai` to `handanim.ai` for consistency; adjust `pyproject.toml` package include
+
+---
+
+## Growth & Community
+
+### README & visual presence
+- [ ] **Animated GIF showcase in README** — add a grid of 4–6 rendered GIFs near the top of `README.md`; the outputs already exist in `examples/output/`; this is the single highest-leverage change for converting visitors into stars
+- [ ] **Manim comparison table** — add a concise feature/complexity comparison vs Manim in the README; position handanim as the lightweight, script-friendly, `pip install`-able alternative for users who find Manim too heavy
+
+### Discoverability
+- [ ] **Algorithm & data-structure examples** — add examples for high-search topics: binary search, bubble sort, BFS/DFS graph traversal, Fourier transform; these attract students, educators, and bloggers who link back to the repo
+- [ ] **Jupyter inline rendering** — implement `Scene.show()` that renders the animation as an inline IPython display widget; lowers the barrier for data-science users who live in notebooks and never save files first
+- [ ] **`handanim-ai` end-to-end demo** — record a short screen capture of the full AI pipeline (text prompt → generated code → rendered GIF); the most shareable asset for social media; publish alongside a working CLI entry point
+
+### Community infrastructure
+- [ ] **Enable GitHub Discussions** — turn on the Discussions tab with "Show and Tell", "Q&A", and "Ideas" categories; gives users a place to share creations without opening an issue
+- [ ] **"Built with handanim" section in README** — invite users to submit their animations; seed it with the existing example outputs; user-generated social proof compounds over time
+- [ ] **Discord or community chat** — a lightweight Discord server (or a link to a GitHub Discussions thread) where contributors can discuss design decisions in real time
+
+### Outreach (one-time actions)
+- [ ] **HackerNews "Show HN" post** — write a post linking to the README once the GIF showcase is in place; Tuesday/Wednesday morning UTC is the highest-traffic window
+- [ ] **Reddit posts** — post rendered GIFs on r/dataisbeautiful (no code needed, just visuals); post the library on r/Python and r/learnpython with a short code snippet
+- [ ] **Twitter / X thread** — post a thread showing 4–5 rendered animations with a "10 lines of Python" angle; animated GIFs perform extremely well on the platform

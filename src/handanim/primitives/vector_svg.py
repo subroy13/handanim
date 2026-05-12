@@ -9,14 +9,12 @@ as close to the original SVG as possible.
 
 
 import io
-from typing import List, Tuple, Optional, Union
-from svgelements import (
-    SVG as SVGParser, Path, Shape, Color,
-    Line, QuadraticBezier, CubicBezier, Move, Close
-)
 
+from svgelements import SVG as SVGParser
+from svgelements import Close, Color, CubicBezier, Line, Move, Path, QuadraticBezier, Shape
+
+from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..core.draw_ops import OpsSet, Ops, OpsType
 
 
 class VectorSVG(Drawable):
@@ -24,7 +22,7 @@ class VectorSVG(Drawable):
     A drawable class that accepts an SVG document and renders it as a Drawable
     as close to the original SVG as possible.
 
-    .. note:: 
+    .. note::
        This feature was contributed by Hamd Waseem (https://github.com/hamdivazim).
 
     Attributes:
@@ -33,10 +31,10 @@ class VectorSVG(Drawable):
     """
 
     def __init__(
-        self, 
-        svg_doc, 
-        position: tuple[float, float] = (0, 0), 
-        *args, 
+        self,
+        svg_doc,
+        position: tuple[float, float] = (0, 0),
+        *args,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
@@ -49,7 +47,7 @@ class VectorSVG(Drawable):
         Create a VectorSVG instance from a file path
         """
         svg_doc = SVGParser.parse(svg_file_path)
-        return cls(svg_doc=svg_doc, *args, **kwargs)
+        return cls(svg_doc, *args, **kwargs)
 
     @classmethod
     def from_svg_string(cls, svg_string: str, *args, **kwargs) -> "VectorSVG":
@@ -57,12 +55,12 @@ class VectorSVG(Drawable):
         Create a VectorSVG instance from an SVG string
         """
         svg_doc = SVGParser.parse(io.StringIO(svg_string))
-        return cls(svg_doc=svg_doc, *args, **kwargs)
+        return cls(svg_doc, *args, **kwargs)
 
     def _parse_color_and_opacity(
-        self, 
+        self,
         color_obj
-    ) -> Tuple[Optional[Tuple[float, float, float]], float]:
+    ) -> tuple[tuple[float, float, float] | None, float]:
         """
         Converts colors to a single solid RGB tuple and alpha value
         """
@@ -91,7 +89,7 @@ class VectorSVG(Drawable):
         for element in self.svg_doc.elements():
             if not isinstance(element, (Shape, Path)):
                 continue
-            
+
             # skip hidden elements
             visibility = element.values.get('visibility')
             display = element.values.get('display')
@@ -100,7 +98,7 @@ class VectorSVG(Drawable):
 
             fill_rgb, fill_alpha = self._parse_color_and_opacity(element.fill)
             stroke_rgb, stroke_alpha = self._parse_color_and_opacity(element.stroke)
-            
+
             try:
                 stroke_width = float(element.stroke_width)
             except (ValueError, TypeError):
@@ -108,11 +106,11 @@ class VectorSVG(Drawable):
 
             # determine drawing operations
             operations = []
-            if fill_rgb: 
+            if fill_rgb:
                 operations.append(("fill", fill_rgb, fill_alpha))
-            if stroke_rgb: 
+            if stroke_rgb:
                 operations.append(("stroke", stroke_rgb, stroke_alpha))
-            
+
             if not operations:
                 continue
 
@@ -122,28 +120,29 @@ class VectorSVG(Drawable):
                 path_element = path_element * element.transform
 
             path_element.approximate_arcs_with_cubics()
-            
+
             try:
                 path_segments = list(path_element.segments())
             except Exception:
                 continue
-                
+
             if not path_segments:
                 continue
 
             # coordinate helper
-            def off(p): 
-                if p is None: return (0, 0)
+            def off(p):
+                if p is None:
+                    return (0, 0)
                 return (
-                    getattr(p, 'x', p.real) + base_x, 
+                    getattr(p, 'x', p.real) + base_x,
                     getattr(p, 'y', p.imag) + base_y
                 )
 
             for mode, rgb, alpha in operations:
                 opsset.add(Ops(OpsType.SET_PEN, {
-                    "mode": mode, 
-                    "color": rgb, 
-                    "opacity": alpha, 
+                    "mode": mode,
+                    "color": rgb,
+                    "opacity": alpha,
                     "width": stroke_width
                 }))
 

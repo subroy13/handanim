@@ -1,15 +1,18 @@
-from typing import Any, List, Union, Tuple, Optional, Dict
-from enum import Enum
-from dataclasses import dataclass
 import json
-import numpy as np
-import cairo
 import tempfile
 import webbrowser
+from collections.abc import Sequence
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any
+
+import cairo
+import numpy as np
+
 from .utils import (
-    slice_bezier,
-    get_bezier_points_from_quadcurve,
     get_bezier_extreme_points,
+    get_bezier_points_from_quadcurve,
+    slice_bezier,
 )
 from .viewport import Viewport
 
@@ -39,7 +42,7 @@ class Ops:
 
     SETUP_OPS_TYPES = [OpsType.SET_PEN, OpsType.MOVE_TO, OpsType.METADATA]
 
-    def __init__(self, type: OpsType, data: Any, partial: float = 1.0, meta: Optional[Dict] = None):
+    def __init__(self, type: OpsType, data: Any, partial: float = 1.0, meta: dict | None = None):
         self.type = type
         self.data = data  # the data to use to perform draw operation
         self.partial = partial  # how much of the ops needs to be performed
@@ -73,15 +76,15 @@ class BoundingBox:
         return self.max_y - self.min_y
 
     @property
-    def center(self) -> Tuple[float, float]:
+    def center(self) -> tuple[float, float]:
         return (self.min_x + self.max_x) / 2, (self.min_y + self.max_y) / 2
 
     @property
-    def top_left(self) -> Tuple[float, float]:
+    def top_left(self) -> tuple[float, float]:
         return self.min_x, self.min_y
 
     @property
-    def bottom_right(self) -> Tuple[float, float]:
+    def bottom_right(self) -> tuple[float, float]:
         return self.max_x, self.max_y
 
 
@@ -99,8 +102,10 @@ class OpsSet:
         opsset (List[Ops]): A list of drawing operations to be performed.
     """
 
-    def __init__(self, initial_set: List[Dict | Ops] = []):
-        converted_set: List[Ops] = []
+    def __init__(self, initial_set: Sequence[dict[Any, Any] | Ops] | None = None):
+        if initial_set is None:
+            initial_set = []
+        converted_set: list[Ops] = []
         for ops in initial_set:
             if isinstance(ops, dict):
                 converted_set.append(Ops(**ops))
@@ -119,7 +124,9 @@ class OpsSet:
                 + "\n".join([str(ops) for ops in self.opsset[-5:]])
             )
 
-    def add_meta(self, meta: dict = {}):
+    def add_meta(self, meta: dict | None = None):
+        if meta is None:
+            meta = {}
         for ops in self.opsset:
             if ops.meta is None:
                 ops.meta = meta
@@ -134,7 +141,7 @@ class OpsSet:
                 new_opsset.append(ops)
         return OpsSet(new_opsset)
 
-    def add(self, ops: Union[Ops, dict]):
+    def add(self, ops: Ops | dict):
         if isinstance(ops, dict):
             ops = Ops(**ops)
         self.opsset.append(ops)
@@ -208,7 +215,7 @@ class OpsSet:
 
             return BoundingBox(min_x, min_y, max_x, max_y)
 
-    def get_center_of_gravity(self) -> Tuple[float, float]:
+    def get_center_of_gravity(self) -> tuple[float, float]:
         """
         Calculate the approximate geometric center of the operations set.
 
@@ -218,7 +225,7 @@ class OpsSet:
         """
         return self.get_bbox().center
 
-    def get_last_ops(self, start_index: int = 0) -> Tuple[Optional[int], Optional[Ops]]:
+    def get_last_ops(self, start_index: int = 0) -> tuple[int | None, Ops | None]:
         """
         Retrieve the last valid operation from the operations set.
 
@@ -314,7 +321,7 @@ class OpsSet:
                 new_ops.append(ops)  # keep same ops
         self.opsset = new_ops
 
-    def scale(self, scale_x: float, scale_y: Optional[float] = None):
+    def scale(self, scale_x: float, scale_y: float | None = None):
         """
         Scales the operations in the opsset relative to its center of gravity.
 
@@ -350,7 +357,7 @@ class OpsSet:
                 new_ops.append(ops)  # keep same ops for set pen type operations
         self.opsset = new_ops  # update the ops list
 
-    def rotate(self, angle: float, center_of_rotation: Optional[Tuple[float, float]] = None):
+    def rotate(self, angle: float, center_of_rotation: tuple[float, float] | None = None):
         """
         Rotates the operations in the opsset by a specified angle around its center of gravity.
 
@@ -470,7 +477,7 @@ class OpsSet:
         self,
         width: int = 800,
         height: int = 600,
-        background_color: Tuple[float, float, float] = (1, 1, 1),
+        background_color: tuple[float, float, float] = (1, 1, 1),
         block: bool = True,
     ):
         """
@@ -511,5 +518,5 @@ class OpsSet:
         webbrowser.open_new_tab(f"file://{tmp_filename}")
 
         if block:
-            print(f"Quick view opened in browser. Press Enter in this console to continue...")
+            print("Quick view opened in browser. Press Enter in this console to continue...")
             input()

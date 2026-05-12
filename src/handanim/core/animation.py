@@ -1,6 +1,6 @@
-from uuid import uuid4
 from enum import Enum
-from typing import List, Optional
+from uuid import uuid4
+
 from .draw_ops import OpsSet
 
 
@@ -33,7 +33,7 @@ class AnimationEvent:
         start_time: float = 0.0,  # the starting time point  (in seconds)
         duration: float = 0.0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
-        data: Optional[dict] = None,  # additional data for the animation, depending on the animation type
+        data: dict | None = None,  # additional data for the animation, depending on the animation type
     ):
         self.id = uuid4().hex[:6]
         self.type = type
@@ -96,7 +96,7 @@ class CompositeAnimationEvent(AnimationEvent):
 
     def __init__(
         self,
-        events: List[AnimationEvent],
+        events: list[AnimationEvent],
         easing_fun=None,
         data=None,
     ):

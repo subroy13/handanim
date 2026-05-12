@@ -1,11 +1,11 @@
-from typing import List, Optional, Tuple
-from fontTools.ttLib import TTFont
-from fontTools.pens.basePen import BasePen
-import numpy as np
 
-from ..core.draw_ops import Ops, OpsSet, OpsType, BoundingBox
+import numpy as np
+from fontTools.pens.basePen import BasePen
+from fontTools.ttLib import TTFont
+
+from ..core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..stylings.fonts import list_fonts, get_font_path
+from ..stylings.fonts import get_font_path, list_fonts
 
 
 class CustomPen(BasePen):
@@ -72,7 +72,7 @@ class Text(Drawable):
     def __init__(
         self,
         text: str,
-        position: Tuple[float, float],
+        position: tuple[float, float],
         font_size: int = 12,
         *args,
         **kwargs,
@@ -82,10 +82,10 @@ class Text(Drawable):
         self.position = position
         self.font_size = font_size
         self.scale_factor = kwargs.get("scale_factor", 1.0)
-        self._wrapped_lines: Optional[List[str]] = None
-        self._line_height: Optional[float] = None
+        self._wrapped_lines: list[str] | None = None
+        self._line_height: float | None = None
 
-    def get_random_font_choice(self) -> Tuple[str, str]:
+    def get_random_font_choice(self) -> tuple[str, str]:
         """
         Chooses a random font from the available fonts
         """
@@ -96,7 +96,7 @@ class Text(Drawable):
             font_choice = np.random.choice(font_list)
         return (font_choice, get_font_path(font_choice))
 
-    def get_glyph_strokes(self, char) -> Tuple[OpsSet, float]:
+    def get_glyph_strokes(self, char) -> tuple[OpsSet, float]:
         """
         Gives the glyph operations as well the width of the char for offsetting purpose
         """
@@ -117,7 +117,7 @@ class Text(Drawable):
         width = glyph.width * scale
         return pen.opsset, width
 
-    def get_glyph_space(self) -> Tuple[float, float]:
+    def get_glyph_space(self) -> tuple[float, float]:
         """
         Gives the width of the space, or an average width
         """
@@ -157,8 +157,8 @@ class Text(Drawable):
                 lines. 1.5 gives comfortable spacing; 1.2 is tighter.
         """
         words = self.text.split(" ")
-        lines: List[str] = []
-        current_words: List[str] = []
+        lines: list[str] = []
+        current_words: list[str] = []
 
         for word in words:
             candidate = " ".join(current_words + [word])
@@ -189,7 +189,7 @@ class Text(Drawable):
         scale_y = bbox.height / draw_bbox.height
 
         # set final font size and position
-        self.font_size = min(reference_size * scale_x, reference_size * scale_y)
+        self.font_size = min(reference_size * scale_x, reference_size * scale_y)  # type: ignore[assignment]
         self.position = (bbox.top_left[0] - draw_bbox.top_left[0], bbox.top_left[1] - draw_bbox.top_left[1])
 
     def _draw_line(self, opsset: OpsSet, line: str, start_x: float, start_y: float):
