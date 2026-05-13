@@ -17,6 +17,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Math.custom_glyph_opsset` now uses `svgelements` (already a runtime dependency) to parse custom font glyph paths, replacing the `SVG`/`svgpathtools` pipeline; bounding box is computed via `OpsSet.get_bbox()` rather than `svgpathtools.Path.bbox()`
 
 ### Added
+- `Drawable.anchor(position)` — returns named anchor points (center, top_left, bottom_right, etc.) in world coordinates from the bounding box
+- `Scene.place_relative(target, reference, ...)` — position one drawable relative to another's anchor without manual coordinate math
+- `Scene.get_current_time()` — returns the end time of the latest event in the scene
+- `Scene.wait(duration)` — returns `get_current_time() + duration` for inserting pauses between animations
+- `Scene.render_keyframes(times, ...)` — batch export snapshots at specific timestamps (single timeline computation)
+- `Scene.export_storyboard(n_frames, ...)` — export evenly-spaced keyframes as individual SVG/PDF files
+- `Scene.render_handout(output_path, ...)` — render a single multi-page PDF with one animation frame per page
+- `Scene.export_beamer(output_dir, ...)` — export keyframe PDFs and a compilable Beamer `.tex` file with `\only<N>` overlay transitions
+- Top-level `__init__.py` exports — `from handanim import Scene, Rectangle, SketchAnimation` etc.
+- Tests for all new scene utilities and export methods (35 new tests)
 - `RotateAnimation` — animates an OpsSet rotating by a configurable angle around an explicit pivot or the center of gravity
 - `ColorTransitionAnimation` — interpolates every `SET_PEN` color in an OpsSet between `start_color` and `end_color` across progress
 - `CameraAnimation` — animates the scene viewport (pan/zoom) over time via `scene.add_camera()`; world-range interpolation with optional explicit `from_*` range
