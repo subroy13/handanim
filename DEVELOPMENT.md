@@ -218,12 +218,65 @@ rect.draw().quick_view(block=False)
 
 ---
 
+## Raster Images
+
+The `RasterImage` primitive lets you embed PNG, JPEG, or other raster images into a scene. Images are positioned in world coordinates and support translate, scale, rotate, and opacity animations.
+
+### Basic usage
+
+```python
+from handanim.primitives import RasterImage
+from handanim.core.scene import Scene
+from handanim.animations.sketch import SketchAnimation
+
+img = RasterImage("photo.png", position=(100, 100), width=400)
+# height auto-computed to preserve aspect ratio
+
+scene = Scene()
+scene.add(SketchAnimation(start_time=0, duration=1.5), img)
+scene.render("output.mp4")
+```
+
+### Sizing options
+
+```python
+# Explicit width and height (may distort)
+img = RasterImage("photo.jpg", position=(0, 0), width=400, height=300)
+
+# Width only — height preserves aspect ratio
+img = RasterImage("photo.jpg", position=(0, 0), width=400)
+
+# Height only — width preserves aspect ratio
+img = RasterImage("photo.jpg", position=(0, 0), height=300)
+
+# No size — uses the image's pixel dimensions as world-coordinate size
+img = RasterImage("photo.jpg", position=(0, 0))
+```
+
+### Animations
+
+`SketchAnimation` fades the image in (opacity ramps from 0 to 1). `FadeInAnimation` and `FadeOutAnimation` also work as expected. Standard transforms (translate, scale, rotate) are supported.
+
+```python
+from handanim.animations.fade import FadeOutAnimation
+
+# Fade in via sketch, then fade out
+scene.add(SketchAnimation(start_time=0, duration=1.0), img)
+scene.add(FadeOutAnimation(start_time=3.0, duration=1.0), img)
+```
+
+### Supported formats
+
+PNG is loaded directly via Cairo. All other formats (JPEG, BMP, TIFF, WebP, etc.) are loaded via Pillow and converted to a Cairo surface automatically.
+
+---
+
 ## Project Layout Cheat Sheet
 
 ```
 src/handanim/
 ├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, styles
-├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, …
+├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, RasterImage, …
 ├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate, ColorTransition, Camera
 └── stylings/      # color constants, fill patterns, stroke utilities
 

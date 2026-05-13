@@ -85,7 +85,7 @@ Visual regression testing is the pragmatic approach for an animation library:
 - [x] `Table.animate_by_row()` / `.animate_by_cell()` — returns a `CompositeAnimationEvent` that reveals cells in sequence
 
 ### Image & Video import
-- [ ] `RasterImage` drawable — load PNG/JPG via Pillow, render to Cairo surface as an OpsSet-compatible operation (needs a new `OpsType.RASTER_IMAGE` or direct Cairo `set_source_surface`)
+- [x] `RasterImage` drawable — load PNG/JPG via Pillow, render to Cairo surface via `OpsType.IMAGE`; supports translate, scale, rotate, opacity; fades in with SketchAnimation, works with FadeIn/FadeOut
 - [ ] `VideoClip` drawable — extract frames from a video file via `moviepy`, render the frame matching the current scene time; useful for compositing hand-drawn annotations over real footage
 
 ### New animation types
@@ -101,7 +101,7 @@ Visual regression testing is the pragmatic approach for an animation library:
 
 ### Cleanup
 - [x] Deprecate & Remove Legacy SVG: primitives/svg.py is marked as deprecated and relies on svgpathtools (which is a dev-only dependency according to repo_overview.md). It would be cleaner to remove this file entirely (or move it to a distinct legacy module) to ensure users don't accidentally import it and hit missing dependency errors, enforcing VectorSVG as the sole SVG handler.
-- [ ] Complete ZigZagLineFillPattern: In stylings/fillpatterns.py, the ZigZagLineFillPattern class is currently commented out entirely with a # TODO: Check and fix this. Completing this would provide a fantastic new sketchy fill style (like a back-and-forth colored pencil shading) to complement the existing hatching.
+- [x] Complete ZigZagLineFillPattern: Implemented in stylings/fillpatterns.py, registered as `fill_pattern="zigzag"` in `get_filler()`.
 
 
 

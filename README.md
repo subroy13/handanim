@@ -89,6 +89,27 @@ python examples/pythagoras.py
 
 Make sure you're using Python 3.11+ (as specified in the project). 
 
+## 📦 Installation using conda
+
+If you prefer conda for environment management:
+
+```bash
+# Create a new environment
+conda create -n handanim python=3.11
+conda activate handanim
+
+# Install system dependencies via conda-forge
+conda install -c conda-forge cairo pycairo ffmpeg
+
+# Install handanim and remaining Python dependencies
+pip install -r requirements.txt
+
+# Run example animation
+python examples/pythagoras.py
+```
+
+> **Note:** The `requirements.txt` may need updating for your platform. If you encounter issues, the Poetry-based installation is the most tested path.
+
 ## Installing Cairo 
 
 Your system must have the Cairo graphics library installed for `pycairo` or `cairocffi` to work correctly. This is a native C library and needs to be installed separately depending on your OS.
