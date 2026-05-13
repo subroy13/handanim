@@ -178,6 +178,37 @@ class Scene:
         """
         return self.get_current_time() + duration
 
+    @staticmethod
+    def place_relative(
+        target: "Drawable",
+        reference: "Drawable",
+        target_anchor: str = "center",
+        reference_anchor: str = "center",
+        offset: tuple[float, float] = (0.0, 0.0),
+    ) -> "Drawable":
+        """Position `target` so that its anchor aligns with a reference drawable's anchor.
+
+        Returns the translated target — does not mutate the original (consistent with
+        the immutability invariant).
+
+        Args:
+            target: The drawable to reposition.
+            reference: The drawable to align against.
+            target_anchor: Anchor name on the target (e.g. "top_left", "center").
+            reference_anchor: Anchor name on the reference.
+            offset: Additional (dx, dy) offset after alignment.
+
+        Usage::
+
+            label = Text("hello", position=(0, 0))
+            label = Scene.place_relative(label, rect, "top", "bottom", offset=(0, -20))
+        """
+        ref_point = reference.anchor(reference_anchor)
+        tgt_point = target.anchor(target_anchor)
+        dx = ref_point[0] - tgt_point[0] + offset[0]
+        dy = ref_point[1] - tgt_point[1] + offset[1]
+        return target.translate(dx, dy)
+
     def add_camera(self, event) -> None:
         """
         Register a CameraAnimation that controls the viewport over time.
@@ -564,6 +595,69 @@ class Scene:
             surface.show_page()
         surface.finish()
         return output_path
+
+    def export_beamer(
+        self,
+        output_dir: str,
+        n_frames: int = 6,
+        times: list[float] | None = None,
+        title: str = "Handanim Slides",
+        max_length: float | None = None,
+    ) -> str:
+        """Export animation keyframes as a compilable Beamer/LaTeX slide deck.
+
+        Each keyframe becomes one overlay on a single frame, so the slides
+        animate forward when presented. Produces PDF images + a .tex file.
+
+        Args:
+            output_dir: Directory to write PDFs and the .tex file.
+            n_frames: Number of evenly-spaced keyframes (ignored if `times` given).
+            times: Explicit list of timestamps to render.
+            title: Title shown on the Beamer title page.
+            max_length: Total animation duration override.
+
+        Returns:
+            Path to the generated .tex file.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        opsset_list = self.create_event_timeline(max_length)
+        total_frames = len(opsset_list)
+        total_duration = total_frames / self.fps
+        if times is None:
+            times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
+
+        pdf_filenames = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            filename = f"slide_{i:03d}.pdf"
+            self._render_frame(opsset_list[frame_index], os.path.join(output_dir, filename), t)
+            pdf_filenames.append(filename)
+
+        overlay_lines = []
+        for i, fname in enumerate(pdf_filenames, start=1):
+            overlay_lines.append(
+                f"    \\only<{i}>{{\\includegraphics[width=\\textwidth]{{{fname}}}}}"
+            )
+        overlays = "\n".join(overlay_lines)
+
+        tex_content = (
+            "\\documentclass{beamer}\n"
+            "\\usepackage{graphicx}\n"
+            f"\\title{{{title}}}\n"
+            "\\date{}\n"
+            "\\begin{document}\n"
+            "\\begin{frame}\n"
+            "\\titlepage\n"
+            "\\end{frame}\n"
+            "\\begin{frame}{}\n"
+            f"{overlays}\n"
+            "\\end{frame}\n"
+            "\\end{document}\n"
+        )
+        tex_path = os.path.join(output_dir, "slides.tex")
+        with open(tex_path, "w") as f:
+            f.write(tex_content)
+        return tex_path
 
     def render(self, output_path: str, max_length: float | None = None):
         """
