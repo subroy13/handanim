@@ -218,6 +218,93 @@ rect.draw().quick_view(block=False)
 
 ---
 
+## Exporting Snapshots & Handouts
+
+Beyond full video rendering, the `Scene` class provides several ways to export individual frames and static documents.
+
+### Single snapshot (SVG or PDF)
+
+```python
+scene.render_snapshot("frame_at_3s.svg", frame_in_seconds=3.0)
+scene.render_snapshot("frame_at_3s.pdf", frame_in_seconds=3.0)  # format from extension
+```
+
+### Batch keyframe export
+
+Export specific timestamps as individual files (one timeline computation, many outputs):
+
+```python
+paths = scene.render_keyframes(
+    times=[0.0, 2.5, 5.0, 8.0],
+    output_dir="output/keyframes",
+    format="svg",  # or "pdf"
+)
+```
+
+### Storyboard (evenly-spaced keyframes)
+
+```python
+paths = scene.export_storyboard(n_frames=8, output_dir="output/storyboard", format="svg")
+```
+
+### Multi-page PDF handout
+
+Produces a single PDF file with one animation frame per page — useful as lecture handouts:
+
+```python
+# Auto-pick 6 evenly-spaced frames
+scene.render_handout("handout.pdf")
+
+# Or specify exact timestamps
+scene.render_handout("handout.pdf", times=[0.0, 2.5, 5.0, 8.0, 12.0])
+```
+
+### Beamer slide deck
+
+Export keyframe PDFs and a compilable `.tex` file with overlay transitions:
+
+```python
+tex_path = scene.export_beamer("output/slides", n_frames=8, title="Pythagorean Theorem")
+# Then compile: cd output/slides && pdflatex slides.tex
+```
+
+---
+
+## Positioning & Timeline Utilities
+
+### Named anchors
+
+Every `Drawable` can report named anchor points from its bounding box:
+
+```python
+rect.anchor("center")        # (cx, cy)
+rect.anchor("top_left")      # (min_x, min_y)
+rect.anchor("bottom_right")  # (max_x, max_y)
+rect.anchor("right")         # (max_x, cy)
+# Also: "top", "bottom", "left", "top_right", "bottom_left"
+```
+
+### Relative positioning
+
+Position one drawable relative to another without manual coordinate arithmetic:
+
+```python
+label = Text("hello", position=(0, 0))
+label = Scene.place_relative(label, rect, target_anchor="top", reference_anchor="bottom", offset=(0, -20))
+```
+
+### Timeline utilities
+
+```python
+scene.add(SketchAnimation(start_time=0, duration=2), rect)
+t = scene.wait(1.0)   # t = 3.0 — returns the time after a 1s pause
+scene.add(SketchAnimation(start_time=t, duration=2), circle)
+
+scene.get_current_time()  # returns the end time of the latest event
+```
+
+---
+
 ## Project Layout Cheat Sheet
 
 ```

@@ -156,6 +156,59 @@ class Scene:
 
             self.object_timelines[drawable.id].append(event.end_time)
 
+    def get_current_time(self) -> float:
+        """Returns the end time of the latest event in the scene, or 0.0 if empty."""
+        t = 0.0
+        if self.events:
+            t = max(t, max(event.end_time for event, _ in self.events))
+        if self.camera_events:
+            t = max(t, max(event.end_time for event in self.camera_events))
+        return t
+
+    def wait(self, duration: float) -> float:
+        """Insert a pause of `duration` seconds after the current last event.
+
+        Returns the time at which the next event should start.
+
+        Usage::
+
+            scene.add(SketchAnimation(start_time=0, duration=2), rect)
+            t = scene.wait(1.0)  # t = 3.0
+            scene.add(SketchAnimation(start_time=t, duration=2), circle)
+        """
+        return self.get_current_time() + duration
+
+    @staticmethod
+    def place_relative(
+        target: "Drawable",
+        reference: "Drawable",
+        target_anchor: str = "center",
+        reference_anchor: str = "center",
+        offset: tuple[float, float] = (0.0, 0.0),
+    ) -> "Drawable":
+        """Position `target` so that its anchor aligns with a reference drawable's anchor.
+
+        Returns the translated target — does not mutate the original (consistent with
+        the immutability invariant).
+
+        Args:
+            target: The drawable to reposition.
+            reference: The drawable to align against.
+            target_anchor: Anchor name on the target (e.g. "top_left", "center").
+            reference_anchor: Anchor name on the reference.
+            offset: Additional (dx, dy) offset after alignment.
+
+        Usage::
+
+            label = Text("hello", position=(0, 0))
+            label = Scene.place_relative(label, rect, "top", "bottom", offset=(0, -20))
+        """
+        ref_point = reference.anchor(reference_anchor)
+        tgt_point = target.anchor(target_anchor)
+        dx = ref_point[0] - tgt_point[0] + offset[0]
+        dy = ref_point[1] - tgt_point[1] + offset[1]
+        return target.translate(dx, dy)
+
     def add_camera(self, event) -> None:
         """
         Register a CameraAnimation that controls the viewport over time.
@@ -408,38 +461,203 @@ class Scene:
 
     def render_snapshot(
         self,
-        output_path: str,  # must be an svg file path
-        frame_in_seconds: float,  # the precise second index for the frame to render
-        max_length: float | None = None,  # number of seconds to create the video for
+        output_path: str,
+        frame_in_seconds: float,
+        max_length: float | None = None,
     ):
-        """
-        Render a snapshot of the animation at a specific time point as an SVG file.
-
-        This method is useful for debugging and inspecting the state of an animation
-        at a precise moment. It generates a single frame from the animation timeline
-        and saves it as an SVG image.
+        """Render a snapshot of the animation at a specific time point as an SVG or PDF file.
 
         Args:
-            output_path (str): Path to the output SVG file.
+            output_path (str): Path to the output file (.svg or .pdf).
             frame_in_seconds (float): The exact time point (in seconds) to render.
             max_length (Optional[float], optional): Total duration of the animation. Defaults to None.
         """
-        opsset_list = self.create_event_timeline(max_length)  # create the animated video
-        frame_index = int(
-            np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1)
-        )  # get the frame index
-        frame_ops: OpsSet = opsset_list[frame_index]
-        with cairo.SVGSurface(output_path, self.width, self.height) as surface:
-            ctx = cairo.Context(surface)  # create cairo context
+        opsset_list = self.create_event_timeline(max_length)
+        frame_index = int(np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1))
+        self._render_frame(opsset_list[frame_index], output_path, frame_in_seconds)
 
-            # set the background color
+    def export_storyboard(
+        self,
+        n_frames: int,
+        output_dir: str,
+        format: str = "svg",
+        max_length: float | None = None,
+    ) -> list[str]:
+        """Export evenly-spaced keyframes as a storyboard.
+
+        Args:
+            n_frames: Number of frames to export.
+            output_dir: Directory to write output files.
+            format: "svg" or "pdf".
+            max_length: Total animation duration override.
+
+        Returns:
+            List of output file paths.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        opsset_list = self.create_event_timeline(max_length)
+        total_frames = len(opsset_list)
+        total_duration = total_frames / self.fps
+        times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
+        paths = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            filename = f"storyboard_{i:03d}_{t:.2f}.{format}"
+            output_path = os.path.join(output_dir, filename)
+            self._render_frame(opsset_list[frame_index], output_path, t)
+            paths.append(output_path)
+        return paths
+
+    def _render_frame(self, frame_ops: OpsSet, output_path: str, frame_in_seconds: float):
+        """Render a single frame OpsSet to an SVG or PDF file based on the file extension."""
+        ext = os.path.splitext(output_path)[1].lower()
+        if ext == ".pdf":
+            surface = cairo.PDFSurface(output_path, self.width, self.height)
+        else:
+            surface = cairo.SVGSurface(output_path, self.width, self.height)
+        ctx = cairo.Context(surface)
+        if self.background_color is not None:
+            ctx.set_source_rgb(*self.background_color)
+        ctx.paint()
+        self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
+        frame_ops.render(ctx)
+        surface.finish()
+
+    def render_keyframes(
+        self,
+        times: list[float],
+        output_dir: str,
+        format: str = "svg",
+        prefix: str = "frame",
+        max_length: float | None = None,
+    ) -> list[str]:
+        """Batch export snapshots at multiple timestamps.
+
+        Computes the event timeline once, then renders each requested frame.
+
+        Args:
+            times: List of timestamps (in seconds) to export.
+            output_dir: Directory to write output files.
+            format: "svg" or "pdf".
+            prefix: Filename prefix; files are named {prefix}_{i:03d}_{time:.2f}.{format}.
+            max_length: Total animation duration override.
+
+        Returns:
+            List of output file paths.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        opsset_list = self.create_event_timeline(max_length)
+        paths = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, len(opsset_list) - 1))
+            filename = f"{prefix}_{i:03d}_{t:.2f}.{format}"
+            output_path = os.path.join(output_dir, filename)
+            self._render_frame(opsset_list[frame_index], output_path, t)
+            paths.append(output_path)
+        return paths
+
+    def render_handout(
+        self,
+        output_path: str,
+        n_frames: int = 6,
+        times: list[float] | None = None,
+        max_length: float | None = None,
+    ) -> str:
+        """Render a single multi-page PDF with one animation frame per page.
+
+        Either provide explicit `times` or let `n_frames` evenly-spaced keyframes
+        be chosen automatically.
+
+        Args:
+            output_path: Path to the output PDF file.
+            n_frames: Number of evenly-spaced frames (ignored if `times` is given).
+            times: Explicit list of timestamps (in seconds) to render.
+            max_length: Total animation duration override.
+
+        Returns:
+            The output file path.
+        """
+        opsset_list = self.create_event_timeline(max_length)
+        total_frames = len(opsset_list)
+        total_duration = total_frames / self.fps
+        if times is None:
+            times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
+
+        surface = cairo.PDFSurface(output_path, self.width, self.height)
+        for t in times:
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            ctx = cairo.Context(surface)
             if self.background_color is not None:
                 ctx.set_source_rgb(*self.background_color)
             ctx.paint()
+            self._get_viewport_at(t).apply_to_context(ctx)
+            opsset_list[frame_index].render(ctx)
+            surface.show_page()
+        surface.finish()
+        return output_path
 
-            self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
-            frame_ops.render(ctx)
-            surface.finish()
+    def export_beamer(
+        self,
+        output_dir: str,
+        n_frames: int = 6,
+        times: list[float] | None = None,
+        title: str = "Handanim Slides",
+        max_length: float | None = None,
+    ) -> str:
+        """Export animation keyframes as a compilable Beamer/LaTeX slide deck.
+
+        Each keyframe becomes one overlay on a single frame, so the slides
+        animate forward when presented. Produces PDF images + a .tex file.
+
+        Args:
+            output_dir: Directory to write PDFs and the .tex file.
+            n_frames: Number of evenly-spaced keyframes (ignored if `times` given).
+            times: Explicit list of timestamps to render.
+            title: Title shown on the Beamer title page.
+            max_length: Total animation duration override.
+
+        Returns:
+            Path to the generated .tex file.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        opsset_list = self.create_event_timeline(max_length)
+        total_frames = len(opsset_list)
+        total_duration = total_frames / self.fps
+        if times is None:
+            times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
+
+        pdf_filenames = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            filename = f"slide_{i:03d}.pdf"
+            self._render_frame(opsset_list[frame_index], os.path.join(output_dir, filename), t)
+            pdf_filenames.append(filename)
+
+        overlay_lines = []
+        for i, fname in enumerate(pdf_filenames, start=1):
+            overlay_lines.append(
+                f"    \\only<{i}>{{\\includegraphics[width=\\textwidth]{{{fname}}}}}"
+            )
+        overlays = "\n".join(overlay_lines)
+
+        tex_content = (
+            "\\documentclass{beamer}\n"
+            "\\usepackage{graphicx}\n"
+            f"\\title{{{title}}}\n"
+            "\\date{}\n"
+            "\\begin{document}\n"
+            "\\begin{frame}\n"
+            "\\titlepage\n"
+            "\\end{frame}\n"
+            "\\begin{frame}{}\n"
+            f"{overlays}\n"
+            "\\end{frame}\n"
+            "\\end{document}\n"
+        )
+        tex_path = os.path.join(output_dir, "slides.tex")
+        with open(tex_path, "w") as f:
+            f.write(tex_content)
+        return tex_path
 
     def render(self, output_path: str, max_length: float | None = None):
         """
