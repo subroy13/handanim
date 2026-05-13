@@ -259,6 +259,40 @@ scene.render_handout("handout.pdf")
 scene.render_handout("handout.pdf", times=[0.0, 2.5, 5.0, 8.0, 12.0])
 ```
 
+### Beamer slide deck
+
+Export keyframe PDFs and a compilable `.tex` file with overlay transitions:
+
+```python
+tex_path = scene.export_beamer("output/slides", n_frames=8, title="Pythagorean Theorem")
+# Then compile: cd output/slides && pdflatex slides.tex
+```
+
+---
+
+## Positioning & Timeline Utilities
+
+### Named anchors
+
+Every `Drawable` can report named anchor points from its bounding box:
+
+```python
+rect.anchor("center")        # (cx, cy)
+rect.anchor("top_left")      # (min_x, min_y)
+rect.anchor("bottom_right")  # (max_x, max_y)
+rect.anchor("right")         # (max_x, cy)
+# Also: "top", "bottom", "left", "top_right", "bottom_left"
+```
+
+### Relative positioning
+
+Position one drawable relative to another without manual coordinate arithmetic:
+
+```python
+label = Text("hello", position=(0, 0))
+label = Scene.place_relative(label, rect, target_anchor="top", reference_anchor="bottom", offset=(0, -20))
+```
+
 ### Timeline utilities
 
 ```python

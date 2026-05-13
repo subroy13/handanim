@@ -29,7 +29,7 @@
 - [x] **Type checking with mypy** — add `[tool.mypy]` section to `pyproject.toml` (start with `strict = false`); run on CI; tighten incrementally as the codebase stabilises
 
 ### Package ergonomics
-- [ ] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
+- [x] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
 - [ ] **PyPI publication** — fill in the empty `description` field and add `classifiers` / `keywords` to `pyproject.toml`; publish `v0.1.0` to PyPI so `pip install handanim` works and the package is discoverable
 - [ ] **Semantic versioning** — adopt SemVer; tag releases in git; use `poetry version patch/minor/major` for bumps; document the release process in DEVELOPMENT.md
 
@@ -94,9 +94,9 @@ Visual regression testing is the pragmatic approach for an animation library:
 - [x] **`CameraAnimation`** (scene-level) — animate `Viewport` pan/zoom over time; lets the "camera" drift across a large canvas or zoom into a detail
 
 ### Coordinate helpers
-- [ ] Named anchor methods on `Drawable`: `.anchor("top_left")`, `.anchor("center")`, `.anchor("bottom_right")` — returns `(x, y)` in world coordinates, computed from the bounding box
-- [ ] `Scene.place_relative(drawable_a, drawable_b, anchor_a, anchor_b, offset)` — helper to position `b` relative to `a` without manual coordinate arithmetic
-- [ ] **`scene.wait(duration, after=None)`** utility — adds blank time; syntactic sugar for advancing the timeline without adding a new drawable
+- [x] Named anchor methods on `Drawable`: `.anchor("top_left")`, `.anchor("center")`, `.anchor("bottom_right")` — returns `(x, y)` in world coordinates, computed from the bounding box
+- [x] `Scene.place_relative(drawable_a, drawable_b, anchor_a, anchor_b, offset)` — helper to position `b` relative to `a` without manual coordinate arithmetic
+- [x] **`scene.wait(duration)`** utility — returns the time after a pause; syntactic sugar for computing start times without manual arithmetic
 
 
 ### Cleanup
@@ -125,19 +125,19 @@ Goal: make handanim output usable beyond standalone MP4 — in slides, web pages
 
 ### SVG / PDF snapshot export
 
-- [ ] **`scene.render_keyframes(times, format="svg|pdf")`** — batch export a list of timestamps to numbered SVG or PDF files; loops over the existing `render_snapshot()`. `cairo.PDFSurface` already exists for PDF output. *(Difficulty: easy)*
-- [ ] **`scene.export_storyboard(n_frames, output_dir)`** — auto-pick `n` evenly-spaced keyframes and export as SVG + a summary HTML grid for quick visual review. *(Difficulty: easy)*
+- [x] **`scene.render_keyframes(times, format="svg|pdf")`** — batch export a list of timestamps to numbered SVG or PDF files; computes timeline once. *(Difficulty: easy)*
+- [x] **`scene.export_storyboard(n_frames, output_dir)`** — auto-pick `n` evenly-spaced keyframes and export as SVG or PDF. *(Difficulty: easy)*
 
 ### Slide deck export
 
-- [ ] **Beamer/LaTeX overlay export** — export keyframes as PDF (via `cairo.PDFSurface`), generate a `.tex` file with `\includegraphics` on `\onslide<>` overlays; produces a compilable beamer deck from a scene definition. Screen-by-screen rendering is how Cairo already works. *(Difficulty: medium — Cairo rendering is easy, LaTeX template generation is mechanical but needs layout/sizing)*
+- [x] **Beamer/LaTeX overlay export** — `scene.export_beamer()` exports keyframe PDFs + generates a compilable `slides.tex` with `\only<N>` overlays. *(Difficulty: medium)*
 - [ ] **reveal.js / HTML export (embed approach)** — export per-slide MP4/GIF clips and embed them into a reveal.js HTML deck. No client-side animation replay, just embedded media. *(Difficulty: medium — template generation + splitting video at keyframe boundaries)*
 - [ ] **reveal.js / HTML export (animated SVG replay)** — build a JS-based player that replays the OpsSet timeline in the browser using SVG or Canvas. Would need a completely separate rendering path from Cairo — essentially a second renderer translating OpsSet ops into DOM SVG elements with timed playback. *(Difficulty: hard — Cairo SVG output is flat with no semantic structure matching OpsSet ops)*
 - [ ] **SVG+CSS vs SVG+JS animation investigation** — determine whether CSS `@keyframes` on SVG path elements can approximate stroke-by-stroke sketch animation, or whether a small JS player reading a timeline JSON is more practical. *(Difficulty: hard — research/prototyping, uncertain output quality)*
 
 ### Handout / static export
 
-- [ ] **PDF handout mode** — render keyframes to a multi-page PDF (one frame per page or grid layout); useful as lecture handouts. `cairo.PDFSurface` handles this natively. *(Difficulty: easy)*
+- [x] **PDF handout mode** — `scene.render_handout()` produces a single multi-page PDF with one frame per page. *(Difficulty: easy)*
 - [ ] **Annotated handout** — allow attaching text annotations per keyframe (e.g., `scene.annotate(t=3.0, text="Note: chain rule applied here")`); render alongside the frame in the PDF. *(Difficulty: medium — needs annotation data model + PDF layout logic)*
 
 ---
