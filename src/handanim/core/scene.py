@@ -525,6 +525,46 @@ class Scene:
             paths.append(output_path)
         return paths
 
+    def render_handout(
+        self,
+        output_path: str,
+        n_frames: int = 6,
+        times: list[float] | None = None,
+        max_length: float | None = None,
+    ) -> str:
+        """Render a single multi-page PDF with one animation frame per page.
+
+        Either provide explicit `times` or let `n_frames` evenly-spaced keyframes
+        be chosen automatically.
+
+        Args:
+            output_path: Path to the output PDF file.
+            n_frames: Number of evenly-spaced frames (ignored if `times` is given).
+            times: Explicit list of timestamps (in seconds) to render.
+            max_length: Total animation duration override.
+
+        Returns:
+            The output file path.
+        """
+        opsset_list = self.create_event_timeline(max_length)
+        total_frames = len(opsset_list)
+        total_duration = total_frames / self.fps
+        if times is None:
+            times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
+
+        surface = cairo.PDFSurface(output_path, self.width, self.height)
+        for t in times:
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            ctx = cairo.Context(surface)
+            if self.background_color is not None:
+                ctx.set_source_rgb(*self.background_color)
+            ctx.paint()
+            self._get_viewport_at(t).apply_to_context(ctx)
+            opsset_list[frame_index].render(ctx)
+            surface.show_page()
+        surface.finish()
+        return output_path
+
     def render(self, output_path: str, max_length: float | None = None):
         """
         Render the animation as a video file.
