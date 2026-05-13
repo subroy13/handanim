@@ -27,6 +27,7 @@ class OpsType(Enum):
     QUAD_CURVE_TO = "quad_curve_to"
     CLOSE_PATH = "close_path"
     DOT = "dot"
+    IMAGE = "image"
 
 
 class Ops:
@@ -186,6 +187,13 @@ class OpsSet:
                     max_x = max(max_x, xmax)
                     min_y = min(min_y, ymin)
                     max_y = max(max_y, ymax)
+                elif ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
+                    ix, iy = ops.data["x"], ops.data["y"]
+                    iw, ih = ops.data["width"], ops.data["height"]
+                    min_x = min(min_x, ix)
+                    min_y = min(min_y, iy)
+                    max_x = max(max_x, ix + iw)
+                    max_y = max(max_y, iy + ih)
                 else:
                     data = ops.data
                     if isinstance(data, list):
@@ -313,7 +321,12 @@ class OpsSet:
         """
         new_ops = []
         for ops in self.opsset:
-            if isinstance(ops.data, list):
+            if ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
+                new_data = dict(ops.data)
+                new_data["x"] += offset_x
+                new_data["y"] += offset_y
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
+            elif isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [(x + offset_x, y + offset_y) for x, y in ops.data]
                 new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
@@ -343,7 +356,14 @@ class OpsSet:
         # now apply scaling
         new_ops = []
         for ops in self.opsset:
-            if isinstance(ops.data, list):
+            if ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
+                new_data = dict(ops.data)
+                new_data["x"] = center_of_gravity[0] + scale_x * (ops.data["x"] - center_of_gravity[0])
+                new_data["y"] = center_of_gravity[1] + scale_y * (ops.data["y"] - center_of_gravity[1])
+                new_data["width"] = ops.data["width"] * abs(scale_x)
+                new_data["height"] = ops.data["height"] * abs(scale_y)
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
+            elif isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [
                     (
@@ -373,17 +393,25 @@ class OpsSet:
         rotation_values = [np.cos(np.deg2rad(angle)), np.sin(np.deg2rad(angle))]
 
         new_ops = []
+        cos_a, sin_a = rotation_values
         for ops in self.opsset:
-            if isinstance(ops.data, list):
+            if ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
+                new_data = dict(ops.data)
+                ox, oy = ops.data["x"], ops.data["y"]
+                new_data["x"] = center_of_rotation[0] + cos_a * (ox - center_of_rotation[0]) - sin_a * (oy - center_of_rotation[1])
+                new_data["y"] = center_of_rotation[1] + sin_a * (ox - center_of_rotation[0]) + cos_a * (oy - center_of_rotation[1])
+                new_data["rotation"] = ops.data.get("rotation", 0.0) + angle
+                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
+            elif isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [
                     (
                         center_of_rotation[0]
-                        + rotation_values[0] * (x - center_of_rotation[0])
-                        - rotation_values[1] * (y - center_of_rotation[1]),
+                        + cos_a * (x - center_of_rotation[0])
+                        - sin_a * (y - center_of_rotation[1]),
                         center_of_rotation[1]
-                        + rotation_values[1] * (x - center_of_rotation[0])
-                        + rotation_values[0] * (y - center_of_rotation[1]),
+                        + sin_a * (x - center_of_rotation[0])
+                        + cos_a * (y - center_of_rotation[1]),
                     )
                     for x, y in ops.data
                 ]  # performs multiplication of rotation matrix explcitly
@@ -459,6 +487,27 @@ class OpsSet:
                     ctx.set_line_width(ops.data.get("width"))
             elif ops.type == OpsType.METADATA:
                 pass  # ignore metadata ops
+            elif ops.type == OpsType.IMAGE:
+                if has_path and mode == "stroke":
+                    ctx.stroke()
+                elif has_path and mode == "fill":
+                    ctx.fill()
+                has_path = False
+                img_surface = ops.data["surface"]
+                ix, iy = ops.data["x"], ops.data["y"]
+                iw, ih = ops.data["width"], ops.data["height"]
+                opacity = ops.data.get("opacity", 1.0) * ops.partial
+                rotation = ops.data.get("rotation", 0.0)
+                img_w = img_surface.get_width()
+                img_h = img_surface.get_height()
+                ctx.save()
+                ctx.translate(ix, iy)
+                if rotation != 0.0:
+                    ctx.rotate(np.deg2rad(rotation))
+                ctx.scale(iw / img_w, ih / img_h)
+                ctx.set_source_surface(img_surface, 0, 0)
+                ctx.paint_with_alpha(opacity)
+                ctx.restore()
             elif ops.type == OpsType.DOT:
                 has_path = True
                 x, y = ops.data.get("center", (0, 0))
