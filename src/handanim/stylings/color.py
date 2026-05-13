@@ -38,3 +38,15 @@ PASTEL_BLUE = (0.6, 0.6, 1.0)
 PASTEL_YELLOW = (1.0, 1.0, 0.6)
 PASTEL_ORANGE = (1.0, 0.8, 0.6)
 PASTEL_PURPLE = (0.8, 0.6, 1.0)
+
+# Blackboard / chalkboard style
+CHALKBOARD_BG = (0.15, 0.18, 0.15)
+CHALK_WHITE = (0.92, 0.92, 0.88)
+CHALK_RED = (0.85, 0.25, 0.22)
+CHALK_YELLOW = (0.95, 0.85, 0.45)
+CHALK_BLUE = (0.45, 0.6, 0.85)
+
+# Warm parchment / whiteboard style
+PARCHMENT_BG = (1.0, 0.98, 0.85)
+WARM_BLACK = (0.12, 0.1, 0.08)
+WARM_RED = (0.75, 0.15, 0.12)

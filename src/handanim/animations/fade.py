@@ -23,8 +23,8 @@ class FadeInAnimation(AnimationEvent):
         current_ops_list = []
         for op in opsset.opsset:
             if op.type == OpsType.SET_PEN:
-                modifed_data = {k: progress if k == "opacity" else v for k, v in op.data.items()}
-                current_ops_list.append(Ops(type=OpsType.SET_PEN, data=modifed_data, partial=op.partial, meta=op.meta))
+                modified_data = {k: progress if k == "opacity" else v for k, v in op.data.items()}
+                current_ops_list.append(Ops(type=OpsType.SET_PEN, data=modified_data, partial=op.partial, meta=op.meta))
             else:
                 current_ops_list.append(op)
         new_opsset = OpsSet(initial_set=current_ops_list)
