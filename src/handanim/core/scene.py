@@ -430,38 +430,100 @@ class Scene:
 
     def render_snapshot(
         self,
-        output_path: str,  # must be an svg file path
-        frame_in_seconds: float,  # the precise second index for the frame to render
-        max_length: float | None = None,  # number of seconds to create the video for
+        output_path: str,
+        frame_in_seconds: float,
+        max_length: float | None = None,
     ):
-        """
-        Render a snapshot of the animation at a specific time point as an SVG file.
-
-        This method is useful for debugging and inspecting the state of an animation
-        at a precise moment. It generates a single frame from the animation timeline
-        and saves it as an SVG image.
+        """Render a snapshot of the animation at a specific time point as an SVG or PDF file.
 
         Args:
-            output_path (str): Path to the output SVG file.
+            output_path (str): Path to the output file (.svg or .pdf).
             frame_in_seconds (float): The exact time point (in seconds) to render.
             max_length (Optional[float], optional): Total duration of the animation. Defaults to None.
         """
-        opsset_list = self.create_event_timeline(max_length)  # create the animated video
-        frame_index = int(
-            np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1)
-        )  # get the frame index
-        frame_ops: OpsSet = opsset_list[frame_index]
-        with cairo.SVGSurface(output_path, self.width, self.height) as surface:
-            ctx = cairo.Context(surface)  # create cairo context
+        opsset_list = self.create_event_timeline(max_length)
+        frame_index = int(np.clip(np.round(frame_in_seconds * self.fps), 0, len(opsset_list) - 1))
+        self._render_frame(opsset_list[frame_index], output_path, frame_in_seconds)
 
-            # set the background color
-            if self.background_color is not None:
-                ctx.set_source_rgb(*self.background_color)
-            ctx.paint()
+    def export_storyboard(
+        self,
+        n_frames: int,
+        output_dir: str,
+        format: str = "svg",
+        max_length: float | None = None,
+    ) -> list[str]:
+        """Export evenly-spaced keyframes as a storyboard.
 
-            self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
-            frame_ops.render(ctx)
-            surface.finish()
+        Args:
+            n_frames: Number of frames to export.
+            output_dir: Directory to write output files.
+            format: "svg" or "pdf".
+            max_length: Total animation duration override.
+
+        Returns:
+            List of output file paths.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        opsset_list = self.create_event_timeline(max_length)
+        total_frames = len(opsset_list)
+        total_duration = total_frames / self.fps
+        times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
+        paths = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            filename = f"storyboard_{i:03d}_{t:.2f}.{format}"
+            output_path = os.path.join(output_dir, filename)
+            self._render_frame(opsset_list[frame_index], output_path, t)
+            paths.append(output_path)
+        return paths
+
+    def _render_frame(self, frame_ops: OpsSet, output_path: str, frame_in_seconds: float):
+        """Render a single frame OpsSet to an SVG or PDF file based on the file extension."""
+        ext = os.path.splitext(output_path)[1].lower()
+        if ext == ".pdf":
+            surface = cairo.PDFSurface(output_path, self.width, self.height)
+        else:
+            surface = cairo.SVGSurface(output_path, self.width, self.height)
+        ctx = cairo.Context(surface)
+        if self.background_color is not None:
+            ctx.set_source_rgb(*self.background_color)
+        ctx.paint()
+        self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
+        frame_ops.render(ctx)
+        surface.finish()
+
+    def render_keyframes(
+        self,
+        times: list[float],
+        output_dir: str,
+        format: str = "svg",
+        prefix: str = "frame",
+        max_length: float | None = None,
+    ) -> list[str]:
+        """Batch export snapshots at multiple timestamps.
+
+        Computes the event timeline once, then renders each requested frame.
+
+        Args:
+            times: List of timestamps (in seconds) to export.
+            output_dir: Directory to write output files.
+            format: "svg" or "pdf".
+            prefix: Filename prefix; files are named {prefix}_{i:03d}_{time:.2f}.{format}.
+            max_length: Total animation duration override.
+
+        Returns:
+            List of output file paths.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        opsset_list = self.create_event_timeline(max_length)
+        paths = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, len(opsset_list) - 1))
+            filename = f"{prefix}_{i:03d}_{t:.2f}.{format}"
+            output_path = os.path.join(output_dir, filename)
+            self._render_frame(opsset_list[frame_index], output_path, t)
+            paths.append(output_path)
+        return paths
 
     def render(self, output_path: str, max_length: float | None = None):
         """
