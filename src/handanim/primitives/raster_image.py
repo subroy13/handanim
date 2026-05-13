@@ -1,8 +1,8 @@
-import numpy as np
 import cairo
+import numpy as np
 
-from ..core.drawable import Drawable
 from ..core.draw_ops import Ops, OpsSet, OpsType
+from ..core.drawable import Drawable
 from ..core.styles import SketchStyle, StrokeStyle
 
 

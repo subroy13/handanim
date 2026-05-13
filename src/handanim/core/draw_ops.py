@@ -322,10 +322,10 @@ class OpsSet:
         new_ops = []
         for ops in self.opsset:
             if ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
-                new_data = dict(ops.data)
-                new_data["x"] += offset_x
-                new_data["y"] += offset_y
-                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
+                img_data = dict(ops.data)
+                img_data["x"] += offset_x
+                img_data["y"] += offset_y
+                new_ops.append(Ops(ops.type, img_data, ops.partial, ops.meta))
             elif isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [(x + offset_x, y + offset_y) for x, y in ops.data]
@@ -357,12 +357,12 @@ class OpsSet:
         new_ops = []
         for ops in self.opsset:
             if ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
-                new_data = dict(ops.data)
-                new_data["x"] = center_of_gravity[0] + scale_x * (ops.data["x"] - center_of_gravity[0])
-                new_data["y"] = center_of_gravity[1] + scale_y * (ops.data["y"] - center_of_gravity[1])
-                new_data["width"] = ops.data["width"] * abs(scale_x)
-                new_data["height"] = ops.data["height"] * abs(scale_y)
-                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
+                img_data = dict(ops.data)
+                img_data["x"] = center_of_gravity[0] + scale_x * (ops.data["x"] - center_of_gravity[0])
+                img_data["y"] = center_of_gravity[1] + scale_y * (ops.data["y"] - center_of_gravity[1])
+                img_data["width"] = ops.data["width"] * abs(scale_x)
+                img_data["height"] = ops.data["height"] * abs(scale_y)
+                new_ops.append(Ops(ops.type, img_data, ops.partial, ops.meta))
             elif isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [
@@ -396,12 +396,12 @@ class OpsSet:
         cos_a, sin_a = rotation_values
         for ops in self.opsset:
             if ops.type == OpsType.IMAGE and isinstance(ops.data, dict):
-                new_data = dict(ops.data)
+                img_data = dict(ops.data)
                 ox, oy = ops.data["x"], ops.data["y"]
-                new_data["x"] = center_of_rotation[0] + cos_a * (ox - center_of_rotation[0]) - sin_a * (oy - center_of_rotation[1])
-                new_data["y"] = center_of_rotation[1] + sin_a * (ox - center_of_rotation[0]) + cos_a * (oy - center_of_rotation[1])
-                new_data["rotation"] = ops.data.get("rotation", 0.0) + angle
-                new_ops.append(Ops(ops.type, new_data, ops.partial, ops.meta))
+                img_data["x"] = center_of_rotation[0] + cos_a * (ox - center_of_rotation[0]) - sin_a * (oy - center_of_rotation[1])
+                img_data["y"] = center_of_rotation[1] + sin_a * (ox - center_of_rotation[0]) + cos_a * (oy - center_of_rotation[1])
+                img_data["rotation"] = ops.data.get("rotation", 0.0) + angle
+                new_ops.append(Ops(ops.type, img_data, ops.partial, ops.meta))
             elif isinstance(ops.data, list):
                 # ops.data is list means, everything is a point
                 new_data = [
