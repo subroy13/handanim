@@ -24,7 +24,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Scene.render_keyframes(times, ...)` — batch export snapshots at specific timestamps (single timeline computation)
 - `Scene.export_storyboard(n_frames, ...)` — export evenly-spaced keyframes as individual SVG/PDF files
 - `Scene.render_handout(output_path, ...)` — render a single multi-page PDF with one animation frame per page
-- `Scene.export_beamer(output_dir, ...)` — export keyframe PDFs and a compilable Beamer `.tex` file with `\only<N>` overlay transitions
+- `Scene.export_beamer(output_dir, ...)` — export keyframe PDFs and a compilable Beamer `.tex` file with `\only<N>` overlay transitions; new `backend="tikz"` option emits native TikZ drawing commands instead of embedded PDF images
+- `Scene.render_tikz(output_path, ...)` — render a single animation frame as a standalone TikZ/LaTeX file
+- `TikZRenderer` (`core/tikz_renderer.py`) — converts OpsSet drawing operations to TikZ path commands; handles coordinate transform (Y-flip), colour deduplication, partial ops, and line width scaling
 - Top-level `__init__.py` exports — `from handanim import Scene, Rectangle, SketchAnimation` etc.
 - Tests for all new scene utilities and export methods (35 new tests)
 - `RotateAnimation` — animates an OpsSet rotating by a configurable angle around an explicit pivot or the center of gravity

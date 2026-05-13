@@ -264,8 +264,30 @@ scene.render_handout("handout.pdf", times=[0.0, 2.5, 5.0, 8.0, 12.0])
 Export keyframe PDFs and a compilable `.tex` file with overlay transitions:
 
 ```python
+# Cairo backend (default) — embeds rendered PDF images
 tex_path = scene.export_beamer("output/slides", n_frames=8, title="Pythagorean Theorem")
 # Then compile: cd output/slides && pdflatex slides.tex
+```
+
+#### Native TikZ backend
+
+For truly native LaTeX vector output (no external PDF images), use the TikZ backend:
+
+```python
+# TikZ backend — inline drawing commands, no external files
+tex_path = scene.export_beamer("output/slides", n_frames=8, backend="tikz", title="My Talk")
+# Produces a single .tex file with \begin{tikzpicture} inside each \only<N>
+```
+
+The TikZ backend converts OpsSet drawing operations to TikZ path commands: `\draw` for strokes, `\fill` for fills, cubic Bezier `controls` for curves, and `\definecolor` for colour management. The hand-drawn roughness is preserved since each wobbly line segment becomes a Bezier curve in TikZ.
+
+### Standalone TikZ frame
+
+Export a single animation frame as a compilable standalone TikZ document:
+
+```python
+scene.render_tikz("frame.tex", time=2.5, target_width_cm=10.0)
+# pdflatex frame.tex
 ```
 
 ---
@@ -309,7 +331,7 @@ scene.get_current_time()  # returns the end time of the latest event
 
 ```
 src/handanim/
-├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, styles
+├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, TikZRenderer, styles
 ├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, RasterImage, …
 ├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate, ColorTransition, Camera
 └── stylings/      # color constants, fill patterns, stroke utilities
