@@ -156,6 +156,28 @@ class Scene:
 
             self.object_timelines[drawable.id].append(event.end_time)
 
+    def get_current_time(self) -> float:
+        """Returns the end time of the latest event in the scene, or 0.0 if empty."""
+        t = 0.0
+        if self.events:
+            t = max(t, max(event.end_time for event, _ in self.events))
+        if self.camera_events:
+            t = max(t, max(event.end_time for event in self.camera_events))
+        return t
+
+    def wait(self, duration: float) -> float:
+        """Insert a pause of `duration` seconds after the current last event.
+
+        Returns the time at which the next event should start.
+
+        Usage::
+
+            scene.add(SketchAnimation(start_time=0, duration=2), rect)
+            t = scene.wait(1.0)  # t = 3.0
+            scene.add(SketchAnimation(start_time=t, duration=2), circle)
+        """
+        return self.get_current_time() + duration
+
     def add_camera(self, event) -> None:
         """
         Register a CameraAnimation that controls the viewport over time.
