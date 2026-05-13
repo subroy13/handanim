@@ -218,56 +218,90 @@ rect.draw().quick_view(block=False)
 
 ---
 
-## Raster Images
+## Exporting Snapshots & Handouts
 
-The `RasterImage` primitive lets you embed PNG, JPEG, or other raster images into a scene. Images are positioned in world coordinates and support translate, scale, rotate, and opacity animations.
+Beyond full video rendering, the `Scene` class provides several ways to export individual frames and static documents.
 
-### Basic usage
-
-```python
-from handanim.primitives import RasterImage
-from handanim.core.scene import Scene
-from handanim.animations.sketch import SketchAnimation
-
-img = RasterImage("photo.png", position=(100, 100), width=400)
-# height auto-computed to preserve aspect ratio
-
-scene = Scene()
-scene.add(SketchAnimation(start_time=0, duration=1.5), img)
-scene.render("output.mp4")
-```
-
-### Sizing options
+### Single snapshot (SVG or PDF)
 
 ```python
-# Explicit width and height (may distort)
-img = RasterImage("photo.jpg", position=(0, 0), width=400, height=300)
-
-# Width only — height preserves aspect ratio
-img = RasterImage("photo.jpg", position=(0, 0), width=400)
-
-# Height only — width preserves aspect ratio
-img = RasterImage("photo.jpg", position=(0, 0), height=300)
-
-# No size — uses the image's pixel dimensions as world-coordinate size
-img = RasterImage("photo.jpg", position=(0, 0))
+scene.render_snapshot("frame_at_3s.svg", frame_in_seconds=3.0)
+scene.render_snapshot("frame_at_3s.pdf", frame_in_seconds=3.0)  # format from extension
 ```
 
-### Animations
+### Batch keyframe export
 
-`SketchAnimation` fades the image in (opacity ramps from 0 to 1). `FadeInAnimation` and `FadeOutAnimation` also work as expected. Standard transforms (translate, scale, rotate) are supported.
+Export specific timestamps as individual files (one timeline computation, many outputs):
 
 ```python
-from handanim.animations.fade import FadeOutAnimation
-
-# Fade in via sketch, then fade out
-scene.add(SketchAnimation(start_time=0, duration=1.0), img)
-scene.add(FadeOutAnimation(start_time=3.0, duration=1.0), img)
+paths = scene.render_keyframes(
+    times=[0.0, 2.5, 5.0, 8.0],
+    output_dir="output/keyframes",
+    format="svg",  # or "pdf"
+)
 ```
 
-### Supported formats
+### Storyboard (evenly-spaced keyframes)
 
-PNG is loaded directly via Cairo. All other formats (JPEG, BMP, TIFF, WebP, etc.) are loaded via Pillow and converted to a Cairo surface automatically.
+```python
+paths = scene.export_storyboard(n_frames=8, output_dir="output/storyboard", format="svg")
+```
+
+### Multi-page PDF handout
+
+Produces a single PDF file with one animation frame per page — useful as lecture handouts:
+
+```python
+# Auto-pick 6 evenly-spaced frames
+scene.render_handout("handout.pdf")
+
+# Or specify exact timestamps
+scene.render_handout("handout.pdf", times=[0.0, 2.5, 5.0, 8.0, 12.0])
+```
+
+### Beamer slide deck
+
+Export keyframe PDFs and a compilable `.tex` file with overlay transitions:
+
+```python
+tex_path = scene.export_beamer("output/slides", n_frames=8, title="Pythagorean Theorem")
+# Then compile: cd output/slides && pdflatex slides.tex
+```
+
+---
+
+## Positioning & Timeline Utilities
+
+### Named anchors
+
+Every `Drawable` can report named anchor points from its bounding box:
+
+```python
+rect.anchor("center")        # (cx, cy)
+rect.anchor("top_left")      # (min_x, min_y)
+rect.anchor("bottom_right")  # (max_x, max_y)
+rect.anchor("right")         # (max_x, cy)
+# Also: "top", "bottom", "left", "top_right", "bottom_left"
+```
+
+### Relative positioning
+
+Position one drawable relative to another without manual coordinate arithmetic:
+
+```python
+label = Text("hello", position=(0, 0))
+label = Scene.place_relative(label, rect, target_anchor="top", reference_anchor="bottom", offset=(0, -20))
+```
+
+### Timeline utilities
+
+```python
+scene.add(SketchAnimation(start_time=0, duration=2), rect)
+t = scene.wait(1.0)   # t = 3.0 — returns the time after a 1s pause
+scene.add(SketchAnimation(start_time=t, duration=2), circle)
+
+scene.get_current_time()  # returns the end time of the latest event
+```
 
 ---
 
