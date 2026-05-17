@@ -310,7 +310,7 @@ scene.get_current_time()  # returns the end time of the latest event
 ```
 src/handanim/
 ├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, styles
-├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, …
+├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, RasterImage, …
 ├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate, ColorTransition, Camera
 └── stylings/      # color constants, fill patterns, stroke utilities
 

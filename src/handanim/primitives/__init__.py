@@ -8,6 +8,7 @@ from .math import Math
 from .polygons import NGon, Polygon, Rectangle, RoundedRectangle, RoundedSquare, Square
 from .table import Table, TableRevealEvent
 from .text import Text
+from .raster_image import RasterImage
 from .vector_svg import VectorSVG
 
 __all__ = [
@@ -32,6 +33,7 @@ __all__ = [
     "FlowchartDiamond",
     "FlowchartConnector",
     "Flowchart",
+    "RasterImage",
     "Table",
     "TableRevealEvent",
 ]
