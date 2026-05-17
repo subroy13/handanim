@@ -2,3 +2,4 @@ checkpoints/
 *.onnx
 dataset.npz
 strokes.json
+data/*

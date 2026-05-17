@@ -27,3 +27,7 @@ dist/
 
 # Poetry
 .poetry/*
+
+# Archived files
+archive/*
+*.py.bak
