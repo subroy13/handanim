@@ -1388,6 +1388,34 @@ render the polygon using a closed linear path with optional filling.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="handanim.primitives.RasterImage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">RasterImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.RasterImage" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
+<p>A drawable that places a raster image (PNG, JPEG, etc.) into the scene.</p>
+<p>The image is positioned in world coordinates. If only one of width/height
+is given, the other is computed to preserve the aspect ratio.  If neither
+is given, the image’s pixel dimensions are used as world-coordinate size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> – Path to the image file.</p></li>
+<li><p><strong>position</strong> – Top-left corner in world coordinates (x, y).</p></li>
+<li><p><strong>width</strong> – Display width in world coordinates.</p></li>
+<li><p><strong>height</strong> – Display height in world coordinates.</p></li>
+<li><p><strong>opacity</strong> – Initial opacity (0.0 transparent, 1.0 opaque).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.RasterImage.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.primitives.RasterImage.draw" title="Link to this definition">¶</a></dt>
+<dd><p>Provides the list of operations to be performed to
+draw this particular drawable object on the canvas</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="handanim.primitives.Rectangle">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">Rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Rectangle" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#handanim.primitives.polygons.Polygon" title="handanim.primitives.polygons.Polygon"><code class="xref py py-class docutils literal notranslate"><span class="pre">Polygon</span></code></a></p>
@@ -1986,6 +2014,10 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.Polygon"><code class="docutils literal notranslate"><span class="pre">Polygon</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.primitives.Polygon.points"><code class="docutils literal notranslate"><span class="pre">Polygon.points</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Polygon.draw"><code class="docutils literal notranslate"><span class="pre">Polygon.draw()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.primitives.RasterImage"><code class="docutils literal notranslate"><span class="pre">RasterImage</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.primitives.RasterImage.draw"><code class="docutils literal notranslate"><span class="pre">RasterImage.draw()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handanim.primitives.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a><ul>
