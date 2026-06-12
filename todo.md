@@ -29,7 +29,7 @@
 - [x] **Type checking with mypy** — add `[tool.mypy]` section to `pyproject.toml` (start with `strict = false`); run on CI; tighten incrementally as the codebase stabilises
 
 ### Package ergonomics
-- [ ] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
+- [x] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
 - [ ] **PyPI publication** — fill in the empty `description` field and add `classifiers` / `keywords` to `pyproject.toml`; publish `v0.1.0` to PyPI so `pip install handanim` works and the package is discoverable
 - [ ] **Semantic versioning** — adopt SemVer; tag releases in git; use `poetry version patch/minor/major` for bumps; document the release process in DEVELOPMENT.md
 
@@ -85,7 +85,7 @@ Visual regression testing is the pragmatic approach for an animation library:
 - [x] `Table.animate_by_row()` / `.animate_by_cell()` — returns a `CompositeAnimationEvent` that reveals cells in sequence
 
 ### Image & Video import
-- [ ] `RasterImage` drawable — load PNG/JPG via Pillow, render to Cairo surface as an OpsSet-compatible operation (needs a new `OpsType.RASTER_IMAGE` or direct Cairo `set_source_surface`)
+- [x] `RasterImage` drawable — load PNG/JPG via Pillow, render to Cairo surface via `OpsType.IMAGE`; supports translate, scale, rotate, opacity; fades in with SketchAnimation, works with FadeIn/FadeOut
 - [ ] `VideoClip` drawable — extract frames from a video file via `moviepy`, render the frame matching the current scene time; useful for compositing hand-drawn annotations over real footage
 
 ### New animation types
@@ -94,14 +94,14 @@ Visual regression testing is the pragmatic approach for an animation library:
 - [x] **`CameraAnimation`** (scene-level) — animate `Viewport` pan/zoom over time; lets the "camera" drift across a large canvas or zoom into a detail
 
 ### Coordinate helpers
-- [ ] Named anchor methods on `Drawable`: `.anchor("top_left")`, `.anchor("center")`, `.anchor("bottom_right")` — returns `(x, y)` in world coordinates, computed from the bounding box
-- [ ] `Scene.place_relative(drawable_a, drawable_b, anchor_a, anchor_b, offset)` — helper to position `b` relative to `a` without manual coordinate arithmetic
-- [ ] **`scene.wait(duration, after=None)`** utility — adds blank time; syntactic sugar for advancing the timeline without adding a new drawable
+- [x] Named anchor methods on `Drawable`: `.anchor("top_left")`, `.anchor("center")`, `.anchor("bottom_right")` — returns `(x, y)` in world coordinates, computed from the bounding box
+- [x] `Scene.place_relative(drawable_a, drawable_b, anchor_a, anchor_b, offset)` — helper to position `b` relative to `a` without manual coordinate arithmetic
+- [x] **`scene.wait(duration)`** utility — returns the time after a pause; syntactic sugar for computing start times without manual arithmetic
 
 
 ### Cleanup
 - [x] Deprecate & Remove Legacy SVG: primitives/svg.py is marked as deprecated and relies on svgpathtools (which is a dev-only dependency according to repo_overview.md). It would be cleaner to remove this file entirely (or move it to a distinct legacy module) to ensure users don't accidentally import it and hit missing dependency errors, enforcing VectorSVG as the sole SVG handler.
-- [ ] Complete ZigZagLineFillPattern: In stylings/fillpatterns.py, the ZigZagLineFillPattern class is currently commented out entirely with a # TODO: Check and fix this. Completing this would provide a fantastic new sketchy fill style (like a back-and-forth colored pencil shading) to complement the existing hatching.
+- [x] Complete ZigZagLineFillPattern: Implemented in PR #10 — replaces commented-out code with working OpsSet-based implementation. Fixed geometry bugs in original (atan→atan2, perpendicular offset, per-segment midpoint). Registered as `fill_pattern="zigzag"` in `get_filler()`.
 
 
 
@@ -116,6 +116,30 @@ The `handanim_ai` module already has the two-prompt pipeline scaffolded. Expand 
 - [ ] **Asset awareness** — let the AI prompt know about files in `fonts/` and an `assets/` folder so it can reference them in generated code
 - [ ] **CLI entry point** — `handanim-ai generate "explain the Pythagorean theorem"` that runs the full pipeline and opens the result
 - [ ] **Prompt versioning** — move prompts to a structured YAML with version field; makes A/B testing prompt changes easier
+
+---
+
+## Phase 3.5 — Export & Presentation Pipeline
+
+Goal: make handanim output usable beyond standalone MP4 — in slides, web pages, and printable handouts. (Proposed by Subrata)
+
+### SVG / PDF snapshot export
+
+- [x] **`scene.render_keyframes(times, format="svg|pdf")`** — batch export a list of timestamps to numbered SVG or PDF files; computes timeline once. *(Difficulty: easy)*
+- [x] **`scene.export_storyboard(n_frames, output_dir)`** — auto-pick `n` evenly-spaced keyframes and export as SVG or PDF. *(Difficulty: easy)*
+
+### Slide deck export
+
+- [x] **Beamer/LaTeX overlay export** — `scene.export_beamer()` exports keyframe PDFs + generates a compilable `slides.tex` with `\only<N>` overlays. *(Difficulty: medium)*
+- [x] **Native TikZ backend for Beamer** — `scene.export_beamer(backend="tikz")` emits inline TikZ drawing commands instead of embedded PDF images. Also adds `scene.render_tikz()` for standalone TikZ output. `TikZRenderer` converts OpsSet ops (lines, curves, fills, dots, opacity) to TikZ paths with coordinate transform, colour deduplication, and partial-op support. Compiles cleanly with pdflatex. *(Difficulty: medium)*
+- [ ] **reveal.js / HTML export (embed approach)** — export per-slide MP4/GIF clips and embed them into a reveal.js HTML deck. No client-side animation replay, just embedded media. *(Difficulty: medium — template generation + splitting video at keyframe boundaries)*
+- [ ] **reveal.js / HTML export (animated SVG replay)** — build a JS-based player that replays the OpsSet timeline in the browser using SVG or Canvas. Would need a completely separate rendering path from Cairo — essentially a second renderer translating OpsSet ops into DOM SVG elements with timed playback. *(Difficulty: hard — Cairo SVG output is flat with no semantic structure matching OpsSet ops)*
+- [ ] **SVG+CSS vs SVG+JS animation investigation** — determine whether CSS `@keyframes` on SVG path elements can approximate stroke-by-stroke sketch animation, or whether a small JS player reading a timeline JSON is more practical. *(Difficulty: hard — research/prototyping, uncertain output quality)*
+
+### Handout / static export
+
+- [x] **PDF handout mode** — `scene.render_handout()` produces a single multi-page PDF with one frame per page. *(Difficulty: easy)*
+- [ ] **Annotated handout** — allow attaching text annotations per keyframe (e.g., `scene.annotate(t=3.0, text="Note: chain rule applied here")`); render alongside the frame in the PDF. *(Difficulty: medium — needs annotation data model + PDF layout logic)*
 
 ---
 
@@ -261,6 +285,15 @@ Use a **Sketch-RNN** (Ha & Eck, 2018 — [paper](https://arxiv.org/abs/1704.0347
 - [ ] **Recognisability** — run generated strokes through a frozen CNN classifier (train a simple ResNet-18 on the HASYv2 bitmaps); target top-1 accuracy > 85% on math symbols
 - [ ] **Diversity** — generate 10 samples per character; compute mean pairwise DTW; a good model should show variation, not copy a single template
 - [ ] Log all three metrics in `train.py` at the end of each epoch alongside the NLL loss
+
+### Additional items
+
+Note: standard fonts are double-stroke (outlines), but handanim needs single-stroke for the hand-drawn aesthetic. Single-stroke fonts do not support math/LaTeX natively — hence the current approach of LaTeX parsing → custom glyph substitution in `Math` primitive.
+
+- [ ] **Google QuickDraw dataset** — use the 2019-2020 stroke data for training; large scale, diverse styles. Simpler networks also work well for this. *(Difficulty: medium)*
+- [ ] **WriteVIT (2025)** — vision transformer for handwriting generation; investigate for higher quality single-stroke output. *(Difficulty: medium-hard)*
+- [ ] **Spacing/kerning fix** — debug the weird gaps in LaTeX math with custom glyph substitution. Likely mismatch between MathTextParser bounding box reporting and actual single-stroke glyph widths. May need per-glyph kerning tables in the JSON font format. *(Difficulty: medium — empirical debugging, MathTextParser internals)*
+- [ ] **Math symbol coverage** — expand `handanimtype1.json` to cover common math symbols (∑, ∫, ∂, ∈, →, ≤, etc.); `utils/fontmaker/symbols.py` has some started. *(Difficulty: medium — each symbol needs stroke data)*
 
 ---
 

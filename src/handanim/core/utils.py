@@ -48,7 +48,7 @@ def get_bezier_points_from_quadcurve(p0: tuple[float, float], q1: tuple[float, f
         Tuple[list, list, list]: Intermediate control points for the cubic Bezier curve
     """
     p1: tuple[float, float] = (1 / 3 * np.array(p0) + 2 / 3 * np.array(q1)).tolist()
-    p2: tuple[float, float] = (1 / 3 * np.array(q1) + 2 / 3 * np.array(q2)).tolist()
+    p2: tuple[float, float] = (2 / 3 * np.array(q1) + 1 / 3 * np.array(q2)).tolist()
     p3 = q2
     return p1, p2, p3
 

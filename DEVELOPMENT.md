@@ -243,12 +243,121 @@ rect.draw().quick_view(block=False)
 
 ---
 
+## Exporting Snapshots & Handouts
+
+Beyond full video rendering, the `Scene` class provides several ways to export individual frames and static documents.
+
+### Single snapshot (SVG or PDF)
+
+```python
+scene.render_snapshot("frame_at_3s.svg", frame_in_seconds=3.0)
+scene.render_snapshot("frame_at_3s.pdf", frame_in_seconds=3.0)  # format from extension
+```
+
+### Batch keyframe export
+
+Export specific timestamps as individual files (one timeline computation, many outputs):
+
+```python
+paths = scene.render_keyframes(
+    times=[0.0, 2.5, 5.0, 8.0],
+    output_dir="output/keyframes",
+    format="svg",  # or "pdf"
+)
+```
+
+### Storyboard (evenly-spaced keyframes)
+
+```python
+paths = scene.export_storyboard(n_frames=8, output_dir="output/storyboard", format="svg")
+```
+
+### Multi-page PDF handout
+
+Produces a single PDF file with one animation frame per page — useful as lecture handouts:
+
+```python
+# Auto-pick 6 evenly-spaced frames
+scene.render_handout("handout.pdf")
+
+# Or specify exact timestamps
+scene.render_handout("handout.pdf", times=[0.0, 2.5, 5.0, 8.0, 12.0])
+```
+
+### Beamer slide deck
+
+Export keyframe PDFs and a compilable `.tex` file with overlay transitions:
+
+```python
+# Cairo backend (default) — embeds rendered PDF images
+tex_path = scene.export_beamer("output/slides", n_frames=8, title="Pythagorean Theorem")
+# Then compile: cd output/slides && pdflatex slides.tex
+```
+
+#### Native TikZ backend
+
+For truly native LaTeX vector output (no external PDF images), use the TikZ backend:
+
+```python
+# TikZ backend — inline drawing commands, no external files
+tex_path = scene.export_beamer("output/slides", n_frames=8, backend="tikz", title="My Talk")
+# Produces a single .tex file with \begin{tikzpicture} inside each \only<N>
+```
+
+The TikZ backend converts OpsSet drawing operations to TikZ path commands: `\draw` for strokes, `\fill` for fills, cubic Bezier `controls` for curves, and `\definecolor` for colour management. The hand-drawn roughness is preserved since each wobbly line segment becomes a Bezier curve in TikZ.
+
+### Standalone TikZ frame
+
+Export a single animation frame as a compilable standalone TikZ document:
+
+```python
+scene.render_tikz("frame.tex", time=2.5, target_width_cm=10.0)
+# pdflatex frame.tex
+```
+
+---
+
+## Positioning & Timeline Utilities
+
+### Named anchors
+
+Every `Drawable` can report named anchor points from its bounding box:
+
+```python
+rect.anchor("center")        # (cx, cy)
+rect.anchor("top_left")      # (min_x, min_y)
+rect.anchor("bottom_right")  # (max_x, max_y)
+rect.anchor("right")         # (max_x, cy)
+# Also: "top", "bottom", "left", "top_right", "bottom_left"
+```
+
+### Relative positioning
+
+Position one drawable relative to another without manual coordinate arithmetic:
+
+```python
+label = Text("hello", position=(0, 0))
+label = Scene.place_relative(label, rect, target_anchor="top", reference_anchor="bottom", offset=(0, -20))
+```
+
+### Timeline utilities
+
+```python
+scene.add(SketchAnimation(start_time=0, duration=2), rect)
+t = scene.wait(1.0)   # t = 3.0 — returns the time after a 1s pause
+scene.add(SketchAnimation(start_time=t, duration=2), circle)
+
+scene.get_current_time()  # returns the end time of the latest event
+```
+
+---
+
 ## Project Layout Cheat Sheet
 
 ```
 src/handanim/
-├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, styles
-├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, …
+├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, TikZRenderer, styles
+├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, RasterImage, …
 ├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate, ColorTransition, Camera
 └── stylings/      # color constants, fill patterns, stroke utilities
 

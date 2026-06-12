@@ -74,6 +74,30 @@ class Drawable:
     def get_bbox(self) -> BoundingBox:
         return self.draw().get_bbox()
 
+    def anchor(self, position: str = "center") -> tuple[float, float]:
+        """Return a named anchor point in world coordinates.
+
+        Args:
+            position: One of "center", "top_left", "top_right", "bottom_left",
+                      "bottom_right", "top", "bottom", "left", "right".
+        """
+        bbox = self.get_bbox()
+        cx, cy = bbox.center
+        anchors = {
+            "center": bbox.center,
+            "top_left": bbox.top_left,
+            "top_right": (bbox.max_x, bbox.min_y),
+            "bottom_left": (bbox.min_x, bbox.max_y),
+            "bottom_right": bbox.bottom_right,
+            "top": (cx, bbox.min_y),
+            "bottom": (cx, bbox.max_y),
+            "left": (bbox.min_x, cy),
+            "right": (bbox.max_x, cy),
+        }
+        if position not in anchors:
+            raise ValueError(f"Unknown anchor '{position}', choose from: {list(anchors.keys())}")
+        return anchors[position]
+
 
 class TransformedDrawable(Drawable):
     """

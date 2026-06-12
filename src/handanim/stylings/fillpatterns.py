@@ -1,4 +1,6 @@
+import copy
 
+import numpy as np
 
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import DrawableFill
@@ -145,90 +147,47 @@ class HatchFillPattern(HachureFillPattern):
         return opsset
 
 
-# class ZigZagFillPattern(DrawableFill):
+class ZigZagLineFillPattern(HachureFillPattern):
+    """
+    Fills polygons with a zigzag line pattern — like back-and-forth colored pencil shading.
 
-#     def fill_polygons(self, ctx):
-#         gap = max(self.fill_style.hachure_gap, 0.1)
+    Takes the same hachure lines as HachureFillPattern, then subdivides each line into
+    segments and offsets midpoints perpendicular to the line direction, alternating sides.
+    The zigzag_offset field in FillStyle controls the amplitude; when negative, defaults
+    to the hachure gap.
+    """
 
-#         fill_style_new = self.fill_style
-#         fill_style_new.hachure_gap = gap  # update the hachure gap
-#         lines = polygon_hachure_lines(
-#             self.bound_box_list, fill_style_new, self.sketch_style
-#         )
-#         zigzag_angle = np.pi * self.fill_style.hachure_angle / 180
-#         zigzag_lines = []
-#         dg = 0.5 * gap * np.array([np.cos(zigzag_angle), np.sin(zigzag_angle)])
-#         for line in lines:
-#             start, end = line  # get the start and end point of the line
-#             zigzag_lines.extend(
-#                 [
-#                     [start + dg, end],
-#                     [start - dg, end],
-#                 ]
-#             )
-#         self.render_fill_lines(ctx, zigzag_lines)
+    def _to_zigzag(self, lines: list[list[tuple[float, float]]], zo: float) -> list[list[tuple[float, float]]]:
+        zigzag_lines = []
+        for line_pts in lines:
+            start = np.array(line_pts[0])
+            end = np.array(line_pts[1])
+            diff = end - start
+            length = np.linalg.norm(diff)
+            if length < 1e-6:
+                continue
+            d = diff / length
+            n = np.array([-d[1], d[0]])
+            count = max(int(np.round(length / (2 * zo))), 1)
+            seg_len = length / count
+            for i in range(count):
+                s = start + i * seg_len * d
+                e = start + (i + 1) * seg_len * d
+                mid = (s + e) / 2 + ((-1) ** i) * zo * n
+                zigzag_lines.append([s.tolist(), mid.tolist()])
+                zigzag_lines.append([mid.tolist(), e.tolist()])
+        return zigzag_lines
 
-
-# class ZigZagLineFillPattern(DrawableFill):
-#     # TODO: Check and fix this
-
-#     def zigzag_lines(
-#         self,
-#         lines: List[List[Tuple[float, float]]],  # list of lines
-#         zo: float,  # zigzag offset factor
-#     ):
-#         zigzag_lines = []
-#         for line in lines:
-#             start, end = line  # get the start and end point of the line
-#             length = np.linalg.norm(np.array(end) - np.array(start))
-#             count = int(np.round(length / (2 * zo)))
-#             if start[0] > end[0]:
-#                 start, end = end, start
-#             alpha = np.atan(
-#                 (end[1] - start[1]) / (end[0] - start[0])
-#             )  # figure out the slope
-#             trig = np.array([np.cos(alpha), np.sin(alpha)])
-#             trig_mid = np.array([np.cos(alpha + np.pi / 4), np.sin(alpha + np.pi / 4)])
-#             for i in range(count):
-#                 lstart = i * 2 * zo
-#                 lend = (i + 1) * 2 * zo
-#                 dz = np.sqrt(2 * zo**2)
-#                 s2 = np.array(start) + lstart * trig
-#                 e2 = np.array(end) + lend * trig
-#                 mid = np.array(start) + dz * trig_mid
-#                 zigzag_lines.append([s2, mid])
-#                 zigzag_lines.append([mid, e2])
-#         return zigzag_lines
-
-#     def render_fill_lines(
-#         self, ctx: cairo.Context, lines: List[List[Tuple[float, float]]]
-#     ):
-#         line_stroke_style = StrokeStyle(
-#             color=self.fill_style.color,
-#             line_width=self.fill_style.hachure_line_width,
-#             opacity=self.fill_style.opacity,
-#         )
-#         for line in lines:
-#             line = Line(
-#                 line[0],
-#                 line[1],
-#                 stroke_style=line_stroke_style,
-#                 sketch_style=self.sketch_style,
-#             )
-#             line.draw(ctx)
-
-#     def fill(self, ctx):
-#         gap = max(self.fill_style.hachure_gap, 0.1)
-#         zo = gap if self.fill_style.zigzag_offset < 0 else self.fill_style.zigzag_offset
-#         fill_style_new = self.fill_style
-#         fill_style_new.hachure_gap = gap + zo  # update the hachure gap
-#         lines = polygon_hachure_lines(
-#             self.bound_box_list, fill_style_new, self.sketch_style
-#         )
-#         zigzag_lines = self.zigzag_lines(
-#             lines, zo
-#         )  # calculate the zigzag lines from the hachure lines
-#         self.render_fill_lines(ctx, zigzag_lines)
+    def fill(self):
+        opsset = OpsSet([Ops(OpsType.SET_PEN, data={"color": self.fill_style.color, "opacity": self.fill_style.opacity, "width": self.fill_style.hachure_line_width, "mode": "stroke"})])
+        gap = max(self.fill_style.hachure_gap, 0.1)
+        zo = gap if self.fill_style.zigzag_offset < 0 else self.fill_style.zigzag_offset
+        fill_style_wider = copy.copy(self.fill_style)
+        fill_style_wider.hachure_gap = gap + zo
+        linepoints = polygon_hachure_lines(self.bound_box_list, fill_style_wider, self.sketch_style)
+        zigzag_pts = self._to_zigzag(linepoints, zo)
+        opsset.extend(self.render_fill_lines(zigzag_pts))
+        return opsset
 
 
 def get_filler(
@@ -241,6 +200,8 @@ def get_filler(
         cls_name = HachureFillPattern
     elif fill_style.fill_pattern == "hatch":
         cls_name = HatchFillPattern
+    elif fill_style.fill_pattern == "zigzag":
+        cls_name = ZigZagLineFillPattern
     elif fill_style.fill_pattern == "solid":
         cls_name = SolidFillPattern  # type: ignore[assignment]
     else:
