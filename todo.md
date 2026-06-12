@@ -30,7 +30,19 @@
 
 ### Package ergonomics
 - [x] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
-- [ ] **PyPI publication** — fill in the empty `description` field and add `classifiers` / `keywords` to `pyproject.toml`; publish `v0.1.0` to PyPI so `pip install handanim` works and the package is discoverable
+- [ ] **PyPI publication** — publish `v0.1.0` so `pip install handanim` works and the package is discoverable
+  - [x] Fill in `description` in `pyproject.toml` (currently empty string)
+  - [x] Add `license = "MIT"` (or match `LICENSE` file) to `pyproject.toml`
+  - [x] Add `classifiers` — e.g. `"Development Status :: 3 - Alpha"`, `"Intended Audience :: Education"`, `"Topic :: Multimedia :: Graphics"`, `"Programming Language :: Python :: 3.11"`
+  - [x] Add `keywords` — e.g. `["animation", "hand-drawn", "manim", "math", "whiteboard", "education"]`
+  - [x] Add `[tool.poetry.urls]` block with `Homepage`, `Repository`, and `Documentation` links
+  - [ ] Wire `[tool.poetry.extras] ai` — list the optional AI deps so `pip install handanim[ai]` pulls them
+  - [ ] Verify `README.md` renders correctly as PyPI long description (no raw HTML, no local image paths)
+  - [x] Run `poetry build` locally and inspect the `dist/` wheel/sdist for unexpected files
+  - [x] Publish to TestPyPI first: `poetry publish --repository testpypi` and verify `pip install --index-url https://test.pypi.org/simple/ handanim` works
+  - [ ] Publish to PyPI: `poetry publish`
+  - [ ] Add PyPI version badge to `README.md`
+  - [ ] Add a GitHub Actions release workflow that runs `poetry publish` automatically on a `v*` tag push
 - [ ] **Semantic versioning** — adopt SemVer; tag releases in git; use `poetry version patch/minor/major` for bumps; document the release process in DEVELOPMENT.md
 
 ### Docs & community files
@@ -143,25 +155,40 @@ Goal: make handanim output usable beyond standalone MP4 — in slides, web pages
 
 ---
 
-## Phase 4 — Handwriting Font Generation
+## Phase 4A — Custom Font Builder (Skeletonization)
 
-Goal: generate a usable single-line stroke font from a handful of hand-written samples.
+Goal: produce high-quality single-stroke glyph paths from existing sources (TTF outlines, real handwriting datasets) and wire them into the rendering pipeline via the custom JSON font format.
 
-- [ ] **Data collection tool** — a simple web/tablet UI (could be a Jupyter widget using `ipycanvas`) that records pen strokes per character as `(x, y, time)` sequences
-- [ ] **Preprocessing pipeline** — normalize scale, resample to uniform arc-length, center each glyph; output to the existing `handanimtype1.json` format
-- [ ] **Stroke-RNN baseline** — adapt [Sketch-RNN](https://github.com/magenta/magenta/tree/main/magenta/models/sketch_rnn) or Ha & Eck (2017) to condition on character identity; train on collected samples
-- [ ] **Transformer alternative** — sequence-to-sequence transformer conditioned on a character token; generates stroke deltas `(dx, dy, pen_up)` autoregressively
-- [ ] **Export pipeline** — sample from trained model per character → smooth with Bezier fitting → write to `fonts/custom/<name>.json`
-- [ ] **Quality metric** — DTW distance between generated and reference strokes; character recognition accuracy using a frozen classifier
+### Bug fixes (already done)
+- [x] **Text left-edge anchor** — `Text.draw()` now passes `self.position` directly to `_draw_line`, consistent with `Math`; both use top-left anchor.
+- [x] **Hershey font/char mapping** — replaced broken `mathlow`/`mathupp` (all chars → charcode 12345) with `greeks`/`greekc` using the correct sequential Latin-proxy encoding; fixed all 48 Greek letter entries in `UNICODE_TO_HERSHEY`.
+- [x] **Hershey math symbol coverage** — added `COMPOSED_GLYPHS` hand-drawn strokes for ∑, ∫, ∂, ∇, ∞, ≤, ≥, ≠, ≈, →, ⟨, ⟩, ⌊⌋, ⌈⌉, and more; extended `UNICODE_TO_HERSHEY` for operators and arrows.
 
-### Additional items
+### Features to build
+- [ ] **Centerline/skeleton extraction** (`tools/fontmaker/make_fonts.py`) — rasterise each TTF glyph (STIX Two Math or DejaVu Math) to a bitmap, apply Zhang-Suen thinning (`skimage`), vectorise the skeleton into smooth spline paths, determine natural stroke order via Eulerian path on connected components, and write to the custom JSON format. *(Difficulty: medium)*
+- [ ] **CROHME InkML ingestion** — parse real human pen-stroke sequences from the CROHME dataset (`(x, y, t)` InkML), normalize/smooth/resample, and export to custom JSON; use as priority-1 font source ahead of Hershey and TTF skeleton. *(Difficulty: medium)*
+- [ ] **Roughification layer** — deterministic Perlin/simplex noise jitter on `LINE_TO`/`CURVE_TO` control points (amplitude × `roughness`, seeded for reproducibility); apply in `hershey_glyph_opsset` and `custom_glyph_opsset` so all glyph paths look hand-drawn. *(Difficulty: easy-medium)*
+- [ ] **Layered font fallback chain** — replace single-backend dispatch in `Math.get_glyph_opsset()` with a priority-ordered chain: custom JSON → Hershey → skeleton TTF → raw TTF outline; configurable per `Math` instance. *(Difficulty: easy)*
+- [ ] **Stroke ordering for SketchAnimation** — optional `stroke_order="natural"` flag that groups OpsSet by `MOVE_TO` boundaries and reorders strokes with a nearest-neighbour heuristic so the reveal animates like actual handwriting. *(Difficulty: medium)*
+- [ ] **Unified `MathText` primitive** — merge `Math` and `Text` (or add `math=True` flag to `Text`) so `$...$` sections are routed through `MathTextParser` while plain text uses the hand-drawn font, both with a consistent left-edge `position` anchor. *(Difficulty: medium)*
+- [ ] **Spacing/kerning fix** — audit the gaps between glyphs in LaTeX math output; likely a mismatch between `MathTextParser` bounding-box reporting and actual single-stroke glyph widths; may require per-glyph kerning tables in the JSON font format. *(Difficulty: medium)*
+- [ ] **Math symbol coverage expansion** — extend `handanimtype1.json` to cover ∑, ∫, ∂, ∈, →, ≤, etc.; `tools/fontmaker/symbols.py` has the label list started. *(Difficulty: medium)*
+
+---
+
+## Phase 4B — Neural Font Generation
+
+Goal: generate a usable single-line stroke font from a handful of hand-written samples using learned sequence models.
 
 Note: standard fonts are double-stroke (outlines), but handanim needs single-stroke for the hand-drawn aesthetic. Single-stroke fonts do not support math/LaTeX natively — hence the current approach of LaTeX parsing → custom glyph substitution in `Math` primitive.
 
-- [ ] **Google QuickDraw dataset** — use the 2019-2020 stroke data for training; large scale, diverse styles. Simpler networks also work well for this. *(Difficulty: medium)*
-- [ ] **WriteVIT (2025)** — vision transformer for handwriting generation; investigate for higher quality single-stroke output. *(Difficulty: medium-hard)*
-- [ ] **Spacing/kerning fix** — debug the weird gaps in LaTeX math with custom glyph substitution. Likely mismatch between MathTextParser bounding box reporting and actual single-stroke glyph widths. May need per-glyph kerning tables in the JSON font format. *(Difficulty: medium — empirical debugging, MathTextParser internals)*
-- [ ] **Math symbol coverage** — expand `handanimtype1.json` to cover common math symbols (∑, ∫, ∂, ∈, →, ≤, etc.); `utils/fontmaker/symbols.py` has some started. *(Difficulty: medium — each symbol needs stroke data)*
+- [ ] **Data collection tool** — Jupyter widget using `ipycanvas` that records pen strokes per character as `(x, y, time)` sequences directly in a notebook. *(Difficulty: easy)*
+- [ ] **Preprocessing pipeline** — normalize scale, resample to uniform arc-length, center each glyph; output to the existing `handanimtype1.json` format. *(Difficulty: easy)*
+- [ ] **Stroke-RNN baseline** — adapt [Sketch-RNN](https://github.com/magenta/magenta/tree/main/magenta/models/sketch_rnn) (Ha & Eck 2017) conditioned on character identity; train on collected samples and/or Google QuickDraw 2019–2020 stroke data. *(Difficulty: medium)*
+- [ ] **Transformer alternative** — sequence-to-sequence transformer conditioned on a character token; generates stroke deltas `(dx, dy, pen_up)` autoregressively; evaluate against Sketch-RNN baseline. *(Difficulty: medium-hard)*
+- [ ] **WriteVIT (2025)** — investigate the 2025 vision-transformer approach for higher-quality single-stroke output. *(Difficulty: medium-hard)*
+- [ ] **Export pipeline** — sample from trained model per character → smooth with Bézier fitting → write to `fonts/custom/<name>.json`. *(Difficulty: easy)*
+- [ ] **Quality metric** — DTW distance between generated and reference strokes; character recognition accuracy using a frozen classifier. *(Difficulty: medium)*
 
 ---
 

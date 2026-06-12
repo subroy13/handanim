@@ -5,9 +5,35 @@ packages = [
 ]
 name = "handanim"
 version = "0.1.0"
-description = ""
+description = "A Python library to create whiteboard-style, hand-drawn animations for educational videos, tutorials or data storytelling."
 authors = ["Subhrajyoty Roy <subhrajyotyroy@gmail.com>"]
+license = "MIT"
 readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Multimedia :: Video",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+]
+keywords = [
+    "animation",
+    "hand-drawn",
+    "manim",
+    "math",
+    "whiteboard",
+    "education",
+]
+
+[tool.poetry.urls]
+Homepage = "https://github.com/subroy13/handanim"
+Documentation = "https://subroy13.github.io/handanim/"
+Repository = "https://github.com/subroy13/handanim.git"
+Issues = "https://github.com/subroy13/handanim/issues"
+Changelog = "https://github.com/subroy13/handanim/blob/master/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -32,6 +58,7 @@ pytest-snapshot = "^0.9.0"
 pytest-cov = "^7.1.0"
 ruff = "^0.15.12"
 mypy = "^2.1.0"
+readme-renderer = "^45.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -53,8 +80,8 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B"]
 ignore = [
-    "E501",   # line too long — handled by line-length setting above
-    "B008",   # function call in default argument — intentional (style objects as defaults)
+    "E501", # line too long — handled by line-length setting above
+    "B008", # function call in default argument — intentional (style objects as defaults)
 ]
 
 [tool.mypy]

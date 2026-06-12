@@ -21,7 +21,7 @@
 ### Example 1: Pythagoras Theorem
 
 <p align="center">
-  <img src="./examples/output/pythagoras.gif" width="500">
+  <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif" width="500">
 </p>
 
 _(Example animation of a Pythagoras Theorem — see `examples/pythagoras.py`)_
@@ -30,7 +30,7 @@ _(Example animation of a Pythagoras Theorem — see `examples/pythagoras.py`)_
 ### Example 2: Square formula
 
 <p align="center">
-  <img src="./examples/output/a_plus_b_square.gif" width="500">
+  <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif" width="500">
 </p>
 
 _(Example animation of proof of a plus b whole square — see `examples/a_plus_b_square.py`)_
@@ -44,7 +44,7 @@ _(Example animation of proof of a plus b whole square — see `examples/a_plus_b
 The easiest way to install all the dependencies is to use [Poetry](https://python-poetry.org/).
 
 ```bash
-# Install dependencies (requires Python 3.13+)
+# Install dependencies (requires Python 3.11+)
 poetry install
 
 # Run example animation
