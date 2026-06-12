@@ -27,3 +27,6 @@ dist/
 
 # Poetry
 .poetry/*
+
+# Additional folders to skip
+archive/*
