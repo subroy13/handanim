@@ -306,3 +306,10 @@ Long-term: a companion module (possibly a separate repo) that adds audio/voice t
 - [ ] **HackerNews "Show HN" post** — write a post linking to the README once the GIF showcase is in place; Tuesday/Wednesday morning UTC is the highest-traffic window
 - [ ] **Reddit posts** — post rendered GIFs on r/dataisbeautiful (no code needed, just visuals); post the library on r/Python and r/learnpython with a short code snippet
 - [ ] **Twitter / X thread** — post a thread showing 4–5 rendered animations with a "10 lines of Python" angle; animated GIFs perform extremely well on the platform
+
+
+## More Ideas
+
+- Paper folding pattern in background and paper folding into ball animation for screen change.
+- "Recall that I said this" (Pick a folded paper ball up and show the previous screen).
+- 
