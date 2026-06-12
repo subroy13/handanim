@@ -596,6 +596,43 @@ class Scene:
         surface.finish()
         return output_path
 
+    def render_tikz(
+        self,
+        output_path: str,
+        time: float = 0.0,
+        target_width_cm: float = 12.0,
+        max_length: float | None = None,
+    ) -> str:
+        """Render a single animation frame as a standalone TikZ/LaTeX file.
+
+        Args:
+            output_path: Path to write the ``.tex`` file.
+            time: Timestamp (in seconds) to render.
+            target_width_cm: Width of the tikzpicture in centimetres.
+            max_length: Total animation duration override.
+
+        Returns:
+            The output file path.
+        """
+        from .tikz_renderer import TikZRenderer
+
+        opsset_list = self.create_event_timeline(max_length)
+        frame_index = int(np.clip(np.round(time * self.fps), 0, len(opsset_list) - 1))
+
+        renderer = TikZRenderer(self.viewport, target_width_cm, self.background_color)
+        tikz_body = renderer.render_tikzpicture(opsset_list[frame_index])
+
+        tex = (
+            "\\documentclass[border=2mm]{standalone}\n"
+            "\\usepackage{tikz}\n"
+            "\\begin{document}\n"
+            f"{tikz_body}\n"
+            "\\end{document}\n"
+        )
+        with open(output_path, "w") as f:
+            f.write(tex)
+        return output_path
+
     def export_beamer(
         self,
         output_dir: str,
@@ -603,18 +640,28 @@ class Scene:
         times: list[float] | None = None,
         title: str = "Handanim Slides",
         max_length: float | None = None,
+        backend: str = "cairo",
+        target_width_cm: float = 12.0,
     ) -> str:
         """Export animation keyframes as a compilable Beamer/LaTeX slide deck.
 
         Each keyframe becomes one overlay on a single frame, so the slides
-        animate forward when presented. Produces PDF images + a .tex file.
+        animate forward when presented.
+
+        With ``backend="cairo"`` (default), each keyframe is rendered as a
+        Cairo PDF and embedded via ``\\includegraphics``.
+
+        With ``backend="tikz"``, keyframes are emitted as inline TikZ
+        drawing commands — native LaTeX vector graphics, no external files.
 
         Args:
-            output_dir: Directory to write PDFs and the .tex file.
+            output_dir: Directory to write output files and the .tex file.
             n_frames: Number of evenly-spaced keyframes (ignored if `times` given).
             times: Explicit list of timestamps to render.
             title: Title shown on the Beamer title page.
             max_length: Total animation duration override.
+            backend: ``"cairo"`` for PDF-image overlays, ``"tikz"`` for native TikZ.
+            target_width_cm: Width of tikzpicture (only used with ``backend="tikz"``).
 
         Returns:
             Path to the generated .tex file.
@@ -626,6 +673,18 @@ class Scene:
         if times is None:
             times = [i * total_duration / (n_frames - 1) for i in range(n_frames)] if n_frames > 1 else [0.0]
 
+        if backend == "tikz":
+            return self._export_beamer_tikz(opsset_list, total_frames, times, title, output_dir, target_width_cm)
+        return self._export_beamer_cairo(opsset_list, total_frames, times, title, output_dir)
+
+    def _export_beamer_cairo(
+        self,
+        opsset_list: list,
+        total_frames: int,
+        times: list[float],
+        title: str,
+        output_dir: str,
+    ) -> str:
         pdf_filenames = []
         for i, t in enumerate(times):
             frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
@@ -643,6 +702,46 @@ class Scene:
         tex_content = (
             "\\documentclass{beamer}\n"
             "\\usepackage{graphicx}\n"
+            f"\\title{{{title}}}\n"
+            "\\date{}\n"
+            "\\begin{document}\n"
+            "\\begin{frame}\n"
+            "\\titlepage\n"
+            "\\end{frame}\n"
+            "\\begin{frame}{}\n"
+            f"{overlays}\n"
+            "\\end{frame}\n"
+            "\\end{document}\n"
+        )
+        tex_path = os.path.join(output_dir, "slides.tex")
+        with open(tex_path, "w") as f:
+            f.write(tex_content)
+        return tex_path
+
+    def _export_beamer_tikz(
+        self,
+        opsset_list: list,
+        total_frames: int,
+        times: list[float],
+        title: str,
+        output_dir: str,
+        target_width_cm: float,
+    ) -> str:
+        from .tikz_renderer import TikZRenderer
+
+        overlay_lines = []
+        for i, t in enumerate(times):
+            frame_index = int(np.clip(np.round(t * self.fps), 0, total_frames - 1))
+            renderer = TikZRenderer(self.viewport, target_width_cm, self.background_color)
+            tikz_body = renderer.render_tikzpicture(opsset_list[frame_index])
+            indent = "\n".join(f"    {line}" for line in tikz_body.splitlines())
+            overlay_lines.append(f"  \\only<{i + 1}>{{\n{indent}\n  }}")
+
+        overlays = "\n".join(overlay_lines)
+
+        tex_content = (
+            "\\documentclass{beamer}\n"
+            "\\usepackage{tikz}\n"
             f"\\title{{{title}}}\n"
             "\\date{}\n"
             "\\begin{document}\n"
