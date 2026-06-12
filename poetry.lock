@@ -717,6 +717,18 @@ sphinx = ">=6.0,<9.0"
 sphinx-basic-ng = ">=1.0.0.beta2"
 
 [[package]]
+name = "hershey-fonts"
+version = "2.1.0"
+description = "Vector font package with built-in fonts and font rendering iterators"
+optional = false
+python-versions = ">=2.7"
+groups = ["main"]
+files = [
+    {file = "Hershey Fonts-2.1.0.tar.gz", hash = "sha256:ebdb0550f9cf78fed2a4bba71b971f5ce5f98ce630da9da9eaa4079b10e8b671"},
+    {file = "Hershey_Fonts-2.1.0-py2.py3-none-any.whl", hash = "sha256:e53ef56bdef231f10f0576a6570f49fcc8442e45115028bc52a7ade15d824581"},
+]
+
+[[package]]
 name = "idna"
 version = "3.18"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -2509,4 +2521,4 @@ ai = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "aba3abd13f0917932cffec9ce0a54988df5e273f91d0ae6b5d687c5887327dfb"
+content-hash = "5a043118109da3b06759bcbf4a9a4fb7f34b0cfe76f38469e43e561cf782bd34"

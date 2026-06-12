@@ -14,6 +14,7 @@ text1 = Math(
     tex_expression=r"Pardon my bad handwriting",
     position=(300, 200),
     font_size=96,
+    font_name="handanimtype1",
     stroke_style=StrokeStyle(color=GREEN, width=2),
 )
 scene.add(event=SketchAnimation(start_time=0, duration=3), drawable=text1)

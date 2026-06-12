@@ -19,6 +19,7 @@ fonttools = ">=4.47.0,<5.0.0"
 matplotlib = ">=3.7.0,<4.0.0"
 svgelements = ">=1.9.6"
 urllib3 = "^2.6.3"
+hershey-fonts = "^2.1.0"
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "^8.2.3"

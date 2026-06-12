@@ -167,7 +167,7 @@ poetry run sphinx-autobuild docs/source docs/build/html
 Each script in `examples/` is a self-contained scene that renders to an MP4 (written to `examples/output/`).
 
 ```bash
-# Pythagoras theorem — text, polygons, eraser
+# Pythagorean theorem — text, polygons, eraser
 poetry run python3 examples/pythagoras.py
 
 # (a+b)² visual proof — algebra with hand-drawn shapes
@@ -176,11 +176,20 @@ poetry run python3 examples/a_plus_b_square.py
 # Distributive property with an SVG character
 poetry run python3 examples/distributive_property.py
 
-# Solar system orbit animation
+# Solar system orbit animation — circles, camera pan
 poetry run python3 examples/solar_system.py
 
-# Custom font rendering
+# Custom JSON font rendering demo
 poetry run python3 examples/custom_font.py
+
+# Hershey hand-drawn math expressions (greeks/greekc fonts)
+poetry run python3 examples/hershey_math.py
+
+# ML pipeline flowchart animation
+poetry run python3 examples/ml_workflow_demo.py
+
+# Beamer slide export with TikZ backend
+poetry run python3 examples/tikz_beamer_demo.py
 ```
 
 Output files land in `examples/output/`. The examples are the canonical "does this actually work end-to-end" check — run one before and after touching rendering code.
@@ -331,21 +340,62 @@ scene.get_current_time()  # returns the end time of the latest event
 
 ```
 src/handanim/
-├── core/          # OpsSet, Drawable, AnimationEvent, Scene, Viewport, TikZRenderer, styles
-├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG, RasterImage, …
-├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate, ColorTransition, Camera
-└── stylings/      # color constants, fill patterns, stroke utilities
+├── core/          # OpsSet, Drawable, DrawableCache, AnimationEvent, Scene,
+│                  # Viewport, TikZRenderer, styles
+├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG,
+│                  # RasterImage, Flowchart, Table, Eraser, hershey_constants
+├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate,
+│                  # ColorTransition, Camera
+└── stylings/      # color constants, fill patterns, font registry, stroke utilities
 
 tests/
 ├── conftest.py             # shared fixtures (seed_numpy, render_to_png_bytes)
 ├── snapshots/              # reference PNGs for visual regression
-├── core/                   # OpsSet, Scene unit tests (no Cairo)
+├── core/                   # OpsSet, Scene, TikZ renderer unit tests
 ├── animations/             # per-animation tests (sketch, rotate, color_transition, camera, …)
-└── drawables/              # visual regression tests for primitives, table, flowchart, …
+├── drawables/              # visual regression tests for primitives, table, flowchart, …
+└── test_public_api.py      # top-level handanim.__init__ export smoke tests
+
+tools/
+├── fontmaker/     # Custom font builder: grid image → skeleton → vector JSON font
+│   ├── make_grid_sheet.py  # Print a glyph grid sheet for hand-drawing
+│   ├── make_fonts.py       # Extract + skeletonise + vectorise → fonts/custom/*.json
+│   └── symbols.py          # Symbol label registry
+└── stroke_model/  # Experimental neural stroke-order model (PyTorch, UNIPEN data)
 
 examples/        # runnable end-to-end scene scripts
+fonts/           # bundled TTF fonts and custom JSON stroke fonts (fonts/custom/)
 docs/            # Sphinx source and build output
 ```
+
+---
+
+## Fontmaker Tool
+
+`tools/fontmaker/` is a standalone pipeline for creating new hand-drawn fonts in the custom JSON format. It is **not** part of the installed `handanim` package — run it from the project root with `poetry run`.
+
+### Workflow
+
+1. **Generate a grid sheet** — prints a PNG grid with every symbol labelled. Print it, draw each glyph by hand with a thick marker, then scan or photograph the result.
+
+```bash
+cd tools/fontmaker
+poetry run python3 make_grid_sheet.py
+# Output: glyph_grid_sheet.png
+```
+
+2. **Extract and vectorise** — reads the filled-in grid image, detects cell boundaries, extracts each glyph bitmap, applies skeletonisation (Zhang-Suen via `skimage`), vectorises the skeleton into SVG paths, and writes the JSON font file.
+
+```bash
+poetry run python3 make_fonts.py
+# Output: <font_name>.json  →  copy to fonts/custom/
+```
+
+3. **Register the font** — add an entry to `src/handanim/stylings/fonts.py` pointing to the new JSON file.
+
+### Adding new symbols
+
+Edit `tools/fontmaker/symbols.py` to extend `SYMBOL_LABELS` with additional Unicode characters, then re-run the two steps above.
 
 ---
 

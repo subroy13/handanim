@@ -5,7 +5,7 @@ from fontTools.ttLib import TTFont
 
 from ..core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..stylings.fonts import get_font_path, list_fonts
+from ..stylings.fonts import get_font_path, list_fonts, get_font_info
 
 
 class CustomPen(BasePen):
@@ -58,7 +58,7 @@ class Text(Drawable):
 
     Attributes:
         text (str): The text to be rendered
-        position (Tuple[float, float]): Starting position for text rendering
+        position (Tuple[float, float]): The top-left starting position for text rendering
         font_size (int, optional): Size of the rendered text. Defaults to 12.
         scale_factor (float, optional): Additional scaling factor. Defaults to 1.0.
 
@@ -89,7 +89,7 @@ class Text(Drawable):
         """
         Chooses a random font from the available fonts
         """
-        font_list = list_fonts()
+        font_list = [f for f in list_fonts() if get_font_info(f)["type"] == "ttf"]
         if self.sketch_style.disable_font_mixture:
             font_choice = font_list[0]
         else:
@@ -230,10 +230,7 @@ class Text(Drawable):
             for i, line in enumerate(self._wrapped_lines):
                 self._draw_line(opsset, line, start_x, start_y + i * line_height)
         else:
-            # Single-line mode: draw at position (0,0) then translate so the
-            # center of gravity lands at self.position, matching original behaviour.
-            self._draw_line(opsset, self.text, 0, 0)
-            cg = opsset.get_center_of_gravity()
-            opsset.translate(self.position[0] - cg[0], self.position[1] - cg[1])
+            # Single-line mode: draw at the self.position
+            self._draw_line(opsset, self.text, self.position[0], self.position[1])
 
         return opsset
