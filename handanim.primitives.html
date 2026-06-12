@@ -523,65 +523,33 @@ draw this particular drawable object on the canvas</p>
 <span id="handanim-primitives-math-module"></span><h2>handanim.primitives.math module<a class="headerlink" href="#module-handanim.primitives.math" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="handanim.primitives.math.Math">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.math.</span></span><span class="sig-name descname"><span class="pre">Math</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tex_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'handanimtype1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.math.Math" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.math.</span></span><span class="sig-name descname"><span class="pre">Math</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tex_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'feasibly'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.math.Math" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
 <p>A Drawable class for rendering mathematical expressions using TeX notation.</p>
-<p>This class parses a TeX expression and renders individual glyphs using a specified font,
-supporting custom positioning, scaling, and stroke styling.</p>
+<p>Parses a TeX expression via matplotlib’s MathTextParser and renders
+individual glyphs using the specified font backend.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.math.Math.tex_expression">
 <span class="sig-name descname"><span class="pre">tex_expression</span></span><a class="headerlink" href="#handanim.primitives.math.Math.tex_expression" title="Link to this definition">¶</a></dt>
-<dd><p>The TeX mathematical expression to render</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
+<dd><p>The TeX expression to render.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.math.Math.position">
 <span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#handanim.primitives.math.Math.position" title="Link to this definition">¶</a></dt>
-<dd><p>The starting position for rendering the expression</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, float]</p>
-</dd>
-</dl>
+<dd><p>Top-left anchor (x, y) for the rendered expression.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.math.Math.font_size">
 <span class="sig-name descname"><span class="pre">font_size</span></span><a class="headerlink" href="#handanim.primitives.math.Math.font_size" title="Link to this definition">¶</a></dt>
-<dd><p>The size of the font, defaults to 12</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int, optional</p>
-</dd>
-</dl>
+<dd><p>Logical font size; the base unit is 10 (scale_factor = font_size / 10).</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.math.Math.font_name">
 <span class="sig-name descname"><span class="pre">font_name</span></span><a class="headerlink" href="#handanim.primitives.math.Math.font_name" title="Link to this definition">¶</a></dt>
-<dd><p>The name of the font to use for rendering, defaults to “feasibly”</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.primitives.math.Math.get_glyph_opsset">
-<span class="sig-name descname"><span class="pre">get_glyph_opsset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.math.Math.get_glyph_opsset" title="Link to this definition">¶</a></dt>
-<dd><p>Extracts the operations set for a single unicode glyph</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.primitives.math.Math.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.math.Math.draw" title="Link to this definition">¶</a></dt>
-<dd><p>Renders the entire mathematical expression as a set of drawing operations</p>
+<dd><p>Font backend to use (see stylings/fonts.py).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -590,21 +558,25 @@ supporting custom positioning, scaling, and stroke styling.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="handanim.primitives.math.Math.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.primitives.math.Math.draw" title="Link to this definition">¶</a></dt>
 <dd><p>Provides the list of operations to be performed to
 draw this particular drawable object on the canvas</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">get_glyph_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unicode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the opset for a single glyph of a unicode number</p>
-</dd></dl>
+<dt class="sig sig-object py" id="handanim.primitives.math.Math.get_glyph_opsset">
+<span class="sig-name descname"><span class="pre">get_glyph_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unicode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.primitives.math.Math.get_glyph_opsset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.math.Math.hershey_glyph_opsset">
+<span class="sig-name descname"><span class="pre">hershey_glyph_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unicode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.primitives.math.Math.hershey_glyph_opsset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.primitives.math.Math.load_font">
-<span class="sig-name descname"><span class="pre">load_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.math.Math.load_font" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#handanim.primitives.math.Math.load_font" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -739,7 +711,7 @@ Converts text characters into drawing operations (OpsSet) that can be rendered.<
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.text.Text.position">
 <span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#handanim.primitives.text.Text.position" title="Link to this definition">¶</a></dt>
-<dd><p>Starting position for text rendering</p>
+<dd><p>The top-left starting position for text rendering</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[float, float]</p>
@@ -799,27 +771,27 @@ Converts text characters into drawing operations (OpsSet) that can be rendered.<
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd><p>Provides the list of operations to be performed to
 draw this particular drawable object on the canvas</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">get_glyph_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">get_glyph_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd><p>Gives the width of the space, or an average width</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">get_glyph_strokes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">get_glyph_strokes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
 <dd><p>Gives the glyph operations as well the width of the char for offsetting purpose</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">get_random_font_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">get_random_font_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
 <dd><p>Chooses a random font from the available fonts</p>
 </dd></dl>
 
@@ -1258,65 +1230,33 @@ draw this particular drawable object on the canvas</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="handanim.primitives.Math">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">Math</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tex_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'handanimtype1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Math" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">handanim.primitives.</span></span><span class="sig-name descname"><span class="pre">Math</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tex_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'feasibly'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Math" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drawable</span></code></a></p>
 <p>A Drawable class for rendering mathematical expressions using TeX notation.</p>
-<p>This class parses a TeX expression and renders individual glyphs using a specified font,
-supporting custom positioning, scaling, and stroke styling.</p>
+<p>Parses a TeX expression via matplotlib’s MathTextParser and renders
+individual glyphs using the specified font backend.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.Math.tex_expression">
 <span class="sig-name descname"><span class="pre">tex_expression</span></span><a class="headerlink" href="#handanim.primitives.Math.tex_expression" title="Link to this definition">¶</a></dt>
-<dd><p>The TeX mathematical expression to render</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
+<dd><p>The TeX expression to render.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.Math.position">
 <span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#handanim.primitives.Math.position" title="Link to this definition">¶</a></dt>
-<dd><p>The starting position for rendering the expression</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, float]</p>
-</dd>
-</dl>
+<dd><p>Top-left anchor (x, y) for the rendered expression.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.Math.font_size">
 <span class="sig-name descname"><span class="pre">font_size</span></span><a class="headerlink" href="#handanim.primitives.Math.font_size" title="Link to this definition">¶</a></dt>
-<dd><p>The size of the font, defaults to 12</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int, optional</p>
-</dd>
-</dl>
+<dd><p>Logical font size; the base unit is 10 (scale_factor = font_size / 10).</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.Math.font_name">
 <span class="sig-name descname"><span class="pre">font_name</span></span><a class="headerlink" href="#handanim.primitives.Math.font_name" title="Link to this definition">¶</a></dt>
-<dd><p>The name of the font to use for rendering, defaults to “feasibly”</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.primitives.Math.get_glyph_opsset">
-<span class="sig-name descname"><span class="pre">get_glyph_opsset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Math.get_glyph_opsset" title="Link to this definition">¶</a></dt>
-<dd><p>Extracts the operations set for a single unicode glyph</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="handanim.primitives.Math.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Math.draw" title="Link to this definition">¶</a></dt>
-<dd><p>Renders the entire mathematical expression as a set of drawing operations</p>
+<dd><p>Font backend to use (see stylings/fonts.py).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1325,21 +1265,25 @@ supporting custom positioning, scaling, and stroke styling.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="handanim.primitives.Math.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#handanim.primitives.Math.draw" title="Link to this definition">¶</a></dt>
 <dd><p>Provides the list of operations to be performed to
 draw this particular drawable object on the canvas</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">get_glyph_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unicode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the opset for a single glyph of a unicode number</p>
-</dd></dl>
+<dt class="sig sig-object py" id="handanim.primitives.Math.get_glyph_opsset">
+<span class="sig-name descname"><span class="pre">get_glyph_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unicode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.primitives.Math.get_glyph_opsset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.primitives.Math.hershey_glyph_opsset">
+<span class="sig-name descname"><span class="pre">hershey_glyph_opsset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unicode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#handanim.primitives.Math.hershey_glyph_opsset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.primitives.Math.load_font">
-<span class="sig-name descname"><span class="pre">load_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.primitives.Math.load_font" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#handanim.primitives.Math.load_font" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1603,7 +1547,7 @@ Converts text characters into drawing operations (OpsSet) that can be rendered.<
 <dl class="py attribute">
 <dt class="sig sig-object py" id="handanim.primitives.Text.position">
 <span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#handanim.primitives.Text.position" title="Link to this definition">¶</a></dt>
-<dd><p>Starting position for text rendering</p>
+<dd><p>The top-left starting position for text rendering</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[float, float]</p>
@@ -1663,27 +1607,27 @@ Converts text characters into drawing operations (OpsSet) that can be rendered.<
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
 <dd><p>Provides the list of operations to be performed to
 draw this particular drawable object on the canvas</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">get_glyph_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">get_glyph_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
 <dd><p>Gives the width of the space, or an average width</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">get_glyph_strokes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id10" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">get_glyph_strokes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><span class="pre">OpsSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
 <dd><p>Gives the glyph operations as well the width of the char for offsetting purpose</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">get_random_font_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">get_random_font_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
 <dd><p>Chooses a random font from the available fonts</p>
 </dd></dl>
 
@@ -1871,11 +1815,10 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.math.Math.position"><code class="docutils literal notranslate"><span class="pre">Math.position</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.math.Math.font_size"><code class="docutils literal notranslate"><span class="pre">Math.font_size</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.math.Math.font_name"><code class="docutils literal notranslate"><span class="pre">Math.font_name</span></code></a></li>
-<li><a class="reference internal" href="#handanim.primitives.math.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
-<li><a class="reference internal" href="#handanim.primitives.math.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.math.Math.custom_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.custom_glyph_opsset()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.math.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.math.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.math.Math.hershey_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.hershey_glyph_opsset()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.math.Math.load_font"><code class="docutils literal notranslate"><span class="pre">Math.load_font()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.math.Math.standard_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.standard_glyph_opsset()</span></code></a></li>
 </ul>
@@ -1914,10 +1857,10 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.get_glyph_space"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.draw"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.autofit"><code class="docutils literal notranslate"><span class="pre">Text.autofit()</span></code></a></li>
-<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
-<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
-<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
-<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.text.Text.wrap"><code class="docutils literal notranslate"><span class="pre">Text.wrap()</span></code></a></li>
 </ul>
 </li>
@@ -2001,11 +1944,10 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.Math.position"><code class="docutils literal notranslate"><span class="pre">Math.position</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Math.font_size"><code class="docutils literal notranslate"><span class="pre">Math.font_size</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Math.font_name"><code class="docutils literal notranslate"><span class="pre">Math.font_name</span></code></a></li>
-<li><a class="reference internal" href="#handanim.primitives.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
-<li><a class="reference internal" href="#handanim.primitives.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Math.custom_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.custom_glyph_opsset()</span></code></a></li>
-<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
-<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.Math.draw"><code class="docutils literal notranslate"><span class="pre">Math.draw()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.Math.get_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.get_glyph_opsset()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.primitives.Math.hershey_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.hershey_glyph_opsset()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Math.load_font"><code class="docutils literal notranslate"><span class="pre">Math.load_font()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Math.standard_glyph_opsset"><code class="docutils literal notranslate"><span class="pre">Math.standard_glyph_opsset()</span></code></a></li>
 </ul>
@@ -2052,10 +1994,10 @@ as close to the original SVG as possible.</p>
 <li><a class="reference internal" href="#handanim.primitives.Text.get_glyph_space"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Text.draw"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Text.autofit"><code class="docutils literal notranslate"><span class="pre">Text.autofit()</span></code></a></li>
-<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
-<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
-<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
-<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Text.draw()</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_space()</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">Text.get_glyph_strokes()</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">Text.get_random_font_choice()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.primitives.Text.wrap"><code class="docutils literal notranslate"><span class="pre">Text.wrap()</span></code></a></li>
 </ul>
 </li>
