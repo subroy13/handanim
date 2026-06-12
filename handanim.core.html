@@ -1103,18 +1103,24 @@ and generates a list of OpsSet operations representing the animation progression
 
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.core.scene.Scene.export_beamer">
-<span class="sig-name descname"><span class="pre">export_beamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Handanim</span> <span class="pre">Slides'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#handanim.core.scene.Scene.export_beamer" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">export_beamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Handanim</span> <span class="pre">Slides'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cairo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_width_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#handanim.core.scene.Scene.export_beamer" title="Link to this definition">¶</a></dt>
 <dd><p>Export animation keyframes as a compilable Beamer/LaTeX slide deck.</p>
 <p>Each keyframe becomes one overlay on a single frame, so the slides
-animate forward when presented. Produces PDF images + a .tex file.</p>
+animate forward when presented.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">backend=&quot;cairo&quot;</span></code> (default), each keyframe is rendered as a
+Cairo PDF and embedded via <code class="docutils literal notranslate"><span class="pre">\includegraphics</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">backend=&quot;tikz&quot;</span></code>, keyframes are emitted as inline TikZ
+drawing commands — native LaTeX vector graphics, no external files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> – Directory to write PDFs and the .tex file.</p></li>
+<li><p><strong>output_dir</strong> – Directory to write output files and the .tex file.</p></li>
 <li><p><strong>n_frames</strong> – Number of evenly-spaced keyframes (ignored if <cite>times</cite> given).</p></li>
 <li><p><strong>times</strong> – Explicit list of timestamps to render.</p></li>
 <li><p><strong>title</strong> – Title shown on the Beamer title page.</p></li>
 <li><p><strong>max_length</strong> – Total animation duration override.</p></li>
+<li><p><strong>backend</strong> – <code class="docutils literal notranslate"><span class="pre">&quot;cairo&quot;</span></code> for PDF-image overlays, <code class="docutils literal notranslate"><span class="pre">&quot;tikz&quot;</span></code> for native TikZ.</p></li>
+<li><p><strong>target_width_cm</strong> – Width of tikzpicture (only used with <code class="docutils literal notranslate"><span class="pre">backend=&quot;tikz&quot;</span></code>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1294,6 +1300,25 @@ be chosen automatically.</p>
 <li><p><strong>frame_in_seconds</strong> (<em>float</em>) – The exact time point (in seconds) to render.</p></li>
 <li><p><strong>max_length</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – Total duration of the animation. Defaults to None.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.scene.Scene.render_tikz">
+<span class="sig-name descname"><span class="pre">render_tikz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_width_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#handanim.core.scene.Scene.render_tikz" title="Link to this definition">¶</a></dt>
+<dd><p>Render a single animation frame as a standalone TikZ/LaTeX file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> – Path to write the <code class="docutils literal notranslate"><span class="pre">.tex</span></code> file.</p></li>
+<li><p><strong>time</strong> – Timestamp (in seconds) to render.</p></li>
+<li><p><strong>target_width_cm</strong> – Width of the tikzpicture in centimetres.</p></li>
+<li><p><strong>max_length</strong> – Total animation duration override.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output file path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2294,18 +2319,24 @@ and generates a list of OpsSet operations representing the animation progression
 
 <dl class="py method">
 <dt class="sig sig-object py" id="handanim.core.Scene.export_beamer">
-<span class="sig-name descname"><span class="pre">export_beamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Handanim</span> <span class="pre">Slides'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#handanim.core.Scene.export_beamer" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">export_beamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Handanim</span> <span class="pre">Slides'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cairo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_width_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#handanim.core.Scene.export_beamer" title="Link to this definition">¶</a></dt>
 <dd><p>Export animation keyframes as a compilable Beamer/LaTeX slide deck.</p>
 <p>Each keyframe becomes one overlay on a single frame, so the slides
-animate forward when presented. Produces PDF images + a .tex file.</p>
+animate forward when presented.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">backend=&quot;cairo&quot;</span></code> (default), each keyframe is rendered as a
+Cairo PDF and embedded via <code class="docutils literal notranslate"><span class="pre">\includegraphics</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">backend=&quot;tikz&quot;</span></code>, keyframes are emitted as inline TikZ
+drawing commands — native LaTeX vector graphics, no external files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> – Directory to write PDFs and the .tex file.</p></li>
+<li><p><strong>output_dir</strong> – Directory to write output files and the .tex file.</p></li>
 <li><p><strong>n_frames</strong> – Number of evenly-spaced keyframes (ignored if <cite>times</cite> given).</p></li>
 <li><p><strong>times</strong> – Explicit list of timestamps to render.</p></li>
 <li><p><strong>title</strong> – Title shown on the Beamer title page.</p></li>
 <li><p><strong>max_length</strong> – Total animation duration override.</p></li>
+<li><p><strong>backend</strong> – <code class="docutils literal notranslate"><span class="pre">&quot;cairo&quot;</span></code> for PDF-image overlays, <code class="docutils literal notranslate"><span class="pre">&quot;tikz&quot;</span></code> for native TikZ.</p></li>
+<li><p><strong>target_width_cm</strong> – Width of tikzpicture (only used with <code class="docutils literal notranslate"><span class="pre">backend=&quot;tikz&quot;</span></code>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2485,6 +2516,25 @@ be chosen automatically.</p>
 <li><p><strong>frame_in_seconds</strong> (<em>float</em>) – The exact time point (in seconds) to render.</p></li>
 <li><p><strong>max_length</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – Total duration of the animation. Defaults to None.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.core.Scene.render_tikz">
+<span class="sig-name descname"><span class="pre">render_tikz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_width_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#handanim.core.Scene.render_tikz" title="Link to this definition">¶</a></dt>
+<dd><p>Render a single animation frame as a standalone TikZ/LaTeX file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> – Path to write the <code class="docutils literal notranslate"><span class="pre">.tex</span></code> file.</p></li>
+<li><p><strong>time</strong> – Timestamp (in seconds) to render.</p></li>
+<li><p><strong>target_width_cm</strong> – Width of the tikzpicture in centimetres.</p></li>
+<li><p><strong>max_length</strong> – Total animation duration override.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output file path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2867,6 +2917,7 @@ defaults to StrokePressure.CONSTANT</p>
 <li><a class="reference internal" href="#handanim.core.scene.Scene.render_handout"><code class="docutils literal notranslate"><span class="pre">Scene.render_handout()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.scene.Scene.render_keyframes"><code class="docutils literal notranslate"><span class="pre">Scene.render_keyframes()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.scene.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.scene.Scene.render_tikz"><code class="docutils literal notranslate"><span class="pre">Scene.render_tikz()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.scene.Scene.set_viewport_to_identity"><code class="docutils literal notranslate"><span class="pre">Scene.set_viewport_to_identity()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.scene.Scene.wait"><code class="docutils literal notranslate"><span class="pre">Scene.wait()</span></code></a></li>
 </ul>
@@ -3009,6 +3060,7 @@ defaults to StrokePressure.CONSTANT</p>
 <li><a class="reference internal" href="#handanim.core.Scene.render_handout"><code class="docutils literal notranslate"><span class="pre">Scene.render_handout()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.Scene.render_keyframes"><code class="docutils literal notranslate"><span class="pre">Scene.render_keyframes()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.Scene.render_snapshot"><code class="docutils literal notranslate"><span class="pre">Scene.render_snapshot()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.core.Scene.render_tikz"><code class="docutils literal notranslate"><span class="pre">Scene.render_tikz()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.Scene.set_viewport_to_identity"><code class="docutils literal notranslate"><span class="pre">Scene.set_viewport_to_identity()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.core.Scene.wait"><code class="docutils literal notranslate"><span class="pre">Scene.wait()</span></code></a></li>
 </ul>
