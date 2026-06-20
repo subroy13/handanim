@@ -15,7 +15,7 @@ from svgelements import QuadraticBezier as SVGQuadBezier
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
 from ..core.styles import StrokePressure
-from ..stylings.strokes import apply_stroke_pressure
+from ..utils.humanize import apply_roughness, apply_stroke_pressure
 from .hershey_constants import (
     COMPOSED_GLYPHS,
     HERSHEY_ASCII_FALLBACK,
@@ -91,51 +91,6 @@ def _scale_hershey_opsset(ops: OpsSet, font_size: float) -> tuple[OpsSet, float,
     scaled.translate(-bbox.min_x, -bbox.min_y)
     return scaled, bbox.height, bbox.width
 
-
-def _apply_roughness(ops: OpsSet, roughness: float) -> OpsSet:
-    """Replace straight LINE_TO segments with lightly curved CURVE_TO segments.
-
-    Each segment gets two cubic Bézier control points displaced
-    perpendicularly by a random amount proportional to roughness and
-    √(segment length).  This gives a hand-drawn wobble without moving
-    the endpoints.
-    """
-    if roughness <= 0:
-        return ops
-    result = OpsSet(initial_set=[])
-    current_pt: tuple[float, float] = (0.0, 0.0)
-    for op in ops.opsset:
-        if op.type == OpsType.MOVE_TO and isinstance(op.data, list):
-            current_pt = tuple(op.data[0])  # type: ignore[assignment]
-            result.add(op)
-        elif op.type == OpsType.LINE_TO and isinstance(op.data, list):
-            end_pt: tuple[float, float] = tuple(op.data[0])  # type: ignore[assignment]
-            dx = end_pt[0] - current_pt[0]
-            dy = end_pt[1] - current_pt[1]
-            length = (dx * dx + dy * dy) ** 0.5
-            if length > 0.5:
-                # Perpendicular unit vector
-                px, py = -dy / length, dx / length
-                amp = roughness * (length ** 0.5)
-                c1 = (
-                    current_pt[0] + dx / 3 + px * np.random.uniform(-amp, amp),
-                    current_pt[1] + dy / 3 + py * np.random.uniform(-amp, amp),
-                )
-                c2 = (
-                    current_pt[0] + 2 * dx / 3 + px * np.random.uniform(-amp, amp),
-                    current_pt[1] + 2 * dy / 3 + py * np.random.uniform(-amp, amp),
-                )
-                result.add(Ops(OpsType.CURVE_TO, [c1, c2, end_pt], op.partial, op.meta))
-            else:
-                result.add(op)
-            current_pt = end_pt
-        else:
-            result.add(op)
-            if op.type == OpsType.CURVE_TO and isinstance(op.data, list):
-                current_pt = tuple(op.data[-1])  # type: ignore[assignment]
-            elif op.type == OpsType.QUAD_CURVE_TO and isinstance(op.data, list):
-                current_pt = tuple(op.data[-1])  # type: ignore[assignment]
-    return result
 
 
 def _composed_to_opsset(
@@ -265,7 +220,7 @@ class Math(Drawable):
 
         def _finish(ops: OpsSet, h: float, w: float) -> tuple[OpsSet, float, float]:
             if roughness > 0:
-                ops = _apply_roughness(ops, roughness)
+                ops = apply_roughness(ops, roughness, font_size)
             return ops, h, w
 
         # 1. Composed glyphs: explicit hand-defined stroke shapes take priority.

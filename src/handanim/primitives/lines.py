@@ -4,7 +4,7 @@ import numpy as np
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
 from ..core.styles import StrokePressure
-from ..stylings.strokes import apply_stroke_pressure
+from ..utils.humanize import apply_stroke_pressure, bow_segment, jitter_point
 
 
 class Line(Drawable):
@@ -34,51 +34,27 @@ class Line(Drawable):
     def draw_single_line(
         self,
         opsset: OpsSet,
-        move: bool = False,  # should we move to the specific position before drawing?
-        overlay: bool = False,  # is this the second pass?
+        move: bool = False,
+        overlay: bool = False,
     ) -> OpsSet:
-        length = np.linalg.norm(
-            self.end - self.start
-        )  # get the length of the line segment
-        roughness_gain = np.clip(
-            -0.0016668 * length + 1.233334, 0.4, 1
-        )  # calculate roughness gain (dampending factor)
+        length = np.linalg.norm(self.end - self.start)
+        roughness_gain = np.clip(-0.0016668 * length + 1.233334, 0.4, 1)
         offset = min(length / 10, self.sketch_style.max_random_offset)
-
-        # get the divergence point for bowing effect
-        diverge_point = np.random.uniform(low=0.2, high=0.4)
-        mid_disp = self.sketch_style.bowing * offset * (self.end - self.start) / 200
-        mid_disp = np.array([mid_disp[1], mid_disp[0]])  # this is normal to the line
-
-        # random generator functions
-        def random_jitter(x):
-            return np.random.uniform(low=-offset, high=offset, size=(x,)) * roughness_gain * self.sketch_style.roughness
         jitter_scale = 0.5 if overlay else 1
+        jitter_amp = offset * roughness_gain * self.sketch_style.roughness * jitter_scale
+        # bow amplitude preserves Line's original formula: bowing * offset * length / 200
+        bow_amp = self.sketch_style.bowing * offset * length / 200
 
-        # draw the curved lines, based on move and overlay
+        c1, c2 = bow_segment(self.start, self.end, bow_amp)
+
         if move:
-            opsset.add(
-                Ops(
-                    OpsType.MOVE_TO, data=[self.start + random_jitter(2) * jitter_scale]
-                )
-            )
+            opsset.add(Ops(OpsType.MOVE_TO, data=[jitter_point(self.start, jitter_amp)]))
 
-        opsset.add(
-            Ops(
-                OpsType.CURVE_TO,
-                data=[
-                    mid_disp
-                    + self.start
-                    + (self.end - self.start) * diverge_point
-                    + random_jitter(2) * jitter_scale,
-                    mid_disp
-                    + self.start
-                    + 2 * (self.end - self.start) * diverge_point
-                    + random_jitter(2) * jitter_scale,
-                    self.end + random_jitter(2) * jitter_scale,
-                ],
-            )
-        )
+        opsset.add(Ops(OpsType.CURVE_TO, data=[
+            jitter_point(c1, jitter_amp),
+            jitter_point(c2, jitter_amp),
+            jitter_point(self.end, jitter_amp),
+        ]))
         return opsset
 
     def draw(self) -> OpsSet:

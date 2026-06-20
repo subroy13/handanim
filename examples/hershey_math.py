@@ -16,7 +16,7 @@ from handanim.stylings.color import BLACK, BLUE, GREEN, RED
 
 
 def main():
-    scene = Scene(width=1400, height=1000)
+    scene = Scene(width=1264, height=960)
 
     FONT = "hershey_mathlow"
     SW = 2  # stroke width

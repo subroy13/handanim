@@ -43,7 +43,8 @@ class Eraser(Drawable):
             )
         )
 
-        min_x, min_y, max_x, max_y = self.drawable_cache.calculate_bounding_box(self.objects_to_erase)
+        bbox = self.drawable_cache.calculate_bounding_box(self.objects_to_erase)
+        min_x, min_y, max_x, max_y = bbox.min_x, bbox.min_y, bbox.max_x, bbox.max_y
 
         spacing = self.stroke_style.width * 10
         y = min_y

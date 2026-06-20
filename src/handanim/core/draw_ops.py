@@ -9,7 +9,7 @@ from typing import Any
 import cairo
 import numpy as np
 
-from .utils import (
+from ..utils.geometry import (
     get_bezier_extreme_points,
     get_bezier_points_from_quadcurve,
     slice_bezier,
@@ -51,7 +51,7 @@ class Ops:
 
     def __repr__(self):
         if isinstance(self.data, list) or isinstance(self.data, np.ndarray):
-            rounded_data = [[np.round(x, 2) for x in point] for point in self.data]
+            rounded_data = [[float(np.round(x, 2)) for x in point] for point in self.data]
         else:
             rounded_data = self.data
         return f"Ops({self.type}, {json.dumps(rounded_data)}, {self.partial})"

@@ -30,18 +30,18 @@
 
 ### Package ergonomics
 - [x] **Top-level exports** — populate `src/handanim/__init__.py` with the commonly-used classes (`Scene`, `Text`, `Rectangle`, `Circle`, `Arrow`, `SketchAnimation`, `FadeInAnimation`, etc.) so users can write `from handanim import Scene` instead of importing from submodules
-- [ ] **PyPI publication** — publish `v0.1.0` so `pip install handanim` works and the package is discoverable
+- [x] **PyPI publication** — publish `v0.1.0` so `pip install handanim` works and the package is discoverable
   - [x] Fill in `description` in `pyproject.toml` (currently empty string)
   - [x] Add `license = "MIT"` (or match `LICENSE` file) to `pyproject.toml`
   - [x] Add `classifiers` — e.g. `"Development Status :: 3 - Alpha"`, `"Intended Audience :: Education"`, `"Topic :: Multimedia :: Graphics"`, `"Programming Language :: Python :: 3.11"`
   - [x] Add `keywords` — e.g. `["animation", "hand-drawn", "manim", "math", "whiteboard", "education"]`
   - [x] Add `[tool.poetry.urls]` block with `Homepage`, `Repository`, and `Documentation` links
   - [ ] Wire `[tool.poetry.extras] ai` — list the optional AI deps so `pip install handanim[ai]` pulls them
-  - [ ] Verify `README.md` renders correctly as PyPI long description (no raw HTML, no local image paths)
+  - [x] Verify `README.md` renders correctly as PyPI long description (no raw HTML, no local image paths)
   - [x] Run `poetry build` locally and inspect the `dist/` wheel/sdist for unexpected files
   - [x] Publish to TestPyPI first: `poetry publish --repository testpypi` and verify `pip install --index-url https://test.pypi.org/simple/ handanim` works
-  - [ ] Publish to PyPI: `poetry publish`
-  - [ ] Add PyPI version badge to `README.md`
+  - [x] Publish to PyPI: `poetry publish`
+  - [x] Add PyPI version badge to `README.md`
   - [ ] Add a GitHub Actions release workflow that runs `poetry publish` automatically on a `v*` tag push
 - [ ] **Semantic versioning** — adopt SemVer; tag releases in git; use `poetry version patch/minor/major` for bumps; document the release process in DEVELOPMENT.md
 
@@ -173,6 +173,71 @@ Goal: produce high-quality single-stroke glyph paths from existing sources (TTF 
 - [ ] **Unified `MathText` primitive** — merge `Math` and `Text` (or add `math=True` flag to `Text`) so `$...$` sections are routed through `MathTextParser` while plain text uses the hand-drawn font, both with a consistent left-edge `position` anchor. *(Difficulty: medium)*
 - [ ] **Spacing/kerning fix** — audit the gaps between glyphs in LaTeX math output; likely a mismatch between `MathTextParser` bounding-box reporting and actual single-stroke glyph widths; may require per-glyph kerning tables in the JSON font format. *(Difficulty: medium)*
 - [ ] **Math symbol coverage expansion** — extend `handanimtype1.json` to cover ∑, ∫, ∂, ∈, →, ≤, etc.; `tools/fontmaker/symbols.py` has the label list started. *(Difficulty: medium)*
+
+### Skeletonization tool (`tools/skeleton/`)
+
+Goal: convert double-stroke TTF outline glyphs (e.g. STIX Two Math, DejaVu) into the handanim single-stroke custom JSON format, so any outline font can be used as a drawing source.
+
+**Pipeline stages (run in order):**
+
+- [ ] **Glyph rasterizer** (`rasterize.py`) — for each requested codepoint, draw the TTF glyph outline at 512×512 px using `fonttools` (decompose contours) + `Pillow`/`cairo` to fill the outline into a binary bitmap. Normalise to a square canvas with configurable padding. Output: per-glyph `numpy` bool array, indexed by codepoint. *(Difficulty: easy)*
+
+- [ ] **Skeleton extraction** (`skeletonize.py`) — apply `skimage.morphology.thin` (Zhang–Suen) to each binary bitmap to produce a 1-px-wide medial axis. Post-process: (a) prune spurs shorter than 4 px by iteratively removing degree-1 pixels whose branch length is below the threshold; (b) detect junction pixels (≥3 neighbours); (c) split the skeleton graph at junctions into branch segments, each stored as an ordered list of pixel coordinates. *(Difficulty: medium)*
+
+- [ ] **Stroke ordering** (`stroke_order.py`) — model branch segments as edges in an undirected graph where junction pixels are nodes. Find a minimum-weight Eulerian circuit (Chinese Postman) to obtain a pen-up-minimal stroke order. Where the graph is not Eulerian, duplicate the minimum-weight set of edges needed to make it so (T-join / blossom matching via `networkx`). Output: ordered list of `[(x1,y1)…(xn,yn)]` stroke traces per glyph. *(Difficulty: medium)*
+
+- [ ] **Bézier vectorization** (`vectorize.py`) — for each ordered stroke trace: (a) apply Douglas–Peucker simplification (tolerance ≈ 1.5 px) to reduce noise; (b) fit a cubic B-spline with `scipy.interpolate.splprep` (smoothing factor tuned to stroke length); (c) evaluate the spline at uniformly-spaced knots and emit a sequence of `MOVE_TO` / `CURVE_TO` ops; (d) map pixel coordinates back to font-unit space using the rasterisation scale factor. *(Difficulty: medium)*
+
+- [ ] **JSON exporter** (`export.py`) — assemble per-glyph ops into the custom JSON format: `{"metadata": {"font_size": <em>}, "glyphs": {"<codepoint>": ["M x y C …", …]}}`. Accepts a list of codepoints and a target output path under `assets/fonts/custom/`. *(Difficulty: easy)*
+
+- [ ] **CLI entry point** (`run.py`) — `python -m tools.skeleton --font path/to/font.ttf --chars "A-Za-z0-9" --out assets/fonts/custom/skeleton_font.json`. Accepts `--spur-threshold`, `--dp-tolerance`, `--spline-smoothing` flags. *(Difficulty: easy)*
+
+- [ ] **Quality evaluation** (`evaluate.py`) — render the original outline glyph and the skeleton overlay side by side to SVG for visual inspection. Compute the mean Hausdorff distance between the skeleton and the original outline edge pixels as a summary metric. *(Difficulty: easy-medium)*
+
+---
+
+### Style transfer pipeline (`tools/style_transfer/`)
+
+Goal: given a single-stroke TTF font (e.g. `FeasiblySingleLine`, `BackstaySingleLine`) and the Hershey rowmans/mathlow font, learn a Thin Plate Spline warp that maps Hershey stroke geometry into the TTF's visual style. Apply the warp to any Hershey glyph — including math symbols — so they inherit the TTF style without needing TTF math coverage.
+
+**Core idea:** For the 36 shared characters (A–Z, 0–9) we have matched stroke pairs. ICP finds the best point-to-point correspondence within each pair (handling different arc-length parameterisations and stroke-ordering choices). All correspondences pooled together train a single global TPS warp. Any Hershey glyph can then be warped into the new style by running its control points through the learned map.
+
+**Pipeline stages:**
+
+- [ ] **Stroke point-cloud extraction** (`extract_strokes.py`) — for each of the 36 characters, render the Hershey glyph via `hershey_glyph_opsset` and the TTF glyph via `standard_glyph_opsset` into OpsSet. Sample both at `N=200` points uniformly by cumulative arc-length (straight segments by linear interpolation, cubic segments by numerical integration). Output: two dicts `{char: np.ndarray(N,2)}` — one for Hershey, one for TTF. *(Difficulty: easy)*
+
+- [ ] **Per-glyph normalisation** (`normalize.py`) — translate and scale each point cloud independently to the unit square [0,1]² (based on its own bounding box). Store the per-glyph `(offset, scale)` pairs so warped coordinates can be mapped back to pixel space later. *(Difficulty: easy)*
+
+- [ ] **ICP alignment per character** (`icp.py`) — for each of the 36 character pairs, run ICP between the normalised Hershey cloud (source) and TTF cloud (target): (a) initialise with centres of mass aligned; (b) iterate: for each source point find the nearest target point (`scipy.spatial.cKDTree`), compute the best-fit rigid transform (SVD of the cross-covariance matrix), apply it to the source; (c) stop when mean-squared distance change < 1e-6 or 50 iterations. Collect the final set of `(hershey_pt, ttf_pt)` correspondences for each character. *(Difficulty: medium)*
+
+- [ ] **Global TPS fitting** (`fit_tps.py`) — pool all correspondences from all 36 characters (post-ICP). Fit two `scipy.interpolate.RBFInterpolator(kernel="thin_plate_spline")` maps: one forward (Hershey → TTF) and one inverse (TTF → Hershey). Tune the regularisation parameter `smoothing` by leave-one-character-out cross-validation on Chamfer distance. Save control-point arrays and smoothing value to `assets/warps/<source>_to_<target>.npz`. *(Difficulty: medium)*
+
+- [ ] **`FontStyleTransfer` class** (`src/handanim/stylings/font_warp.py`) — loads a `.npz` warp file and exposes:
+  - `warp_opsset(ops: OpsSet) -> OpsSet` — replaces every coordinate in the ops with the TPS-mapped value (handles `MOVE_TO`, `LINE_TO`, `CURVE_TO`, `QUAD_CURVE_TO`);
+  - `warp_point_inverse(pt) -> np.ndarray` — back-projects a point from TTF space to Hershey space (used for entry/exit inference).
+  Integrate into `Math.hershey_glyph_opsset` as an optional post-processing step when a `FontStyleTransfer` is attached to the `Math` drawable. *(Difficulty: medium)*
+
+- [ ] **Entry/exit point inference** — after warping each Hershey glyph, record the first `MOVE_TO` point and the last drawn point of each stroke sub-path as `entry` and `exit` metadata (stored as `Ops.meta`). These are needed later for cursive-style connecting strokes between adjacent glyphs. *(Difficulty: easy)*
+
+- [ ] **Warp evaluation** (`evaluate.py`) — for each of the 36 validation characters: (a) compute Chamfer distance between warped Hershey cloud and TTF cloud; (b) export SVG showing original Hershey, TTF target, and warped Hershey overlaid; (c) print summary table of per-character distortion. *(Difficulty: easy)*
+
+- [ ] **CLI** (`run.py`) — `python -m tools.style_transfer --hershey rowmans --font FeasiblySingleLine.ttf --out assets/warps/rowmans_to_feasibly.npz [--eval]`. Calls extract → normalise → ICP → fit TPS → save, with `--eval` triggering `evaluate.py`. *(Difficulty: easy)*
+
+---
+
+### Font asset CLI (tool discovery)
+- [ ] **`handanim font list`** — print all registered fonts (built-in + user-registered from `~/.handanim/config.json`) with their type and file path. *(Difficulty: easy)*
+- [ ] **`handanim font register <path> --name <name> --type <ttf|custom>`** — copy or symlink the asset into `~/.handanim/fonts/<type>/` and append an entry to `~/.handanim/config.json`; validate the file before writing. *(Difficulty: easy)*
+- [ ] **`handanim font remove <name>`** — remove the entry from `~/.handanim/config.json` (does not delete the file). *(Difficulty: easy)*
+- [ ] **`handanim warp list`** — list registered TPS warp files from `~/.handanim/config.json`. *(Difficulty: easy)*
+- [ ] **`handanim warp register <path> --source <font> --target <font>`** — register a `.npz` warp file produced by `tools/style_transfer/fit_tps.py`. *(Difficulty: easy)*
+- [ ] **Wire CLI entry point** — add `[tool.poetry.scripts] handanim = "handanim.cli:main"` to `pyproject.toml`; scaffold `src/handanim/cli.py` with subcommands dispatching to the above actions. *(Difficulty: easy-medium)*
+
+### Hand-drawn humanization
+- [ ] **Correlated baseline drift** — replace the per-character i.i.d. y-jitter in `Text._draw_line` with a random-walk accumulator so the baseline drifts gradually across a line rather than flipping sign each character; amplitude expressed as a fraction of `font_size`. A slow drift with occasional partial correction (e.g., cumulative sum of small Gaussian steps, clamped to ±`roughness * font_size`) matches how a real hand wanders along a ruled or imaginary baseline. *(Difficulty: easy)*
+- [ ] **Per-character rotation and scale jitter** — in `Text._draw_line` and `Math.draw()`, apply a small per-glyph random rotation (±3–5°) and scale (±3–8%) around the glyph's baseline anchor before translating it into position; sample the per-word distribution once per word so variance is smaller within a word than across words, matching the coherence of real handwriting. *(Difficulty: easy-medium)*
+- [ ] **Global per-session slant** — add a `slant_angle: float = 0.0` field (in degrees) to `SketchStyle`; apply it as a horizontal shear (`x += y * tan(slant_angle)`) to the full OpsSet produced by `Text.draw()` and `Math.draw()` so all glyphs in a text block lean consistently, like a person with a characteristic writing angle. *(Difficulty: easy)*
+- [ ] **TPS style transfer from single-stroke TTF to Hershey math** — fit a thin-plate-spline warp (`scipy.interpolate.RBFInterpolator` with `kernel="thin_plate_spline"`) from the 36 paired characters A–Z + 0–9 in any single-stroke TTF font (`BackstaySingleLine`, `FeasiblySingleLine`) against the same characters from the Hershey pipeline; both sides normalized to the unit bounding box; correspondences established via ICP on arc-length-sampled point clouds. Apply the learned warp to the OpsSet points of any Hershey math glyph so math symbols inherit the TTF's visual style without needing TTF math coverage. As a byproduct, back-project the TTF stroke start/end points through the inverse warp to infer natural entry/exit positions for Hershey glyphs (needed for cursive-like connecting strokes). Expose as a `FontStyleTransfer` class with `warp_opsset(ops)` and `warp_point_inverse(pt)` methods. *(Difficulty: medium-hard)*
 
 ---
 

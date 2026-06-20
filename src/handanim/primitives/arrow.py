@@ -3,7 +3,7 @@ import numpy as np
 
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..core.utils import get_line_slope_angle
+from ..utils.geometry import get_line_slope_angle
 from .curves import Curve
 from .lines import Line, LinearPath
 

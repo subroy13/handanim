@@ -16,7 +16,7 @@ on a 16:9 beamer slide with default margins).
 from __future__ import annotations
 
 from .draw_ops import OpsSet, OpsType
-from .utils import get_bezier_points_from_quadcurve, slice_bezier
+from ..utils.geometry import get_bezier_points_from_quadcurve, slice_bezier
 from .viewport import Viewport
 
 

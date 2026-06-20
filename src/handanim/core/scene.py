@@ -9,7 +9,7 @@ from .animation import AnimationEvent, AnimationEventType, CompositeAnimationEve
 from .cache import DrawableCache, GroupFrameCache
 from .draw_ops import OpsSet
 from .drawable import Drawable, DrawableGroup
-from .utils import cairo_surface_to_numpy
+from ..utils.geometry import cairo_surface_to_numpy
 from .viewport import Viewport
 
 

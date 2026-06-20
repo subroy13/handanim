@@ -1,6 +1,7 @@
 # ✍️ handanim
 
 [![Build and Deploy Docs](https://github.com/subroy13/handanim/actions/workflows/docs.yml/badge.svg)](https://github.com/subroy13/handanim/actions/workflows/docs.yml)
+[![PyPI version](https://img.shields.io/pypi/v/handanim.svg)](https://pypi.org/project/handanim/)
 
 > A Python library to create whiteboard-style, hand-drawn animations for educational videos, tutorials or data storytelling.
 
@@ -39,9 +40,18 @@ _(Example animation of proof of a plus b whole square — see `examples/a_plus_b
 
 ## 🚀 Quickstart
 
-### 📦 Installation using Poetry
+### 📦 Installation using pip (from PyPI)
 
-The easiest way to install all the dependencies is to use [Poetry](https://python-poetry.org/).
+The easiest way to install `handanim` is directly from PyPI using pip:
+
+```bash
+# Install handanim
+pip install handanim
+```
+
+### 📦 Installation from source using Poetry
+
+The easiest way to install all the dependencies from source is to use [Poetry](https://python-poetry.org/).
 
 ```bash
 # Install dependencies (requires Python 3.11+)
