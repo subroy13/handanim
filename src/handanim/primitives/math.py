@@ -209,9 +209,20 @@ class Math(Drawable):
         bbox = svg_ops.get_bbox()
         width = bbox.width * font_scale
         height = bbox.height * font_scale
-        svg_ops.scale(font_scale)
-        svg_ops.translate(-bbox.min_x * font_scale, -bbox.min_y * font_scale)
-        return svg_ops, height, width
+        # Scale each point directly from the bbox origin — NOT via OpsSet.scale()
+        # which scales around center-of-gravity and badly mispositions sparse paths
+        # (e.g. skeleton fonts with only 4–10 points per glyph).
+        new_opsset = OpsSet(initial_set=[])
+        for op in svg_ops.opsset:
+            if isinstance(op.data, list):
+                new_data = [
+                    ((x - bbox.min_x) * font_scale, (y - bbox.min_y) * font_scale)
+                    for x, y in op.data
+                ]
+                new_opsset.add(Ops(op.type, new_data, op.partial, op.meta))
+            else:
+                new_opsset.add(op)
+        return new_opsset, height, width
 
     def hershey_glyph_opsset(
         self, unicode: int, font_size: int

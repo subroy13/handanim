@@ -14,7 +14,7 @@ text1 = Math(
     tex_expression=r"Pardon my bad handwriting",
     position=(300, 200),
     font_size=96,
-    font_name="handanimtype1",
+    font_name="noto_sans_math",
     stroke_style=StrokeStyle(color=GREEN, width=2),
 )
 scene.add(event=SketchAnimation(start_time=0, duration=3), drawable=text1)
@@ -33,7 +33,7 @@ text1 = Math(
     font_size=192,
     stroke_style=StrokeStyle(color=BLUE, width=2),
     glow_dot_hint={"color": BLUE, "radius": 5},
-    font_name="handanimtype1",
+    font_name="noto_sans_math",
 )
 scene.add(event=SketchAnimation(start_time=6, duration=3), drawable=text1)
 

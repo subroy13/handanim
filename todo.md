@@ -194,6 +194,13 @@ Goal: convert double-stroke TTF outline glyphs (e.g. STIX Two Math, DejaVu) into
 
 - [ ] **Quality evaluation** (`evaluate.py`) — render the original outline glyph and the skeleton overlay side by side to SVG for visual inspection. Compute the mean Hausdorff distance between the skeleton and the original outline edge pixels as a summary metric. *(Difficulty: easy-medium)*
 
+**ISSUES**
+
+1. Equality should not appear at the baseline.
+2. There are symbols (e.g., y) which goes below the baseline. They are getting cut off.
+
+
+
 ---
 
 ### Style transfer pipeline (`tools/style_transfer/`)

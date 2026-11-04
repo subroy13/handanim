@@ -39,17 +39,21 @@ Changelog = "https://github.com/subroy13/handanim/blob/master/CHANGELOG.md"
 python = "^3.11"
 cairocffi = ">=1.7.1,<2.0.0"
 numpy = ">=2.2.4,<3.0.0"
-moviepy = ">=2.1.2,<3.0.0"
 pycairo = ">=1.27.0,<2.0.0"
 fonttools = ">=4.47.0,<5.0.0"
 matplotlib = ">=3.7.0,<4.0.0"
 svgelements = ">=1.9.6"
-urllib3 = "^2.6.3"
+urllib3 = "^2.8.0"
 hershey-fonts = "^2.1.0"
+imageio = "^2.38.1"
+imageio-ffmpeg = "^0.8.1"
+pillow = "^13.0.0"
+tqdm = "^4.70.1"
+python-dotenv = "^1.2.4"
 
 [tool.poetry.group.dev.dependencies]
-sphinx = "^8.2.3"
-furo = "^2024.8.6"
+sphinx = {version = "^9.2.0", python = ">=3.13"}
+furo = {version = "^2025.12.19", python = ">=3.13"}
 vtracer = "^0.6.11"
 opencv-python = "^4.11.0.86"
 scikit-image = "^0.25.2"
@@ -59,6 +63,7 @@ pytest-cov = "^7.1.0"
 ruff = "^0.15.12"
 mypy = "^2.1.0"
 readme-renderer = "^45.0"
+urllib3 = {version = "^2.8.0", python = ">=3.13"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

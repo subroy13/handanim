@@ -8,6 +8,7 @@ _BUILTIN_FONTS = {
     "feasibly": {"type": "ttf", "file": "FeasiblySingleLine-z8D90.ttf"},
     "backstay": {"type": "ttf", "file": "BackstaySingleLine-rgOw8.ttf"},
     "handanimtype1": {"type": "custom", "file": "handanimtype1.json"},
+    "noto_sans_math": {"type": "custom", "file": "noto_sans_math_skeleton.json"},
     "hershey_mathlow": {"type": "hershey", "name": "mathlow"},
     "hershey_rowmans": {"type": "hershey", "name": "rowmans"},
     "hershey_cursive": {"type": "hershey", "name": "cursive"},
