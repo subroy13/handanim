@@ -2,6 +2,7 @@ from handanim.primitives.math import Math
 from handanim.primitives.text import Text
 from handanim.core.draw_ops import OpsType
 from handanim.stylings.fonts import get_font_info, list_fonts
+import pytest
 
 def test_list_fonts():
     fonts = list_fonts()
@@ -56,4 +57,13 @@ def test_hershey_math_primitive():
     )
     ops = math_primitive.draw()
     assert len(ops.opsset) > 0, "Hershey Math drawing returned empty operations set"
+
+
+@pytest.mark.parametrize("expression", [r"$\triangle$", r"$\angle$", r"$\sim$"])
+def test_hershey_geometry_symbols_have_visible_strokes(expression):
+    # Previously these glyphs silently disappeared from rendered proofs.
+    ops = Math(expression, (0, 0), font_size=24, font_name="hershey_rowmans").draw()
+    assert any(op.type in (OpsType.LINE_TO, OpsType.CURVE_TO) for op in ops.opsset)
+    bbox = ops.get_bbox()
+    assert bbox.width > 0 and bbox.height > 0
 

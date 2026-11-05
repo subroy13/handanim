@@ -23,6 +23,17 @@ from handanim.primitives.polygons import Rectangle
 FLAT = SketchStyle(roughness=0, bowing=0)
 
 
+def test_portrait_video_keeps_requested_dimensions(tmp_path):
+    import imageio.v2 as imageio
+
+    scene = Scene(width=90, height=160, fps=10)
+    scene.add(SketchAnimation(start_time=0, duration=0.1), Line((10, 10), (20, 20)))
+    output = tmp_path / "portrait.mp4"
+    scene.render(str(output), max_length=0.1)
+    with imageio.get_reader(str(output)) as reader:
+        assert reader.get_meta_data()["size"] == (90, 160)
+
+
 def make_line():
     return Line((0, 0), (100, 100), sketch_style=FLAT)
 

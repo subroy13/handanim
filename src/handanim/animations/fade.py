@@ -23,11 +23,12 @@ class FadeInAnimation(AnimationEvent):
         current_ops_list = []
         for op in opsset.opsset:
             if op.type == OpsType.SET_PEN:
-                modified_data = {k: progress if k == "opacity" else v for k, v in op.data.items()}
+                modified_data = dict(op.data)
+                modified_data["opacity"] = op.data.get("opacity", 1.0) * progress
                 current_ops_list.append(Ops(type=OpsType.SET_PEN, data=modified_data, partial=op.partial, meta=op.meta))
             elif op.type == OpsType.IMAGE and isinstance(op.data, dict):
                 modified_data = dict(op.data)
-                modified_data["opacity"] = progress
+                modified_data["opacity"] = op.data.get("opacity", 1.0) * progress
                 current_ops_list.append(Ops(type=OpsType.IMAGE, data=modified_data, partial=op.partial, meta=op.meta))
             else:
                 current_ops_list.append(op)

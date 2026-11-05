@@ -33,6 +33,8 @@ class Drawable:
         fill_style: FillStyle | None = None,
         glow_dot_hint: dict | bool | None = None,
         id: str | None = None,
+        *args,
+        **kwargs,
     ):
         if id is not None:
             self.id = id

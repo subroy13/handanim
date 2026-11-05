@@ -99,6 +99,11 @@ UNICODE_TO_HERSHEY: dict[int, tuple[str, str]] = {
 #     point from the raw origin, then translates by the post-scale bbox).
 #   • Typical operator size: ±7–9 units in y; tall operators (∑ ∫): ±12–16.
 COMPOSED_GLYPHS: dict[int, list[list[tuple[float, float]]]] = {
+    # Geometry symbols used in angle and triangle-similarity proofs.
+    9651: [[(-9, 9), (0, -9), (9, 9), (-9, 9)]],  # △ triangle
+    8736: [[(8, -9), (-8, 9), (10, 9)]],          # ∠ angle
+    8764: [[(-9, 2), (-6, -2), (-3, -3), (0, 0),
+            (3, 3), (6, 2), (9, -2)]],           # ∼ similar to
     # ± plus-minus (177): total y range [-9, 9]
     177: [
         [(-7, -3), (7, -3)],    # + horizontal bar

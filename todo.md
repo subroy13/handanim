@@ -1,5 +1,31 @@
 # handanim — Todo & Roadmap
 
+## Collaborative whiteboard shorts
+
+Goal: create reproducible, hand-sketched explanation videos lasting 30–60 seconds through an agent + MCP + human review loop. Grow this backlog from real video-making experience; audit existing capabilities before implementing a feature.
+
+- [x] **Video sandbox** — create `sandbox/` for per-video scripts, storyboards, and renders, separate from package source.
+- [x] **Agent workflow prompt** — document content research, central takeaway, narration, visual planning, implementation, review, and revision in [sandbox/AGENTS.md](sandbox/AGENTS.md).
+- [x] **Portrait production convention** — use 9:16, 1080 × 1920 at 30 fps for final videos; 360 × 640 previews. Apply this to new sandbox videos without changing general library defaults.
+- [x] **First complete render** — [Ptolemy's theorem](sandbox/ptolemy/storyboard.md): a 58-second portrait proof using two similar-triangle pairs, captions, and local synthetic narration. Saved scene and narration scripts reproduce the assets; the geometric explanation does not need a decorative character.
+- [ ] **First viewing review** — watch the full Ptolemy video with the user; revise pacing, narration, and clarity based on actual feedback. Programmatic decoding and sampled-frame review are complete; listening review remains pending.
+- [x] **Exercise the MCP workflow** — used linting, introspection, and rendered snapshots on Ptolemy; the fixes below have targeted regression tests (148 relevant tests passed).
+- [x] **Bundled font discovery** — use the renderer's font registry instead of scanning the nonexistent root `fonts/` directory. Reports valid font names, including registered user fonts. Restart an already-running MCP server to load this fix.
+- [x] **Geometry glyphs** — add Hershey strokes for triangle, angle, and similarity symbols; these silently disappeared in the first proof render.
+- [x] **Exact portrait dimensions** — prevent imageio from resizing 1080-pixel and 360-pixel widths to multiples of 16 during MP4 rendering.
+- [x] **Translucent fades** — scale existing opacity instead of replacing it, preventing pale hatching from flashing opaque when a fade starts.
+- [ ] **Unsupported-glyph diagnostics** — surface missing mathematical glyphs before rendering; passing lint/layout checks did not detect the missing similarity symbols.
+- [ ] **Efficient single-frame inspection** — avoid calculating the entire video timeline for each snapshot; current snapshot review repeats full timeline work.
+- [ ] **API/schema discovery tool** — expose supported primitives, animation signatures, styles, and the ScenePlan schema with minimal valid examples; verify examples compile against the current package.
+- [ ] **Render an existing script through MCP** — expose preview/final rendering with resolution, frame rate, and time-range controls, returning output paths and useful failures. Reuse existing rendering support where possible.
+- [ ] **Batch visual review through MCP** — expose multiple timestamp snapshots or a contact sheet; build on existing `Scene.render_keyframes` if suitable.
+- [ ] **Actionable scene diagnostics** — report object identity, timestamp, and bounds for clipping and timing problems; distinguish intentional overlap from likely mistakes and inspect motion between keyframes.
+- [ ] **Reproducible rerenders** — verify seed control across sketch/text randomness and record package version, fonts/assets, and render settings alongside each finished video. Compare repeated snapshots before claiming reproducibility.
+- [ ] **Portrait readability checks** — develop reusable caption space and configurable overlay margins; check text and strokes at phone size using actual previews.
+- [ ] **Narration-led timing** — start with recorded audio, align scene beats and captions, and verify the final mix. Coordinate with Phase 5 below rather than creating a second audio system.
+- [ ] **Cartoon vocabulary** — develop reusable stick figures, gestures, expressions, pointing, and speech bubbles as real videos require them; preserve immutable drawables and pure animations.
+- [ ] **Revision exercise** — demonstrate that a request such as “hold the diagram longer and point at the arrow” can be implemented locally without regenerating the whole video.
+
 ---
 
 ## Bug Fixes (do first)
@@ -11,7 +37,7 @@
 - [x] **`svgwrite` unused dep** — remove from `requirements.txt` and `pyproject.toml`
 - [x] **Legacy `SVG` primitive** — move `svgpathtools` to runtime deps OR deprecate `SVG` in favour of `VectorSVG` and mark it clearly. `VectorSVG` is strictly more capable.
 - [x] **Wire up `easing_fun`** — `AnimationEvent` accepts an easing function but no `apply()` implementation ever calls it; either remove it or implement: `progress = easing_fun(raw_progress) if easing_fun else raw_progress` at the top of every `apply()`
-- [x] Immutability Violation in stylings/strokes.py: The functions apply_stroke_pressure and apply_strokes_gradient currently mutate the current_pen_data dictionaries directly (e.g., current_pen_data["width"] = ...). Because this dictionary is a reference to the Ops data, it mutates the original operations in place. This violates the core architectural invariant stated in CLAUDE.md that transformations and animations must be stateless. Fix: Use .copy() on current_pen_ops.data before applying new pressure or gradient values and emitting the new Ops.
+- [x] Immutability Violation in stylings/strokes.py: The functions apply_stroke_pressure and apply_strokes_gradient currently mutate the current_pen_data dictionaries directly (e.g., current_pen_data["width"] = ...). Because this dictionary is a reference to the Ops data, it mutates the original operations in place. This violates the core architectural invariant stated in AI_AGENT_GUIDELINES.md that transformations and animations must be stateless. Fix: Use .copy() on current_pen_ops.data before applying new pressure or gradient values and emitting the new Ops.
 - [x] Incomplete Eraser Logic (primitives/eraser.py): At line 47, there is a # TODO: do the rotation, perform the zigzag motion here. Currently, the eraser just performs a horizontal bounding-box wipe without mimicking a human zigzag erasing motion or aligning to the stroke paths. This breaks the "hand-drawn" aesthetic constraint for this specific primitive.
 
 
@@ -36,7 +62,7 @@
   - [x] Add `classifiers` — e.g. `"Development Status :: 3 - Alpha"`, `"Intended Audience :: Education"`, `"Topic :: Multimedia :: Graphics"`, `"Programming Language :: Python :: 3.11"`
   - [x] Add `keywords` — e.g. `["animation", "hand-drawn", "manim", "math", "whiteboard", "education"]`
   - [x] Add `[tool.poetry.urls]` block with `Homepage`, `Repository`, and `Documentation` links
-  - [ ] Wire `[tool.poetry.extras] ai` — list the optional AI deps so `pip install handanim[ai]` pulls them
+  - [x] Wire `[tool.poetry.extras] ai` — list the optional AI deps so `pip install handanim[ai]` pulls them
   - [x] Verify `README.md` renders correctly as PyPI long description (no raw HTML, no local image paths)
   - [x] Run `poetry build` locally and inspect the `dist/` wheel/sdist for unexpected files
   - [x] Publish to TestPyPI first: `poetry publish --repository testpypi` and verify `pip install --index-url https://test.pypi.org/simple/ handanim` works
@@ -119,15 +145,18 @@ Visual regression testing is the pragmatic approach for an animation library:
 
 ---
 
-## Phase 3 — AI Integration (`handanim_ai`)
+## Phase 3 — AI Agentic Studio (`aianim`, formerly `handanim_ai`)
 
-The `handanim_ai` module already has the two-prompt pipeline scaffolded. Expand it:
+The `aianim` module combines hand-drawn whiteboard animation (`handanim`) with voice synthesis (`voiceanim`):
 
-- [ ] **Structured scene representation** — replace the free-text scene description passed between the two LLM calls with a JSON schema (list of `{drawable, animation, timing}` objects); makes the codegen prompt more reliable and the output parseable
-- [ ] **Code execution & feedback loop** — after `codegen.txt` generates code, execute it in a subprocess, catch exceptions, and feed them back to the LLM for self-correction (1–2 retry loop)
-- [ ] **Asset awareness** — let the AI prompt know about files in `fonts/` and an `assets/` folder so it can reference them in generated code
-- [ ] **CLI entry point** — `handanim-ai generate "explain the Pythagorean theorem"` that runs the full pipeline and opens the result
-- [ ] **Prompt versioning** — move prompts to a structured YAML with version field; makes A/B testing prompt changes easier
+- [x] **Structured scene representation** — replace the free-text scene description passed between the two LLM calls with a JSON schema (list of `{drawable, animation, timing}` objects); makes the codegen prompt more reliable and the output parseable
+- [x] **Code execution & feedback loop** — after `codegen.txt` generates code, execute it in a subprocess, catch exceptions, and feed them back to the LLM for self-correction (1–2 retry loop)
+- [x] **Asset awareness** — let the AI prompt know about files in `fonts/` and an `assets/` folder so it can reference them in generated code
+- [x] **CLI entry point** — `handanim-ai generate "explain the Pythagorean theorem"` that runs the full pipeline and opens the result
+- [x] **Prompt versioning** — move prompts to a structured YAML with version field; makes A/B testing prompt changes easier
+- [x] **AWS Bedrock & Multi-provider support** — AWS Bedrock Converse API with Claude 3.5 Sonnet / Nova / Llama support, OpenRouter, and MockModel
+- [x] **MCP Server (`handanim-ai mcp`)** — Model Context Protocol stdio server enabling Claude Desktop, Claude Code, Cursor, and Gemini to natively lint, introspect, snapshot, and generate scenes
+- [x] **AST Linter & Headless Scene Introspection** — `check_code()` guardrails and `Scene.introspect()` headless bounds/collision checks
 
 ---
 
@@ -264,15 +293,28 @@ Note: standard fonts are double-stroke (outlines), but handanim needs single-str
 
 ---
 
-## Phase 5 — Voice & Audio (`larynxanim`)
+## Phase 5 — Voice & Audio (`voiceanim`)
 
-Long-term: a companion module (possibly a separate repo) that adds audio/voice to handanim scenes.
+Realistic human-style voice synthesis, word-level alignment, and timeline synchronization subpackage for whiteboard animations.
 
-- [ ] **TTS integration** — generate voice narration from a script string using Coqui TTS or an API (ElevenLabs, OpenAI); save as WAV
-- [ ] **Audio-visual sync** — align `AnimationEvent` timings with sentence timestamps from the TTS output (forced alignment via `aeneas` or Whisper)
-- [ ] **Final mix** — composite audio + Cairo-rendered video frames using `moviepy`
-- [ ] **Auto-subtitle** — burn subtitles onto frames at the aligned timestamps
-- [ ] **Lip-sync SVG characters** — parameterize mouth shape in `VectorSVG` characters as named path groups; animate them in sync with phonemes
+### Implemented Features
+- [x] **Subpackage Architecture & Schemas (`voiceanim`)** — `AudioClip`, `WordTimestamp`, `SentenceTimestamp`, `NarrationBeat` with word lookups, range calculations, and JSON serialization.
+- [x] **Default Local Provider: Kokoro-82M (`KokoroProvider`)** — High-fidelity, 82M-parameter lightweight open-weight local model (`kokoro-onnx` / `kokoro`). Ultra-fast real-time inference on macOS CPU / Apple Silicon. Presets include `af_heart` (flagship warm female), `am_adam` (clear male), `bf_emma`, `bm_george`.
+- [x] **Cloud Provider: AWS Polly (`PollyProvider`)** — Integration with AWS Polly Neural & Generative engines (`Matthew`, `Ruth`, `Joanna`, `Stephen`). Queries native `SpeechMarks` (`OutputFormat='json'`) for millisecond-exact word and sentence timestamps.
+- [x] **Controllable Model: Qwen3-TTS (`QwenTTSProvider`)** — Support for `Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice` (and `0.6B`), featuring natural language instruction-driven control (`instruct="Speak in an enthusiastic, friendly teacher's voice"`) over timbre, emotion, and prosody.
+- [x] **Test/CI Provider: `MockVoiceProvider`** — Offline deterministic sine-wave synthesizer with proportional word timestamps for zero-cost testing without network or GPU.
+- [x] **Content-Addressed Audio Cache (`AudioCache`)** — SHA-256 hash of `(provider, model, voice, speed, instruct, text)`. Re-rendering identical scenes reuses cached WAV and metadata in `<1ms`, guaranteeing reproducible visual timing.
+- [x] **Word-Level Visual Synchronization (`VoiceTimelineSync`)** — `VoiceTimelineSync.sync_event_to_word(clip, word, event_cls, drawable, lead_in)` automatically anchors `SketchAnimation` start times to when words are spoken.
+- [x] **Beat Stitching & Fit Validation** — `stitch_narration_beats()` combines multi-scene audio clips with silence padding; `validate_beat_fit()` warns when spoken duration exceeds visual slots.
+- [x] **Automated Audio/Video Muxing (`mixer.py`)** — Multiplexes audio and video using `imageio-ffmpeg`'s bundled ffmpeg binary (`-c:v copy -c:a aac -shortest`).
+- [x] **Native `Scene.render(..., narration=...)` Integration** — Direct support in `Scene.render()` for `AudioClip` or audio file paths; auto-adjusts scene length and muxes final video.
+- [x] **Subtitle Export** — `AudioClip.export_srt()` and `AudioClip.export_vtt()` export standard subtitle files matching word/sentence boundaries.
+- [x] **MCP Audio Server Tools** — Added `list_voices`, `synthesize_narration`, `get_word_timestamps`, and `mux_video_audio` to `aianim mcp` (and `handanim-ai mcp`) for agentic, multi-modal video production.
+
+### Things to Do (Next Steps)
+- [ ] **Math & LaTeX Pronunciation Engine** — Translates LaTeX expressions into natural spoken English (e.g. `\int_0^\pi \sin(x) dx` $\to$ "integral from zero to pi of sine of x dx", `\frac{a}{b}` $\to$ "a over b") before sending to TTS.
+- [ ] **Auto-Burned Whiteboard Subtitles** — Burn sketchy handwriting-style subtitle captions onto Cairo frames using Hershey/custom single-line stroke fonts.
+- [ ] **Lip-Sync SVG Characters** — Map phoneme sequences from `AudioClip` to mouth open/closed shape keys in `VectorSVG` characters.
 
 ---
 
@@ -282,7 +324,7 @@ Long-term: a companion module (possibly a separate repo) that adds audio/voice t
 - [ ] **Unify style location** — `core/styles.py` has type definitions, `stylings/` has utility functions; add a top-level note in each file pointing to the other; consider moving `color.py` constants into `core/styles.py` so a single import suffices
 - [ ] **`Scene.add()` return value** — return the `drawable` (or a handle) so calls can be chained: `handle = scene.add(event, rect)`
 - [ ] **Type annotations audit** — several functions use `Any` loosely; tighten with `TypeVar` for `Drawable` subclasses and overloads for `OpsSet` transforms
-- [ ] **`handanim_ai` as proper subpackage** — rename import path from `handanim_ai` to `handanim.ai` for consistency; adjust `pyproject.toml` package include
+- [x] **`handanim_ai` as proper subpackage (`aianim`)** — renamed package to `aianim` uniting visual drawing (`handanim`) and speech synthesis (`voiceanim`); backwards compatibility shim maintained in `handanim_ai`; added CLI entry points `aianim` and `handanim-ai`
 
 ---
 
