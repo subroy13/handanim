@@ -889,7 +889,9 @@ class Scene:
             write_obj = imageio.get_writer(output_path, mode="I", duration=max_length)
         else:
             tqdm_desc = "Rendering video..."
-            write_obj = imageio.get_writer(output_path, fps=self.fps, codec="libx264")
+            # Preserve requested sizes such as 1080×1920 and 360×640;
+            # imageio otherwise rounds dimensions up to multiples of 16.
+            write_obj = imageio.get_writer(output_path, fps=self.fps, codec="libx264", macro_block_size=1)
 
         with write_obj as writer:
             for i, frame_ops in enumerate(tqdm(opsset_list, desc=tqdm_desc)):

@@ -55,6 +55,14 @@ def test_mcp_call_lint_script():
     assert parsed["is_valid"] is True
 
 
+def test_mcp_assets_report_registered_bundled_fonts():
+    content = HandanimMCPServer().call_tool("list_assets", {})
+    fonts = json.loads(content[0]["text"])["fonts"]
+    assert "feasibly" in fonts["ttf"]
+    assert "handanimtype1" in fonts["custom_json"]
+    assert "hershey_rowmans" in fonts["hershey"]
+
+
 def test_mcp_call_compile_plan():
     server = HandanimMCPServer()
     req = {

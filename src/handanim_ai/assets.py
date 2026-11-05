@@ -4,26 +4,29 @@ from pathlib import Path
 from typing import Any
 
 import handanim.stylings.color as color_module
+from handanim.stylings.fonts import get_font_info, get_font_path, list_fonts
 
 
 def get_available_assets() -> dict[str, Any]:
     """Scan and return available fonts, colors, and asset files."""
     repo_root = Path(__file__).resolve().parent.parent.parent
-    fonts_dir = repo_root / "fonts"
     assets_dir = repo_root / "assets"
     examples_assets_dir = repo_root / "examples" / "assets"
 
     ttf_fonts = []
     custom_json_fonts = []
-    if fonts_dir.exists():
-        for p in fonts_dir.glob("*.ttf"):
-            ttf_fonts.append(p.stem)
-        custom_dir = fonts_dir / "custom"
-        if custom_dir.exists():
-            for p in custom_dir.glob("*.json"):
-                custom_json_fonts.append(p.stem)
-
-    hershey_fonts = ["rowmans", "greeks", "greekc"]
+    hershey_fonts = []
+    # Use the renderer's registry so reported names work as font_name values.
+    # This also includes registered user fonts and resolves assets/fonts correctly.
+    for name in list_fonts():
+        info = get_font_info(name)
+        if info["type"] == "hershey":
+            hershey_fonts.append(name)
+        elif Path(get_font_path(name)).is_file():
+            if info["type"] == "ttf":
+                ttf_fonts.append(name)
+            elif info["type"] == "custom":
+                custom_json_fonts.append(name)
 
     # Extract color names
     colors = [
@@ -44,7 +47,7 @@ def get_available_assets() -> dict[str, Any]:
         "fonts": {
             "ttf": sorted(ttf_fonts),
             "custom_json": sorted(custom_json_fonts),
-            "hershey": hershey_fonts,
+            "hershey": sorted(hershey_fonts),
         },
         "colors": sorted(colors),
         "media_assets": sorted(media_assets),

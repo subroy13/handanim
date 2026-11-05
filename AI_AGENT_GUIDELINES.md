@@ -2,6 +2,8 @@
 
 > **Quick Reference for AI Agents:** This guide provides the complete architectural mental model, directory map, invariant rules, and developer workflows for `handanim`. Read this document to understand what exists, where each component lives, and how data flows through the library without re-scanning the entire codebase.
 
+For collaborative 30–60 second portrait whiteboard videos, start with [sandbox/AGENTS.md](sandbox/AGENTS.md). It contains the production workflow, current MCP tool names, portrait settings, and targeted source references. Use this architecture guide when changing the package itself.
+
 ---
 
 ## 1. Project Identity & Guiding Philosophy

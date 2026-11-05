@@ -1,5 +1,31 @@
 # handanim — Todo & Roadmap
 
+## Collaborative whiteboard shorts
+
+Goal: create reproducible, hand-sketched explanation videos lasting 30–60 seconds through an agent + MCP + human review loop. Grow this backlog from real video-making experience; audit existing capabilities before implementing a feature.
+
+- [x] **Video sandbox** — create `sandbox/` for per-video scripts, storyboards, and renders, separate from package source.
+- [x] **Agent workflow prompt** — document content research, central takeaway, narration, visual planning, implementation, review, and revision in [sandbox/AGENTS.md](sandbox/AGENTS.md).
+- [x] **Portrait production convention** — use 9:16, 1080 × 1920 at 30 fps for final videos; 360 × 640 previews. Apply this to new sandbox videos without changing general library defaults.
+- [x] **First complete render** — [Ptolemy's theorem](sandbox/ptolemy/storyboard.md): a 58-second portrait proof using two similar-triangle pairs, captions, and local synthetic narration. Saved scene and narration scripts reproduce the assets; the geometric explanation does not need a decorative character.
+- [ ] **First viewing review** — watch the full Ptolemy video with the user; revise pacing, narration, and clarity based on actual feedback. Programmatic decoding and sampled-frame review are complete; listening review remains pending.
+- [x] **Exercise the MCP workflow** — used linting, introspection, and rendered snapshots on Ptolemy; the fixes below have targeted regression tests (148 relevant tests passed).
+- [x] **Bundled font discovery** — use the renderer's font registry instead of scanning the nonexistent root `fonts/` directory. Reports valid font names, including registered user fonts. Restart an already-running MCP server to load this fix.
+- [x] **Geometry glyphs** — add Hershey strokes for triangle, angle, and similarity symbols; these silently disappeared in the first proof render.
+- [x] **Exact portrait dimensions** — prevent imageio from resizing 1080-pixel and 360-pixel widths to multiples of 16 during MP4 rendering.
+- [x] **Translucent fades** — scale existing opacity instead of replacing it, preventing pale hatching from flashing opaque when a fade starts.
+- [ ] **Unsupported-glyph diagnostics** — surface missing mathematical glyphs before rendering; passing lint/layout checks did not detect the missing similarity symbols.
+- [ ] **Efficient single-frame inspection** — avoid calculating the entire video timeline for each snapshot; current snapshot review repeats full timeline work.
+- [ ] **API/schema discovery tool** — expose supported primitives, animation signatures, styles, and the ScenePlan schema with minimal valid examples; verify examples compile against the current package.
+- [ ] **Render an existing script through MCP** — expose preview/final rendering with resolution, frame rate, and time-range controls, returning output paths and useful failures. Reuse existing rendering support where possible.
+- [ ] **Batch visual review through MCP** — expose multiple timestamp snapshots or a contact sheet; build on existing `Scene.render_keyframes` if suitable.
+- [ ] **Actionable scene diagnostics** — report object identity, timestamp, and bounds for clipping and timing problems; distinguish intentional overlap from likely mistakes and inspect motion between keyframes.
+- [ ] **Reproducible rerenders** — verify seed control across sketch/text randomness and record package version, fonts/assets, and render settings alongside each finished video. Compare repeated snapshots before claiming reproducibility.
+- [ ] **Portrait readability checks** — develop reusable caption space and configurable overlay margins; check text and strokes at phone size using actual previews.
+- [ ] **Narration-led timing** — start with recorded audio, align scene beats and captions, and verify the final mix. Coordinate with Phase 5 below rather than creating a second audio system.
+- [ ] **Cartoon vocabulary** — develop reusable stick figures, gestures, expressions, pointing, and speech bubbles as real videos require them; preserve immutable drawables and pure animations.
+- [ ] **Revision exercise** — demonstrate that a request such as “hold the diagram longer and point at the arrow” can be implemented locally without regenerating the whole video.
+
 ---
 
 ## Bug Fixes (do first)
@@ -267,9 +293,16 @@ Note: standard fonts are double-stroke (outlines), but handanim needs single-str
 
 ---
 
-## Phase 5 — Voice & Audio (`larynxanim`)
+## Phase 5 — Voice & Audio (`voiceanim`)
 
-Long-term: a companion module (possibly a separate repo) that adds audio/voice to handanim scenes.
+Proposed voice/audio part of handanim; design separately before implementation. The Ptolemy short currently uses per-video macOS `say` clips and FFmpeg in `sandbox/ptolemy/narration.py`.
+
+- [ ] **Design the narration API** — named spoken beats, actual audio duration, and named timing cues usable by the animation timeline. Distinguish authored timestamps from estimated/provider/forced-alignment timestamps.
+- [ ] **Decouple voice generation from rendering** — saved WAV + transcript + timing cues can come from a human recording, a local synthesizer, or an optional hosted provider. Rerendering visuals should reuse saved audio.
+- [ ] **Math pronunciation** — keep display text separate from spoken text (e.g. `AC` versus “A C”), with a pronunciation glossary for names, formulas, and symbols.
+- [ ] **Natural delivery and fit checks** — voice/style controls, deliberate pauses and reading holds; flag narration that exceeds a beat instead of silently clipping or speeding it up.
+- [ ] **Reproducible voice assets** — invalidate clips when text, voice, model/settings, or pronunciation changes; save generated audio because future synthesis may differ.
+- [ ] **MCP audio workflow** — list voices/capabilities, generate or import narration, return durations/cues, inspect overlaps, and mux an existing video. Add after the core design is settled.
 
 - [ ] **TTS integration** — generate voice narration from a script string using Coqui TTS or an API (ElevenLabs, OpenAI); save as WAV
 - [ ] **Audio-visual sync** — align `AnimationEvent` timings with sentence timestamps from the TTS output (forced alignment via `aeneas` or Whisper)
