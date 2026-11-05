@@ -459,6 +459,113 @@ class Scene:
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
 
+    def introspect(self, max_length: float | None = None) -> dict:
+        """Analyze the scene layout and timing without rendering frames.
+
+        Performs headless static inspection:
+        - Calculates bounding boxes for all registered drawables.
+        - Identifies objects placed outside the visible world viewport.
+        - Audits event timing (creation, duration, deletion) and active intervals.
+        - Reports warnings and errors in a machine-readable dictionary suitable for AI agents.
+
+        Returns:
+            dict containing duration, viewport, objects, warnings, and errors.
+        """
+        key_frames, drawable_events_mapping = self.find_key_frames()
+        total_duration = (
+            max_length
+            if max_length is not None
+            else (float(np.ceil(key_frames[-1])) if len(key_frames) > 0 else 0.0)
+        )
+
+        world_min_x, world_max_x = self.viewport.world_xrange
+        world_min_y, world_max_y = self.viewport.world_yrange
+
+        warnings: list[str] = []
+        errors: list[str] = []
+        object_summaries: list[dict] = []
+
+        for drawable_id, events in drawable_events_mapping.items():
+            drawable = self.drawable_cache.drawables.get(drawable_id)
+            d_type = type(drawable).__name__ if drawable else "Unknown"
+
+            # Check bbox
+            bbox_dict: dict | None = None
+            try:
+                opsset = self.drawable_cache.get_drawable_opsset(drawable_id)
+                bbox = opsset.get_bbox()
+                bbox_dict = {
+                    "min_x": round(float(bbox.min_x), 2),
+                    "min_y": round(float(bbox.min_y), 2),
+                    "max_x": round(float(bbox.max_x), 2),
+                    "max_y": round(float(bbox.max_y), 2),
+                    "width": round(float(bbox.width), 2),
+                    "height": round(float(bbox.height), 2),
+                }
+
+                # Check if off-screen
+                if (
+                    bbox.max_x < world_min_x
+                    or bbox.min_x > world_max_x
+                    or bbox.max_y < world_min_y
+                    or bbox.min_y > world_max_y
+                ):
+                    warnings.append(
+                        f"Object '{drawable_id}' ({d_type}) is completely outside the world viewport "
+                        f"[{world_min_x}..{world_max_x}, {world_min_y}..{world_max_y}]."
+                    )
+                elif (
+                    bbox.min_x < world_min_x
+                    or bbox.max_x > world_max_x
+                    or bbox.min_y < world_min_y
+                    or bbox.max_y > world_max_y
+                ):
+                    warnings.append(
+                        f"Object '{drawable_id}' ({d_type}) partially clips outside viewport bounds: "
+                        f"bbox={bbox_dict} vs viewport x=[{world_min_x}, {world_max_x}], y=[{world_min_y}, {world_max_y}]."
+                    )
+            except Exception as e:
+                errors.append(f"Could not compute bounding box for '{drawable_id}': {e}")
+
+            # Check events
+            event_summaries = []
+            for ev in events:
+                event_summaries.append({
+                    "id": ev.id,
+                    "type": ev.type.name if hasattr(ev.type, "name") else str(ev.type),
+                    "class": type(ev).__name__,
+                    "start_time": ev.start_time,
+                    "duration": ev.duration,
+                    "end_time": ev.end_time,
+                })
+                if ev.end_time > total_duration:
+                    warnings.append(
+                        f"Event '{type(ev).__name__}' on '{drawable_id}' ends at t={ev.end_time:.2f}s, "
+                        f"beyond total scene duration of {total_duration:.2f}s."
+                    )
+
+            object_summaries.append({
+                "id": drawable_id,
+                "type": d_type,
+                "bbox": bbox_dict,
+                "events": event_summaries,
+            })
+
+        return {
+            "duration": total_duration,
+            "fps": self.fps,
+            "viewport": {
+                "world_xrange": list(self.viewport.world_xrange),
+                "world_yrange": list(self.viewport.world_yrange),
+                "screen_width": self.width,
+                "screen_height": self.height,
+            },
+            "num_objects": len(object_summaries),
+            "objects": object_summaries,
+            "warnings": warnings,
+            "errors": errors,
+        }
+
     def render_snapshot(
         self,
         output_path: str,
@@ -509,10 +616,12 @@ class Scene:
         return paths
 
     def _render_frame(self, frame_ops: OpsSet, output_path: str, frame_in_seconds: float):
-        """Render a single frame OpsSet to an SVG or PDF file based on the file extension."""
+        """Render a single frame OpsSet to an SVG, PNG, or PDF file based on the file extension."""
         ext = os.path.splitext(output_path)[1].lower()
         if ext == ".pdf":
             surface = cairo.PDFSurface(output_path, self.width, self.height)
+        elif ext == ".png":
+            surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
         else:
             surface = cairo.SVGSurface(output_path, self.width, self.height)
         ctx = cairo.Context(surface)
@@ -521,6 +630,8 @@ class Scene:
         ctx.paint()
         self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
         frame_ops.render(ctx)
+        if ext == ".png":
+            surface.write_to_png(output_path)
         surface.finish()
 
     def render_keyframes(

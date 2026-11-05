@@ -30,3 +30,7 @@ dist/
 
 # Additional folders to skip
 archive/*
+
+# Environment variables
+.env
+.env.local

@@ -11,7 +11,7 @@
 - [x] **`svgwrite` unused dep** — remove from `requirements.txt` and `pyproject.toml`
 - [x] **Legacy `SVG` primitive** — move `svgpathtools` to runtime deps OR deprecate `SVG` in favour of `VectorSVG` and mark it clearly. `VectorSVG` is strictly more capable.
 - [x] **Wire up `easing_fun`** — `AnimationEvent` accepts an easing function but no `apply()` implementation ever calls it; either remove it or implement: `progress = easing_fun(raw_progress) if easing_fun else raw_progress` at the top of every `apply()`
-- [x] Immutability Violation in stylings/strokes.py: The functions apply_stroke_pressure and apply_strokes_gradient currently mutate the current_pen_data dictionaries directly (e.g., current_pen_data["width"] = ...). Because this dictionary is a reference to the Ops data, it mutates the original operations in place. This violates the core architectural invariant stated in CLAUDE.md that transformations and animations must be stateless. Fix: Use .copy() on current_pen_ops.data before applying new pressure or gradient values and emitting the new Ops.
+- [x] Immutability Violation in stylings/strokes.py: The functions apply_stroke_pressure and apply_strokes_gradient currently mutate the current_pen_data dictionaries directly (e.g., current_pen_data["width"] = ...). Because this dictionary is a reference to the Ops data, it mutates the original operations in place. This violates the core architectural invariant stated in AI_AGENT_GUIDELINES.md that transformations and animations must be stateless. Fix: Use .copy() on current_pen_ops.data before applying new pressure or gradient values and emitting the new Ops.
 - [x] Incomplete Eraser Logic (primitives/eraser.py): At line 47, there is a # TODO: do the rotation, perform the zigzag motion here. Currently, the eraser just performs a horizontal bounding-box wipe without mimicking a human zigzag erasing motion or aligning to the stroke paths. This breaks the "hand-drawn" aesthetic constraint for this specific primitive.
 
 
@@ -36,7 +36,7 @@
   - [x] Add `classifiers` — e.g. `"Development Status :: 3 - Alpha"`, `"Intended Audience :: Education"`, `"Topic :: Multimedia :: Graphics"`, `"Programming Language :: Python :: 3.11"`
   - [x] Add `keywords` — e.g. `["animation", "hand-drawn", "manim", "math", "whiteboard", "education"]`
   - [x] Add `[tool.poetry.urls]` block with `Homepage`, `Repository`, and `Documentation` links
-  - [ ] Wire `[tool.poetry.extras] ai` — list the optional AI deps so `pip install handanim[ai]` pulls them
+  - [x] Wire `[tool.poetry.extras] ai` — list the optional AI deps so `pip install handanim[ai]` pulls them
   - [x] Verify `README.md` renders correctly as PyPI long description (no raw HTML, no local image paths)
   - [x] Run `poetry build` locally and inspect the `dist/` wheel/sdist for unexpected files
   - [x] Publish to TestPyPI first: `poetry publish --repository testpypi` and verify `pip install --index-url https://test.pypi.org/simple/ handanim` works
@@ -123,11 +123,14 @@ Visual regression testing is the pragmatic approach for an animation library:
 
 The `handanim_ai` module already has the two-prompt pipeline scaffolded. Expand it:
 
-- [ ] **Structured scene representation** — replace the free-text scene description passed between the two LLM calls with a JSON schema (list of `{drawable, animation, timing}` objects); makes the codegen prompt more reliable and the output parseable
-- [ ] **Code execution & feedback loop** — after `codegen.txt` generates code, execute it in a subprocess, catch exceptions, and feed them back to the LLM for self-correction (1–2 retry loop)
-- [ ] **Asset awareness** — let the AI prompt know about files in `fonts/` and an `assets/` folder so it can reference them in generated code
-- [ ] **CLI entry point** — `handanim-ai generate "explain the Pythagorean theorem"` that runs the full pipeline and opens the result
-- [ ] **Prompt versioning** — move prompts to a structured YAML with version field; makes A/B testing prompt changes easier
+- [x] **Structured scene representation** — replace the free-text scene description passed between the two LLM calls with a JSON schema (list of `{drawable, animation, timing}` objects); makes the codegen prompt more reliable and the output parseable
+- [x] **Code execution & feedback loop** — after `codegen.txt` generates code, execute it in a subprocess, catch exceptions, and feed them back to the LLM for self-correction (1–2 retry loop)
+- [x] **Asset awareness** — let the AI prompt know about files in `fonts/` and an `assets/` folder so it can reference them in generated code
+- [x] **CLI entry point** — `handanim-ai generate "explain the Pythagorean theorem"` that runs the full pipeline and opens the result
+- [x] **Prompt versioning** — move prompts to a structured YAML with version field; makes A/B testing prompt changes easier
+- [x] **AWS Bedrock & Multi-provider support** — AWS Bedrock Converse API with Claude 3.5 Sonnet / Nova / Llama support, OpenRouter, and MockModel
+- [x] **MCP Server (`handanim-ai mcp`)** — Model Context Protocol stdio server enabling Claude Desktop, Claude Code, Cursor, and Gemini to natively lint, introspect, snapshot, and generate scenes
+- [x] **AST Linter & Headless Scene Introspection** — `check_code()` guardrails and `Scene.introspect()` headless bounds/collision checks
 
 ---
 
