@@ -17,6 +17,17 @@ from .compiler import plan_to_python
 from .diagnostics import check_code
 from .pipeline import AnimationGenerator
 
+try:
+    from voiceanim import (
+        VoiceEngine,
+        mix_audio_with_video,
+    )
+    from voiceanim.providers import KokoroProvider
+
+    HAS_VOICEANIM = True
+except ImportError:
+    HAS_VOICEANIM = False
+
 
 class HandanimMCPServer:
     """Stdio-based JSON-RPC 2.0 Model Context Protocol Server."""
@@ -98,6 +109,77 @@ class HandanimMCPServer:
                         },
                     },
                     "required": ["topic"],
+                },
+            },
+            "list_voices": {
+                "description": "List available Kokoro-82M speech synthesis voices (e.g. af_heart, am_adam, bf_emma, bm_george).",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                },
+            },
+            "synthesize_narration": {
+                "description": "Synthesize spoken audio from text using realistic voice models (default: Kokoro-82M, also supports AWS Polly, Qwen3-TTS, and Mock). Returns the saved audio file path, duration, and word count.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "text": {"type": "string", "description": "Text narration to synthesize into speech"},
+                        "provider": {
+                            "type": "string",
+                            "description": "TTS provider ('kokoro' [default], 'polly', 'qwen', 'mock')",
+                            "default": "kokoro",
+                        },
+                        "voice": {
+                            "type": "string",
+                            "description": "Voice identifier (e.g. 'af_heart', 'am_adam', 'Matthew', 'Vivian')",
+                        },
+                        "speed": {"type": "number", "description": "Speech rate multiplier (1.0 = normal)", "default": 1.0},
+                        "instruct": {
+                            "type": "string",
+                            "description": "Natural language style/emotion instruction (for Qwen3-TTS)",
+                        },
+                        "output_path": {"type": "string", "description": "Optional output .wav file path"},
+                    },
+                    "required": ["text"],
+                },
+            },
+            "get_word_timestamps": {
+                "description": "Synthesize narration and return exact word-level start and end timestamps. Essential for AI agents to align whiteboard drawing animations to spoken words.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "text": {"type": "string", "description": "Text narration to synthesize and align"},
+                        "provider": {
+                            "type": "string",
+                            "description": "TTS provider ('kokoro' [default], 'polly', 'qwen', 'mock')",
+                            "default": "kokoro",
+                        },
+                        "voice": {"type": "string", "description": "Voice identifier"},
+                        "speed": {"type": "number", "description": "Speech rate multiplier", "default": 1.0},
+                    },
+                    "required": ["text"],
+                },
+            },
+            "mux_video_audio": {
+                "description": "Multiplex a silent whiteboard animation video (.mp4) with an audio narration track (.wav or .mp3) into a synchronized video.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "video_path": {"type": "string", "description": "Path to input video file"},
+                        "audio_path": {"type": "string", "description": "Path to input audio file"},
+                        "output_path": {"type": "string", "description": "Target output video path"},
+                        "audio_offset": {
+                            "type": "number",
+                            "description": "Audio start offset in seconds (default 0.0)",
+                            "default": 0.0,
+                        },
+                        "shortest": {
+                            "type": "boolean",
+                            "description": "If true, finish encoding when the shorter stream ends",
+                            "default": False,
+                        },
+                    },
+                    "required": ["video_path", "audio_path", "output_path"],
                 },
             },
         }
@@ -322,6 +404,126 @@ finally:
                             "retries_used": result.retries_used,
                             "error": result.error,
                             "code": result.code,
+                        },
+                        indent=2,
+                    ),
+                }
+            ]
+
+        elif tool_name == "list_voices":
+            if not HAS_VOICEANIM:
+                return [{"type": "text", "text": "Error: voiceanim package is not available."}]
+            providers_info = {
+                "default_provider": "kokoro",
+                "providers": {
+                    "kokoro": {
+                        "name": "Kokoro-82M (Local ONNX)",
+                        "default_voice": KokoroProvider.default_voice,
+                        "voices": KokoroProvider.supported_voices,
+                    },
+                },
+            }
+            return [{"type": "text", "text": json.dumps(providers_info, indent=2)}]
+
+        elif tool_name == "synthesize_narration":
+            if not HAS_VOICEANIM:
+                return [{"type": "text", "text": "Error: voiceanim package is not available."}]
+            text = args.get("text", "")
+            provider = args.get("provider", "kokoro")
+            voice = args.get("voice")
+            speed = float(args.get("speed", 1.0))
+            instruct = args.get("instruct")
+            output_path = args.get("output_path")
+
+            clip = VoiceEngine.synthesize(
+                text=text,
+                provider=provider,
+                voice=voice,
+                speed=speed,
+                instruct=instruct,
+                output_path=output_path,
+            )
+            return [
+                {
+                    "type": "text",
+                    "text": json.dumps(
+                        {
+                            "audio_path": clip.audio_path,
+                            "duration": clip.duration,
+                            "sample_rate": clip.sample_rate,
+                            "word_count": len(clip.words),
+                            "provider": provider,
+                            "voice": voice or "default",
+                        },
+                        indent=2,
+                    ),
+                }
+            ]
+
+        elif tool_name == "get_word_timestamps":
+            if not HAS_VOICEANIM:
+                return [{"type": "text", "text": "Error: voiceanim package is not available."}]
+            text = args.get("text", "")
+            provider = args.get("provider", "kokoro")
+            voice = args.get("voice")
+            speed = float(args.get("speed", 1.0))
+
+            clip = VoiceEngine.synthesize(
+                text=text,
+                provider=provider,
+                voice=voice,
+                speed=speed,
+            )
+            return [
+                {
+                    "type": "text",
+                    "text": json.dumps(
+                        {
+                            "text": text,
+                            "duration": clip.duration,
+                            "words": [
+                                {
+                                    "word": w.word,
+                                    "start": w.start,
+                                    "end": w.end,
+                                    "duration": w.duration,
+                                }
+                                for w in clip.words
+                            ],
+                        },
+                        indent=2,
+                    ),
+                }
+            ]
+
+        elif tool_name == "mux_video_audio":
+            if not HAS_VOICEANIM:
+                return [{"type": "text", "text": "Error: voiceanim package is not available."}]
+            video_path = args.get("video_path")
+            audio_path = args.get("audio_path")
+            output_path = args.get("output_path")
+            audio_offset = float(args.get("audio_offset", 0.0))
+            shortest = bool(args.get("shortest", False))
+
+            if not video_path or not os.path.exists(video_path):
+                return [{"type": "text", "text": f"Error: video file '{video_path}' not found."}]
+            if not audio_path or not os.path.exists(audio_path):
+                return [{"type": "text", "text": f"Error: audio file '{audio_path}' not found."}]
+
+            out = mix_audio_with_video(
+                video_path=video_path,
+                audio_path=audio_path,
+                output_path=output_path,
+                audio_offset=audio_offset,
+                shortest=shortest,
+            )
+            return [
+                {
+                    "type": "text",
+                    "text": json.dumps(
+                        {
+                            "success": True,
+                            "output_path": str(out),
                         },
                         indent=2,
                     ),

@@ -1,8 +1,8 @@
 """Unit tests for the InteractiveSession assistant."""
 
-from handanim_ai.interactive import InteractiveSession
-from handanim_ai.models import MockModel
-from handanim_ai.schema import ScenePlan
+from aianim.interactive import InteractiveSession
+from aianim.models import MockModel
+from aianim.schema import ScenePlan
 
 
 def test_interactive_session_clarification():

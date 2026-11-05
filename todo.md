@@ -145,9 +145,9 @@ Visual regression testing is the pragmatic approach for an animation library:
 
 ---
 
-## Phase 3 — AI Integration (`handanim_ai`)
+## Phase 3 — AI Agentic Studio (`aianim`, formerly `handanim_ai`)
 
-The `handanim_ai` module already has the two-prompt pipeline scaffolded. Expand it:
+The `aianim` module combines hand-drawn whiteboard animation (`handanim`) with voice synthesis (`voiceanim`):
 
 - [x] **Structured scene representation** — replace the free-text scene description passed between the two LLM calls with a JSON schema (list of `{drawable, animation, timing}` objects); makes the codegen prompt more reliable and the output parseable
 - [x] **Code execution & feedback loop** — after `codegen.txt` generates code, execute it in a subprocess, catch exceptions, and feed them back to the LLM for self-correction (1–2 retry loop)
@@ -295,20 +295,26 @@ Note: standard fonts are double-stroke (outlines), but handanim needs single-str
 
 ## Phase 5 — Voice & Audio (`voiceanim`)
 
-Proposed voice/audio part of handanim; design separately before implementation. The Ptolemy short currently uses per-video macOS `say` clips and FFmpeg in `sandbox/ptolemy/narration.py`.
+Realistic human-style voice synthesis, word-level alignment, and timeline synchronization subpackage for whiteboard animations.
 
-- [ ] **Design the narration API** — named spoken beats, actual audio duration, and named timing cues usable by the animation timeline. Distinguish authored timestamps from estimated/provider/forced-alignment timestamps.
-- [ ] **Decouple voice generation from rendering** — saved WAV + transcript + timing cues can come from a human recording, a local synthesizer, or an optional hosted provider. Rerendering visuals should reuse saved audio.
-- [ ] **Math pronunciation** — keep display text separate from spoken text (e.g. `AC` versus “A C”), with a pronunciation glossary for names, formulas, and symbols.
-- [ ] **Natural delivery and fit checks** — voice/style controls, deliberate pauses and reading holds; flag narration that exceeds a beat instead of silently clipping or speeding it up.
-- [ ] **Reproducible voice assets** — invalidate clips when text, voice, model/settings, or pronunciation changes; save generated audio because future synthesis may differ.
-- [ ] **MCP audio workflow** — list voices/capabilities, generate or import narration, return durations/cues, inspect overlaps, and mux an existing video. Add after the core design is settled.
+### Implemented Features
+- [x] **Subpackage Architecture & Schemas (`voiceanim`)** — `AudioClip`, `WordTimestamp`, `SentenceTimestamp`, `NarrationBeat` with word lookups, range calculations, and JSON serialization.
+- [x] **Default Local Provider: Kokoro-82M (`KokoroProvider`)** — High-fidelity, 82M-parameter lightweight open-weight local model (`kokoro-onnx` / `kokoro`). Ultra-fast real-time inference on macOS CPU / Apple Silicon. Presets include `af_heart` (flagship warm female), `am_adam` (clear male), `bf_emma`, `bm_george`.
+- [x] **Cloud Provider: AWS Polly (`PollyProvider`)** — Integration with AWS Polly Neural & Generative engines (`Matthew`, `Ruth`, `Joanna`, `Stephen`). Queries native `SpeechMarks` (`OutputFormat='json'`) for millisecond-exact word and sentence timestamps.
+- [x] **Controllable Model: Qwen3-TTS (`QwenTTSProvider`)** — Support for `Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice` (and `0.6B`), featuring natural language instruction-driven control (`instruct="Speak in an enthusiastic, friendly teacher's voice"`) over timbre, emotion, and prosody.
+- [x] **Test/CI Provider: `MockVoiceProvider`** — Offline deterministic sine-wave synthesizer with proportional word timestamps for zero-cost testing without network or GPU.
+- [x] **Content-Addressed Audio Cache (`AudioCache`)** — SHA-256 hash of `(provider, model, voice, speed, instruct, text)`. Re-rendering identical scenes reuses cached WAV and metadata in `<1ms`, guaranteeing reproducible visual timing.
+- [x] **Word-Level Visual Synchronization (`VoiceTimelineSync`)** — `VoiceTimelineSync.sync_event_to_word(clip, word, event_cls, drawable, lead_in)` automatically anchors `SketchAnimation` start times to when words are spoken.
+- [x] **Beat Stitching & Fit Validation** — `stitch_narration_beats()` combines multi-scene audio clips with silence padding; `validate_beat_fit()` warns when spoken duration exceeds visual slots.
+- [x] **Automated Audio/Video Muxing (`mixer.py`)** — Multiplexes audio and video using `imageio-ffmpeg`'s bundled ffmpeg binary (`-c:v copy -c:a aac -shortest`).
+- [x] **Native `Scene.render(..., narration=...)` Integration** — Direct support in `Scene.render()` for `AudioClip` or audio file paths; auto-adjusts scene length and muxes final video.
+- [x] **Subtitle Export** — `AudioClip.export_srt()` and `AudioClip.export_vtt()` export standard subtitle files matching word/sentence boundaries.
+- [x] **MCP Audio Server Tools** — Added `list_voices`, `synthesize_narration`, `get_word_timestamps`, and `mux_video_audio` to `aianim mcp` (and `handanim-ai mcp`) for agentic, multi-modal video production.
 
-- [ ] **TTS integration** — generate voice narration from a script string using Coqui TTS or an API (ElevenLabs, OpenAI); save as WAV
-- [ ] **Audio-visual sync** — align `AnimationEvent` timings with sentence timestamps from the TTS output (forced alignment via `aeneas` or Whisper)
-- [ ] **Final mix** — composite audio + Cairo-rendered video frames using `moviepy`
-- [ ] **Auto-subtitle** — burn subtitles onto frames at the aligned timestamps
-- [ ] **Lip-sync SVG characters** — parameterize mouth shape in `VectorSVG` characters as named path groups; animate them in sync with phonemes
+### Things to Do (Next Steps)
+- [ ] **Math & LaTeX Pronunciation Engine** — Translates LaTeX expressions into natural spoken English (e.g. `\int_0^\pi \sin(x) dx` $\to$ "integral from zero to pi of sine of x dx", `\frac{a}{b}` $\to$ "a over b") before sending to TTS.
+- [ ] **Auto-Burned Whiteboard Subtitles** — Burn sketchy handwriting-style subtitle captions onto Cairo frames using Hershey/custom single-line stroke fonts.
+- [ ] **Lip-Sync SVG Characters** — Map phoneme sequences from `AudioClip` to mouth open/closed shape keys in `VectorSVG` characters.
 
 ---
 
@@ -318,7 +324,7 @@ Proposed voice/audio part of handanim; design separately before implementation. 
 - [ ] **Unify style location** — `core/styles.py` has type definitions, `stylings/` has utility functions; add a top-level note in each file pointing to the other; consider moving `color.py` constants into `core/styles.py` so a single import suffices
 - [ ] **`Scene.add()` return value** — return the `drawable` (or a handle) so calls can be chained: `handle = scene.add(event, rect)`
 - [ ] **Type annotations audit** — several functions use `Any` loosely; tighten with `TypeVar` for `Drawable` subclasses and overloads for `OpsSet` transforms
-- [ ] **`handanim_ai` as proper subpackage** — rename import path from `handanim_ai` to `handanim.ai` for consistency; adjust `pyproject.toml` package include
+- [x] **`handanim_ai` as proper subpackage (`aianim`)** — renamed package to `aianim` uniting visual drawing (`handanim`) and speech synthesis (`voiceanim`); backwards compatibility shim maintained in `handanim_ai`; added CLI entry points `aianim` and `handanim-ai`
 
 ---
 

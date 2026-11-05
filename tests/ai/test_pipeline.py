@@ -2,10 +2,10 @@
 
 import tempfile
 
-from handanim_ai.executor import CodeExecutor
-from handanim_ai.models import MockModel
-from handanim_ai.pipeline import AnimationGenerator
-from handanim_ai.prompts.prompt_manager import PromptManager
+from aianim.executor import CodeExecutor
+from aianim.models import MockModel
+from aianim.pipeline import AnimationGenerator
+from aianim.prompts.prompt_manager import PromptManager
 
 
 def test_prompt_manager_discovery_and_formatting():

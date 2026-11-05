@@ -2,8 +2,8 @@
 
 import ast
 
-from handanim_ai.compiler import plan_to_python
-from handanim_ai.schema import AnimationSpec, DrawableSpec, ScenePlan, SceneSpec
+from aianim.compiler import plan_to_python
+from aianim.schema import AnimationSpec, DrawableSpec, ScenePlan, SceneSpec
 
 
 def test_plan_to_python_compilation():

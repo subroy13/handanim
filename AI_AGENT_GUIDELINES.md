@@ -111,7 +111,8 @@ handanim/
 │   │   ├── animations/            # All animation event types
 │   │   ├── stylings/              # Colors, fills, fonts, strokes
 │   │   └── utils/                 # Geometry & humanization utilities
-│   └── handanim_ai/               # AI generation pipeline (LLM prompts & schemas)
+│   ├── voiceanim/                 # Voice synthesis, timestamps, audio cache & muxer
+│   └── aianim/                    # AI agentic studio (combines handanim & voiceanim)
 ├── tools/                         # Offline tools (font creation, ML stroke model)
 ├── fonts/                         # Bundled TTF and custom JSON fonts
 ├── examples/                      # Runnable reference scripts
@@ -176,9 +177,9 @@ All animations inherit from `AnimationEvent` and implement `apply(opsset, progre
 - `utils/humanize.py`: Adds human-like wobble, jitter, overshoot, and uneven line velocity.
 - `utils/geometry.py`: Geometric primitives, intersections, convex hulls, and bounding box math.
 
-### 4.5. AI & Agentic Tooling (`src/handanim_ai/`)
+### 4.5. AI & Agentic Studio (`src/aianim/`)
 
-`handanim_ai` provides an autonomous generation pipeline, AST code guardrails, and an MCP server for local AI agents:
+`aianim` provides an autonomous generation pipeline, AST code guardrails, interactive Bedrock studio, and an MCP server that combines whiteboard drawing (`handanim`) and speech narration (`voiceanim`):
 - `schema.py`: Strongly typed `ScenePlan`, `SceneSpec`, `DrawableSpec`, `AnimationSpec` dataclasses, validation, and JSON Schema generator for tool-calling.
 - `compiler.py`: `plan_to_python()` — deterministic compiler converting a `ScenePlan` directly into executable Python.
 - `diagnostics.py`: `check_code(code_str)` — AST linter catching unassigned immutable transforms (`obj.translate()`), legacy imports, and syntax errors.
@@ -275,18 +276,38 @@ Understanding how a `Scene` turns code into frames:
 
 ---
 
-## 8. AI Integration (`handanim-ai`)
+## 8. AI Agentic Studio (`aianim`, formerly `handanim-ai`)
 
-`handanim-ai` provides two complementary workflows:
+`aianim` combines `handanim` (visual sketch rendering) and `voiceanim` (voice synthesis and word alignment) through agentic workflows:
 
-1. **Interactive Assistant** (`poetry run handanim-ai` or `poetry run handanim-ai interactive`):
+1. **Interactive Assistant** (`poetry run aianim` or `poetry run handanim-ai`):
    - Direct conversational experience for human creators using AWS Bedrock.
    - Interactive arrow-key menus (`questionary`) and rich terminal panels/syntax trees (`rich`).
    - Under-the-hood prompt visibility (`--verbose`) and instant plan refinement / self-repair.
 
-2. **Model Context Protocol (MCP) Server** (`poetry run handanim-ai mcp`):
+2. **Model Context Protocol (MCP) Server** (`poetry run aianim mcp` or `poetry run handanim-ai mcp`):
    - Stdio JSON-RPC server conforming to the MCP specification for external agents (Claude Desktop, Claude Code, Cursor, Gemini).
    - Tools: `list_primitives_and_styles`, `introspect_scene_api`, `lint_handanim_code`, `execute_and_verify_code`, `render_snapshot_preview`.
    - Outputs base64 PNG snapshots directly into agent context for visual feedback without file uploads.
+
+---
+
+## 9. Voice & Audio Integration (`voiceanim`)
+
+`voiceanim` provides speech synthesis, word-level alignment, and narration synchronization for whiteboard animations:
+
+1. **Providers**:
+   - `KokoroProvider` (Default): Local, offline, 82M open-weight model (`kokoro-onnx` / `kokoro`) with studio-grade natural prosody.
+   - `PollyProvider`: Cloud-based AWS Polly (`Matthew`, `Ruth`, etc.) with native `SpeechMarks` for exact millisecond word timestamps.
+   - `QwenTTSProvider`: Multilingual `Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice` supporting natural language prompt instructions (`instruct="..."`) to control timbre, emotion, and prosody.
+   - `MockVoiceProvider`: Offline deterministic synthesizer for testing and CI without network or GPU.
+
+2. **Core Capabilities**:
+   - `AudioClip`: Represents synthesized audio with exact `WordTimestamp` and `SentenceTimestamp` markers, `.get_word_time(word)`, and `.export_srt()`.
+   - `AudioCache`: SHA-256 content-addressable storage (`.voiceanim_cache/`) ensuring 100% reproducible timing across video re-renders.
+   - `VoiceTimelineSync`: `sync_event_to_word(clip, word, event_cls, drawable)` anchors `SketchAnimation` start times to spoken cues.
+   - `mixer.py`: Combines audio and video using `imageio-ffmpeg`'s bundled ffmpeg binary.
+   - `Scene.render(output_path, narration=clip)`: Automatically extends timeline duration to fit spoken audio and muxes final video.
+
 
 

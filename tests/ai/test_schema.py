@@ -1,6 +1,6 @@
 """Unit tests for ScenePlan schema, validation, and JSON export."""
 
-from handanim_ai.schema import AnimationSpec, DrawableSpec, ScenePlan, SceneSpec
+from aianim.schema import AnimationSpec, DrawableSpec, ScenePlan, SceneSpec
 
 
 def test_schema_serialization():

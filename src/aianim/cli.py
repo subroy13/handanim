@@ -1,11 +1,11 @@
-"""Simplified CLI for handanim-ai.
+"""Simplified CLI for aianim.
 
 Two primary modes:
 1. Interactive Assistant: For human users with AWS Bedrock seeking full control and visibility.
-   Usage: `handanim-ai` or `handanim-ai interactive`
+   Usage: `aianim` (or `handanim-ai`)
 2. MCP Server: For agentic systems (Claude Desktop, Claude Code, Cursor, Gemini) to generate,
    inspect, and see animations directly.
-   Usage: `handanim-ai mcp`
+   Usage: `aianim mcp`
 """
 
 import argparse
@@ -24,8 +24,8 @@ from .models import get_model
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="handanim-ai",
-        description="handanim-ai: Interactive Bedrock Studio & Model Context Protocol (MCP) Server.",
+        prog="aianim",
+        description="aianim: AI Agentic Studio combining whiteboard drawing (handanim) and voice synthesis (voiceanim).",
     )
     subparsers = parser.add_subparsers(dest="command")
 

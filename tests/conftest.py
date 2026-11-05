@@ -1,7 +1,14 @@
 import io
+import sys
+from pathlib import Path
+
+src_dir = str(Path(__file__).parent.parent / "src")
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+import cairo
 import numpy as np
 import pytest
-import cairo
 
 from handanim.core.draw_ops import OpsSet
 from handanim.core.viewport import Viewport

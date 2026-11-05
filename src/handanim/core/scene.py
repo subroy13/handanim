@@ -1,15 +1,17 @@
 import os
+from pathlib import Path
+from typing import Any
 
 import cairo
 import imageio.v2 as imageio
 import numpy as np
 from tqdm import tqdm
 
+from ..utils.geometry import cairo_surface_to_numpy
 from .animation import AnimationEvent, AnimationEventType, CompositeAnimationEvent
 from .cache import DrawableCache, GroupFrameCache
 from .draw_ops import OpsSet
 from .drawable import Drawable, DrawableGroup
-from ..utils.geometry import cairo_surface_to_numpy
 from .viewport import Viewport
 
 
@@ -431,9 +433,8 @@ class Scene:
         for t in tqdm(range(0, frame_count + 1), desc="Calculating animation frames..."):
             frame_opsset = OpsSet(initial_set=[])  # initialize with blank opsset, will add more
 
-            # for each frame, update the current active objects if it is a keyframe
-            if t in key_frame_indices:
-                current_active_objects = self.get_active_objects(t / self.fps)
+            # Update active objects for the current timestamp
+            current_active_objects = self.get_active_objects(t / self.fps)
 
             # for each of these active objects, calculate what all events need to apply upto which progress
             self.frame_cache.reset()  # reset this cache for each frame
@@ -869,9 +870,14 @@ class Scene:
             f.write(tex_content)
         return tex_path
 
-    def render(self, output_path: str, max_length: float | None = None):
+    def render(
+        self,
+        output_path: str,
+        max_length: float | None = None,
+        narration: Any = None,
+    ):
         """
-        Render the animation as a video file.
+        Render the animation as a video file, optionally muxing with narration audio.
 
         This method generates a video by creating a timeline of animation events
         and rendering each frame using Cairo graphics. The video is saved to the
@@ -880,18 +886,40 @@ class Scene:
         Args:
             output_path (str): Path to save the output video file.
             max_length (Optional[float], optional): Maximum duration of the animation. Defaults to None.
+            narration (Optional[Any], optional): An AudioClip instance from voiceanim or path to a WAV/MP3 file.
         """
+        audio_path: str | None = None
+        if narration is not None:
+            if hasattr(narration, "audio_path"):
+                audio_path = str(narration.audio_path)
+                if max_length is None and hasattr(narration, "duration"):
+                    key_frames, _ = self.find_key_frames()
+                    kf_len = float(np.ceil(key_frames[-1])) if key_frames else 0.0
+                    max_length = max(kf_len, float(narration.duration))
+            elif isinstance(narration, (str, Path)):
+                audio_path = str(narration)
+
         # calculate the events
         opsset_list = self.create_event_timeline(max_length)
-        output_file_ext = os.path.basename(output_path).split(os.path.extsep)[-1]
-        if output_file_ext.lower() == "gif":
+        output_file_ext = os.path.basename(output_path).split(os.path.extsep)[-1].lower()
+
+        # If audio muxing is needed, render video to a temporary path first
+        temp_video_path: str | None = None
+        target_video_path = output_path
+        if audio_path is not None and output_file_ext != "gif":
+            import tempfile
+            fd, temp_video_path = tempfile.mkstemp(suffix=f".{output_file_ext}")
+            os.close(fd)
+            target_video_path = temp_video_path
+
+        if output_file_ext == "gif":
             tqdm_desc = "Rendering GIF..."
-            write_obj = imageio.get_writer(output_path, mode="I", duration=max_length)
+            write_obj = imageio.get_writer(target_video_path, mode="I", duration=max_length)
         else:
             tqdm_desc = "Rendering video..."
             # Preserve requested sizes such as 1080×1920 and 360×640;
             # imageio otherwise rounds dimensions up to multiples of 16.
-            write_obj = imageio.get_writer(output_path, fps=self.fps, codec="libx264", macro_block_size=1)
+            write_obj = imageio.get_writer(target_video_path, fps=self.fps, codec="libx264", macro_block_size=1)
 
         with write_obj as writer:
             for i, frame_ops in enumerate(tqdm(opsset_list, desc=tqdm_desc)):
@@ -908,3 +936,14 @@ class Scene:
 
                 frame_np = cairo_surface_to_numpy(surface)
                 writer.append_data(frame_np)  # type: ignore[attr-defined]
+
+        # Mux audio if requested
+        if audio_path is not None and temp_video_path is not None:
+            try:
+                from voiceanim.mixer import mix_audio_with_video
+                mix_audio_with_video(temp_video_path, audio_path, output_path)
+            finally:
+                if os.path.exists(temp_video_path):
+                    os.unlink(temp_video_path)
+
+        return output_path

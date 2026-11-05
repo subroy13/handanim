@@ -1,2 +1,2 @@
-# Tests for handanim_ai
+# Tests for aianim
 

@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from handanim_ai.models import BedrockModel, MockModel, get_model
+from aianim.models import BedrockModel, MockModel, get_model
 
 
 def test_mock_model():

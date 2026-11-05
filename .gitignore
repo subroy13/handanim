@@ -34,3 +34,6 @@ archive/*
 # Environment variables
 .env
 .env.local
+
+# Voiceanim cache
+.voiceanim_cache/

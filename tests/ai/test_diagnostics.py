@@ -1,6 +1,6 @@
 """Unit tests for AST linter and code guardrails."""
 
-from handanim_ai.diagnostics import check_code
+from aianim.diagnostics import check_code
 
 
 def test_diagnostics_valid_code():
