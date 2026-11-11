@@ -5,7 +5,7 @@ from fontTools.ttLib import TTFont
 
 from ..core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..stylings.fonts import get_font_path, list_fonts, get_font_info
+from ..stylings.fonts import get_font_info, get_font_path, list_fonts
 
 
 class CustomPen(BasePen):
@@ -81,6 +81,7 @@ class Text(Drawable):
         self.text = text
         self.position = position
         self.font_size = font_size
+        self.font_name: str | None = kwargs.get("font_name")
         self.scale_factor = kwargs.get("scale_factor", 1.0)
         self._wrapped_lines: list[str] | None = None
         self._line_height: float | None = None
@@ -90,7 +91,9 @@ class Text(Drawable):
         Chooses a random font from the available fonts
         """
         font_list = [f for f in list_fonts() if get_font_info(f)["type"] == "ttf"]
-        if self.sketch_style.disable_font_mixture:
+        if self.font_name:
+            font_choice = self.font_name if self.font_name in font_list else font_list[0]
+        elif self.sketch_style.disable_font_mixture:
             font_choice = font_list[0]
         else:
             font_choice = np.random.choice(font_list)

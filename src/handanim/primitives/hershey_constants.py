@@ -4,6 +4,11 @@
 # spans roughly ±12–15 units in both axes.
 HERSHEY_FONT_UNITS: float = 30.0
 
+# Baseline y-coordinate in Hershey font units (y increases downward:
+# cap-height is y = -12, x-height is y = -5, math axis is y = 0,
+# baseline is y = 9, and descenders extend to y = 16).
+HERSHEY_BASELINE: float = 9.0
+
 # Standard Hershey font that covers the full printable-ASCII range
 # (digits, Latin letters, punctuation).  Must be used for any character
 # in the range 0x20–0x7E instead of mathlow/mathupp, because those
@@ -73,7 +78,22 @@ UNICODE_TO_HERSHEY: dict[int, tuple[str, str]] = {
     935: ("greekc", "V"),   # Χ Chi
     936: ("greekc", "W"),   # Ψ Psi
     937: ("greekc", "X"),   # Ω Omega
-    # ---- common math operators → rowmans ----------------------------------
+    # ---- common math operators & punctuation → rowmans --------------------
+    39:   ("rowmans", "'"),  # ' straight apostrophe
+    45:   ("rowmans", "-"),  # - hyphen-minus
+    96:   ("rowmans", "`"),  # ` grave accent / backtick
+    103:  ("rowmans", "g"),  # g lowercase g (descender below baseline)
+    121:  ("rowmans", "y"),  # y lowercase y (descender below baseline)
+    180:  ("rowmans", "'"),  # ´ acute accent
+    700:  ("rowmans", "'"),  # ʼ modifier letter apostrophe
+    8208: ("rowmans", "-"),  # ‐ hyphen
+    8209: ("rowmans", "-"),  # ‑ non-breaking hyphen
+    8210: ("rowmans", "-"),  # ‒ figure dash
+    8211: ("rowmans", "-"),  # – en dash
+    8212: ("rowmans", "-"),  # — em dash
+    8216: ("rowmans", "`"),  # ‘ left single quotation mark
+    8217: ("rowmans", "'"),  # ’ right single quotation mark / apostrophe
+    8242: ("rowmans", "'"),  # ′ prime
     8722: ("rowmans", "-"),  # − minus sign
     8901: ("rowmans", "."),  # · dot operator
     215:  ("rowmans", "x"),  # × multiplication (rendered as x)

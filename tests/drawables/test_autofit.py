@@ -7,14 +7,12 @@ Tests for content-autofitting features:
 """
 
 import numpy as np
-import pytest
 
 from handanim.core.draw_ops import BoundingBox, OpsSet
 from handanim.core.styles import SketchStyle
 from handanim.primitives.lines import Line
 from handanim.primitives.polygons import Rectangle
 from handanim.primitives.text import Text
-
 
 # Sketch style with all randomness removed — deterministic endpoints for geometry tests.
 FLAT = SketchStyle(roughness=0, bowing=0)

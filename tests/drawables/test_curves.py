@@ -13,13 +13,12 @@ import io
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
 from handanim.core.draw_ops import OpsSet, OpsType
 from handanim.core.styles import SketchStyle, StrokeStyle
 from handanim.primitives.curves import Curve
-
 
 # ---------------------------------------------------------------------------
 # Helpers

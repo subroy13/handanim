@@ -9,13 +9,11 @@ Structure
 """
 
 import pytest
-import numpy as np
 
+from handanim.animations.camera import CameraAnimation
 from handanim.core.animation import AnimationEventType
 from handanim.core.draw_ops import Ops, OpsSet, OpsType
 from handanim.core.viewport import Viewport
-from handanim.animations.camera import CameraAnimation
-
 
 # ---------------------------------------------------------------------------
 # Helpers

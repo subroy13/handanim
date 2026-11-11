@@ -14,7 +14,6 @@ import pytest
 from handanim.core.draw_ops import OpsSet, OpsType
 from handanim.primitives.vector_svg import VectorSVG
 
-
 # ---------------------------------------------------------------------------
 # Minimal SVG fixtures
 # ---------------------------------------------------------------------------
@@ -144,7 +143,7 @@ class TestVectorSVGPosition:
         pts_origin = extract_pts(v_origin.draw())
         pts_shifted = extract_pts(v_shifted.draw())
 
-        for (ox, oy), (sx, sy) in zip(pts_origin, pts_shifted):
+        for (ox, oy), (sx, sy) in zip(pts_origin, pts_shifted, strict=False):
             assert sx == pytest.approx(ox + offset[0], abs=1e-4)
             assert sy == pytest.approx(oy + offset[1], abs=1e-4)
 

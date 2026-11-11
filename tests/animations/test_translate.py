@@ -10,17 +10,15 @@ Structure
 """
 
 import io
-import math
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
+from handanim.animations.translate import TranslateFromAnimation, TranslateToAnimation
 from handanim.core.animation import AnimationEventType
 from handanim.core.draw_ops import Ops, OpsSet, OpsType
-from handanim.animations.translate import TranslateFromAnimation, TranslateToAnimation
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -45,8 +43,8 @@ def _extract_points(opsset: OpsSet):
 
 
 def _translate_opsset() -> OpsSet:
+    from handanim.core.styles import SketchStyle, StrokeStyle
     from handanim.primitives.polygons import Rectangle
-    from handanim.core.styles import StrokeStyle, SketchStyle
 
     rect = Rectangle(
         top_left=(50.0, 200.0),

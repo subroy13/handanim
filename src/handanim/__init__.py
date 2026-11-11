@@ -1,3 +1,15 @@
+from .animations import (
+    CameraAnimation,
+    ColorTransitionAnimation,
+    FadeInAnimation,
+    FadeOutAnimation,
+    RotateAnimation,
+    SketchAnimation,
+    TranslateFromAnimation,
+    TranslateToAnimation,
+    ZoomInAnimation,
+    ZoomOutAnimation,
+)
 from .core import (
     AnimationEvent,
     AnimationEventType,
@@ -33,18 +45,6 @@ from .primitives import (
     TableRevealEvent,
     Text,
     VectorSVG,
-)
-from .animations import (
-    CameraAnimation,
-    ColorTransitionAnimation,
-    FadeInAnimation,
-    FadeOutAnimation,
-    RotateAnimation,
-    SketchAnimation,
-    TranslateFromAnimation,
-    TranslateToAnimation,
-    ZoomInAnimation,
-    ZoomOutAnimation,
 )
 
 __all__ = [

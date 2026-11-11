@@ -18,9 +18,10 @@ class DrawableCache:
         drawables (dict[str, Drawable]): A mapping of drawable IDs to their drawable objects
     """
 
-    def __init__(self):
+    def __init__(self, background_color: tuple[float, float, float] = (1, 1, 1)):
         self.cache: dict[str, OpsSet] = {}
         self.drawables: dict[str, Drawable] = {}
+        self.background_color: tuple[float, float, float] = background_color
 
     def get_cachekey(self, drawable_id: str, event_id: str | None = None):
         if event_id is None:
@@ -69,7 +70,7 @@ class GroupFrameCache:
       - transformed:   the result of event.apply(group_opsset, progress)
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._pretransform: dict[tuple[str, str], OpsSet] = {}
         self._transformed: dict[tuple[str, str, int], OpsSet] = {}
 

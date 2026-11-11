@@ -6,9 +6,9 @@ from .flowchart import Flowchart, FlowchartConnector, FlowchartDiamond, Flowchar
 from .lines import Line, LinearPath
 from .math import Math
 from .polygons import NGon, Polygon, Rectangle, RoundedRectangle, RoundedSquare, Square
+from .raster_image import RasterImage
 from .table import Table, TableRevealEvent
 from .text import Text
-from .raster_image import RasterImage
 from .vector_svg import VectorSVG
 
 __all__ = [

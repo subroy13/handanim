@@ -2,7 +2,6 @@ import json
 import unicodedata
 from typing import Any
 
-import numpy as np
 from fontTools.ttLib import TTFont
 from matplotlib.mathtext import MathTextParser
 from svgelements import Close as SVGClose
@@ -19,6 +18,7 @@ from ..utils.humanize import apply_roughness, apply_stroke_pressure
 from .hershey_constants import (
     COMPOSED_GLYPHS,
     HERSHEY_ASCII_FALLBACK,
+    HERSHEY_BASELINE,
     HERSHEY_FONT_UNITS,
     UNICODE_TO_HERSHEY,
 )
@@ -86,10 +86,14 @@ def _scale_hershey_opsset(ops: OpsSet, font_size: float) -> tuple[OpsSet, float,
             ))
         else:
             scaled.add(op)
-    # Use the actual post-scale bbox to normalise origin
+    # Use the actual post-scale bbox to normalise origin, while returning
+    # the ascent above the Hershey baseline (y = HERSHEY_BASELINE) so that
+    # descenders (g, y, p, q, j), mid-line operators (-, =, ~), and top
+    # punctuation (', ") are positioned at their true vertical heights.
     bbox = scaled.get_bbox()
     scaled.translate(-bbox.min_x, -bbox.min_y)
-    return scaled, bbox.height, bbox.width
+    ascent = HERSHEY_BASELINE * font_scale - bbox.min_y
+    return scaled, ascent, bbox.width
 
 
 
@@ -304,6 +308,12 @@ class Math(Drawable):
         for glyph in glyphs:
             font, font_size, unicode, *rest = glyph
             offset_x, offset_y = rest[-2:]
+            # TeX math mode maps "'" to \prime in cmsy10.ttf at slot 48 ('0').
+            if getattr(font, "fname", "").endswith("cmsy10.ttf") and unicode == 48:
+                unicode = 39
+                if self.font_details["type"] == "hershey" and offset_y > 0.3 * font_size:
+                    offset_y -= 0.55 * font_size
+                    font_size = font_size / 0.7
 
             glyph_opsset, glyph_height, glyph_width = self.get_glyph_opsset(
                 unicode,

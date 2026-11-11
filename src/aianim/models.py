@@ -147,7 +147,7 @@ class BedrockModel(BaseLLMModel):
         if not content_blocks:
             raise RuntimeError(f"Empty response from Bedrock model {self.model_id}")
 
-        return content_blocks[0].get("text", "")
+        return str(content_blocks[0].get("text", ""))
 
 
 class OpenRouterModel(BaseLLMModel):
@@ -200,7 +200,7 @@ class OpenRouterModel(BaseLLMModel):
         response_data = response.json()
         if "choices" not in response_data or len(response_data["choices"]) == 0:
             raise RuntimeError("No choices found in OpenRouter response.")
-        return response_data["choices"][0]["message"]["content"]
+        return str(response_data["choices"][0]["message"]["content"])
 
 
 class MockModel(BaseLLMModel):

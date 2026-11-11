@@ -14,14 +14,13 @@ import io
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
 from handanim.core.draw_ops import OpsSet
-from handanim.core.styles import StrokeStyle, SketchStyle
+from handanim.core.styles import SketchStyle, StrokeStyle
 from handanim.primitives.lines import Line
 from handanim.primitives.polygons import Rectangle
-
 
 SSIM_THRESHOLD = 0.98
 

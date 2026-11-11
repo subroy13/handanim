@@ -17,6 +17,8 @@ def mix_audio_with_video(
     output_path: str | Path,
     duration: float | None = None,
     volume: float = 1.0,
+    audio_offset: float = 0.0,
+    shortest: bool = True,
 ) -> str:
     """Mux an audio track (WAV/MP3) with an existing MP4 video file.
 
@@ -65,12 +67,18 @@ def mix_audio_with_video(
         "192k",
     ]
 
-    if volume != 1.0:
+    if audio_offset > 0:
+        delay_ms = int(audio_offset * 1000)
+        filter_str = f"adelay={delay_ms}|{delay_ms}"
+        if volume != 1.0:
+            filter_str += f",volume={volume}"
+        cmd.extend(["-filter:a", filter_str])
+    elif volume != 1.0:
         cmd.extend(["-filter:a", f"volume={volume}"])
 
     if duration is not None and duration > 0:
         cmd.extend(["-t", str(duration)])
-    else:
+    elif shortest:
         cmd.append("-shortest")
 
     cmd.append(str(output_path))

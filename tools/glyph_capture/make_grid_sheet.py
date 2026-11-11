@@ -2,17 +2,35 @@
 # This code is used to generate a grid of symbols, useful to generate custom font styles
 #############
 
-import numpy as np
-import os
-from PIL import Image, ImageDraw, ImageFont
+import sys
+from pathlib import Path
 from urllib.request import urlretrieve
-from symbols import SYMBOL_LABELS
 
-# DOWNLOAD a better font (Noto Sans) with Unicode support
-CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
-font_url = "https://github.com/googlefonts/noto-fonts/blob/main/unhinted/otf/NotoSansMath/NotoSansMath-Regular.otf?raw=true"
-font_path = os.path.join(CURRENT_PATH, "NotoSansMath-Regular.otf")
-urlretrieve(font_url, font_path)
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+
+CURRENT_PATH = Path(__file__).resolve().parent
+REPO_ROOT = CURRENT_PATH.parent.parent
+if str(CURRENT_PATH) not in sys.path:
+    sys.path.insert(0, str(CURRENT_PATH))
+
+from symbols import SYMBOL_LABELS  # noqa: E402
+
+# Prefer the local NotoSansMath-Regular.ttf in assets/fonts/ttf/; download only if missing
+LOCAL_TTF_PATH = REPO_ROOT / "assets" / "fonts" / "ttf" / "NotoSansMath-Regular.ttf"
+FALLBACK_OTF_URL = (
+    "https://github.com/googlefonts/noto-fonts/blob/main/unhinted/otf/NotoSansMath/NotoSansMath-Regular.otf?raw=true"
+)
+FALLBACK_OTF_PATH = CURRENT_PATH / "NotoSansMath-Regular.otf"
+
+
+def get_grid_label_font_path() -> str:
+    if LOCAL_TTF_PATH.is_file():
+        return str(LOCAL_TTF_PATH)
+    if not FALLBACK_OTF_PATH.is_file():
+        urlretrieve(FALLBACK_OTF_URL, str(FALLBACK_OTF_PATH))
+    return str(FALLBACK_OTF_PATH)
+
 
 # SETTINGS
 cell_size = 100  # width/height of each box (in px)
@@ -32,6 +50,7 @@ if __name__ == "__main__":
     draw = ImageDraw.Draw(img)
 
     # LOAD font
+    font_path = get_grid_label_font_path()
     font = ImageFont.truetype(font_path, font_size)
 
     # DRAW GRID + LABELS
@@ -58,6 +77,6 @@ if __name__ == "__main__":
             draw.rectangle(box, outline="black", width=2)
 
     # SAVE IMAGE
-    output_file = "glyph_grid_sheet.png"
+    output_file = CURRENT_PATH / "glyph_grid_sheet.png"
     img.save(output_file)
     print(f"Saved worksheet grid as {output_file}")

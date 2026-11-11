@@ -23,6 +23,9 @@ class Eraser(Drawable):
         *args,
         **kwargs,
     ):
+        self.background_color: tuple[float, float, float] | None = kwargs.pop(
+            "background_color", None
+        )
         super().__init__(*args, **kwargs)
         self.objects_to_erase = objects_to_erase
         self.drawable_cache = drawable_cache
@@ -32,11 +35,16 @@ class Eraser(Drawable):
         Calculates the zigzag motion of the eraser
         """
         opsset = OpsSet(initial_set=[])
+        default_color = (
+            self.background_color
+            or getattr(self.drawable_cache, "background_color", None)
+            or (1, 1, 1)
+        )
         opsset.add(
             Ops(
                 OpsType.SET_PEN,
                 {
-                    "color": self.stroke_style.options.get("color", (1, 1, 1)),
+                    "color": self.stroke_style.options.get("color", default_color),
                     "width": self.stroke_style.width * 10,  # make it like pastel blend
                     "opacity": self.stroke_style.opacity,
                 },

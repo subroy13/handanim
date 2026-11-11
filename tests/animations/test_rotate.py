@@ -14,13 +14,12 @@ import math
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
+from handanim.animations.rotate import RotateAnimation
 from handanim.core.animation import AnimationEventType
 from handanim.core.draw_ops import Ops, OpsSet, OpsType
-from handanim.animations.rotate import RotateAnimation
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -43,8 +42,8 @@ def _extract_points(opsset: OpsSet):
 
 
 def _rotate_opsset() -> OpsSet:
+    from handanim.core.styles import SketchStyle, StrokeStyle
     from handanim.primitives.polygons import Rectangle
-    from handanim.core.styles import StrokeStyle, SketchStyle
 
     rect = Rectangle(
         top_left=(300.0, 275.0),
@@ -101,7 +100,7 @@ class TestRotateAnimationGeometry:
         anim = RotateAnimation(start_time=0, duration=1.0, data={"angle": 90})
         original = _make_hline_opsset(x0=100, x1=200, y=0)
         result = anim.apply(original, raw_progress=0.0)
-        for (ox, oy), (rx, ry) in zip(_extract_points(original), _extract_points(result)):
+        for (ox, oy), (rx, ry) in zip(_extract_points(original), _extract_points(result), strict=False):
             assert rx == pytest.approx(ox, abs=1e-6)
             assert ry == pytest.approx(oy, abs=1e-6)
 
@@ -130,7 +129,7 @@ class TestRotateAnimationGeometry:
         anim = RotateAnimation(start_time=0, duration=1.0, data={"angle": 360})
         original = _make_hline_opsset(x0=100, x1=200, y=50)
         result = anim.apply(original, raw_progress=1.0)
-        for (ox, oy), (rx, ry) in zip(_extract_points(original), _extract_points(result)):
+        for (ox, oy), (rx, ry) in zip(_extract_points(original), _extract_points(result), strict=False):
             assert rx == pytest.approx(ox, abs=1e-4)
             assert ry == pytest.approx(oy, abs=1e-4)
 

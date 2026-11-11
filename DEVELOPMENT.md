@@ -339,14 +339,19 @@ scene.get_current_time()  # returns the end time of the latest event
 ## Project Layout Cheat Sheet
 
 ```
-src/handanim/
-├── core/          # OpsSet, Drawable, DrawableCache, AnimationEvent, Scene,
-│                  # Viewport, TikZRenderer, styles
-├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG,
-│                  # RasterImage, Flowchart, Table, Eraser, hershey_constants
-├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate,
-│                  # ColorTransition, Camera
-└── stylings/      # color constants, fill patterns, font registry, stroke utilities
+src/
+├── handanim/
+│   ├── core/          # OpsSet, Drawable, DrawableCache, AnimationEvent, Scene,
+│   │                  # Viewport, TikZRenderer, styles
+│   ├── primitives/    # Line, Rectangle, Ellipse, Arrow, Text, Math, VectorSVG,
+│   │                  # RasterImage, Flowchart, Table, Eraser, hershey_constants
+│   ├── animations/    # SketchAnimation, FadeIn/Out, Zoom, Translate, Rotate,
+│   │                  # ColorTransition, Camera
+│   ├── stylings/      # color constants, fill patterns, font registry, stroke utilities
+│   ├── fonts/         # Bundled runtime TTF (ttf/) and custom JSON stroke fonts (custom/)
+│   └── utils/         # geometry and humanization utilities
+├── voiceanim/         # Speech synthesis, word-level timestamps, audio cache & muxer
+└── aianim/            # Agentic studio, AST linter, ScenePlan compiler & MCP server
 
 tests/
 ├── conftest.py             # shared fixtures (seed_numpy, render_to_png_bytes)
@@ -354,32 +359,37 @@ tests/
 ├── core/                   # OpsSet, Scene, TikZ renderer unit tests
 ├── animations/             # per-animation tests (sketch, rotate, color_transition, camera, …)
 ├── drawables/              # visual regression tests for primitives, table, flowchart, …
+├── voice/                  # voiceanim provider, timeline, cache, and mixer tests
+├── ai/                     # aianim compiler, linter, pipeline, and MCP server tests
 └── test_public_api.py      # top-level handanim.__init__ export smoke tests
 
 tools/
-├── fontmaker/     # Custom font builder: grid image → skeleton → vector JSON font
+├── glyph_capture/ # Custom font builder: hand-drawn grid image → skeleton → JSON font
 │   ├── make_grid_sheet.py  # Print a glyph grid sheet for hand-drawing
-│   ├── make_fonts.py       # Extract + skeletonise + vectorise → fonts/custom/*.json
+│   ├── make_fonts.py       # Extract + skeletonise + vectorise → custom JSON font
 │   └── symbols.py          # Symbol label registry
+├── skeleton/      # Automated TTF-to-single-stroke skeletoniser (e.g. NotoSansMath)
+│   ├── run.py              # CLI entry point to generate custom/*.json from a TTF
+│   └── showcase.py         # Visual quality comparison (TTF vs skeleton JSON)
 └── stroke_model/  # Experimental neural stroke-order model (PyTorch, UNIPEN data)
 
-examples/        # runnable end-to-end scene scripts
-fonts/           # bundled TTF fonts and custom JSON stroke fonts (fonts/custom/)
+assets/fonts/    # Offline source fonts used by tools/ (e.g. NotoSansMath-Regular.ttf)
+examples/        # Runnable end-to-end scene scripts
 docs/            # Sphinx source and build output
 ```
 
 ---
 
-## Fontmaker Tool
+## Font Generation Tools (`tools/`)
 
-`tools/fontmaker/` is a standalone pipeline for creating new hand-drawn fonts in the custom JSON format. It is **not** part of the installed `handanim` package — run it from the project root with `poetry run`.
+The repository includes two offline pipelines for producing single-stroke JSON fonts. Neither is part of the installed `handanim` wheel — run them from the project root with `poetry run`.
 
-### Workflow
+### 1. Hand-Drawn Grid Capture (`tools/glyph_capture/`)
 
 1. **Generate a grid sheet** — prints a PNG grid with every symbol labelled. Print it, draw each glyph by hand with a thick marker, then scan or photograph the result.
 
 ```bash
-cd tools/fontmaker
+cd tools/glyph_capture
 poetry run python3 make_grid_sheet.py
 # Output: glyph_grid_sheet.png
 ```
@@ -388,14 +398,20 @@ poetry run python3 make_grid_sheet.py
 
 ```bash
 poetry run python3 make_fonts.py
-# Output: <font_name>.json  →  copy to fonts/custom/
+# Output: <font_name>.json  →  place in src/handanim/fonts/custom/
 ```
 
-3. **Register the font** — add an entry to `src/handanim/stylings/fonts.py` pointing to the new JSON file.
+3. **Register the font** — add an entry to `_BUILTIN_FONTS` in `src/handanim/stylings/fonts.py`.
 
-### Adding new symbols
+### 2. TTF Skeletoniser (`tools/skeleton/`)
 
-Edit `tools/fontmaker/symbols.py` to extend `SYMBOL_LABELS` with additional Unicode characters, then re-run the two steps above.
+Converts an outline TTF font (such as `assets/fonts/ttf/NotoSansMath-Regular.ttf`) into a single-stroke skeleton JSON font for runtime rendering:
+
+```bash
+poetry run python3 -m tools.skeleton.run \
+    --font assets/fonts/ttf/NotoSansMath-Regular.ttf \
+    --out  src/handanim/fonts/custom/noto_sans_math_skeleton.json
+```
 
 ---
 
@@ -446,6 +462,111 @@ pre-commit run --all-files
 ```
 
 After `pre-commit install`, every `git commit` will run ruff and fix/format staged Python files before the commit lands.
+
+---
+
+## Publishing & Release Guidelines
+
+The single `handanim` PyPI distribution packages `handanim` (with its bundled fonts in `src/handanim/fonts/`), `voiceanim`, and `aianim` (plus the legacy `handanim_ai` shim). Optional dependencies are exposed via extras (`handanim[voice]`, `handanim[ai]`, `handanim[all]`).
+
+Follow these steps to compile assets, build the distributions, verify package contents, and publish to PyPI:
+
+### 1. Compile / Refresh Bundled Fonts (if modified)
+
+If you changed any font generation parameters or added new glyphs using `tools/`, regenerate the runtime JSON fonts into `src/handanim/fonts/custom/` before building:
+
+```bash
+# Regenerate Noto Sans Math skeleton JSON (if skeleton parameters changed)
+poetry run python3 -m tools.skeleton.run \
+    --font assets/fonts/ttf/NotoSansMath-Regular.ttf \
+    --out  src/handanim/fonts/custom/noto_sans_math_skeleton.json
+```
+
+Verify that all fonts listed in `_BUILTIN_FONTS` (`src/handanim/stylings/fonts.py`) exist under `src/handanim/fonts/ttf/` or `src/handanim/fonts/custom/`, alongside `OFL.txt` and `LICENSE.md`.
+
+### 2. Run Pre-Release Quality Checks
+
+Ensure the test suite, linter, and type checker all pass cleanly:
+
+```bash
+# Run full test suite (core, animations, drawables, voiceanim, aianim)
+poetry run pytest
+
+# Check formatting & lint rules
+poetry run ruff check src/ tests/
+
+# Run static type checking
+poetry run mypy src/handanim
+```
+
+### 3. Bump the Version & Update Changelog
+
+PyPI does not allow overwriting an existing version number. Bump the version in `pyproject.toml` using Poetry (and document the release in `CHANGELOG.md`):
+
+```bash
+# Choose one based on SemVer:
+poetry version patch   # e.g. 0.1.0 -> 0.1.1 (bug fixes)
+poetry version minor   # e.g. 0.1.0 -> 0.2.0 (new features / modules)
+poetry version major   # e.g. 0.2.0 -> 1.0.0 (breaking API changes)
+```
+
+### 4. Clean & Build the Package (`sdist` and `wheel`)
+
+Remove old build artifacts in `dist/` and build fresh `.tar.gz` and `.whl` archives:
+
+```bash
+rm -rf dist/
+poetry build
+```
+
+### 5. Inspect Built Artifacts Before Publishing
+
+Verify that the wheel includes `handanim/`, `handanim/fonts/`, `voiceanim/`, `aianim/`, and no unintended large files:
+
+```bash
+# List top-level packages and bundled font files inside the wheel
+unzip -l dist/*.whl | grep -E "(handanim/fonts/|voiceanim/|aianim/)"
+```
+
+Optionally test-install the built wheel into a clean temporary virtual environment and render a quick `Text` / `Math` smoke test outside the repo directory:
+
+```bash
+python3 -m venv /tmp/handanim-release-test
+/tmp/handanim-release-test/bin/pip install dist/*.whl
+/tmp/handanim-release-test/bin/python -c "
+from handanim import Text, Math
+assert len(Text('Release check', (0, 0)).draw().opsset) > 0
+assert len(Math(r'\alpha + \beta', (0, 0)).draw().opsset) > 0
+import voiceanim, aianim
+print('Wheel smoke test passed!')
+"
+rm -rf /tmp/handanim-release-test
+```
+
+### 6. Publish to TestPyPI (Optional) & PyPI
+
+```bash
+# Optional: publish to TestPyPI first
+poetry config repositories.testpypi https://test.pypi.org/legacy/
+poetry publish --repository testpypi
+
+# Publish to official PyPI (requires PYPI_TOKEN or configured Poetry credentials)
+poetry publish
+```
+
+> **Tip:** To configure your PyPI API token once with Poetry:
+> ```bash
+> poetry config pypi-token.pypi pypi-<your-api-token>
+> ```
+
+### 7. Tag the Release in Git
+
+```bash
+git add pyproject.toml CHANGELOG.md
+git commit -m "chore(release): v$(poetry version -s)"
+git tag "v$(poetry version -s)"
+git push origin HEAD --tags
+```
 
 ---
 

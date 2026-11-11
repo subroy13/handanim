@@ -4,11 +4,9 @@ Ops repr, OpsSet repr, get_current_point, get_last_ops, add_meta,
 CURVE_TO bounding-box, and QUAD_CURVE_TO bounding-box.
 """
 
-import numpy as np
 import pytest
 
 from handanim.core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
-
 
 # ---------------------------------------------------------------------------
 # BoundingBox

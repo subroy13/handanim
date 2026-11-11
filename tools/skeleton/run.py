@@ -7,19 +7,19 @@ Usage examples
 # Process the math preset (default) from NotoSansMath
 python -m tools.skeleton.run \\
     --font assets/fonts/ttf/NotoSansMath-Regular.ttf \\
-    --out  assets/fonts/custom/noto_sans_math_skeleton.json
+    --out  src/handanim/fonts/custom/noto_sans_math_skeleton.json
 
 # Process only ASCII characters
 python -m tools.skeleton.run \\
     --font assets/fonts/ttf/NotoSansMath-Regular.ttf \\
     --preset ascii \\
-    --out  assets/fonts/custom/noto_sans_math_skeleton.json
+    --out  src/handanim/fonts/custom/noto_sans_math_skeleton.json
 
 # Process specific codepoints (hex or decimal, space-separated)
 python -m tools.skeleton.run \\
     --font   assets/fonts/ttf/NotoSansMath-Regular.ttf \\
     --chars  "0x41 0x42 0x43 0x2211 0x222B" \\
-    --out    assets/fonts/custom/noto_sans_math_skeleton.json
+    --out    src/handanim/fonts/custom/noto_sans_math_skeleton.json
 
 # Tune quality parameters
 python -m tools.skeleton.run \\
@@ -27,7 +27,7 @@ python -m tools.skeleton.run \\
     --size           512 \\
     --spur-threshold 8 \\
     --dp-tolerance   2.0 \\
-    --out            assets/fonts/custom/noto_sans_math_skeleton.json
+    --out            src/handanim/fonts/custom/noto_sans_math_skeleton.json
 """
 
 from __future__ import annotations

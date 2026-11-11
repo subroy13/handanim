@@ -1,4 +1,5 @@
 import os
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -43,10 +44,11 @@ class Scene:
         self.height = height
         self.fps = fps
         self.background_color = background_color
-        self.drawable_cache = DrawableCache()
+        self.drawable_cache = DrawableCache(background_color=background_color)
         self.frame_cache = GroupFrameCache()
         self.events: list[tuple[AnimationEvent, str]] = []
         self.object_timelines: dict[str, list[float]] = {}
+        self._auto_created_times: dict[str, float] = {}
         self.drawable_groups: dict[str, DrawableGroup] = {}  # stores drawable groups present in the scene
         self.camera_events: list = []  # CameraAnimation events; typed as List to avoid circular import
 
@@ -138,6 +140,7 @@ class Scene:
 
         else:
             # single simple drawable
+            self.drawable_cache.background_color = self.background_color
             self.drawable_cache.set_drawable_opsset(drawable)
             self.drawable_cache.drawables[drawable.id] = drawable
 
@@ -148,15 +151,41 @@ class Scene:
         self.events.append((event, drawable.id))
 
         if event.type is AnimationEventType.CREATION:
+            if drawable.id in self._auto_created_times:
+                auto_time = self._auto_created_times.pop(drawable.id)
+                if auto_time in self.object_timelines[drawable.id]:
+                    self.object_timelines[drawable.id].remove(auto_time)
             self.object_timelines[drawable.id].append(event.start_time)
+            if hasattr(drawable, "objects_to_erase"):
+                self.object_timelines[drawable.id].append(event.end_time)
+                for target in self._iter_erased_drawables(drawable.objects_to_erase):
+                    if target.id not in self.object_timelines:
+                        self.object_timelines[target.id] = []
+                    if len(self.object_timelines[target.id]) == 0:
+                        self.object_timelines[target.id].append(event.start_time)
+                        self._auto_created_times[target.id] = event.start_time
+                    self.object_timelines[target.id].append(event.end_time)
+                    self.object_timelines[target.id].sort()
         elif event.type is AnimationEventType.DELETION:
             # any object cannot be deleted without being created
             if len(self.object_timelines[drawable.id]) == 0:
                 self.object_timelines[drawable.id].append(
                     event.start_time
                 )  # assume created at the beginning of deletion event
+                self._auto_created_times[drawable.id] = event.start_time
 
             self.object_timelines[drawable.id].append(event.end_time)
+
+        self.object_timelines[drawable.id].sort()
+
+    def _iter_erased_drawables(self, drawables: Sequence[Drawable]) -> list[Drawable]:
+        result: list[Drawable] = []
+        for item in drawables:
+            if isinstance(item, DrawableGroup):
+                result.extend(self._iter_erased_drawables(item.elements))
+            else:
+                result.append(item)
+        return result
 
     def get_current_time(self) -> float:
         """Returns the end time of the latest event in the scene, or 0.0 if empty."""
@@ -275,7 +304,7 @@ class Scene:
         active_list: list[str] = []
         for object_id in self.object_timelines:
             active = False  # everything starts with blank screen
-            for time in self.object_timelines[object_id]:
+            for time in sorted(self.object_timelines[object_id]):
                 if t >= time:
                     active = not active  # switch status
                 else:
@@ -285,7 +314,7 @@ class Scene:
                 active_list.append(object_id)
         return active_list
 
-    def find_key_frames(self):
+    def find_key_frames(self) -> tuple[list[float], dict[str, list[AnimationEvent]]]:
         """
         Find the key frames that we need to calculate for the animation
         Key frames are the frames where an object is created or deleted
@@ -424,7 +453,6 @@ class Scene:
             max_length = np.ceil(key_frames[-1])
         else:
             key_frames.append(max_length)
-        key_frame_indices = np.round(np.array(key_frames) * self.fps).astype(int).tolist()
         scene_opsset_list: list[OpsSet] = []
         current_active_objects: list[str] = []
 
@@ -619,6 +647,7 @@ class Scene:
     def _render_frame(self, frame_ops: OpsSet, output_path: str, frame_in_seconds: float):
         """Render a single frame OpsSet to an SVG, PNG, or PDF file based on the file extension."""
         ext = os.path.splitext(output_path)[1].lower()
+        surface: cairo.Surface
         if ext == ".pdf":
             surface = cairo.PDFSurface(output_path, self.width, self.height)
         elif ext == ".png":

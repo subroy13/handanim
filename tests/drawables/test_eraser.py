@@ -7,15 +7,14 @@ Structure
 - TestEraserCoverage — zigzag motion covers the bounding box of erased objects
 """
 
-import numpy as np
-import pytest
 
+from handanim.animations.sketch import SketchAnimation
 from handanim.core.cache import DrawableCache
-from handanim.core.draw_ops import Ops, OpsSet, OpsType
+from handanim.core.draw_ops import OpsSet, OpsType
+from handanim.core.scene import Scene
 from handanim.core.styles import SketchStyle, StrokeStyle
 from handanim.primitives.eraser import Eraser
 from handanim.primitives.polygons import Rectangle
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -111,3 +110,24 @@ class TestEraserCoverage:
         ys = [p[1] for p in pts]
         assert max(xs) >= 450
         assert max(ys) >= 350
+
+
+def test_eraser_defaults_to_scene_background_and_removes_erased_objects():
+    cream = (0.98, 0.96, 0.90)
+    scene = Scene(background_color=cream)
+    rect = _make_rect()
+    scene.add(SketchAnimation(start_time=0.0, duration=1.0), rect)
+
+    eraser = Eraser(objects_to_erase=[rect], drawable_cache=scene.drawable_cache)
+    scene.add(SketchAnimation(start_time=1.0, duration=1.0), eraser)
+
+    # Default pen color should match the scene's cream background, not white.
+    eraser_ops = scene.drawable_cache.get_drawable_opsset(eraser.id)
+    set_pen = next(op for op in eraser_ops.opsset if op.type == OpsType.SET_PEN)
+    assert set_pen.data["color"] == cream
+
+    # During erase (t=1.5), rect and eraser are active; after erase (t=2.0+), rect is removed.
+    assert rect.id in scene.get_active_objects(1.5)
+    assert rect.id not in scene.get_active_objects(2.0)
+    assert rect.id not in scene.get_active_objects(2.5)
+

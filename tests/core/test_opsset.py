@@ -8,7 +8,7 @@ instances with known coordinates and assert exact output after transforms.
 import numpy as np
 import pytest
 
-from handanim.core.draw_ops import Ops, OpsSet, OpsType, BoundingBox
+from handanim.core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
 
 # ---------------------------------------------------------------------------
 # Helpers
