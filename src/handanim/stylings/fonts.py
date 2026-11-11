@@ -1,10 +1,11 @@
 import json
 import os
+from importlib.resources import files
 from pathlib import Path
 
 _USER_CONFIG_PATH = Path.home() / ".handanim" / "config.json"
 
-_BUILTIN_FONTS = {
+_BUILTIN_FONTS: dict[str, dict[str, str]] = {
     "feasibly": {"type": "ttf", "file": "FeasiblySingleLine-z8D90.ttf"},
     "backstay": {"type": "ttf", "file": "BackstaySingleLine-rgOw8.ttf"},
     "handanimtype1": {"type": "custom", "file": "handanimtype1.json"},
@@ -15,18 +16,20 @@ _BUILTIN_FONTS = {
 }
 
 
-def _load_user_fonts() -> dict:
+def _load_user_fonts() -> dict[str, dict[str, str]]:
     """Read ~/.handanim/config.json and return its fonts section, or {} if absent."""
     if _USER_CONFIG_PATH.exists():
         try:
-            return json.loads(_USER_CONFIG_PATH.read_text()).get("fonts", {})
+            fonts_data = json.loads(_USER_CONFIG_PATH.read_text()).get("fonts", {})
+            if isinstance(fonts_data, dict):
+                return fonts_data
         except (json.JSONDecodeError, OSError):
             return {}
     return {}
 
 
 # User config wins on name collision so user-registered fonts can override built-ins.
-FONTS: dict = {**_BUILTIN_FONTS, **_load_user_fonts()}
+FONTS: dict[str, dict[str, str]] = {**_BUILTIN_FONTS, **_load_user_fonts()}
 
 
 def list_fonts() -> list[str]:
@@ -34,7 +37,7 @@ def list_fonts() -> list[str]:
     return list(FONTS.keys())
 
 
-def get_font_info(font_name: str) -> dict | None:
+def get_font_info(font_name: str) -> dict[str, str] | None:
     """Return the metadata dict for font_name, or None if not found."""
     return FONTS.get(font_name)
 
@@ -43,7 +46,7 @@ def get_font_path(font_name: str) -> str:
     """Return the filesystem path to a TTF or custom JSON font.
 
     User-registered fonts may supply an absolute path in their 'file' field;
-    built-in fonts are resolved relative to assets/fonts/<type>/.
+    built-in fonts are resolved via importlib.resources from handanim.fonts.
     """
     info = FONTS.get(font_name)
     if not info or info.get("type") == "hershey":
@@ -53,5 +56,5 @@ def get_font_path(font_name: str) -> str:
     if os.path.isabs(file_val):
         return file_val
 
-    assets_root = os.path.join(os.path.dirname(__file__), "../../../assets/fonts/", info["type"])
-    return os.path.join(assets_root, file_val)
+    resource = files("handanim.fonts").joinpath(info["type"], file_val)
+    return str(resource)

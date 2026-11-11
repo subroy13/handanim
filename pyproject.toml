@@ -6,7 +6,7 @@ packages = [
     { include = "handanim_ai", from = "src" },
 ]
 name = "handanim"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Python library to create whiteboard-style, hand-drawn animations for educational videos, tutorials or data storytelling."
 authors = ["Subhrajyoty Roy <subhrajyotyroy@gmail.com>"]
 license = "MIT"

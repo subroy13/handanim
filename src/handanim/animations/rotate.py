@@ -19,7 +19,7 @@ class RotateAnimation(AnimationEvent):
             - "center" (tuple[float, float]): Fixed pivot point. Default: center of gravity.
     """
 
-    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None) -> None:
         super().__init__(AnimationEventType.MUTATION, start_time, duration, easing_fun, data)
         self.angle = self.data.get("angle", 360)
         self.center: tuple[float, float] | None = self.data.get("center", None)

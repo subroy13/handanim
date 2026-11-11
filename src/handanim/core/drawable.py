@@ -55,19 +55,19 @@ class Drawable:
         """
         raise NotImplementedError(f"No method for drawing {self.__class__.__name__}")
 
-    def translate(self, offset_x: float, offset_y: float):
+    def translate(self, offset_x: float, offset_y: float) -> "TransformedDrawable":
         """
         Translates the drawable object by the given offset
         """
         return TransformedDrawable(self, "translate", {"offset_x": offset_x, "offset_y": offset_y})
 
-    def scale(self, scale_x: float, scale_y: float):
+    def scale(self, scale_x: float, scale_y: float) -> "TransformedDrawable":
         """
         Scales the drawable object by the given scale factors
         """
         return TransformedDrawable(self, "scale", {"scale_x": scale_x, "scale_y": scale_y})
 
-    def rotate(self, angle: float):
+    def rotate(self, angle: float) -> "TransformedDrawable":
         """
         Rotates the drawable object by the given angle
         """

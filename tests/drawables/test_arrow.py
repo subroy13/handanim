@@ -12,17 +12,15 @@ Structure
 """
 
 import io
-import math
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
-from handanim.core.draw_ops import Ops, OpsSet, OpsType
+from handanim.core.draw_ops import OpsSet, OpsType
 from handanim.core.styles import SketchStyle, StrokeStyle
 from handanim.primitives.arrow import Arrow, CurvedArrow
-
 
 # ---------------------------------------------------------------------------
 # Helpers

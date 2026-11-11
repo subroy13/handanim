@@ -12,14 +12,14 @@ Structure
 """
 
 import io
-import pytest
+
 import numpy as np
+import pytest
 
-from handanim.core.animation import AnimationEventType, CompositeAnimationEvent
-from handanim.core.draw_ops import BoundingBox, OpsSet
-from handanim.core.styles import FillStyle, StrokeStyle, SketchStyle
+from handanim.core.animation import CompositeAnimationEvent
+from handanim.core.draw_ops import OpsSet
+from handanim.core.styles import FillStyle, StrokeStyle
 from handanim.primitives.table import Table, TableRevealEvent
-
 
 # ---------------------------------------------------------------------------
 # Minimal animation stub — no real drawing, just carries timing
@@ -360,14 +360,14 @@ class TestTableAddToScene:
         spy = self._SceneSpy()
         reveal = small_table.animate_by_row(_StubAnim, start_time=0, total_duration=3.0)
         reveal.add_to_scene(spy)
-        for (_, actual_drawable), (_, expected_drawable) in zip(spy.calls, reveal.pairs):
+        for (_, actual_drawable), (_, expected_drawable) in zip(spy.calls, reveal.pairs, strict=False):
             assert actual_drawable is expected_drawable
 
     def test_add_to_scene_passes_correct_events(self, small_table):
         spy = self._SceneSpy()
         reveal = small_table.animate_by_cell(_StubAnim, start_time=0, total_duration=6.0)
         reveal.add_to_scene(spy)
-        for (actual_event, _), (expected_event, _) in zip(spy.calls, reveal.pairs):
+        for (actual_event, _), (expected_event, _) in zip(spy.calls, reveal.pairs, strict=False):
             assert actual_event is expected_event
 
 
@@ -400,8 +400,8 @@ class TestTableVisual:
         snapshot.assert_match(png, "table.png")
 
     def test_table_self_consistency(self, render_to_png_bytes):
-        from skimage.metrics import structural_similarity as ssim
         from skimage import io as skio
+        from skimage.metrics import structural_similarity as ssim
 
         np.random.seed(42)
         png_a = render_to_png_bytes(_table_opsset(), width=700, height=400)

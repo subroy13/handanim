@@ -59,7 +59,7 @@ class QwenTTSProvider(BaseVoiceProvider):
 
         try:
             import torch
-            from qwen_tts import Qwen3TTSModel  # type: ignore
+            from qwen_tts import Qwen3TTSModel
 
             device_map = "mps" if torch.backends.mps.is_available() else ("cuda:0" if torch.cuda.is_available() else "cpu")
             logger.info("Loading %s on %s...", self.model_id, device_map)

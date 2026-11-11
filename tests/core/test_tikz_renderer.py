@@ -5,12 +5,12 @@ import subprocess
 
 import pytest
 
-from handanim.animations import FadeInAnimation, SketchAnimation
-from handanim.core import FillStyle, Scene, SketchStyle, StrokeStyle
+from handanim.animations import SketchAnimation
+from handanim.core import Scene
 from handanim.core.draw_ops import Ops, OpsSet, OpsType
 from handanim.core.tikz_renderer import TikZRenderer, opsset_to_tikz
 from handanim.core.viewport import Viewport
-from handanim.primitives import Circle, Line, NGon, Rectangle
+from handanim.primitives import Line, Rectangle
 
 
 @pytest.fixture
@@ -206,7 +206,7 @@ class TestTikzpicture:
     def test_no_background_when_none(self, renderer):
         result = renderer.render_tikzpicture(OpsSet([]))
         lines = result.splitlines()
-        fill_lines = [l for l in lines if "\\fill" in l]
+        fill_lines = [line for line in lines if "\\fill" in line]
         assert len(fill_lines) == 0
 
 
@@ -338,9 +338,9 @@ class TestTikzCompilation:
 
     def test_beamer_tikz_compiles(self, tmp_path):
         scene = Scene(width=400, height=300)
-        l = Line(start=(50, 50), end=(350, 50))
+        line = Line(start=(50, 50), end=(350, 50))
         r = Rectangle(top_left=(100, 100), width=200, height=100)
-        scene.add(SketchAnimation(start_time=0, duration=1), drawable=l)
+        scene.add(SketchAnimation(start_time=0, duration=1), drawable=line)
         scene.add(SketchAnimation(start_time=1, duration=1), drawable=r)
         tex = scene.export_beamer(str(tmp_path), n_frames=3, backend="tikz", title="Test")
         result = subprocess.run(

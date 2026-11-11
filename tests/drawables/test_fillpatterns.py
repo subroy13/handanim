@@ -16,6 +16,7 @@ import pytest
 
 from handanim.core.draw_ops import OpsSet, OpsType
 from handanim.core.styles import FillStyle, SketchStyle
+from handanim.primitives.polygons import RoundedRectangle
 from handanim.stylings.fillpatterns import (
     HachureFillPattern,
     HatchFillPattern,
@@ -23,7 +24,6 @@ from handanim.stylings.fillpatterns import (
     ZigZagLineFillPattern,
     get_filler,
 )
-
 
 # ---------------------------------------------------------------------------
 # Shared fixtures
@@ -175,3 +175,40 @@ class TestGetFiller:
         fill = FillStyle(fill_pattern="solid", color=(0.5, 0.5, 0.5))
         result = get_filler(_SQUARE, fill, _SKETCH).fill()
         assert isinstance(result, OpsSet)
+
+
+def test_rounded_rectangle_hachure_fill_clipped_to_corners():
+    x, y, width, height = 50.0, 50.0, 200.0, 120.0
+    border_radius = 0.25
+    r = border_radius * min(width, height)
+    rr = RoundedRectangle(
+        (x, y),
+        width,
+        height,
+        border_radius=border_radius,
+        fill_style=FillStyle(fill_pattern="hachure", hachure_gap=5),
+        sketch_style=SketchStyle(roughness=0, bowing=0, disable_multi_stroke=True),
+    )
+    ops = rr.draw()
+    in_fill = False
+    fill_points: list[tuple[float, float]] = []
+    for op in ops.opsset:
+        if op.type == OpsType.METADATA and isinstance(op.data, dict):
+            in_fill = op.data.get("drawing_mode") == "fill"
+        elif in_fill and isinstance(op.data, list):
+            for pt in op.data:
+                fill_points.append((float(pt[0]), float(pt[1])))
+
+    assert len(fill_points) > 0
+    corners = [
+        (x + r, y + r, -1.0, -1.0),
+        (x + width - r, y + r, 1.0, -1.0),
+        (x + width - r, y + height - r, 1.0, 1.0),
+        (x + r, y + height - r, -1.0, 1.0),
+    ]
+    for px, py in fill_points:
+        for cx, cy, sx, sy in corners:
+            if (px - cx) * sx > 0 and (py - cy) * sy > 0:
+                # Allow 1.5px tolerance for integer rounding in straight_hachure_lines
+                assert np.hypot(px - cx, py - cy) <= r + 1.5
+

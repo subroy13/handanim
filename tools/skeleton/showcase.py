@@ -18,7 +18,7 @@ poetry run python3 -m tools.skeleton.showcase --chars "A B ∑ ∫ ∞ α π"
 # Specify font / json / output explicitly
 poetry run python3 -m tools.skeleton.showcase \\
     --font assets/fonts/ttf/NotoSansMath-Regular.ttf \\
-    --json assets/fonts/custom/noto_sans_math_skeleton.json \\
+    --json src/handanim/fonts/custom/noto_sans_math_skeleton.json \\
     --out  tools/skeleton/showcase.png \\
     --size 256
 """
@@ -203,7 +203,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "--json",
-        default="assets/fonts/custom/noto_sans_math_skeleton.json",
+        default="src/handanim/fonts/custom/noto_sans_math_skeleton.json",
         help="Skeleton JSON font file (default: noto_sans_math_skeleton.json).",
     )
     parser.add_argument(

@@ -2,29 +2,33 @@
 # This program allows you to create a database of glyphs from a single filled in grid image
 #############
 
-import os
 import json
+import os
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+import cv2
 import numpy as np
 from PIL import Image
-
-# import vtracer
-import cv2
-import xml.etree.ElementTree as ET
-from svgpathtools import svg2paths
-from tqdm import tqdm
-from skimage.morphology import skeletonize
 from skimage import measure
-import svgwrite
+from skimage.morphology import skeletonize
+from svgelements import Path as SvgPath
+from tqdm import tqdm
 
-from symbols import SYMBOL_LABELS
+ROOT_PATH = Path(__file__).resolve().parent
+REPO_ROOT = ROOT_PATH.parent.parent
+if str(ROOT_PATH) not in sys.path:
+    sys.path.insert(0, str(ROOT_PATH))
+
+from symbols import SYMBOL_LABELS  # noqa: E402
 
 # === CONSTANTS ===
-ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-IMAGE_PATH = os.path.join(ROOT_PATH, "sample_symbols.png")
+IMAGE_PATH = str(ROOT_PATH / "sample_symbols.png")
 FONT_NAME = "handanimtype1"
-OUTPUT_IMAGE_DIR = os.path.join(ROOT_PATH, "tmp", "glyph_images")
-OUTPUT_SVG_DIR = os.path.join(ROOT_PATH, "tmp", "glyph_svgs")
-OUTPUT_DATABASE_FILE = os.path.join(ROOT_PATH, f"{FONT_NAME}.json")
+OUTPUT_IMAGE_DIR = str(ROOT_PATH / "tmp" / "glyph_images")
+OUTPUT_SVG_DIR = str(ROOT_PATH / "tmp" / "glyph_svgs")
+OUTPUT_DATABASE_FILE = str(REPO_ROOT / "src" / "handanim" / "fonts" / "custom" / f"{FONT_NAME}.json")
 N_ITEMS_IN_ROW = 15  # the number of glyphs in a row in the grid
 INNER_PADDING = 10  # 10 pixels are removed as inner padding within each grid
 MIN_CELL_SIZE = 50  # the usual size is
@@ -91,16 +95,19 @@ def extract_svg_paths(svg_file):
     return paths
 
 
-def compute_combined_bbox(paths):
-    """Compute bounding box of all paths combined."""
+def compute_combined_bbox(path_strings: list[str]):
+    """Compute bounding box of all SVG path strings combined."""
     min_x, min_y, max_x, max_y = (
         float("inf"),
         float("inf"),
         -float("inf"),
         -float("inf"),
     )
-    for path in paths:
-        xmin, xmax, ymin, ymax = path.bbox()
+    for d_str in path_strings:
+        bbox = SvgPath(d_str).bbox()
+        if bbox is None:
+            continue
+        xmin, ymin, xmax, ymax = bbox
         min_x = min(min_x, xmin)
         max_x = max(max_x, xmax)
         min_y = min(min_y, ymin)
@@ -123,23 +130,37 @@ def convert_png_to_svg(img_path: str, svg_path: str):
     # Find contours from skeleton
     contours = measure.find_contours(skeleton, level=0.5)
 
-    # Create SVG from contours
-    dwg = svgwrite.Drawing(size=(img.shape[1], img.shape[0]))
+    # Write SVG from contours
+    svg_elem = ET.Element(
+        "svg",
+        xmlns="http://www.w3.org/2000/svg",
+        width=str(img.shape[1]),
+        height=str(img.shape[0]),
+    )
     for contour in contours:
         if len(contour) < 2:
             continue
         path_data = f"M{contour[0][1]},{contour[0][0]}"
         for pt in contour[1:]:
             path_data += f" L{pt[1]},{pt[0]}"
-        dwg.add(dwg.path(d=path_data, stroke="black", fill="none", stroke_width=1))
+        ET.SubElement(
+            svg_elem,
+            "path",
+            d=path_data,
+            stroke="black",
+            fill="none",
+            **{"stroke-width": "1"},
+        )
 
-    dwg.saveas(svg_path)
+    tree = ET.ElementTree(svg_elem)
+    tree.write(svg_path, encoding="utf-8", xml_declaration=True)
 
 
 if __name__ == "__main__":
     # === Ensure output folders exist ===
     os.makedirs(OUTPUT_IMAGE_DIR, exist_ok=True)
     os.makedirs(OUTPUT_SVG_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(OUTPUT_DATABASE_FILE), exist_ok=True)
 
     crops = detect_grid_cells(IMAGE_PATH)
     glyph_database = {}
@@ -162,13 +183,12 @@ if __name__ == "__main__":
         # Run tracing
         convert_png_to_svg(png_path, svg_path)
         try:
-            paths, attributes = svg2paths(svg_path)
-            min_x, min_y, max_x, max_y = compute_combined_bbox(paths)
+            path_list = extract_svg_paths(svg_path)
+            min_x, min_y, max_x, max_y = compute_combined_bbox(path_list)
             bbox_height = max_y - min_y
             if bbox_height > glyph_max_size:
                 glyph_max_size = bbox_height
 
-            path_list = extract_svg_paths(svg_path)
             unicode_code = ord(label)
             glyph_database[str(unicode_code)] = path_list  # use string keys in JSON
         except Exception as e:
@@ -181,3 +201,4 @@ if __name__ == "__main__":
     }
     with open(OUTPUT_DATABASE_FILE, "w", encoding="utf-8") as f:
         json.dump(glyph_details, f, ensure_ascii=False)
+    print(f"Saved custom font JSON to {OUTPUT_DATABASE_FILE}")

@@ -13,13 +13,12 @@ import io
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
+from handanim.animations.zoom import ZoomInAnimation, ZoomOutAnimation
 from handanim.core.animation import AnimationEventType
 from handanim.core.draw_ops import Ops, OpsSet, OpsType
-from handanim.animations.zoom import ZoomInAnimation, ZoomOutAnimation
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -42,8 +41,8 @@ def _extract_points(opsset: OpsSet):
 
 
 def _zoom_opsset() -> OpsSet:
+    from handanim.core.styles import SketchStyle, StrokeStyle
     from handanim.primitives.polygons import Rectangle
-    from handanim.core.styles import StrokeStyle, SketchStyle
 
     rect = Rectangle(
         top_left=(300.0, 275.0),
@@ -90,9 +89,7 @@ class TestZoomInBasics:
 class TestZoomInGeometry:
     def test_progress_one_returns_full_size(self):
         opsset = _make_hline_opsset(x0=0.0, x1=100.0, y=50.0)
-        before = _extract_points(opsset)
         result = ZoomInAnimation(start_time=0, duration=1.0).apply(opsset, raw_progress=1.0)
-        after = _extract_points(result)
         # At progress=1 scale=1 → center of gravity preserved, relative positions same
         orig_cx, orig_cy = opsset.get_center_of_gravity()
         res_cx, res_cy = result.get_center_of_gravity()
@@ -128,7 +125,6 @@ class TestZoomOutBasics:
 
     def test_progress_zero_full_size(self):
         opsset = _make_hline_opsset(x0=0.0, x1=100.0, y=50.0)
-        before = _extract_points(opsset)
         result = ZoomOutAnimation(start_time=0, duration=1.0).apply(opsset, raw_progress=0.0)
         orig_cx, orig_cy = opsset.get_center_of_gravity()
         res_cx, res_cy = result.get_center_of_gravity()

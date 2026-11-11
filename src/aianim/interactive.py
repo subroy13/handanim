@@ -106,7 +106,7 @@ class InteractiveSession:
                     use_indicator=True,
                 ).ask()
                 if selected is not None:
-                    return selected
+                    return str(selected)
                 # Handle Ctrl+C
                 return choices[-1] if any("Exit" in c or "Quit" in c for c in choices) else choices[0]
             except Exception:

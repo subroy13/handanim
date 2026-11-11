@@ -1,15 +1,14 @@
 """Tests for RasterImage primitive and IMAGE OpsType integration."""
 
 import os
+
 import cairo
-import numpy as np
 import pytest
 
-from handanim.core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
-from handanim.core.scene import Scene
-from handanim.core.styles import SketchStyle
-from handanim.animations.sketch import SketchAnimation
 from handanim.animations.fade import FadeInAnimation, FadeOutAnimation
+from handanim.animations.sketch import SketchAnimation
+from handanim.core.draw_ops import OpsType
+from handanim.core.scene import Scene
 from handanim.primitives.raster_image import RasterImage
 
 

@@ -177,12 +177,46 @@ class RoundedRectangle(Drawable):
         opsset.extend(curve.draw())
 
         if self.fill_style is not None:
-            bound_box = [
-                (x, y),
-                (x + self.width, y),
-                (x + self.width, y + self.height),
-                (x, y + self.height),
-            ]
+            ext_points = (
+                [np.array(points[0], dtype=float)]
+                + [np.array(pt, dtype=float) for pt in points]
+                + [np.array(points[-1], dtype=float)]
+            )
+            s = 1 - self.sketch_style.curve_tightness
+            corners = (
+                (x + border_radius, y + border_radius, -1.0, -1.0),
+                (x + self.width - border_radius, y + border_radius, 1.0, -1.0),
+                (
+                    x + self.width - border_radius,
+                    y + self.height - border_radius,
+                    1.0,
+                    1.0,
+                ),
+                (x + border_radius, y + self.height - border_radius, -1.0, 1.0),
+            )
+            bound_box: list[tuple[float, float]] = []
+            for i in range(1, len(ext_points) - 2):
+                b0 = ext_points[i]
+                b1 = b0 + s * (ext_points[i + 1] - ext_points[i - 1]) / 6
+                b2 = ext_points[i + 1] + s * (ext_points[i] - ext_points[i + 2]) / 6
+                b3 = ext_points[i + 1]
+                for t in np.linspace(0.0, 1.0, 8, endpoint=False):
+                    pt = (
+                        (1 - t) ** 3 * b0
+                        + 3 * (1 - t) ** 2 * t * b1
+                        + 3 * (1 - t) * t**2 * b2
+                        + t**3 * b3
+                    )
+                    px = float(np.clip(pt[0], x, x + self.width))
+                    py = float(np.clip(pt[1], y, y + self.height))
+                    for cx, cy, sx, sy in corners:
+                        if (px - cx) * sx > 0 and (py - cy) * sy > 0:
+                            dx, dy = px - cx, py - cy
+                            dist = float(np.hypot(dx, dy))
+                            if dist > border_radius > 0:
+                                px = float(cx + dx * border_radius / dist)
+                                py = float(cy + dy * border_radius / dist)
+                    bound_box.append((px, py))
             opsset.add(Ops(type=OpsType.METADATA, data={"drawing_mode": "fill"}))
             filler = get_filler([bound_box], self.fill_style, self.sketch_style)
             opsset.extend(filler.fill())

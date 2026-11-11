@@ -6,19 +6,18 @@ render_keyframes, export_storyboard, render_handout, export_beamer).
 """
 
 import os
-import numpy as np
+
 import pytest
 
-from handanim.core.scene import Scene
+from handanim.animations.sketch import SketchAnimation
 from handanim.core.animation import AnimationEvent, AnimationEventType, CompositeAnimationEvent
-from handanim.core.drawable import Drawable, DrawableGroup
 from handanim.core.draw_ops import OpsSet
+from handanim.core.drawable import DrawableGroup
+from handanim.core.scene import Scene
 from handanim.core.styles import SketchStyle
 from handanim.core.viewport import Viewport
-from handanim.animations.sketch import SketchAnimation
 from handanim.primitives.lines import Line
 from handanim.primitives.polygons import Rectangle
-
 
 FLAT = SketchStyle(roughness=0, bowing=0)
 
@@ -205,9 +204,7 @@ class TestSceneAdd:
         s = Scene()
         a, b = make_line(), make_rect()
         group = DrawableGroup([a, b], grouping_method="series")
-        # Use base AnimationEvent (CREATION) — SketchAnimation.subdivide() doesn't
-        # accept the 'type' kwarg that subdivide() forwards to cls().
-        event = AnimationEvent(AnimationEventType.CREATION, start_time=0.0, duration=2.0)
+        event = SketchAnimation(start_time=0.0, duration=2.0)
         s.add(event, group)
         assert a.id in s.object_timelines
         assert b.id in s.object_timelines
@@ -216,7 +213,7 @@ class TestSceneAdd:
         s = Scene()
         a, b = make_line(), make_rect()
         group = DrawableGroup([a, b], grouping_method="series")
-        event = AnimationEvent(AnimationEventType.CREATION, start_time=0.0, duration=2.0)
+        event = SketchAnimation(start_time=0.0, duration=2.0)
         s.add(event, group)
         total = sum(e.duration for e, _ in s.events)
         assert abs(total - 2.0) < 1e-9
@@ -270,6 +267,19 @@ class TestGetActiveObjects:
     def test_empty_scene_returns_empty_list(self):
         s = Scene()
         assert s.get_active_objects(0.0) == []
+
+    def test_out_of_order_events_keep_timeline_sorted(self):
+        s = Scene(fps=4)
+        line = make_line()
+        # Add creation at t=2.0, deletion at t=1.0, and initial creation at t=0.0 out of time order
+        s.add(make_sketch(start=2.0, duration=0.5), line)
+        s.add(AnimationEvent(AnimationEventType.DELETION, start_time=0.5, duration=0.5), line)
+        s.add(make_sketch(start=0.0, duration=0.5), line)
+
+        assert s.object_timelines[line.id] == [0.0, 1.0, 2.0]
+        assert line.id in s.get_active_objects(0.25)
+        assert line.id not in s.get_active_objects(1.5)
+        assert line.id in s.get_active_objects(2.25)
 
 
 # ---------------------------------------------------------------------------

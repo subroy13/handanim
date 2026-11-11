@@ -13,13 +13,12 @@ import io
 
 import numpy as np
 import pytest
-from skimage.metrics import structural_similarity as ssim
 from skimage import io as skio
+from skimage.metrics import structural_similarity as ssim
 
+from handanim.animations.color_transition import ColorTransitionAnimation
 from handanim.core.animation import AnimationEventType
 from handanim.core.draw_ops import Ops, OpsSet, OpsType
-from handanim.animations.color_transition import ColorTransitionAnimation
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -46,8 +45,8 @@ def _extract_points(opsset: OpsSet):
 
 
 def _color_transition_opsset() -> OpsSet:
+    from handanim.core.styles import SketchStyle, StrokeStyle
     from handanim.primitives.polygons import Rectangle
-    from handanim.core.styles import StrokeStyle, SketchStyle
 
     rect = Rectangle(
         top_left=(200.0, 225.0),

@@ -76,7 +76,7 @@ class KokoroProvider(BaseVoiceProvider):
             return self._kokoro_instance
 
         try:
-            from kokoro_onnx import Kokoro  # type: ignore
+            from kokoro_onnx import Kokoro
 
             model_path, voices_path = self._ensure_model_files()
             self._kokoro_instance = Kokoro(str(model_path), str(voices_path))

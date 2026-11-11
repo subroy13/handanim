@@ -118,7 +118,9 @@ class AudioClip:
 
         Uses sentence timestamps when available, falling back to word grouping.
         """
-        entries = self.sentences if self.sentences else self._group_words_into_phrases()
+        entries: list[SentenceTimestamp | dict] = (
+            list(self.sentences) if self.sentences else list(self._group_words_into_phrases())
+        )
         srt_lines: list[str] = []
 
         def format_timestamp(seconds: float) -> str:
@@ -129,9 +131,14 @@ class AudioClip:
             return f"{hrs:02d}:{mins:02d}:{secs:02d},{millis:03d}"
 
         for idx, entry in enumerate(entries, 1):
-            text = entry.text if hasattr(entry, "text") else entry["text"]
-            start = entry.start if hasattr(entry, "start") else entry["start"]
-            end = entry.end if hasattr(entry, "end") else entry["end"]
+            if isinstance(entry, SentenceTimestamp):
+                text = entry.text
+                start = entry.start
+                end = entry.end
+            else:
+                text = str(entry["text"])
+                start = float(entry["start"])
+                end = float(entry["end"])
 
             srt_lines.append(str(idx))
             srt_lines.append(f"{format_timestamp(start)} --> {format_timestamp(end)}")

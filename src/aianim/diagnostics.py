@@ -23,7 +23,7 @@ class HandanimCodeAuditor(ast.NodeVisitor):
 
     IMMUTABLE_TRANSFORMS = {"translate", "scale", "rotate"}
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.errors: list[str] = []
         self.warnings: list[str] = []
         self.suggestions: list[str] = []

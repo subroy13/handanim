@@ -12,8 +12,8 @@ Structure
 - TestFlowchartVisual         — visual regression snapshot
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from handanim.core.draw_ops import BoundingBox, OpsSet
 from handanim.primitives.flowchart import (
@@ -22,7 +22,6 @@ from handanim.primitives.flowchart import (
     FlowchartDiamond,
     FlowchartNode,
 )
-
 
 # ---------------------------------------------------------------------------
 # Shared fixture: a minimal two-node spec
@@ -366,7 +365,6 @@ class TestFlowchartDraw:
 # ---------------------------------------------------------------------------
 
 def _flowchart_opsset() -> OpsSet:
-    from handanim.core.styles import StrokeStyle, SketchStyle
     spec = {
         "nodes": [
             {"id": "start",    "label": "Start",   "position": [500, 80],  "size": [160, 50]},
@@ -392,9 +390,10 @@ class TestFlowchartVisual:
 
     def test_flowchart_self_consistency(self, render_to_png_bytes):
         """Same seed must produce pixel-identical output across two renders."""
-        from skimage.metrics import structural_similarity as ssim
         import io
+
         from skimage import io as skio
+        from skimage.metrics import structural_similarity as ssim
 
         np.random.seed(42)
         png_a = render_to_png_bytes(_flowchart_opsset(), width=500, height=500)

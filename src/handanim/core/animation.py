@@ -29,7 +29,7 @@ class AnimationEvent:
 
     def __init__(
         self,
-        type: AnimationEventType,  # the type of animation
+        type: AnimationEventType = AnimationEventType.CREATION,  # the type of animation
         start_time: float = 0.0,  # the starting time point  (in seconds)
         duration: float = 0.0,  # the duration of the animation (in seconds)
         easing_fun=None,  # easing function to use
@@ -69,16 +69,18 @@ class AnimationEvent:
         Returns subdivision of an event into n_division segments
         """
         cls = self.__class__
-        return [
-            cls(
-                type=self.type,
+        segments = []
+        for i in range(n_division):
+            seg = cls(
                 start_time=self.start_time + i * self.duration / n_division,
-                easing_fun=self.easing_fun,
-                data=self.data,
                 duration=self.duration / n_division,
+                easing_fun=self.easing_fun,
+                data=dict(self.data),
             )
-            for i in range(n_division)
-        ]
+            if cls is AnimationEvent:
+                seg.type = self.type
+            segments.append(seg)
+        return segments
 
 
 class CompositeAnimationEvent(AnimationEvent):

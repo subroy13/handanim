@@ -3,7 +3,6 @@ import numpy as np
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.styles import StrokePressure
 
-
 # ── Geometric bowing helpers ─────────────────────────────────────────────────
 
 def bow_segment(
@@ -96,7 +95,7 @@ def apply_stroke_pressure(opsset: OpsSet, stroke_pressure: StrokePressure) -> Op
     def pressure_profile(t: float, min_val: float = 0.75, max_val: float = 1.25) -> float:
         mid = (min_val + max_val) / 2
         scale = (max_val - min_val) / 2
-        return mid + scale * np.sin(2 * t * np.pi)
+        return float(mid + scale * np.sin(2 * t * np.pi))
 
     new_opsset = OpsSet(initial_set=[])
     current_pen_ops = None

@@ -27,7 +27,7 @@ class ColorTransitionAnimation(AnimationEvent):
             - "end_color"   (tuple[float,float,float]): RGB at progress 1. Required.
     """
 
-    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
+    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None) -> None:
         super().__init__(AnimationEventType.MUTATION, start_time, duration, easing_fun, data)
         self.start_color: tuple[float, float, float] = self.data.get("start_color", (0.0, 0.0, 0.0))
         self.end_color: tuple[float, float, float] = self.data.get("end_color", (1.0, 1.0, 1.0))

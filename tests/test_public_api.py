@@ -10,7 +10,7 @@ def test_all_symbols_importable():
 
 
 def test_top_level_import_shorthand():
-    from handanim import Scene, Rectangle, SketchAnimation, StrokeStyle, SketchStyle
+    from handanim import Rectangle, Scene, SketchAnimation, SketchStyle, StrokeStyle
     assert all(cls is not None for cls in [Scene, Rectangle, SketchAnimation, StrokeStyle, SketchStyle])
 
 
