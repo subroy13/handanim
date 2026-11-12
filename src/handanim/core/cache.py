@@ -66,8 +66,9 @@ class GroupFrameCache:
     """
     Per-frame cache for group animation transforms. Must be reset at the start
     of each frame via reset(). Stores two slots per (group, event):
-      - pre-transform: the assembled group OpsSet before event.apply()
-      - transformed:   the result of event.apply(group_opsset, progress)
+
+    - pre-transform: the assembled group OpsSet before event.apply()
+    - transformed:   the result of event.apply(group_opsset, progress)
     """
 
     def __init__(self) -> None:

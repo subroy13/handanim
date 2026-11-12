@@ -100,6 +100,24 @@ class Drawable:
             raise ValueError(f"Unknown anchor '{position}', choose from: {list(anchors.keys())}")
         return anchors[position]
 
+    def align_to(
+        self,
+        x: float,
+        y: float,
+        anchor: str = "center",
+    ) -> "TransformedDrawable":
+        """Return a translated copy whose named `anchor` is placed at `(x, y)`."""
+        ax, ay = self.anchor(anchor)
+        return self.translate(x - ax, y - ay)
+
+    def center_at(self, x: float, y: float) -> "TransformedDrawable":
+        """Return a translated copy whose bounding-box center is placed at `(x, y)`."""
+        return self.align_to(x, y, anchor="center")
+
+    def centred(self, x: float, y: float) -> "TransformedDrawable":
+        """Alias for `center_at(x, y)`."""
+        return self.center_at(x, y)
+
 
 class TransformedDrawable(Drawable):
     """

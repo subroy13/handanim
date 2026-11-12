@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .cache import AudioCache
-from .mixer import mix_audio_with_video
+from .mixer import mix_audio_with_video, mix_soundtrack
 from .providers import (
     PROVIDERS,
     BaseVoiceProvider,
@@ -17,6 +17,18 @@ from .providers import (
     get_provider,
 )
 from .schema import AudioClip, NarrationBeat, SentenceTimestamp, WordTimestamp
+from .sfx import (
+    generate_theme_music,
+    loop_audio,
+    synthesize_chalk_sound,
+    synthesize_crumple_sound,
+    synthesize_ding_sound,
+    synthesize_eraser_sound,
+    synthesize_page_turn_sound,
+    synthesize_pop_sound,
+    synthesize_theme_loop,
+    synthesize_whoosh_sound,
+)
 from .timeline import VoiceTimelineSync
 
 
@@ -67,6 +79,38 @@ class VoiceEngine:
             output_path=output_path,
         )
 
+    @staticmethod
+    def generate_theme_music(
+        duration: float,
+        output_path: str | Path | None = None,
+        style: str = "marimba",
+        bpm: float = 104.0,
+        volume: float = 0.22,
+    ) -> AudioClip:
+        """Generate repeating open-source background theme music of length `duration`."""
+        return generate_theme_music(
+            duration=duration,
+            output_path=output_path,
+            style=style,
+            bpm=bpm,
+            volume=volume,
+        )
+
+    @staticmethod
+    def loop_audio(
+        audio_source: str | Path | AudioClip,
+        duration: float,
+        output_path: str | Path | None = None,
+        volume: float = 0.22,
+    ) -> AudioClip:
+        """Repeat an audio file, `AudioClip`, or built-in theme preset to match `duration`."""
+        return loop_audio(
+            audio_source=audio_source,
+            duration=duration,
+            output_path=output_path,
+            volume=volume,
+        )
+
 
 __all__ = [
     "VoiceEngine",
@@ -77,6 +121,17 @@ __all__ = [
     "AudioCache",
     "VoiceTimelineSync",
     "mix_audio_with_video",
+    "mix_soundtrack",
+    "generate_theme_music",
+    "loop_audio",
+    "synthesize_chalk_sound",
+    "synthesize_eraser_sound",
+    "synthesize_page_turn_sound",
+    "synthesize_crumple_sound",
+    "synthesize_pop_sound",
+    "synthesize_whoosh_sound",
+    "synthesize_ding_sound",
+    "synthesize_theme_loop",
     "BaseVoiceProvider",
     "KokoroProvider",
     "PollyProvider",

@@ -1,4 +1,6 @@
 from .arrow import Arrow, CurvedArrow
+from .captions import Captions, CaptionsAnimation, CaptionWord
+from .character import CharacterRig, Pose, RigNode, TwoJointLimb, VariantSlot, solve_two_joint_ik
 from .curves import Curve
 from .ellipse import Circle, Ellipse
 from .eraser import Eraser
@@ -36,4 +38,13 @@ __all__ = [
     "RasterImage",
     "Table",
     "TableRevealEvent",
+    "Captions",
+    "CaptionsAnimation",
+    "CaptionWord",
+    "RigNode",
+    "VariantSlot",
+    "TwoJointLimb",
+    "CharacterRig",
+    "Pose",
+    "solve_two_joint_ik",
 ]

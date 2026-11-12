@@ -16,10 +16,19 @@ class FadeInAnimation(AnimationEvent):
         data (dict, optional): Additional data associated with the animation. Defaults to None.
     """
 
-    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
+    def __init__(
+        self,
+        start_time: float = 0.0,
+        duration: float = 0.0,
+        easing_fun=None,
+        data: dict | None = None,
+        initial_opacity: float = 0.0,
+    ) -> None:
         super().__init__(AnimationEventType.CREATION, start_time, duration, easing_fun, data)
+        self.initial_opacity = float(self.data.get("initial_opacity", initial_opacity))
 
-    def _opsset_apply(self, opsset: OpsSet, progress: float):
+    def _opsset_apply(self, opsset: OpsSet, progress: float) -> OpsSet:
+        effective_progress = self.initial_opacity + (1.0 - self.initial_opacity) * progress
         current_ops_list = []
         for op in opsset.opsset:
             if op.type == OpsType.SET_PEN:
@@ -27,21 +36,21 @@ class FadeInAnimation(AnimationEvent):
                 meta = dict(op.meta) if op.meta else {}
                 base_opacity = meta.get("base_opacity", op.data.get("opacity", 1.0))
                 meta["base_opacity"] = base_opacity
-                modified_data["opacity"] = base_opacity * progress
+                modified_data["opacity"] = base_opacity * effective_progress
                 current_ops_list.append(Ops(type=OpsType.SET_PEN, data=modified_data, partial=op.partial, meta=meta))
             elif op.type == OpsType.IMAGE and isinstance(op.data, dict):
                 modified_data = dict(op.data)
                 meta = dict(op.meta) if op.meta else {}
                 base_opacity = meta.get("base_opacity", op.data.get("opacity", 1.0))
                 meta["base_opacity"] = base_opacity
-                modified_data["opacity"] = base_opacity * progress
+                modified_data["opacity"] = base_opacity * effective_progress
                 current_ops_list.append(Ops(type=OpsType.IMAGE, data=modified_data, partial=op.partial, meta=meta))
             else:
                 current_ops_list.append(op)
         new_opsset = OpsSet(initial_set=current_ops_list)
         return new_opsset
 
-    def _apply(self, opsset: OpsSet, progress: float):
+    def _apply(self, opsset: OpsSet, progress: float) -> OpsSet:
         return self._opsset_apply(opsset, progress)
 
 

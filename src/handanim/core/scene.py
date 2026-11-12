@@ -11,9 +11,45 @@ from tqdm import tqdm
 from ..utils.geometry import cairo_surface_to_numpy
 from .animation import AnimationEvent, AnimationEventType, CompositeAnimationEvent
 from .cache import DrawableCache, GroupFrameCache
-from .draw_ops import OpsSet
+from .draw_ops import Ops, OpsSet
 from .drawable import Drawable, DrawableGroup
 from .viewport import Viewport
+
+
+class _OverlayLayer:
+    """Camera-independent overlay layer proxy attached to a `Scene`.
+
+    Objects added via `scene.overlay.add(...)` are rendered using the scene's
+    base static viewport rather than the camera-animated viewport, so HUD elements,
+    titles, and captions stay fixed on screen during `CameraAnimation` pan/zoom.
+    """
+
+    def __init__(self, scene: "Scene") -> None:
+        self._scene = scene
+
+    def add(
+        self,
+        event: AnimationEvent | Drawable,
+        drawable: Drawable | None = None,
+    ) -> None:
+        self._scene.add(event, drawable, overlay=True)
+
+    def swap(
+        self,
+        source: Drawable,
+        target: Drawable,
+        start_time: float = 0.0,
+        duration: float = 0.0,
+        easing_fun=None,
+    ) -> None:
+        self._scene.swap(
+            source,
+            target,
+            start_time=start_time,
+            duration=duration,
+            easing_fun=easing_fun,
+            overlay=True,
+        )
 
 
 class Scene:
@@ -39,6 +75,16 @@ class Scene:
         fps: int = 24,
         background_color: tuple[float, float, float] = (1, 1, 1),
         viewport: Viewport | None = None,
+        background_music: Any = None,
+        music_volume: float = 0.18,
+        music_loop: bool = True,
+        sketch_sound: bool = False,
+        sketch_sound_volume: float = 0.45,
+        sketch_sound_style: str = "chalk",
+        eraser_sound: bool = False,
+        eraser_sound_volume: float = 0.55,
+        transition_sound: bool = False,
+        transition_sound_volume: float = 0.55,
     ):
         self.width = width
         self.height = height
@@ -51,6 +97,19 @@ class Scene:
         self._auto_created_times: dict[str, float] = {}
         self.drawable_groups: dict[str, DrawableGroup] = {}  # stores drawable groups present in the scene
         self.camera_events: list = []  # CameraAnimation events; typed as List to avoid circular import
+        self.transitions: list = []  # SceneTransition events
+        self.overlay_drawable_ids: set[str] = set()
+        self.overlay = _OverlayLayer(self)
+        self.background_music: Any = background_music
+        self.music_volume: float = float(music_volume)
+        self.music_loop: bool = bool(music_loop)
+        self.sketch_sound: bool = bool(sketch_sound)
+        self.sketch_sound_volume: float = float(sketch_sound_volume)
+        self.sketch_sound_style: str = str(sketch_sound_style)
+        self.eraser_sound: bool = bool(eraser_sound)
+        self.eraser_sound_volume: float = float(eraser_sound_volume)
+        self.transition_sound: bool = bool(transition_sound)
+        self.transition_sound_volume: float = float(transition_sound_volume)
 
         if viewport is not None:
             self.viewport = viewport
@@ -95,13 +154,17 @@ class Scene:
 
     def add(
         self,
-        event: AnimationEvent,
-        drawable: Drawable,
+        event: AnimationEvent | Drawable,
+        drawable: Drawable | None = None,
+        *,
+        overlay: bool = False,
     ):
         """
         Adds an animation event to a drawable primitive in the scene.
 
         Handles different scenarios including:
+        - Self-driving drawables such as `Captions` (e.g. `scene.overlay.add(captions)`)
+        - `Swap(a, b, t)` events (e.g. `scene.add(Swap(a, b, t))`)
         - Composite animation events (recursively adding sub-events)
         - Drawable groups with parallel or sequential event distribution
         - Single event and drawable cases
@@ -109,13 +172,61 @@ class Scene:
         Manages event tracking, drawable caching, and object timelines.
 
         Args:
-            event (AnimationEvent): The animation event to be added.
-            drawable (Drawable): The drawable primitive to apply the event to.
+            event (AnimationEvent | Drawable): The animation event (or self-driving drawable) to be added.
+            drawable (Drawable, optional): The drawable primitive to apply the event to.
+            overlay (bool, optional): If True, renders the drawable in the camera-independent overlay layer.
         """
+        from ..animations.fade import FadeInAnimation, FadeOutAnimation
+        from ..animations.transitions import SceneTransition
+        from ..animations.visibility import Hide, Show, Swap
+        from ..primitives.captions import Captions
+
+        if isinstance(event, SceneTransition):
+            self.add_transition(event)
+            return
+
+        if isinstance(event, Captions) and drawable is None:
+            drawable = event
+            event = drawable.to_event()
+
+        if isinstance(event, Swap):
+            if event.duration > 0.0:
+                self.add(
+                    FadeOutAnimation(
+                        start_time=event.start_time,
+                        duration=event.duration,
+                        easing_fun=event.easing_fun,
+                    ),
+                    event.source,
+                    overlay=overlay,
+                )
+                self.add(
+                    FadeInAnimation(
+                        start_time=event.start_time,
+                        duration=event.duration,
+                        easing_fun=event.easing_fun,
+                    ),
+                    event.target,
+                    overlay=overlay,
+                )
+            else:
+                self.add(Hide(start_time=event.start_time), event.source, overlay=overlay)
+                self.add(Show(start_time=event.start_time), event.target, overlay=overlay)
+            return
+
+        if not isinstance(event, AnimationEvent):
+            raise TypeError(f"Expected AnimationEvent, got {type(event).__name__}")
+        if drawable is None:
+            raise ValueError("`drawable` is required when adding a standard AnimationEvent")
+
+        if isinstance(drawable, Captions):
+            center_x = (self.viewport.world_xrange[0] + self.viewport.world_xrange[1]) / 2.0
+            drawable.set_default_x(center_x)
+
         # handle the case for composite events if any
         if isinstance(event, CompositeAnimationEvent):
             for sub_event in event.events:
-                self.add(sub_event, drawable)  # recursively call add() for the subevents
+                self.add(sub_event, drawable, overlay=overlay)  # recursively call add() for the subevents
             return
 
         if isinstance(drawable, DrawableGroup):
@@ -125,7 +236,7 @@ class Scene:
                 segmented_events = event.subdivide(len(drawable.elements))
                 for sub_drawable, segment_event in zip(drawable.elements, segmented_events, strict=False):
                     # recursively call add(), but with the duration modified appropriately
-                    self.add(event=segment_event, drawable=sub_drawable)
+                    self.add(event=segment_event, drawable=sub_drawable, overlay=overlay)
                 return
             elif drawable.grouping_method == "parallel":
                 # group does not have any drawable opsset, so it is not in cache
@@ -134,15 +245,20 @@ class Scene:
                     self.drawable_groups[drawable.id] = drawable
                 event.data["apply_to_group"] = drawable.id  # add more context to the event with the group_id
                 for elem in drawable.elements:
-                    self.add(event, elem)
+                    self.add(event, elem, overlay=overlay)
 
                 return
 
         else:
             # single simple drawable
             self.drawable_cache.background_color = self.background_color
+            if hasattr(drawable, "objects_to_erase"):
+                drawable.drawable_cache = self.drawable_cache  # type: ignore[attr-defined]
             self.drawable_cache.set_drawable_opsset(drawable)
             self.drawable_cache.drawables[drawable.id] = drawable
+
+        if overlay:
+            self.overlay_drawable_ids.add(drawable.id)
 
         # Initialize timeline for the new drawable
         if drawable.id not in self.object_timelines:
@@ -175,8 +291,30 @@ class Scene:
                 self._auto_created_times[drawable.id] = event.start_time
 
             self.object_timelines[drawable.id].append(event.end_time)
+        elif event.type is AnimationEventType.MUTATION:
+            if len(self.object_timelines[drawable.id]) == 0:
+                self.object_timelines[drawable.id].append(event.start_time)
+                self._auto_created_times[drawable.id] = event.start_time
 
         self.object_timelines[drawable.id].sort()
+
+    def swap(
+        self,
+        source: Drawable,
+        target: Drawable,
+        start_time: float = 0.0,
+        duration: float = 0.0,
+        easing_fun=None,
+        *,
+        overlay: bool = False,
+    ) -> None:
+        """Atomically hide `source` and show `target` at `start_time` (or cross-fade if `duration > 0`)."""
+        from ..animations.visibility import Swap
+
+        self.add(
+            Swap(source, target, start_time=start_time, duration=duration, easing_fun=easing_fun),
+            overlay=overlay,
+        )
 
     def _iter_erased_drawables(self, drawables: Sequence[Drawable]) -> list[Drawable]:
         result: list[Drawable] = []
@@ -194,6 +332,8 @@ class Scene:
             t = max(t, max(event.end_time for event, _ in self.events))
         if self.camera_events:
             t = max(t, max(event.end_time for event in self.camera_events))
+        if self.transitions:
+            t = max(t, max(tr.end_time for tr in self.transitions))
         return t
 
     def wait(self, duration: float) -> float:
@@ -253,6 +393,30 @@ class Scene:
         """
         self.camera_events.append(event)
 
+    def add_transition(self, transition) -> None:
+        """Register a `SceneTransition` (such as `PageTurnTransition` or `PaperCrumpleTransition`).
+
+        Transitions fold or crumple all world-space drawables created before
+        `transition.start_time`, revealing a fresh page underneath and automatically
+        deactivating the previous page's world drawables once `transition.end_time`
+        is reached. Overlay drawables (`scene.overlay`) remain unaffected.
+        """
+        self.transitions.append(transition)
+        self.transitions.sort(key=lambda tr: tr.start_time)
+
+    def _get_last_shown_time(self, object_id: str, t: float) -> float:
+        """Return the latest timestamp <= t at which `object_id` became active."""
+        active = False
+        last_shown = 0.0
+        for time in sorted(self.object_timelines.get(object_id, [])):
+            if t >= time:
+                active = not active
+                if active:
+                    last_shown = float(time)
+            else:
+                break
+        return last_shown
+
     def _get_viewport_at(self, t: float) -> Viewport:
         """
         Return the viewport state at time t by replaying all camera events.
@@ -293,7 +457,9 @@ class Scene:
 
         Calculates object visibility by toggling their active status based on their timeline.
         An object becomes active when its timeline reaches a time point, and its status
-        alternates with each subsequent time point.
+        alternates with each subsequent time point. World-space objects whose latest creation
+        preceded a completed `SceneTransition` (`last_shown_time < tr.start_time` and
+        `t >= tr.end_time`) are automatically deactivated.
 
         Args:
             t (float): The time point (in seconds) to check object activity.
@@ -304,12 +470,18 @@ class Scene:
         active_list: list[str] = []
         for object_id in self.object_timelines:
             active = False  # everything starts with blank screen
+            last_shown = 0.0
             for time in sorted(self.object_timelines[object_id]):
                 if t >= time:
                     active = not active  # switch status
+                    if active:
+                        last_shown = float(time)
                 else:
                     # time has increased beyond t
                     break
+            if active and self.transitions and object_id not in self.overlay_drawable_ids:
+                if any(tr.start_time > last_shown and t >= tr.end_time for tr in self.transitions):
+                    active = False
             if active:
                 active_list.append(object_id)
         return active_list
@@ -319,7 +491,14 @@ class Scene:
         Find the key frames that we need to calculate for the animation
         Key frames are the frames where an object is created or deleted
         """
-        event_drawable_ids = sorted(self.events, key=lambda x: x[0].start_time)
+        event_drawable_ids = sorted(
+            self.events,
+            key=lambda x: (
+                x[0].start_time,
+                x[0].end_time,
+                0 if x[0].type is AnimationEventType.DELETION else 1,
+            ),
+        )
         events = [event for event, _ in event_drawable_ids]
         drawable_events_mapping: dict[str, list[AnimationEvent]] = (
             {}
@@ -330,6 +509,9 @@ class Scene:
             else:
                 drawable_events_mapping[drawable_id].append(event)
         key_frames = [event.start_time for event in events] + [event.end_time for event in events]
+        if self.transitions:
+            key_frames.extend([tr.start_time for tr in self.transitions])
+            key_frames.extend([tr.end_time for tr in self.transitions])
         key_frames = list(set(key_frames))
         key_frames.sort()
         return key_frames, drawable_events_mapping
@@ -377,6 +559,12 @@ class Scene:
 
         # now we need to apply the last transformation only
         event, progress = event_and_progress[-1]
+        if event.type is AnimationEventType.CREATION:
+            from ..animations.fade import FadeInAnimation
+            from ..animations.visibility import restore_base_opacity
+
+            if not isinstance(event, FadeInAnimation):
+                opsset = restore_base_opacity(opsset)
         group_id = event.data.get("apply_to_group", None)
         if group_id is None:
             # simple animation, just apply the opsset blindly
@@ -450,7 +638,7 @@ class Scene:
         """
         key_frames, drawable_events_mapping = self.find_key_frames()
         if max_length is None:
-            max_length = np.ceil(key_frames[-1])
+            max_length = float(np.ceil(key_frames[-1])) if key_frames else 0.0
         else:
             key_frames.append(max_length)
         scene_opsset_list: list[OpsSet] = []
@@ -460,20 +648,36 @@ class Scene:
         frame_count = int(np.round(max_length * self.fps))
         for t in tqdm(range(0, frame_count + 1), desc="Calculating animation frames..."):
             frame_opsset = OpsSet(initial_set=[])  # initialize with blank opsset, will add more
+            t_sec = t / self.fps
 
             # Update active objects for the current timestamp
-            current_active_objects = self.get_active_objects(t / self.fps)
+            current_active_objects = self.get_active_objects(t_sec)
+            world_objects = [oid for oid in current_active_objects if oid not in self.overlay_drawable_ids]
+            overlay_objects = [oid for oid in current_active_objects if oid in self.overlay_drawable_ids]
+
+            active_tr = None
+            if self.transitions:
+                active_trs = [
+                    tr for tr in self.transitions
+                    if tr.start_time <= t_sec < tr.end_time and tr.duration > 0
+                ]
+                if active_trs:
+                    active_tr = active_trs[-1]
 
             # for each of these active objects, calculate what all events need to apply upto which progress
             self.frame_cache.reset()  # reset this cache for each frame
-            for object_id in current_active_objects:
+            outgoing_world_ops = OpsSet(initial_set=[])
+            incoming_world_ops = OpsSet(initial_set=[])
+            overlay_frame_ops = OpsSet(initial_set=[])
+
+            for object_id in world_objects + overlay_objects:
                 event_and_progress = self.get_object_event_and_progress(object_id, t, drawable_events_mapping)
 
                 # if all animations are complete for this object, we can draw from cache
                 all_complete = event_and_progress and all([p == 1.0 for _, p in event_and_progress])
-                last_event_id = event_and_progress[-1][0].id
+                last_event_id = event_and_progress[-1][0].id if event_and_progress else None
 
-                if all_complete and self.drawable_cache.exists_in_cache(object_id, last_event_id):
+                if all_complete and last_event_id is not None and self.drawable_cache.exists_in_cache(object_id, last_event_id):
                     # a fully completed animation list exists in cache now, can fetch from last event's drawable
                     animated_opsset = self.drawable_cache.get_drawable_opsset(object_id, last_event_id)
                 else:
@@ -484,7 +688,40 @@ class Scene:
                         event_and_progress=event_and_progress,
                         drawable_events_mapping=drawable_events_mapping,
                     )
-                frame_opsset.extend(animated_opsset)
+                if object_id in self.overlay_drawable_ids:
+                    tagged_ops = [
+                        Ops(
+                            type=op.type,
+                            data=op.data,
+                            partial=op.partial,
+                            meta={**(op.meta or {}), "overlay": True},
+                        )
+                        for op in animated_opsset.opsset
+                    ]
+                    overlay_frame_ops.extend(OpsSet(initial_set=tagged_ops))
+                elif active_tr is not None:
+                    last_shown = self._get_last_shown_time(object_id, t_sec)
+                    if last_shown < active_tr.start_time:
+                        outgoing_world_ops.extend(animated_opsset)
+                    else:
+                        incoming_world_ops.extend(animated_opsset)
+                else:
+                    frame_opsset.extend(animated_opsset)
+
+            if active_tr is not None:
+                raw_progress = float(np.clip((t_sec - active_tr.start_time) / active_tr.duration, 0.0, 1.0))
+                transitioned_world = active_tr.apply_transition(
+                    outgoing_ops=outgoing_world_ops,
+                    incoming_ops=incoming_world_ops,
+                    raw_progress=raw_progress,
+                    viewport=self._get_viewport_at(t_sec),
+                    background_color=self.background_color,
+                )
+                frame_opsset.extend(transitioned_world)
+
+            if overlay_frame_ops.opsset:
+                frame_opsset.extend(overlay_frame_ops)
+
             scene_opsset_list.append(frame_opsset)  # create the list of ops at scene
         return scene_opsset_list
 
@@ -644,6 +881,33 @@ class Scene:
             paths.append(output_path)
         return paths
 
+    def _render_opsset_on_context(
+        self,
+        ctx: cairo.Context,
+        frame_ops: OpsSet,
+        frame_in_seconds: float,
+    ) -> None:
+        """Render world ops under the camera viewport and overlay ops under the static viewport."""
+        world_ops_list: list[Ops] = []
+        overlay_ops_list: list[Ops] = []
+        for op in frame_ops.opsset:
+            if op.meta and op.meta.get("overlay"):
+                overlay_ops_list.append(op)
+            else:
+                world_ops_list.append(op)
+
+        if world_ops_list or not overlay_ops_list:
+            ctx.save()
+            self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
+            OpsSet(initial_set=world_ops_list).render(ctx)
+            ctx.restore()
+
+        if overlay_ops_list:
+            ctx.save()
+            self.viewport.apply_to_context(ctx)
+            OpsSet(initial_set=overlay_ops_list).render(ctx)
+            ctx.restore()
+
     def _render_frame(self, frame_ops: OpsSet, output_path: str, frame_in_seconds: float):
         """Render a single frame OpsSet to an SVG, PNG, or PDF file based on the file extension."""
         ext = os.path.splitext(output_path)[1].lower()
@@ -658,8 +922,7 @@ class Scene:
         if self.background_color is not None:
             ctx.set_source_rgb(*self.background_color)
         ctx.paint()
-        self._get_viewport_at(frame_in_seconds).apply_to_context(ctx)
-        frame_ops.render(ctx)
+        self._render_opsset_on_context(ctx, frame_ops, frame_in_seconds)
         if ext == ".png":
             surface.write_to_png(output_path)
         surface.finish()
@@ -731,8 +994,7 @@ class Scene:
             if self.background_color is not None:
                 ctx.set_source_rgb(*self.background_color)
             ctx.paint()
-            self._get_viewport_at(t).apply_to_context(ctx)
-            opsset_list[frame_index].render(ctx)
+            self._render_opsset_on_context(ctx, opsset_list[frame_index], t)
             surface.show_page()
         surface.finish()
         return output_path
@@ -899,43 +1161,211 @@ class Scene:
             f.write(tex_content)
         return tex_path
 
+    def set_background_music(
+        self,
+        music: Any = "marimba",
+        volume: float = 0.18,
+        loop: bool = True,
+    ) -> None:
+        """Configure background theme music or audio to play (and optionally loop) in rendered videos.
+
+        Args:
+            music: Theme preset (`"marimba"`, `"calm"`, `"upbeat"`), `True`, `AudioClip`, or path to a WAV/MP3 file.
+            volume: Volume multiplier for the music track (default `0.18`).
+            loop: If True (default), repeats the background music across the full video duration.
+        """
+        self.background_music = music
+        self.music_volume = float(volume)
+        self.music_loop = bool(loop)
+
+    def enable_sketch_sound(
+        self,
+        enabled: bool = True,
+        volume: float = 0.45,
+        style: str = "chalk",
+    ) -> None:
+        """Automatically play chalk / sketch-pen drawing sounds during `SketchAnimation` events."""
+        self.sketch_sound = bool(enabled)
+        self.sketch_sound_volume = float(volume)
+        self.sketch_sound_style = str(style)
+
+    def enable_eraser_sound(
+        self,
+        enabled: bool = True,
+        volume: float = 0.55,
+    ) -> None:
+        """Automatically play board/paper erasing sounds during `Eraser` animations."""
+        self.eraser_sound = bool(enabled)
+        self.eraser_sound_volume = float(volume)
+
+    def enable_transition_sound(
+        self,
+        enabled: bool = True,
+        volume: float = 0.55,
+    ) -> None:
+        """Automatically play page-turn and paper-crumple sounds during `SceneTransition` animations."""
+        self.transition_sound = bool(enabled)
+        self.transition_sound_volume = float(volume)
+
+    def extract_auto_sfx_events(
+        self,
+        include_sketch: bool | None = None,
+        include_eraser: bool | None = None,
+        include_transition: bool | None = None,
+    ) -> list[dict[str, Any]]:
+        """Extract non-overlapping chalk sketch, eraser, and transition SFX intervals from the scene timeline."""
+        from ..animations.sketch import SketchAnimation
+        from ..animations.transitions import PageTurnTransition, PaperCrumpleTransition
+
+        do_sketch = self.sketch_sound if include_sketch is None else bool(include_sketch)
+        do_eraser = self.eraser_sound if include_eraser is None else bool(include_eraser)
+        do_transition = self.transition_sound if include_transition is None else bool(include_transition)
+
+        sketch_intervals: list[tuple[float, float]] = []
+        eraser_intervals: list[tuple[float, float]] = []
+
+        for event, drawable_id in self.events:
+            if event.duration <= 0.0:
+                continue
+            drawable = self.drawable_cache.drawables.get(drawable_id)
+            is_eraser = drawable is not None and hasattr(drawable, "objects_to_erase")
+
+            if is_eraser:
+                if do_eraser:
+                    eraser_intervals.append((float(event.start_time), float(event.end_time)))
+            elif isinstance(event, SketchAnimation) and do_sketch:
+                sketch_intervals.append((float(event.start_time), float(event.end_time)))
+
+        def _merge_intervals(intervals: list[tuple[float, float]]) -> list[tuple[float, float]]:
+            if not intervals:
+                return []
+            sorted_iv = sorted(intervals, key=lambda x: (x[0], x[1]))
+            merged: list[tuple[float, float]] = [sorted_iv[0]]
+            for st, en in sorted_iv[1:]:
+                prev_st, prev_en = merged[-1]
+                if st <= prev_en + 0.02:
+                    merged[-1] = (prev_st, max(prev_en, en))
+                else:
+                    merged.append((st, en))
+            return merged
+
+        sfx_events: list[dict[str, Any]] = []
+        for st, en in _merge_intervals(sketch_intervals):
+            sfx_events.append(
+                {
+                    "type": "chalk",
+                    "start_time": st,
+                    "duration": en - st,
+                    "volume": self.sketch_sound_volume,
+                    "style": self.sketch_sound_style,
+                }
+            )
+        for st, en in _merge_intervals(eraser_intervals):
+            sfx_events.append(
+                {
+                    "type": "eraser",
+                    "start_time": st,
+                    "duration": en - st,
+                    "volume": self.eraser_sound_volume,
+                }
+            )
+        if do_transition:
+            for tr in self.transitions:
+                if tr.duration <= 0.0:
+                    continue
+                if isinstance(tr, PaperCrumpleTransition):
+                    tr_type = "crumple"
+                elif isinstance(tr, PageTurnTransition):
+                    tr_type = "page_turn"
+                else:
+                    tr_type = "page_turn"
+                sfx_events.append(
+                    {
+                        "type": tr_type,
+                        "start_time": float(tr.start_time),
+                        "duration": float(tr.duration),
+                        "volume": self.transition_sound_volume,
+                    }
+                )
+        sfx_events.sort(key=lambda d: float(d["start_time"]))
+        return sfx_events
+
     def render(
         self,
         output_path: str,
         max_length: float | None = None,
         narration: Any = None,
+        background_music: Any = None,
+        music_volume: float | None = None,
+        music_loop: bool | None = None,
+        sketch_sound: bool | None = None,
+        eraser_sound: bool | None = None,
+        transition_sound: bool | None = None,
+        sfx_events: Sequence[dict[str, Any] | tuple[Any, ...]] | None = None,
     ):
         """
-        Render the animation as a video file, optionally muxing with narration audio.
-
-        This method generates a video by creating a timeline of animation events
-        and rendering each frame using Cairo graphics. The video is saved to the
-        specified output path with the configured frame rate.
+        Render the animation as a video file, optionally mixing narration, repeating
+        background theme music, and automatic chalk/eraser/transition sound effects.
 
         Args:
             output_path (str): Path to save the output video file.
             max_length (Optional[float], optional): Maximum duration of the animation. Defaults to None.
             narration (Optional[Any], optional): An AudioClip instance from voiceanim or path to a WAV/MP3 file.
+            background_music (Optional[Any], optional): Theme preset (`"marimba"`, `"calm"`, `"upbeat"`), `True`,
+                `AudioClip`, or path to a music file. Defaults to `self.background_music`.
+            music_volume (Optional[float], optional): Background music volume multiplier.
+            music_loop (Optional[bool], optional): Whether to repeat background music for the whole video.
+            sketch_sound (Optional[bool], optional): If True, automatically adds chalk sound during `SketchAnimation`.
+            eraser_sound (Optional[bool], optional): If True, automatically adds erasing sound during `Eraser`.
+            transition_sound (Optional[bool], optional): If True, automatically adds page-turn/crumple sound during `SceneTransition`.
+            sfx_events (Optional[Sequence], optional): Extra custom sound effect events to mix in.
         """
-        audio_path: str | None = None
+        bg_music = self.background_music if background_music is None else background_music
+        bg_vol = self.music_volume if music_volume is None else float(music_volume)
+        bg_loop = self.music_loop if music_loop is None else bool(music_loop)
+        use_sketch_sfx = self.sketch_sound if sketch_sound is None else bool(sketch_sound)
+        use_eraser_sfx = self.eraser_sound if eraser_sound is None else bool(eraser_sound)
+        use_transition_sfx = (
+            self.transition_sound
+            if transition_sound is None
+            else bool(transition_sound)
+        )
+
+        narration_audio_path: str | None = None
         if narration is not None:
             if hasattr(narration, "audio_path"):
-                audio_path = str(narration.audio_path)
+                narration_audio_path = str(narration.audio_path)
                 if max_length is None and hasattr(narration, "duration"):
                     key_frames, _ = self.find_key_frames()
                     kf_len = float(np.ceil(key_frames[-1])) if key_frames else 0.0
                     max_length = max(kf_len, float(narration.duration))
             elif isinstance(narration, (str, Path)):
-                audio_path = str(narration)
+                narration_audio_path = str(narration)
 
         # calculate the events
         opsset_list = self.create_event_timeline(max_length)
         output_file_ext = os.path.basename(output_path).split(os.path.extsep)[-1].lower()
+        video_duration = max(0.1, (len(opsset_list) - 1) / self.fps) if len(opsset_list) > 1 else 0.5
+
+        auto_sfx = self.extract_auto_sfx_events(
+            include_sketch=use_sketch_sfx,
+            include_eraser=use_eraser_sfx,
+            include_transition=use_transition_sfx,
+        )
+        all_sfx: list[dict[str, Any] | tuple[Any, ...]] = list(auto_sfx)
+        if sfx_events:
+            all_sfx.extend(sfx_events)
+
+        needs_audio = (
+            narration_audio_path is not None
+            or (bg_music is not None and bg_music is not False)
+            or len(all_sfx) > 0
+        )
 
         # If audio muxing is needed, render video to a temporary path first
         temp_video_path: str | None = None
         target_video_path = output_path
-        if audio_path is not None and output_file_ext != "gif":
+        if needs_audio and output_file_ext != "gif":
             import tempfile
             fd, temp_video_path = tempfile.mkstemp(suffix=f".{output_file_ext}")
             os.close(fd)
@@ -960,18 +1390,32 @@ class Scene:
                     ctx.set_source_rgb(*self.background_color)
                 ctx.paint()
 
-                self._get_viewport_at(i / self.fps).apply_to_context(ctx)
-                frame_ops.render(ctx)  # applies the operations to cairo context
+                self._render_opsset_on_context(ctx, frame_ops, i / self.fps)
 
                 frame_np = cairo_surface_to_numpy(surface)
                 writer.append_data(frame_np)  # type: ignore[attr-defined]
 
         # Mux audio if requested
-        if audio_path is not None and temp_video_path is not None:
+        if needs_audio and temp_video_path is not None:
+            mixed_wav_path: str | None = None
             try:
-                from voiceanim.mixer import mix_audio_with_video
-                mix_audio_with_video(temp_video_path, audio_path, output_path)
+                from voiceanim.mixer import mix_audio_with_video, mix_soundtrack
+
+                if (bg_music is not None and bg_music is not False) or len(all_sfx) > 0:
+                    mixed_wav_path = mix_soundtrack(
+                        duration=video_duration,
+                        narration=narration,
+                        background_music=bg_music,
+                        music_volume=bg_vol,
+                        music_loop=bg_loop,
+                        sfx_events=all_sfx,
+                    )
+                    mix_audio_with_video(temp_video_path, mixed_wav_path, output_path)
+                elif narration_audio_path is not None:
+                    mix_audio_with_video(temp_video_path, narration_audio_path, output_path)
             finally:
+                if mixed_wav_path is not None and os.path.exists(mixed_wav_path):
+                    os.unlink(mixed_wav_path)
                 if os.path.exists(temp_video_path):
                     os.unlink(temp_video_path)
 

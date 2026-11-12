@@ -1,11 +1,12 @@
 """Simplified CLI for aianim.
 
 Two primary modes:
+
 1. Interactive Assistant: For human users with AWS Bedrock seeking full control and visibility.
-   Usage: `aianim` (or `handanim-ai`)
+   Usage: ``aianim`` (or ``handanim-ai``)
 2. MCP Server: For agentic systems (Claude Desktop, Claude Code, Cursor, Gemini) to generate,
    inspect, and see animations directly.
-   Usage: `aianim mcp`
+   Usage: ``aianim mcp``
 """
 
 import argparse
