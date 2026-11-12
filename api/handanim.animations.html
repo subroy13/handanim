@@ -1,0 +1,1347 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="handanim.stylings &amp; utils Package" href="handanim.stylings.html"><link rel="prev" title="handanim.primitives Package" href="handanim.primitives.html">
+
+    <!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
+        <title>handanim.animations Package - handanim — Hand-Drawn Whiteboard Animation Studio</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1d4ed8;
+  --color-brand-content: #1e40af;
+  --color-admonition-background: rgba(29, 78, 216, 0.06);
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">handanim — Hand-Drawn Whiteboard Animation Studio</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">handanim — Hand-Drawn Whiteboard Animation Studio</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation &amp; Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/architecture.html">Core Architecture &amp; Design Principles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide (handanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/scenes_and_viewports.html">Scenes, Viewports &amp; Camera</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/primitives_and_layout.html">Primitives, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/text_math_and_fonts.html">Text, Math &amp; Fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/styling_and_fills.html">Styling, Sketch Aesthetics &amp; Fills</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/animations_and_easing.html">Animations, Visibility &amp; Easing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/characters_and_shorts.html">Character Rigs, Poses &amp; 2-Joint IK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/export_and_slides.html">Export Formats, Snapshots, Beamer &amp; TikZ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Voice, Captions &amp; Sound (voiceanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../voiceanim_guide/overview.html">voiceanim Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../voiceanim_guide/tts_providers.html">Voice Providers (Kokoro, Qwen3-TTS, Polly, Mock)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../voiceanim_guide/sync_and_captions.html">Word-Level Sync &amp; Built-In Captions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../voiceanim_guide/music_and_sfx.html">Background Music &amp; Automatic Chalk / Eraser SFX</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AI Studio &amp; MCP (aianim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aianim_guide/overview.html">aianim Overview (Agentic Animation Studio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aianim_guide/cli_and_interactive.html">CLI &amp; Interactive Studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aianim_guide/mcp_server.html">Model Context Protocol (MCP) Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aianim_guide/diagnostics_and_linting.html">AST Guardrails &amp; Headless Scene Introspection</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="handanim.html">handanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handanim.core.html">handanim.core Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handanim.primitives.html">handanim.primitives Package</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">handanim.animations Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handanim.stylings.html">handanim.stylings &amp; utils Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim.html">voiceanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim.html">aianim Package</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/subroy13/handanim/blob/master/docs/source/api/handanim.animations.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/subroy13/handanim/edit/master/docs/source/api/handanim.animations.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="handanim-animations-package">
+<h1>handanim.animations Package<a class="headerlink" href="#handanim-animations-package" title="Link to this heading">¶</a></h1>
+<section id="module-handanim.animations.sketch">
+<span id="handanim-animations-sketch"></span><h2>handanim.animations.sketch<a class="headerlink" href="#module-handanim.animations.sketch" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.sketch.</span></span><span class="sig-name descname"><span class="pre">SketchAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>A class representing a sketch animation event that progressively renders drawing operations.</p>
+<p>This animation supports partial rendering of drawing and fill operations with configurable timing
+and optional glowing dot effects. It allows for smooth, incremental visualization of drawing sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.wait_before_fill">
+<span class="sig-name descname"><span class="pre">wait_before_fill</span></span><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.wait_before_fill" title="Link to this definition">¶</a></dt>
+<dd><p>Delay in seconds before starting fill animation, capped at half the total duration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.get_partial_sketch">
+<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation.get_partial_sketch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.get_partial_sketch" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates a partial OpsSet representing the current sketching progress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opsset</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Applies the sketch animation to a given OpsSet at a specific progress point.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation.get_partial_sketch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate a partial OpsSet representing the sketching progress of an operation set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>OpsSet</strong> – The full drawn opsset on which to apply partial sketching</p></li>
+<li><p><strong>progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The progress of sketching, ranging from 0.0 to 1.0.</p></li>
+<li><p><strong>opsset</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A new OpsSet containing the operations up to the specified progress point,</dt><dd><p>with the last operation potentially being partially completed.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet">OpsSet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.fade">
+<span id="handanim-animations-fade"></span><h2>handanim.animations.fade<a class="headerlink" href="#module-handanim.animations.fade" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.fade.FadeInAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.fade.</span></span><span class="sig-name descname"><span class="pre">FadeInAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/fade.html#FadeInAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.fade.FadeInAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>A class representing a fade-in animation event that gradually increases the opacity of elements.</p>
+<p>This animation applies a progressive opacity change from 0 to 1 over a specified duration,
+creating a smooth fade-in effect for graphical elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The time at which the animation begins. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The total duration of the animation. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional function to modify the animation’s progress curve. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional data associated with the animation. Defaults to None.</p></li>
+<li><p><strong>initial_opacity</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.fade.FadeOutAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.fade.</span></span><span class="sig-name descname"><span class="pre">FadeOutAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/fade.html#FadeOutAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.fade.FadeOutAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.animations.fade.FadeInAnimation" title="handanim.animations.fade.FadeInAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">FadeInAnimation</span></code></a></p>
+<p>A class representing a fade-out animation event that gradually decreases the opacity of elements.</p>
+<p>This animation applies a progressive opacity change from 1 to 0 over a specified duration,
+creating a smooth fade-out effect for graphical elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The time at which the animation begins. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The total duration of the animation. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional function to modify the animation’s progress curve. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional data associated with the animation. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.visibility">
+<span id="handanim-animations-visibility"></span><h2>handanim.animations.visibility<a class="headerlink" href="#module-handanim.animations.visibility" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.visibility.restore_base_opacity">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">restore_base_opacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/visibility.html#restore_base_opacity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.visibility.restore_base_opacity" title="Link to this definition">¶</a></dt>
+<dd><p>Restore original opacity on an OpsSet whose opacity was scaled by a fade.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>opsset</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.visibility.Show">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">Show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/visibility.html#Show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.visibility.Show" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Instantly makes a drawable visible at <cite>start_time</cite>, restoring its original opacity.</p>
+<p>Useful for placing hooks on screen at frame 0 (<cite>Show(0)</cite>) or toggling blinks,
+mouth shapes, and labels back on after <cite>Hide</cite> or <cite>FadeOutAnimation</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.visibility.Hide">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">Hide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/visibility.html#Hide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.visibility.Hide" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Instantly hides a drawable at <cite>start_time</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.visibility.Swap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">Swap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/visibility.html#Swap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.visibility.Swap" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Atomically swaps <cite>source</cite> out and <cite>target</cite> in at <cite>start_time</cite>.</p>
+<p>If <cite>duration == 0.0</cite> (default), performs an instant <cite>Hide(start_time)</cite> on <cite>source</cite>
+and <cite>Show(start_time)</cite> on <cite>target</cite>. If <cite>duration &gt; 0.0</cite>, cross-fades between them.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Swap</span><span class="p">(</span><span class="n">closed_mouth</span><span class="p">,</span> <span class="n">open_mouth</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">))</span>
+<span class="c1"># or</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">closed_mouth</span><span class="p">,</span> <span class="n">open_mouth</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><em>Drawable</em></a>)</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.drawable.Drawable" title="handanim.core.drawable.Drawable"><em>Drawable</em></a>)</p></li>
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.visibility.ShowAnimation">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">ShowAnimation</span></span><a class="headerlink" href="#handanim.animations.visibility.ShowAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#handanim.animations.visibility.Show" title="handanim.animations.visibility.Show"><code class="xref py py-class docutils literal notranslate"><span class="pre">Show</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.visibility.HideAnimation">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">HideAnimation</span></span><a class="headerlink" href="#handanim.animations.visibility.HideAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#handanim.animations.visibility.Hide" title="handanim.animations.visibility.Hide"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hide</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.visibility.SwapAnimation">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.visibility.</span></span><span class="sig-name descname"><span class="pre">SwapAnimation</span></span><a class="headerlink" href="#handanim.animations.visibility.SwapAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#handanim.animations.visibility.Swap" title="handanim.animations.visibility.Swap"><code class="xref py py-class docutils literal notranslate"><span class="pre">Swap</span></code></a></p>
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.easing">
+<span id="handanim-animations-easing"></span><h2>handanim.animations.easing<a class="headerlink" href="#module-handanim.animations.easing" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.linear">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#linear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.linear" title="Link to this definition">¶</a></dt>
+<dd><p>Linear identity easing: f(t) = t.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_quad">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_in_quad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_in_quad" title="Link to this definition">¶</a></dt>
+<dd><p>Quadratic ease-in: f(t) = t^2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_out_quad">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_out_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_out_quad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_out_quad" title="Link to this definition">¶</a></dt>
+<dd><p>Quadratic ease-out: f(t) = 1 - (1 - t)^2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_out_quad">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_out_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_in_out_quad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_in_out_quad" title="Link to this definition">¶</a></dt>
+<dd><p>Quadratic ease-in-out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_cubic">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_cubic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_in_cubic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_in_cubic" title="Link to this definition">¶</a></dt>
+<dd><p>Cubic ease-in: f(t) = t^3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_out_cubic">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_out_cubic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_out_cubic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_out_cubic" title="Link to this definition">¶</a></dt>
+<dd><p>Cubic ease-out: f(t) = 1 - (1 - t)^3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_out_cubic">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_out_cubic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_in_out_cubic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_in_out_cubic" title="Link to this definition">¶</a></dt>
+<dd><p>Cubic ease-in-out: accelerates to midpoint then decelerates smoothly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_out">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.easing.ease_in_out" title="Link to this definition">¶</a></dt>
+<dd><p>Cubic ease-in-out: accelerates to midpoint then decelerates smoothly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_back">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overshoot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.70158</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_in_back"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_in_back" title="Link to this definition">¶</a></dt>
+<dd><p>Back ease-in: pulls back slightly before accelerating forward.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>overshoot</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_out_back">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_out_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overshoot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_out_back"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_out_back" title="Link to this definition">¶</a></dt>
+<dd><p>Overshoot ‘pop’ ease-out: overshoots 1.0 slightly then settles back to 1.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>overshoot</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_in_out_back">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_in_out_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overshoot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.70158</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_in_out_back"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_in_out_back" title="Link to this definition">¶</a></dt>
+<dd><p>Symmetric back ease-in-out with slight pull-back and overshoot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>overshoot</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_out_elastic">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_out_elastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_out_elastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_out_elastic" title="Link to this definition">¶</a></dt>
+<dd><p>Elastic spring ease-out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="handanim.animations.easing.ease_out_bounce">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">ease_out_bounce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#ease_out_bounce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.ease_out_bounce" title="Link to this definition">¶</a></dt>
+<dd><p>Bounce ease-out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.easing.PopAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.easing.</span></span><span class="sig-name descname"><span class="pre">PopAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overshoot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/easing.html#PopAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.easing.PopAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.animations.zoom.ZoomInAnimation" title="handanim.animations.zoom.ZoomInAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a></p>
+<p>Zoom-in animation with an overshoot ‘pop’ easing (<cite>ease_out_back</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>overshoot</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.translate">
+<span id="handanim-animations-translate"></span><h2>handanim.animations.translate<a class="headerlink" href="#module-handanim.animations.translate" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.translate.TranslateToAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.translate.</span></span><span class="sig-name descname"><span class="pre">TranslateToAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/translate.html#TranslateToAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.translate.TranslateToAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>A class representing a translate to a point animation event.</p>
+<p>This animation translates an OpsSet from its current center of gravity to a specified point
+over the course of the animation’s duration, using an optional easing function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The start time of the animation. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The duration of the animation. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify animation progress. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary containing animation data, including the target ‘point’. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.translate.TranslateToAnimation._opsset_apply">
+<span class="sig-name descname"><span class="pre">_opsset_apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/translate.html#TranslateToAnimation._opsset_apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.translate.TranslateToAnimation._opsset_apply" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates and applies the translation of the OpsSet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.translate.TranslateToAnimation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.translate.TranslateToAnimation.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Applies the translation to the given OpsSet at the specified progress.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.translate.TranslateFromAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.translate.</span></span><span class="sig-name descname"><span class="pre">TranslateFromAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/translate.html#TranslateFromAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.translate.TranslateFromAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation" title="handanim.animations.translate.TranslateToAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">TranslateToAnimation</span></code></a></p>
+<p>A class representing a translate from a point animation event.</p>
+<p>This animation translates an OpsSet from a specified point to its current center of gravity
+over the course of the animation’s duration, using an optional easing function.</p>
+<p>Inherits from TranslateToAnimation and reverses the progress to achieve the “from” translation effect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The start time of the animation. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The duration of the animation. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify animation progress. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary containing animation data, including the starting ‘point’. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.translate.TranslateFromAnimation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#handanim.animations.translate.TranslateFromAnimation.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Applies the translation from the specified point to the OpsSet’s center of gravity.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.rotate">
+<span id="handanim-animations-rotate"></span><h2>handanim.animations.rotate<a class="headerlink" href="#module-handanim.animations.rotate" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.rotate.RotateAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.rotate.</span></span><span class="sig-name descname"><span class="pre">RotateAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/rotate.html#RotateAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.rotate.RotateAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Animates a rotation of an OpsSet from 0 to <cite>angle</cite> degrees over the duration.</p>
+<p>The rotation is applied around the center of gravity by default, or around
+a fixed <cite>center</cite> point if provided in data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> – When the animation begins (seconds).</p></li>
+<li><p><strong>duration</strong> – Length of the animation (seconds).</p></li>
+<li><p><strong>easing_fun</strong> – Optional easing function.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>) – Dict with optional keys:
+- “angle” (float): Total rotation angle in degrees. Default 360.
+- “center” (tuple[float, float]): Fixed pivot point. Default: center of gravity.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.zoom">
+<span id="handanim-animations-zoom"></span><h2>handanim.animations.zoom<a class="headerlink" href="#module-handanim.animations.zoom" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.zoom.ZoomInAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.zoom.</span></span><span class="sig-name descname"><span class="pre">ZoomInAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/zoom.html#ZoomInAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.zoom.ZoomInAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>A class representing a zoom-in animation event that scales an OpsSet progressively.</p>
+<p>This animation scales the operations set from its original size to a larger size
+based on the provided progress value. It is typically used for creating or
+expanding visual elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – The start time of the animation. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – The duration of the animation. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify the animation progress. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>Any</em><em>, </em><em>optional</em>) – Additional data associated with the animation. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.zoom.ZoomOutAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.zoom.</span></span><span class="sig-name descname"><span class="pre">ZoomOutAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/zoom.html#ZoomOutAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.zoom.ZoomOutAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.animations.zoom.ZoomInAnimation" title="handanim.animations.zoom.ZoomInAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a></p>
+<p>A class representing a zoom-out animation event that scales an OpsSet progressively.</p>
+<p>This animation scales the operations set from its current size to a smaller size
+based on the provided progress value. It is typically used for shrinking or
+removing visual elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – The start time of the animation. Defaults to 0.</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – The duration of the animation. Defaults to 0.</p></li>
+<li><p><strong>easing_fun</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional easing function to modify the animation progress. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>Any</em><em>, </em><em>optional</em>) – Additional data associated with the animation. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.color_transition">
+<span id="handanim-animations-color-transition"></span><h2>handanim.animations.color_transition<a class="headerlink" href="#module-handanim.animations.color_transition" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.color_transition.ColorTransitionAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.color_transition.</span></span><span class="sig-name descname"><span class="pre">ColorTransitionAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/color_transition.html#ColorTransitionAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.color_transition.ColorTransitionAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Interpolates every SET_PEN color in an OpsSet from <cite>start_color</cite> to <cite>end_color</cite>.</p>
+<p>At progress=0 all strokes are rendered with <cite>start_color</cite>; at progress=1 they
+use <cite>end_color</cite>.  The fill color (if present) is interpolated identically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> – When the animation begins (seconds).</p></li>
+<li><p><strong>duration</strong> – Length of the animation (seconds).</p></li>
+<li><p><strong>easing_fun</strong> – Optional easing function.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>) – Dict with keys:
+- “start_color” (tuple[float,float,float]): RGB at progress 0. Required.
+- “end_color”   (tuple[float,float,float]): RGB at progress 1. Required.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.camera">
+<span id="handanim-animations-camera"></span><h2>handanim.animations.camera<a class="headerlink" href="#module-handanim.animations.camera" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.camera.CameraAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.camera.</span></span><span class="sig-name descname"><span class="pre">CameraAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/camera.html#CameraAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.camera.CameraAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Animates the Scene viewport (pan and/or zoom) over time.</p>
+<p>Instead of touching any drawable’s OpsSet, this animation changes the world
+ranges that the Viewport maps to the screen — the “camera” moves, not the content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> – When the animation begins (seconds).</p></li>
+<li><p><strong>duration</strong> – Length of the animation (seconds).</p></li>
+<li><p><strong>easing_fun</strong> – Optional easing function applied to progress.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>) – <p>Dict with optional keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;from_xrange&quot;</span></code> (tuple[float, float]): World x range at progress=0.
+Defaults to wherever the camera currently is.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;from_yrange&quot;</span></code> (tuple[float, float]): World y range at progress=0.
+Defaults to wherever the camera currently is.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;to_xrange&quot;</span></code>   (tuple[float, float]): World x range at progress=1.
+Defaults to from_xrange (no movement on x).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;to_yrange&quot;</span></code>   (tuple[float, float]): World y range at progress=1.
+Defaults to from_yrange (no movement on y).</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">add_camera</span><span class="p">(</span><span class="n">CameraAnimation</span><span class="p">(</span>
+    <span class="n">start_time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;to_xrange&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">800</span><span class="p">),</span>
+        <span class="s2">&quot;to_yrange&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.camera.CameraAnimation.apply_to_viewport">
+<span class="sig-name descname"><span class="pre">apply_to_viewport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/camera.html#CameraAnimation.apply_to_viewport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.camera.CameraAnimation.apply_to_viewport" title="Link to this definition">¶</a></dt>
+<dd><p>Return a new Viewport interpolated toward the target world ranges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><em>Viewport</em></a>) – The viewport state immediately before this event (used as
+the from_* default when not explicitly specified).</p></li>
+<li><p><strong>progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Animation progress from 0.0 to 1.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Viewport instance with interpolated world ranges.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><em>Viewport</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.pose">
+<span id="handanim-animations-pose"></span><h2>handanim.animations.pose<a class="headerlink" href="#module-handanim.animations.pose" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.pose.PoseAnimation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.pose.</span></span><span class="sig-name descname"><span class="pre">PoseAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_pose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_pose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyframes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/pose.html#PoseAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.pose.PoseAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Animates a <cite>CharacterRig</cite> between poses by blending joint angles, offsets, scales, and IK targets.</p>
+<p>Supports both two-pose transitions (<cite>from_pose -&gt; to_pose</cite>) and multi-keyframe
+sequences (<cite>keyframes=[(t0, pose0), (t1, pose1), …]</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rig</strong> (<a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.CharacterRig" title="handanim.primitives.character.CharacterRig"><em>CharacterRig</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>to_pose</strong> (<a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.Pose" title="handanim.primitives.character.Pose"><em>Pose</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>from_pose</strong> (<a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.Pose" title="handanim.primitives.character.Pose"><em>Pose</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>keyframes</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.Pose" title="handanim.primitives.character.Pose"><em>Pose</em></a><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.pose.PoseAnimation.from_keyframes">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_keyframes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyframes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/pose.html#PoseAnimation.from_keyframes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.pose.PoseAnimation.from_keyframes" title="Link to this definition">¶</a></dt>
+<dd><p>Create a <cite>PoseAnimation</cite> from a sequence of <cite>(timestamp, Pose)</cite> keyframes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rig</strong> (<a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.CharacterRig" title="handanim.primitives.character.CharacterRig"><em>CharacterRig</em></a>)</p></li>
+<li><p><strong>keyframes</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>Sequence</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.Pose" title="handanim.primitives.character.Pose"><em>Pose</em></a><em>]</em><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#handanim.animations.pose.PoseAnimation" title="handanim.animations.pose.PoseAnimation"><em>PoseAnimation</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.pose.PoseAnimation.get_pose_at_progress">
+<span class="sig-name descname"><span class="pre">get_pose_at_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/pose.html#PoseAnimation.get_pose_at_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.pose.PoseAnimation.get_pose_at_progress" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the blended <cite>Pose</cite> and scene timestamp at <cite>raw_progress</cite> in [0, 1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference internal" href="handanim.primitives.html#handanim.primitives.character.Pose" title="handanim.primitives.character.Pose"><em>Pose</em></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.pose.PoseAnimation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/pose.html#PoseAnimation.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.pose.PoseAnimation.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Public entry point called by Scene. Applies easing (if any) then delegates to _apply().
+Do not override in subclasses — implement _apply() instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opsset</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>raw_progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-handanim.animations.transitions">
+<span id="handanim-animations-transitions"></span><h2>handanim.animations.transitions<a class="headerlink" href="#module-handanim.animations.transitions" title="Link to this heading">¶</a></h2>
+<p>Scene-level page-turn (paper fold) and paper-crumple transition animations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.transitions.SceneTransition">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.transitions.</span></span><span class="sig-name descname"><span class="pre">SceneTransition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">ease_in_out_cubic&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/transitions.html#SceneTransition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.transitions.SceneTransition" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Base class for scene-level page transitions (<cite>PageTurnTransition</cite>, <cite>PaperCrumpleTransition</cite>).</p>
+<p>When added to a <cite>Scene</cite> via <cite>scene.add_transition(transition)</cite> or <cite>scene.add(transition)</cite>:</p>
+<ul class="simple">
+<li><p>All world drawables created before <cite>transition.start_time</cite> belong to the outgoing page
+and are automatically deactivated at <cite>transition.end_time</cite>.</p></li>
+<li><p>Any world drawables created at or after <cite>transition.start_time</cite> belong to the newly
+revealed page underneath.</p></li>
+<li><p>Camera-invariant <cite>scene.overlay</cite> drawables (e.g. <cite>Captions</cite>) remain untouched above the page.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.transitions.SceneTransition.sfx_type">
+<span class="sig-name descname"><span class="pre">sfx_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'page_turn'</span></span><a class="headerlink" href="#handanim.animations.transitions.SceneTransition.sfx_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.transitions.SceneTransition.apply_transition">
+<span class="sig-name descname"><span class="pre">apply_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outgoing_ops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incoming_ops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_progress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/transitions.html#SceneTransition.apply_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.transitions.SceneTransition.apply_transition" title="Link to this definition">¶</a></dt>
+<dd><p>Compose the outgoing and incoming page <cite>OpsSet`s at `raw_progress</cite> in <cite>[0, 1]</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outgoing_ops</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>incoming_ops</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>raw_progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>viewport</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><em>Viewport</em></a>)</p></li>
+<li><p><strong>background_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PageTurnTransition">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.transitions.</span></span><span class="sig-name descname"><span class="pre">PageTurnTransition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right_to_left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bleed_through</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flap_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0.27)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shadow_opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">ease_in_out_cubic&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/transitions.html#PageTurnTransition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.transitions.PageTurnTransition" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.animations.transitions.SceneTransition" title="handanim.animations.transitions.SceneTransition"><code class="xref py py-class docutils literal notranslate"><span class="pre">SceneTransition</span></code></a></p>
+<p>Folds and turns the current drawing sheet across the board to reveal the next page.</p>
+<p>Supported <cite>direction</cite> values:
+- <code class="docutils literal notranslate"><span class="pre">&quot;right_to_left&quot;</span></code> (default): Lifts the right side of the paper and folds it left.
+- <code class="docutils literal notranslate"><span class="pre">&quot;left_to_right&quot;</span></code>: Lifts the left side of the paper and folds it right.
+- <code class="docutils literal notranslate"><span class="pre">&quot;bottom_right&quot;</span></code> (or <code class="docutils literal notranslate"><span class="pre">&quot;right_corner_to_left_corner&quot;</span></code>): Peels the bottom-right corner diagonally across to top-left.
+- <code class="docutils literal notranslate"><span class="pre">&quot;bottom_left&quot;</span></code> (or <code class="docutils literal notranslate"><span class="pre">&quot;left_corner_to_right_corner&quot;</span></code>): Peels the bottom-left corner diagonally across to top-right.
+- <code class="docutils literal notranslate"><span class="pre">&quot;top_right&quot;</span></code>: Peels the top-right corner diagonally across to bottom-left.
+- <code class="docutils literal notranslate"><span class="pre">&quot;top_left&quot;</span></code>: Peels the top-left corner diagonally across to bottom-right.
+- <code class="docutils literal notranslate"><span class="pre">&quot;bottom_to_top&quot;</span></code>: Flips the bottom edge of the notepad upward.
+- <code class="docutils literal notranslate"><span class="pre">&quot;top_to_bottom&quot;</span></code>: Flips the top edge downward.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>direction</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>bleed_through</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>flap_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>border_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>shadow_opacity</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PageTurnTransition.sfx_type">
+<span class="sig-name descname"><span class="pre">sfx_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'page_turn'</span></span><a class="headerlink" href="#handanim.animations.transitions.PageTurnTransition.sfx_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PageTurnTransition.VALID_DIRECTIONS">
+<span class="sig-name descname"><span class="pre">VALID_DIRECTIONS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bottom_left',</span> <span class="pre">'bottom_right',</span> <span class="pre">'bottom_to_top',</span> <span class="pre">'left_corner_to_right_corner',</span> <span class="pre">'left_to_right',</span> <span class="pre">'right_corner_to_left_corner',</span> <span class="pre">'right_to_left',</span> <span class="pre">'top_left',</span> <span class="pre">'top_right',</span> <span class="pre">'top_to_bottom'}</span></span><a class="headerlink" href="#handanim.animations.transitions.PageTurnTransition.VALID_DIRECTIONS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PageTurnTransition.apply_transition">
+<span class="sig-name descname"><span class="pre">apply_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outgoing_ops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incoming_ops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_progress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/transitions.html#PageTurnTransition.apply_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.transitions.PageTurnTransition.apply_transition" title="Link to this definition">¶</a></dt>
+<dd><p>Compose the outgoing and incoming page <cite>OpsSet`s at `raw_progress</cite> in <cite>[0, 1]</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outgoing_ops</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>incoming_ops</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>raw_progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>viewport</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><em>Viewport</em></a>)</p></li>
+<li><p><strong>background_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PaperCrumpleTransition">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.transitions.</span></span><span class="sig-name descname"><span class="pre">PaperCrumpleTransition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paper_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0.27)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">ease_in_out_cubic&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/transitions.html#PaperCrumpleTransition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.transitions.PaperCrumpleTransition" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#handanim.animations.transitions.SceneTransition" title="handanim.animations.transitions.SceneTransition"><code class="xref py py-class docutils literal notranslate"><span class="pre">SceneTransition</span></code></a></p>
+<p>Crumples the current sheet of paper into a jagged paper ball and tosses it off to the side.</p>
+<p>Supported <cite>direction</cite> values:
+- <code class="docutils literal notranslate"><span class="pre">&quot;right&quot;</span></code> (default): Crumples toward center and tosses off the right edge.
+- <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code>: Crumples toward center and tosses off the left edge.
+- <code class="docutils literal notranslate"><span class="pre">&quot;top_right&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;bottom_right&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;top_left&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;bottom_left&quot;</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>direction</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>paper_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>border_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PaperCrumpleTransition.sfx_type">
+<span class="sig-name descname"><span class="pre">sfx_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'crumple'</span></span><a class="headerlink" href="#handanim.animations.transitions.PaperCrumpleTransition.sfx_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PaperCrumpleTransition.VALID_DIRECTIONS">
+<span class="sig-name descname"><span class="pre">VALID_DIRECTIONS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bottom_left',</span> <span class="pre">'bottom_right',</span> <span class="pre">'left',</span> <span class="pre">'right',</span> <span class="pre">'top_left',</span> <span class="pre">'top_right'}</span></span><a class="headerlink" href="#handanim.animations.transitions.PaperCrumpleTransition.VALID_DIRECTIONS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.transitions.PaperCrumpleTransition.apply_transition">
+<span class="sig-name descname"><span class="pre">apply_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outgoing_ops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incoming_ops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_progress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/transitions.html#PaperCrumpleTransition.apply_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.transitions.PaperCrumpleTransition.apply_transition" title="Link to this definition">¶</a></dt>
+<dd><p>Compose the outgoing and incoming page <cite>OpsSet`s at `raw_progress</cite> in <cite>[0, 1]</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outgoing_ops</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>incoming_ops</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a>)</p></li>
+<li><p><strong>raw_progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>viewport</strong> (<a class="reference internal" href="handanim.core.html#handanim.core.viewport.Viewport" title="handanim.core.viewport.Viewport"><em>Viewport</em></a>)</p></li>
+<li><p><strong>background_color</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="handanim.core.html#handanim.core.draw_ops.OpsSet" title="handanim.core.draw_ops.OpsSet"><em>OpsSet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="handanim.stylings.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">handanim.stylings &amp; utils Package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="handanim.primitives.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">handanim.primitives Package</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025-2026, Subhrajyoty Roy
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">handanim.animations Package</a><ul>
+<li><a class="reference internal" href="#module-handanim.animations.sketch">handanim.animations.sketch</a><ul>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation"><code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.wait_before_fill"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.wait_before_fill</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.get_partial_sketch"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.apply"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.apply()</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.fade">handanim.animations.fade</a><ul>
+<li><a class="reference internal" href="#handanim.animations.fade.FadeInAnimation"><code class="docutils literal notranslate"><span class="pre">FadeInAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.fade.FadeOutAnimation"><code class="docutils literal notranslate"><span class="pre">FadeOutAnimation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.visibility">handanim.animations.visibility</a><ul>
+<li><a class="reference internal" href="#handanim.animations.visibility.restore_base_opacity"><code class="docutils literal notranslate"><span class="pre">restore_base_opacity()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.visibility.Show"><code class="docutils literal notranslate"><span class="pre">Show</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.visibility.Hide"><code class="docutils literal notranslate"><span class="pre">Hide</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.visibility.Swap"><code class="docutils literal notranslate"><span class="pre">Swap</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.visibility.ShowAnimation"><code class="docutils literal notranslate"><span class="pre">ShowAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.visibility.HideAnimation"><code class="docutils literal notranslate"><span class="pre">HideAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.visibility.SwapAnimation"><code class="docutils literal notranslate"><span class="pre">SwapAnimation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.easing">handanim.animations.easing</a><ul>
+<li><a class="reference internal" href="#handanim.animations.easing.linear"><code class="docutils literal notranslate"><span class="pre">linear()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_quad"><code class="docutils literal notranslate"><span class="pre">ease_in_quad()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_out_quad"><code class="docutils literal notranslate"><span class="pre">ease_out_quad()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_out_quad"><code class="docutils literal notranslate"><span class="pre">ease_in_out_quad()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_cubic"><code class="docutils literal notranslate"><span class="pre">ease_in_cubic()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_out_cubic"><code class="docutils literal notranslate"><span class="pre">ease_out_cubic()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_out_cubic"><code class="docutils literal notranslate"><span class="pre">ease_in_out_cubic()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_out"><code class="docutils literal notranslate"><span class="pre">ease_in_out()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_back"><code class="docutils literal notranslate"><span class="pre">ease_in_back()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_out_back"><code class="docutils literal notranslate"><span class="pre">ease_out_back()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_in_out_back"><code class="docutils literal notranslate"><span class="pre">ease_in_out_back()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_out_elastic"><code class="docutils literal notranslate"><span class="pre">ease_out_elastic()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.ease_out_bounce"><code class="docutils literal notranslate"><span class="pre">ease_out_bounce()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.easing.PopAnimation"><code class="docutils literal notranslate"><span class="pre">PopAnimation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.translate">handanim.animations.translate</a><ul>
+<li><a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation._opsset_apply"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation._opsset_apply()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.translate.TranslateToAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateToAnimation.apply()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.animations.translate.TranslateFromAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.translate.TranslateFromAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation.apply()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.rotate">handanim.animations.rotate</a><ul>
+<li><a class="reference internal" href="#handanim.animations.rotate.RotateAnimation"><code class="docutils literal notranslate"><span class="pre">RotateAnimation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.zoom">handanim.animations.zoom</a><ul>
+<li><a class="reference internal" href="#handanim.animations.zoom.ZoomInAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomInAnimation</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.zoom.ZoomOutAnimation"><code class="docutils literal notranslate"><span class="pre">ZoomOutAnimation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.color_transition">handanim.animations.color_transition</a><ul>
+<li><a class="reference internal" href="#handanim.animations.color_transition.ColorTransitionAnimation"><code class="docutils literal notranslate"><span class="pre">ColorTransitionAnimation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.camera">handanim.animations.camera</a><ul>
+<li><a class="reference internal" href="#handanim.animations.camera.CameraAnimation"><code class="docutils literal notranslate"><span class="pre">CameraAnimation</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.camera.CameraAnimation.apply_to_viewport"><code class="docutils literal notranslate"><span class="pre">CameraAnimation.apply_to_viewport()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.pose">handanim.animations.pose</a><ul>
+<li><a class="reference internal" href="#handanim.animations.pose.PoseAnimation"><code class="docutils literal notranslate"><span class="pre">PoseAnimation</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.pose.PoseAnimation.from_keyframes"><code class="docutils literal notranslate"><span class="pre">PoseAnimation.from_keyframes()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.pose.PoseAnimation.get_pose_at_progress"><code class="docutils literal notranslate"><span class="pre">PoseAnimation.get_pose_at_progress()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.pose.PoseAnimation.apply"><code class="docutils literal notranslate"><span class="pre">PoseAnimation.apply()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-handanim.animations.transitions">handanim.animations.transitions</a><ul>
+<li><a class="reference internal" href="#handanim.animations.transitions.SceneTransition"><code class="docutils literal notranslate"><span class="pre">SceneTransition</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.transitions.SceneTransition.sfx_type"><code class="docutils literal notranslate"><span class="pre">SceneTransition.sfx_type</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.transitions.SceneTransition.apply_transition"><code class="docutils literal notranslate"><span class="pre">SceneTransition.apply_transition()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.animations.transitions.PageTurnTransition"><code class="docutils literal notranslate"><span class="pre">PageTurnTransition</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.transitions.PageTurnTransition.sfx_type"><code class="docutils literal notranslate"><span class="pre">PageTurnTransition.sfx_type</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.transitions.PageTurnTransition.VALID_DIRECTIONS"><code class="docutils literal notranslate"><span class="pre">PageTurnTransition.VALID_DIRECTIONS</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.transitions.PageTurnTransition.apply_transition"><code class="docutils literal notranslate"><span class="pre">PageTurnTransition.apply_transition()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handanim.animations.transitions.PaperCrumpleTransition"><code class="docutils literal notranslate"><span class="pre">PaperCrumpleTransition</span></code></a><ul>
+<li><a class="reference internal" href="#handanim.animations.transitions.PaperCrumpleTransition.sfx_type"><code class="docutils literal notranslate"><span class="pre">PaperCrumpleTransition.sfx_type</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.transitions.PaperCrumpleTransition.VALID_DIRECTIONS"><code class="docutils literal notranslate"><span class="pre">PaperCrumpleTransition.VALID_DIRECTIONS</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.transitions.PaperCrumpleTransition.apply_transition"><code class="docutils literal notranslate"><span class="pre">PaperCrumpleTransition.apply_transition()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=4ebf8126"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

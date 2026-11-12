@@ -7,9 +7,10 @@
 
     <!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
 <meta name="robots" content="noindex" />
-<title>Search - handanim  documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+<title>Search - handanim — Hand-Drawn Whiteboard Animation Studio</title><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=64e9d2db" />
     
     
 
@@ -18,18 +19,27 @@
   body {
     --color-code-background: #f2f2f2;
   --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1d4ed8;
+  --color-brand-content: #1e40af;
+  --color-admonition-background: rgba(29, 78, 216, 0.06);
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
   
       }
     }
@@ -161,7 +171,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">handanim  documentation</div></a>
+      <a href="index.html"><div class="brand">handanim — Hand-Drawn Whiteboard Animation Studio</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -182,7 +192,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
-  <span class="sidebar-brand-text">handanim  documentation</span>
+  <span class="sidebar-brand-text">handanim — Hand-Drawn Whiteboard Animation Studio</span>
   
 </a><form class="sidebar-search-container" method="get" action="#" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -190,17 +200,49 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">handanim</a><input aria-label="Toggle navigation of handanim" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="handanim.html">handanim package</a><input aria-label="Toggle navigation of handanim package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="handanim.core.html">handanim.core package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html">handanim.primitives package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html">handanim.stylings package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation &amp; Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quickstart Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/architecture.html">Core Architecture &amp; Design Principles</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">User Guide (handanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/scenes_and_viewports.html">Scenes, Viewports &amp; Camera</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/primitives_and_layout.html">Primitives, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/text_math_and_fonts.html">Text, Math &amp; Fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/styling_and_fills.html">Styling, Sketch Aesthetics &amp; Fills</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/animations_and_easing.html">Animations, Visibility &amp; Easing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/characters_and_shorts.html">Character Rigs, Poses &amp; 2-Joint IK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/export_and_slides.html">Export Formats, Snapshots, Beamer &amp; TikZ</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Voice, Captions &amp; Sound (voiceanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/overview.html">voiceanim Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/tts_providers.html">Voice Providers (Kokoro, Qwen3-TTS, Polly, Mock)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html">Word-Level Sync &amp; Built-In Captions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html">Background Music &amp; Automatic Chalk / Eraser SFX</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AI Studio &amp; MCP (aianim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/overview.html">aianim Overview (Agentic Animation Studio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/cli_and_interactive.html">CLI &amp; Interactive Studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/mcp_server.html">Model Context Protocol (MCP) Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/diagnostics_and_linting.html">AST Guardrails &amp; Headless Scene Introspection</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.html">handanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.core.html">handanim.core Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.primitives.html">handanim.primitives Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.animations.html">handanim.animations Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.stylings.html">handanim.stylings &amp; utils Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/voiceanim.html">voiceanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/aianim.html">aianim Package</a></li>
 </ul>
 
 </div>
@@ -256,7 +298,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Subhrajyoty Roy
+                Copyright &#169; 2025-2026, Subhrajyoty Roy
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -276,7 +318,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+</div><script src="_static/documentation_options.js?v=4ebf8126"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

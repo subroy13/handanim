@@ -1,0 +1,54 @@
+/* Custom styling for handanim documentation (Furo theme) */
+
+.hero-banner {
+    padding: 1.5rem 1.75rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(29, 78, 216, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%);
+    border: 1px solid var(--color-background-border);
+    margin-bottom: 1.75rem;
+}
+
+.hero-banner p {
+    font-size: 1.08rem;
+    margin: 0.4rem 0;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.feature-card {
+    padding: 1.15rem 1.25rem;
+    border-radius: 10px;
+    border: 1px solid var(--color-background-border);
+    background-color: var(--color-background-secondary);
+}
+
+.feature-card h3 {
+    margin-top: 0;
+    font-size: 1.05rem;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin: 1.25rem 0;
+}
+
+.gallery-item {
+    border: 1px solid var(--color-background-border);
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: var(--color-background-secondary);
+    text-align: center;
+}
+
+.gallery-item img {
+    max-width: 100%;
+    border-radius: 6px;
+}
+

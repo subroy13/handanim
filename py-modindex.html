@@ -4,10 +4,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html">
 
-    <!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 --><title>Python Module Index - handanim documentation</title>
+    <!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 --><title>Python Module Index - handanim — Hand-Drawn Whiteboard Animation Studio</title>
 <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=64e9d2db" />
     
     
 
@@ -16,18 +17,27 @@
   body {
     --color-code-background: #f2f2f2;
   --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1d4ed8;
+  --color-brand-content: #1e40af;
+  --color-admonition-background: rgba(29, 78, 216, 0.06);
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
   
       }
     }
@@ -159,7 +169,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">handanim  documentation</div></a>
+      <a href="index.html"><div class="brand">handanim — Hand-Drawn Whiteboard Animation Studio</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -180,7 +190,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
-  <span class="sidebar-brand-text">handanim  documentation</span>
+  <span class="sidebar-brand-text">handanim — Hand-Drawn Whiteboard Animation Studio</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -188,17 +198,49 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">handanim</a><input aria-label="Toggle navigation of handanim" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="handanim.html">handanim package</a><input aria-label="Toggle navigation of handanim package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="handanim.core.html">handanim.core package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html">handanim.primitives package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html">handanim.stylings package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation &amp; Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quickstart Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/architecture.html">Core Architecture &amp; Design Principles</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">User Guide (handanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/scenes_and_viewports.html">Scenes, Viewports &amp; Camera</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/primitives_and_layout.html">Primitives, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/text_math_and_fonts.html">Text, Math &amp; Fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/styling_and_fills.html">Styling, Sketch Aesthetics &amp; Fills</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/animations_and_easing.html">Animations, Visibility &amp; Easing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/characters_and_shorts.html">Character Rigs, Poses &amp; 2-Joint IK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/export_and_slides.html">Export Formats, Snapshots, Beamer &amp; TikZ</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Voice, Captions &amp; Sound (voiceanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/overview.html">voiceanim Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/tts_providers.html">Voice Providers (Kokoro, Qwen3-TTS, Polly, Mock)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html">Word-Level Sync &amp; Built-In Captions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html">Background Music &amp; Automatic Chalk / Eraser SFX</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AI Studio &amp; MCP (aianim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/overview.html">aianim Overview (Agentic Animation Studio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/cli_and_interactive.html">CLI &amp; Interactive Studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/mcp_server.html">Model Context Protocol (MCP) Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/diagnostics_and_linting.html">AST Guardrails &amp; Headless Scene Introspection</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.html">handanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.core.html">handanim.core Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.primitives.html">handanim.primitives Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.animations.html">handanim.animations Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.stylings.html">handanim.stylings &amp; utils Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/voiceanim.html">voiceanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/aianim.html">aianim Package</a></li>
 </ul>
 
 </div>
@@ -234,9 +276,76 @@
           
 <section class="domainindex-section">
   <h1>Python Module Index</h1>
-  <div class="domainindex-jumpbox"><a href="#cap-h"><strong>h</strong></a></div>
+  <div class="domainindex-jumpbox"><a href="#cap-a"><strong>a</strong></a> | <a href="#cap-h"><strong>h</strong></a> | <a href="#cap-v"><strong>v</strong></a></div>
 </section>
 <table class="domainindex-table">
+  <tr class="pcap">
+    <td></td><td>&#160;</td><td></td>
+  </tr>
+  <tr class="cap" id="cap-a">
+    <td></td><td><strong>a</strong></td><td></td>
+  </tr>
+  <tr>
+    <td><img src="_static/minus.png" class="toggler"
+              id="toggle-1" style="display: none" alt="-" /></td>
+    <td>
+        <code class="xref">aianim</code></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.assets"><code class="xref">aianim.assets</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.cli"><code class="xref">aianim.cli</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.compiler"><code class="xref">aianim.compiler</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.diagnostics"><code class="xref">aianim.diagnostics</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.executor"><code class="xref">aianim.executor</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.mcp_server"><code class="xref">aianim.mcp_server</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.models"><code class="xref">aianim.models</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.pipeline"><code class="xref">aianim.pipeline</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-1">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/aianim.html#module-aianim.schema"><code class="xref">aianim.schema</code></a></td><td>
+    <em></em></td>
+  </tr>
   <tr class="pcap">
     <td></td><td>&#160;</td><td></td>
   </tr>
@@ -245,177 +354,328 @@
   </tr>
   <tr>
     <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
+              id="toggle-2" style="display: none" alt="-" /></td>
     <td>
-        <a href="handanim.html#module-handanim"><code class="xref">handanim</code></a></td><td>
+        <code class="xref">handanim</code></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.animations.html#module-handanim.animations"><code class="xref">handanim.animations</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.camera"><code class="xref">handanim.animations.camera</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.animations.html#module-handanim.animations.fade"><code class="xref">handanim.animations.fade</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.color_transition"><code class="xref">handanim.animations.color_transition</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.animations.html#module-handanim.animations.sketch"><code class="xref">handanim.animations.sketch</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.easing"><code class="xref">handanim.animations.easing</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.animations.html#module-handanim.animations.translate"><code class="xref">handanim.animations.translate</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.fade"><code class="xref">handanim.animations.fade</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.animations.html#module-handanim.animations.zoom"><code class="xref">handanim.animations.zoom</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.pose"><code class="xref">handanim.animations.pose</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core"><code class="xref">handanim.core</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.rotate"><code class="xref">handanim.animations.rotate</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.animation"><code class="xref">handanim.core.animation</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.sketch"><code class="xref">handanim.animations.sketch</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.draw_ops"><code class="xref">handanim.core.draw_ops</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.transitions"><code class="xref">handanim.animations.transitions</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.drawable"><code class="xref">handanim.core.drawable</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.translate"><code class="xref">handanim.animations.translate</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.scene"><code class="xref">handanim.core.scene</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.visibility"><code class="xref">handanim.animations.visibility</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.styles"><code class="xref">handanim.core.styles</code></a></td><td>
+        <a href="api/handanim.animations.html#module-handanim.animations.zoom"><code class="xref">handanim.animations.zoom</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.utils"><code class="xref">handanim.core.utils</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.animation"><code class="xref">handanim.core.animation</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.core.html#module-handanim.core.viewport"><code class="xref">handanim.core.viewport</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.cache"><code class="xref">handanim.core.cache</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives"><code class="xref">handanim.primitives</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.draw_ops"><code class="xref">handanim.core.draw_ops</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.curves"><code class="xref">handanim.primitives.curves</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.drawable"><code class="xref">handanim.core.drawable</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.ellipse"><code class="xref">handanim.primitives.ellipse</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.scene"><code class="xref">handanim.core.scene</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.eraser"><code class="xref">handanim.primitives.eraser</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.styles"><code class="xref">handanim.core.styles</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.lines"><code class="xref">handanim.primitives.lines</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.tikz_renderer"><code class="xref">handanim.core.tikz_renderer</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.math"><code class="xref">handanim.primitives.math</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.utils"><code class="xref">handanim.core.utils</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.polygons"><code class="xref">handanim.primitives.polygons</code></a></td><td>
+        <a href="api/handanim.core.html#module-handanim.core.viewport"><code class="xref">handanim.core.viewport</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.text"><code class="xref">handanim.primitives.text</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.arrow"><code class="xref">handanim.primitives.arrow</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.primitives.html#module-handanim.primitives.vector_svg"><code class="xref">handanim.primitives.vector_svg</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.captions"><code class="xref">handanim.primitives.captions</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.stylings.html#module-handanim.stylings"><code class="xref">handanim.stylings</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.character"><code class="xref">handanim.primitives.character</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.stylings.html#module-handanim.stylings.color"><code class="xref">handanim.stylings.color</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.curves"><code class="xref">handanim.primitives.curves</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.stylings.html#module-handanim.stylings.fillpatterns"><code class="xref">handanim.stylings.fillpatterns</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.ellipse"><code class="xref">handanim.primitives.ellipse</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.stylings.html#module-handanim.stylings.fonts"><code class="xref">handanim.stylings.fonts</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.eraser"><code class="xref">handanim.primitives.eraser</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.stylings.html#module-handanim.stylings.strokes"><code class="xref">handanim.stylings.strokes</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.flowchart"><code class="xref">handanim.primitives.flowchart</code></a></td><td>
     <em></em></td>
   </tr>
-  <tr class="cg-1">
+  <tr class="cg-2">
     <td></td>
     <td>&#160;&#160;&#160;
-        <a href="handanim.stylings.html#module-handanim.stylings.utils"><code class="xref">handanim.stylings.utils</code></a></td><td>
+        <a href="api/handanim.primitives.html#module-handanim.primitives.lines"><code class="xref">handanim.primitives.lines</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.primitives.html#module-handanim.primitives.math"><code class="xref">handanim.primitives.math</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.primitives.html#module-handanim.primitives.polygons"><code class="xref">handanim.primitives.polygons</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.primitives.html#module-handanim.primitives.raster_image"><code class="xref">handanim.primitives.raster_image</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.primitives.html#module-handanim.primitives.table"><code class="xref">handanim.primitives.table</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.primitives.html#module-handanim.primitives.text"><code class="xref">handanim.primitives.text</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.primitives.html#module-handanim.primitives.vector_svg"><code class="xref">handanim.primitives.vector_svg</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.stylings.color"><code class="xref">handanim.stylings.color</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.stylings.fillpatterns"><code class="xref">handanim.stylings.fillpatterns</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.stylings.fonts"><code class="xref">handanim.stylings.fonts</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.stylings.strokes"><code class="xref">handanim.stylings.strokes</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.stylings.utils"><code class="xref">handanim.stylings.utils</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.utils.geometry"><code class="xref">handanim.utils.geometry</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-2">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/handanim.stylings.html#module-handanim.utils.humanize"><code class="xref">handanim.utils.humanize</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="pcap">
+    <td></td><td>&#160;</td><td></td>
+  </tr>
+  <tr class="cap" id="cap-v">
+    <td></td><td><strong>v</strong></td><td></td>
+  </tr>
+  <tr>
+    <td><img src="_static/minus.png" class="toggler"
+              id="toggle-3" style="display: none" alt="-" /></td>
+    <td>
+        <a href="api/voiceanim.html#module-voiceanim"><code class="xref">voiceanim</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.cache"><code class="xref">voiceanim.cache</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.mixer"><code class="xref">voiceanim.mixer</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.providers.base"><code class="xref">voiceanim.providers.base</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.providers.kokoro_provider"><code class="xref">voiceanim.providers.kokoro_provider</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.providers.mock_provider"><code class="xref">voiceanim.providers.mock_provider</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.providers.polly_provider"><code class="xref">voiceanim.providers.polly_provider</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.providers.qwen_provider"><code class="xref">voiceanim.providers.qwen_provider</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.schema"><code class="xref">voiceanim.schema</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.sfx"><code class="xref">voiceanim.sfx</code></a></td><td>
+    <em></em></td>
+  </tr>
+  <tr class="cg-3">
+    <td></td>
+    <td>&#160;&#160;&#160;
+        <a href="api/voiceanim.html#module-voiceanim.timeline"><code class="xref">voiceanim.timeline</code></a></td><td>
     <em></em></td>
   </tr>
 </table>
@@ -431,7 +691,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Subhrajyoty Roy
+                Copyright &#169; 2025-2026, Subhrajyoty Roy
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -451,7 +711,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+</div><script src="_static/documentation_options.js?v=4ebf8126"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

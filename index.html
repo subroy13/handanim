@@ -3,13 +3,14 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="handanim" href="modules.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Installation &amp; Setup" href="getting_started/installation.html">
 
     <!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>handanim documentation</title>
+        <title>handanim — Hand-Drawn Whiteboard Animation Studio</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=64e9d2db" />
     
     
 
@@ -18,18 +19,27 @@
   body {
     --color-code-background: #f2f2f2;
   --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1d4ed8;
+  --color-brand-content: #1e40af;
+  --color-admonition-background: rgba(29, 78, 216, 0.06);
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #93c5fd;
+  --color-admonition-background: rgba(96, 165, 250, 0.1);
   
       }
     }
@@ -161,7 +171,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">handanim  documentation</div></a>
+      <a href="#"><div class="brand">handanim — Hand-Drawn Whiteboard Animation Studio</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -172,7 +182,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -182,7 +192,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
   
-  <span class="sidebar-brand-text">handanim  documentation</span>
+  <span class="sidebar-brand-text">handanim — Hand-Drawn Whiteboard Animation Studio</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -190,17 +200,49 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">handanim</a><input aria-label="Toggle navigation of handanim" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="handanim.html">handanim package</a><input aria-label="Toggle navigation of handanim package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="handanim.core.html">handanim.core package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.primitives.html">handanim.primitives package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="handanim.stylings.html">handanim.stylings package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation &amp; Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quickstart Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/architecture.html">Core Architecture &amp; Design Principles</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">User Guide (handanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/scenes_and_viewports.html">Scenes, Viewports &amp; Camera</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/primitives_and_layout.html">Primitives, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/text_math_and_fonts.html">Text, Math &amp; Fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/styling_and_fills.html">Styling, Sketch Aesthetics &amp; Fills</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/animations_and_easing.html">Animations, Visibility &amp; Easing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/characters_and_shorts.html">Character Rigs, Poses &amp; 2-Joint IK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/export_and_slides.html">Export Formats, Snapshots, Beamer &amp; TikZ</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Voice, Captions &amp; Sound (voiceanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/overview.html">voiceanim Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/tts_providers.html">Voice Providers (Kokoro, Qwen3-TTS, Polly, Mock)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html">Word-Level Sync &amp; Built-In Captions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html">Background Music &amp; Automatic Chalk / Eraser SFX</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AI Studio &amp; MCP (aianim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/overview.html">aianim Overview (Agentic Animation Studio)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/cli_and_interactive.html">CLI &amp; Interactive Studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/mcp_server.html">Model Context Protocol (MCP) Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/diagnostics_and_linting.html">AST Guardrails &amp; Headless Scene Introspection</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.html">handanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.core.html">handanim.core Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.primitives.html">handanim.primitives Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.animations.html">handanim.animations Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.stylings.html">handanim.stylings &amp; utils Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/voiceanim.html">voiceanim Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/aianim.html">aianim Package</a></li>
 </ul>
 
 </div>
@@ -221,12 +263,16 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/index.rst.txt" title="View this page">
+  <a class="muted-link" href="https://github.com/subroy13/handanim/blob/master/docs/source/index.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/subroy13/handanim/edit/master/docs/source/index.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -234,25 +280,329 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
           <section id="handanim-documentation">
-<h1>handanim documentation<a class="headerlink" href="#handanim-documentation" title="Link to this heading">¶</a></h1>
-<p>Add your content using <code class="docutils literal notranslate"><span class="pre">reStructuredText</span></code> syntax. See the
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText</a>
-documentation for details.</p>
+<h1>✍️ handanim Documentation<a class="headerlink" href="#handanim-documentation" title="Link to this heading">¶</a></h1>
+<div class="hero-banner">
+  <p><strong>handanim</strong> is a Python library and agentic studio for creating whiteboard-style, hand-drawn animations, mathematical proofs, and narrated short-form explainers.</p>
+  <p>
+    <a href="https://pypi.org/project/handanim/"><img src="https://img.shields.io/pypi/v/handanim.svg" alt="PyPI Version"></a>
+    <a href="https://github.com/subroy13/handanim"><img src="https://img.shields.io/github/stars/subroy13/handanim?style=social" alt="GitHub Stars"></a>
+    <a href="https://github.com/subroy13/handanim/actions/workflows/docs.yml"><img src="https://github.com/subroy13/handanim/actions/workflows/docs.yml/badge.svg" alt="Docs Status"></a>
+  </p>
+</div><section id="the-unified-whiteboard-ecosystem">
+<h2>The Unified Whiteboard Ecosystem<a class="headerlink" href="#the-unified-whiteboard-ecosystem" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">handanim</span></code> ships three tightly integrated packages in a single installation:</p>
+<div class="feature-grid">
+  <div class="feature-card">
+    <h3>🎨 <code>handanim</code> — Core Visual Engine</h3>
+    <p>Hand-sketched geometric primitives, LaTeX &amp; Hershey math, flowcharts, tables, hierarchical 2D character rigs with 2-joint IK, multi-page scene transitions (<code>PageTurnTransition</code> &amp; <code>PaperCrumpleTransition</code>), camera pan/zoom, camera-invariant overlays, and export to MP4, GIF, SVG, PDF, Beamer, and native TikZ.</p>
+  </div>
+  <div class="feature-card">
+    <h3>🎙️ <code>voiceanim</code> — Voice, Music &amp; SFX</h3>
+    <p>Word-aligned speech synthesis (Kokoro-82M local TTS, Qwen3-TTS, AWS Polly), word-by-word <code>Captions</code> highlighting, repeating background theme music with speech ducking, and automatic chalk, eraser, page-turn, and paper-crumple sound effects.</p>
+  </div>
+  <div class="feature-card">
+    <h3>🤖 <code>aianim</code> — Agentic Studio &amp; MCP</h3>
+    <p>Structured <code>ScenePlan</code> compiler, self-healing execution loop, static AST guardrails (<code>check_code</code>), headless layout/timing introspection (<code>Scene.introspect</code>), and a ready-to-use Model Context Protocol server (<code>handanim-ai mcp</code>).</p>
+  </div>
+</div></section>
+<section id="visual-showcase">
+<h2>Visual Showcase<a class="headerlink" href="#visual-showcase" title="Link to this heading">¶</a></h2>
+<div class="gallery-grid">
+  <div class="gallery-item">
+    <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif" alt="Pythagoras Theorem Animation">
+    <p><strong>Pythagoras Theorem</strong> — Hand-sketched geometry with hachure fills</p>
+  </div>
+  <div class="gallery-item">
+    <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
+    <p><strong>Algebraic Proof of (a + b)²</strong> — Step-by-step visual derivation</p>
+  </div>
+</div></section>
+<section id="second-quick-example">
+<h2>30-Second Quick Example<a class="headerlink" href="#second-quick-example" title="Link to this heading">¶</a></h2>
+<p>Create a hand-drawn scene with narration, word-by-word highlighted captions, repeating background theme music, and automatic chalk drawing and eraser sound effects:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">handanim</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Captions</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Eraser</span><span class="p">,</span> <span class="n">Math</span><span class="p">,</span> <span class="n">Scene</span><span class="p">,</span> <span class="n">SketchAnimation</span><span class="p">,</span> <span class="n">StrokeStyle</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">handanim.stylings.color</span><span class="w"> </span><span class="kn">import</span> <span class="n">BLACK</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">,</span> <span class="n">RED</span><span class="p">,</span> <span class="n">TEAL</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">voiceanim</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceEngine</span>
+
+<span class="c1"># 1. Synthesize word-timed narration (uses local Kokoro-82M or MockVoiceProvider)</span>
+<span class="n">clip</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="s2">&quot;Let us sketch a circle and Euler&#39;s identity on the whiteboard.&quot;</span><span class="p">,</span>
+    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;kokoro&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 2. Build a 9:16 portrait or 16:9 landscape whiteboard scene</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">Scene</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">))</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">set_viewport_to_identity</span><span class="p">()</span>
+
+<span class="n">title</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Whiteboard Demo&quot;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">220</span><span class="p">),</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">780</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">stroke_style</span><span class="o">=</span><span class="n">StrokeStyle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="n">Math</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$e^{i\pi} + 1 = 0$&quot;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="mi">340</span><span class="p">,</span> <span class="mi">1150</span><span class="p">),</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">stroke_style</span><span class="o">=</span><span class="n">StrokeStyle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">TEAL</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">3.5</span><span class="p">))</span>
+<span class="n">eraser</span> <span class="o">=</span> <span class="n">Eraser</span><span class="p">(</span><span class="n">objects_to_erase</span><span class="o">=</span><span class="p">[</span><span class="n">circle</span><span class="p">])</span>
+
+<span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SketchAnimation</span><span class="p">(</span><span class="n">start_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">title</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SketchAnimation</span><span class="p">(</span><span class="n">start_time</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.5</span><span class="p">),</span> <span class="n">circle</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SketchAnimation</span><span class="p">(</span><span class="n">start_time</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.4</span><span class="p">),</span> <span class="n">formula</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SketchAnimation</span><span class="p">(</span><span class="n">start_time</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">eraser</span><span class="p">)</span>
+
+<span class="c1"># 3. Pin word-timed captions on the camera-independent overlay layer</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Captions</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="n">words_per_chunk</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="n">RED</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1590</span><span class="p">))</span>
+
+<span class="c1"># 4. Render with narration, looping marimba theme music, and auto chalk/eraser SFX</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+    <span class="s2">&quot;demo.mp4&quot;</span><span class="p">,</span>
+    <span class="n">narration</span><span class="o">=</span><span class="n">clip</span><span class="p">,</span>
+    <span class="n">background_music</span><span class="o">=</span><span class="s2">&quot;marimba&quot;</span><span class="p">,</span>
+    <span class="n">sketch_sound</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">eraser_sound</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">handanim</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="handanim.html">handanim package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation &amp; Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#system-prerequisites-cairo">1. System Prerequisites (Cairo)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-via-pip-from-pypi">2. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-from-source-poetry">3. Installing from Source (Poetry)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-with-conda">4. Installing with Conda</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quickstart Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#step-1-create-a-scene">Step 1: Create a <code class="docutils literal notranslate"><span class="pre">Scene</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#step-2-create-immutable-drawable-primitives">Step 2: Create Immutable <code class="docutils literal notranslate"><span class="pre">Drawable</span></code> Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#step-3-schedule-animations-on-the-timeline">Step 3: Schedule Animations on the Timeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#step-4-render-video-or-inspect-keyframes">Step 4: Render Video or Inspect Keyframes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/architecture.html">Core Architecture &amp; Design Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/architecture.html#the-four-stage-pipeline">The Four-Stage Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/architecture.html#immutable-drawable-objects">1. Immutable <code class="docutils literal notranslate"><span class="pre">Drawable</span></code> Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/architecture.html#vector-ops-and-opsset">2. Vector <code class="docutils literal notranslate"><span class="pre">Ops</span></code> and <code class="docutils literal notranslate"><span class="pre">OpsSet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/architecture.html#stateless-animationevent-transformations">3. Stateless <code class="docutils literal notranslate"><span class="pre">AnimationEvent</span></code> Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/architecture.html#two-layer-viewport-rendering-world-vs-overlay">4. Two-Layer Viewport Rendering (World vs. Overlay)</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guide (handanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/scenes_and_viewports.html">Scenes, Viewports &amp; Camera</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/scenes_and_viewports.html#creating-a-scene">Creating a Scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/scenes_and_viewports.html#world-coordinates-vs-screen-pixels-viewport">World Coordinates vs. Screen Pixels (<code class="xref py py-class docutils literal notranslate"><span class="pre">Viewport</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/scenes_and_viewports.html#camera-pan-zoom-cameraanimation">Camera Pan &amp; Zoom (<code class="xref py py-class docutils literal notranslate"><span class="pre">CameraAnimation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/scenes_and_viewports.html#camera-independent-overlay-layer-scene-overlay">Camera-Independent Overlay Layer (<code class="docutils literal notranslate"><span class="pre">scene.overlay</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/scenes_and_viewports.html#relative-placement-coordinate-helpers">Relative Placement &amp; Coordinate Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/primitives_and_layout.html">Primitives, Flowcharts &amp; Tables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/primitives_and_layout.html#geometric-primitives">Geometric Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/primitives_and_layout.html#flowcharts-handanim-primitives-flowchart">Flowcharts (<code class="xref py py-mod docutils literal notranslate"><span class="pre">handanim.primitives.flowchart</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/primitives_and_layout.html#tables-table">Tables (<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/primitives_and_layout.html#svg-raster-images-eraser">SVG, Raster Images &amp; Eraser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/text_math_and_fonts.html">Text, Math &amp; Fonts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/text_math_and_fonts.html#handwritten-text-text">Handwritten Text (<code class="xref py py-class docutils literal notranslate"><span class="pre">Text</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/text_math_and_fonts.html#latex-hershey-math-math">LaTeX &amp; Hershey Math (<code class="xref py py-class docutils literal notranslate"><span class="pre">Math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/text_math_and_fonts.html#bundled-fonts-registering-custom-fonts">Bundled Fonts &amp; Registering Custom Fonts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/styling_and_fills.html">Styling, Sketch Aesthetics &amp; Fills</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/styling_and_fills.html#stroke-styling-strokestyle">Stroke Styling (<code class="xref py py-class docutils literal notranslate"><span class="pre">StrokeStyle</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/styling_and_fills.html#sketch-imperfection-sketchstyle">Sketch Imperfection (<code class="xref py py-class docutils literal notranslate"><span class="pre">SketchStyle</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/styling_and_fills.html#hand-sketched-fill-patterns-fillstyle">Hand-Sketched Fill Patterns (<code class="xref py py-class docutils literal notranslate"><span class="pre">FillStyle</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/styling_and_fills.html#color-palettes-handanim-stylings-color">Color Palettes (<code class="xref py py-mod docutils literal notranslate"><span class="pre">handanim.stylings.color</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/animations_and_easing.html">Animations, Visibility &amp; Easing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animations_and_easing.html#creation-reveal-animations">Creation &amp; Reveal Animations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animations_and_easing.html#instant-visibility-toggles-show-hide-swap">Instant Visibility Toggles (<code class="xref py py-class docutils literal notranslate"><span class="pre">Show</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Hide</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Swap</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animations_and_easing.html#motion-mutation-animations">Motion &amp; Mutation Animations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animations_and_easing.html#built-in-easing-functions-handanim-animations-easing">Built-In Easing Functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">handanim.animations.easing</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animations_and_easing.html#grouping-drawables-drawablegroup">Grouping Drawables (<code class="xref py py-class docutils literal notranslate"><span class="pre">DrawableGroup</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animations_and_easing.html#scene-transitions-pageturntransition-papercrumpletransition">Scene Transitions (<code class="xref py py-class docutils literal notranslate"><span class="pre">PageTurnTransition</span></code> &amp; <code class="xref py py-class docutils literal notranslate"><span class="pre">PaperCrumpleTransition</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/characters_and_shorts.html">Character Rigs, Poses &amp; 2-Joint IK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/characters_and_shorts.html#hierarchical-rignode-characterrig">Hierarchical <code class="docutils literal notranslate"><span class="pre">RigNode</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">CharacterRig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/characters_and_shorts.html#building-a-character-with-swappable-eyes-mouth-ik-limbs">Building a Character with Swappable Eyes/Mouth &amp; IK Limbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/characters_and_shorts.html#blending-poses-with-poseanimation">Blending Poses with <code class="xref py py-class docutils literal notranslate"><span class="pre">PoseAnimation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/export_and_slides.html">Export Formats, Snapshots, Beamer &amp; TikZ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/export_and_slides.html#video-gif-rendering-render">1. Video &amp; GIF Rendering (<code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/export_and_slides.html#single-frame-batch-snapshots-svg-pdf-png">2. Single-Frame &amp; Batch Snapshots (SVG / PDF / PNG)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/export_and_slides.html#multi-page-printable-pdf-handouts-render-handout">3. Multi-Page Printable PDF Handouts (<code class="xref py py-meth docutils literal notranslate"><span class="pre">render_handout()</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/export_and_slides.html#latex-beamer-slide-decks-native-tikz-export-beamer">4. LaTeX Beamer Slide Decks &amp; Native TikZ (<code class="xref py py-meth docutils literal notranslate"><span class="pre">export_beamer()</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Voice, Captions &amp; Sound (voiceanim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/overview.html">voiceanim Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/overview.html#key-capabilities">Key Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/overview.html#core-data-model-audioclip">Core Data Model (<code class="xref py py-class docutils literal notranslate"><span class="pre">AudioClip</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/tts_providers.html">Voice Providers (Kokoro, Qwen3-TTS, Polly, Mock)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/tts_providers.html#local-open-weight-default-kokoroprovider-provider-kokoro">1. Local Open-Weight Default: <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;kokoro&quot;</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/tts_providers.html#instruction-controllable-local-tts-qwenttsprovider-provider-qwen">2. Instruction-Controllable Local TTS: <code class="docutils literal notranslate"><span class="pre">QwenTTSProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;qwen&quot;</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/tts_providers.html#cloud-neural-generative-tts-pollyprovider-provider-polly">3. Cloud Neural &amp; Generative TTS: <code class="docutils literal notranslate"><span class="pre">PollyProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;polly&quot;</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/tts_providers.html#offline-deterministic-ci-testing-mockvoiceprovider-provider-mock">4. Offline Deterministic CI / Testing: <code class="docutils literal notranslate"><span class="pre">MockVoiceProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;mock&quot;</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/tts_providers.html#multi-beat-narration-stitching">Multi-Beat Narration Stitching</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html">Word-Level Sync &amp; Built-In Captions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html#synchronizing-animations-to-spoken-words-voicetimelinesync">Synchronizing Animations to Spoken Words (<code class="xref py py-class docutils literal notranslate"><span class="pre">VoiceTimelineSync</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html#built-in-word-by-word-captions-captions">Built-In Word-By-Word Captions (<code class="xref py py-class docutils literal notranslate"><span class="pre">Captions</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/sync_and_captions.html#exporting-external-srt-and-vtt-subtitles">Exporting External <code class="docutils literal notranslate"><span class="pre">.srt</span></code> and <code class="docutils literal notranslate"><span class="pre">.vtt</span></code> Subtitles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html">Background Music &amp; Automatic Chalk / Eraser SFX</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#repeating-background-theme-music">1. Repeating Background Theme Music</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-chalk-sketch-sound-during-sketchanimation">2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-board-wiping-sound-during-eraser">3. Automatic Board-Wiping Sound During <code class="docutils literal notranslate"><span class="pre">Eraser</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-page-turn-paper-crumple-sounds-transition-sound-true">4. Automatic Page-Turn &amp; Paper-Crumple Sounds (<code class="docutils literal notranslate"><span class="pre">transition_sound=True</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#additional-procedural-sfx-pop-whoosh-ding-page-turn-crumple">5. Additional Procedural SFX (<code class="docutils literal notranslate"><span class="pre">pop</span></code>, <code class="docutils literal notranslate"><span class="pre">whoosh</span></code>, <code class="docutils literal notranslate"><span class="pre">ding</span></code>, <code class="docutils literal notranslate"><span class="pre">page_turn</span></code>, <code class="docutils literal notranslate"><span class="pre">crumple</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">AI Studio &amp; MCP (aianim)</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/overview.html">aianim Overview (Agentic Animation Studio)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/overview.html#architecture-of-the-aianim-pipeline">Architecture of the <code class="docutils literal notranslate"><span class="pre">aianim</span></code> Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/overview.html#key-components">Key Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/cli_and_interactive.html">CLI &amp; Interactive Studio</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/cli_and_interactive.html#command-line-interface">Command-Line Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/cli_and_interactive.html#programmatic-python-api-animationpipeline">Programmatic Python API (<code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationPipeline</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/mcp_server.html">Model Context Protocol (MCP) Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/mcp_server.html#starting-the-mcp-server">Starting the MCP Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/mcp_server.html#configuring-in-claude-desktop-cursor-antigravity">Configuring in Claude Desktop / Cursor / Antigravity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/mcp_server.html#tools-exposed-by-the-mcp-server">Tools Exposed by the MCP Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aianim_guide/diagnostics_and_linting.html">AST Guardrails &amp; Headless Scene Introspection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/diagnostics_and_linting.html#static-ast-code-linter-check-code">1. Static AST Code Linter (<code class="xref py py-func docutils literal notranslate"><span class="pre">check_code()</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aianim_guide/diagnostics_and_linting.html#headless-scene-introspection-introspect">2. Headless Scene Introspection (<code class="xref py py-meth docutils literal notranslate"><span class="pre">introspect()</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#mathematical-proofs-geometry">Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#flowcharts-diagrams">Flowcharts &amp; Diagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#short-form-storytelling-characters-captions-sound">Short-Form Storytelling: Characters, Captions &amp; Sound</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.html">handanim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.core.html">handanim.core Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.scene">handanim.core.scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.drawable">handanim.core.drawable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.draw_ops">handanim.core.draw_ops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.animation">handanim.core.animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.styles">handanim.core.styles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.viewport">handanim.core.viewport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.cache">handanim.core.cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.tikz_renderer">handanim.core.tikz_renderer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.core.html#module-handanim.core.utils">handanim.core.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.primitives.html">handanim.primitives Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.lines">handanim.primitives.lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.arrow">handanim.primitives.arrow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.polygons">handanim.primitives.polygons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.ellipse">handanim.primitives.ellipse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.curves">handanim.primitives.curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.text">handanim.primitives.text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.math">handanim.primitives.math</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.captions">handanim.primitives.captions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.character">handanim.primitives.character</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.flowchart">handanim.primitives.flowchart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.table">handanim.primitives.table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.vector_svg">handanim.primitives.vector_svg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.raster_image">handanim.primitives.raster_image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.primitives.html#module-handanim.primitives.eraser">handanim.primitives.eraser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.animations.html">handanim.animations Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.sketch">handanim.animations.sketch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.fade">handanim.animations.fade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.visibility">handanim.animations.visibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.easing">handanim.animations.easing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.translate">handanim.animations.translate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.rotate">handanim.animations.rotate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.zoom">handanim.animations.zoom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.color_transition">handanim.animations.color_transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.camera">handanim.animations.camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.pose">handanim.animations.pose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.animations.html#module-handanim.animations.transitions">handanim.animations.transitions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/handanim.stylings.html">handanim.stylings &amp; utils Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.stylings.color">handanim.stylings.color</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.stylings.fonts">handanim.stylings.fonts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.stylings.fillpatterns">handanim.stylings.fillpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.stylings.strokes">handanim.stylings.strokes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.stylings.utils">handanim.stylings.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.utils.geometry">handanim.utils.geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/handanim.stylings.html#module-handanim.utils.humanize">handanim.utils.humanize</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/voiceanim.html">voiceanim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim">Top-Level Facade (<code class="xref py py-mod docutils literal notranslate"><span class="pre">voiceanim</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim.schema">voiceanim.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim.timeline">voiceanim.timeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim.sfx">voiceanim.sfx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim.mixer">voiceanim.mixer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim.cache">voiceanim.cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/voiceanim.html#module-voiceanim.providers.base">voiceanim.providers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/aianim.html">aianim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#top-level-exports-aianim">Top-Level Exports (<code class="xref py py-mod docutils literal notranslate"><span class="pre">aianim</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.schema">aianim.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.compiler">aianim.compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.pipeline">aianim.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.diagnostics">aianim.diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.executor">aianim.executor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.models">aianim.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.assets">aianim.assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.mcp_server">aianim.mcp_server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/aianim.html#module-aianim.cli">aianim.cli</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 </section>
 
         </article>
@@ -260,12 +610,12 @@ documentation for details.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="modules.html">
+          <a class="next-page" href="getting_started/installation.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">handanim</div>
+                <div class="title">Installation &amp; Setup</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -274,7 +624,7 @@ documentation for details.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Subhrajyoty Roy
+                Copyright &#169; 2025-2026, Subhrajyoty Roy
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -288,13 +638,36 @@ documentation for details.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">✍️ handanim Documentation</a><ul>
+<li><a class="reference internal" href="#the-unified-whiteboard-ecosystem">The Unified Whiteboard Ecosystem</a></li>
+<li><a class="reference internal" href="#visual-showcase">Visual Showcase</a></li>
+<li><a class="reference internal" href="#second-quick-example">30-Second Quick Example</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+</div><script src="_static/documentation_options.js?v=4ebf8126"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
