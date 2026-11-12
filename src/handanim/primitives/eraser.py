@@ -19,7 +19,7 @@ class Eraser(Drawable):
     def __init__(
         self,
         objects_to_erase: list[Drawable],
-        drawable_cache: DrawableCache,
+        drawable_cache: DrawableCache | None = None,
         *args,
         **kwargs,
     ):
@@ -28,7 +28,7 @@ class Eraser(Drawable):
         )
         super().__init__(*args, **kwargs)
         self.objects_to_erase = objects_to_erase
-        self.drawable_cache = drawable_cache
+        self.drawable_cache = drawable_cache or DrawableCache()
 
     def draw(self) -> OpsSet:
         """

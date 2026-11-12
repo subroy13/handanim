@@ -5,7 +5,12 @@ from fontTools.ttLib import TTFont
 
 from ..core.draw_ops import BoundingBox, Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
-from ..stylings.fonts import get_font_info, get_font_path, list_fonts
+from ..stylings.fonts import (
+    BACKSTAY_PERSONAL_USE_WARNING,
+    get_font_info,
+    get_font_path,
+    list_fonts,
+)
 
 
 class CustomPen(BasePen):
@@ -72,7 +77,7 @@ class Text(Drawable):
     def __init__(
         self,
         text: str,
-        position: tuple[float, float],
+        position: tuple[float, float] = (0.0, 0.0),
         font_size: int = 12,
         *args,
         **kwargs,
@@ -81,7 +86,14 @@ class Text(Drawable):
         self.text = text
         self.position = position
         self.font_size = font_size
-        self.font_name: str | None = kwargs.get("font_name")
+        self.font_name: str | None = kwargs.get("font_name") or kwargs.get("font")
+        if self.font_name == "backstay":
+            import warnings
+
+            warnings.warn(BACKSTAY_PERSONAL_USE_WARNING, UserWarning, stacklevel=2)
+        self.align: str = kwargs.get("align", "left")
+        if self.align not in ("left", "center", "right"):
+            raise ValueError(f"Invalid align '{self.align}', choose from: 'left', 'center', 'right'")
         self.scale_factor = kwargs.get("scale_factor", 1.0)
         self._wrapped_lines: list[str] | None = None
         self._line_height: float | None = None
@@ -90,13 +102,25 @@ class Text(Drawable):
         """
         Chooses a random font from the available fonts
         """
-        font_list = [f for f in list_fonts() if get_font_info(f)["type"] == "ttf"]
         if self.font_name:
-            font_choice = self.font_name if self.font_name in font_list else font_list[0]
-        elif self.sketch_style.disable_font_mixture:
-            font_choice = font_list[0]
+            info = get_font_info(self.font_name)
+            if info is not None and info.get("type") == "ttf":
+                font_choice = self.font_name
+            else:
+                font_choice = "feasibly"
         else:
-            font_choice = np.random.choice(font_list)
+            # Exclude personal-use-only 'backstay' from default/random selection unless explicitly requested
+            font_list = [
+                f
+                for f in list_fonts()
+                if f != "backstay" and (info := get_font_info(f)) is not None and info.get("type") == "ttf"
+            ]
+            if not font_list:
+                font_list = ["feasibly"]
+            if self.sketch_style.disable_font_mixture:
+                font_choice = font_list[0]
+            else:
+                font_choice = str(np.random.choice(font_list))
         return (font_choice, get_font_path(font_choice))
 
     def get_glyph_strokes(self, char) -> tuple[OpsSet, float]:
@@ -197,6 +221,10 @@ class Text(Drawable):
 
     def _draw_line(self, opsset: OpsSet, line: str, start_x: float, start_y: float):
         """Render a single line of text into opsset, starting at (start_x, start_y)."""
+        if self.align == "center":
+            start_x = start_x - self._measure_text_width(line) / 2.0
+        elif self.align == "right":
+            start_x = start_x - self._measure_text_width(line)
         space_width, glyph_scale = self.get_glyph_space()
         offset_x, offset_y = start_x, start_y
         for char in line:

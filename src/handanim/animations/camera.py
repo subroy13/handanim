@@ -16,13 +16,14 @@ class CameraAnimation(AnimationEvent):
         duration: Length of the animation (seconds).
         easing_fun: Optional easing function applied to progress.
         data: Dict with optional keys:
-            - "from_xrange" (tuple[float, float]): World x range at progress=0.
+
+            - ``"from_xrange"`` (tuple[float, float]): World x range at progress=0.
               Defaults to wherever the camera currently is.
-            - "from_yrange" (tuple[float, float]): World y range at progress=0.
+            - ``"from_yrange"`` (tuple[float, float]): World y range at progress=0.
               Defaults to wherever the camera currently is.
-            - "to_xrange"   (tuple[float, float]): World x range at progress=1.
+            - ``"to_xrange"``   (tuple[float, float]): World x range at progress=1.
               Defaults to from_xrange (no movement on x).
-            - "to_yrange"   (tuple[float, float]): World y range at progress=1.
+            - ``"to_yrange"``   (tuple[float, float]): World y range at progress=1.
               Defaults to from_yrange (no movement on y).
 
     Usage::

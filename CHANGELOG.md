@@ -17,6 +17,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Math.custom_glyph_opsset` now uses `svgelements` (already a runtime dependency) to parse custom font glyph paths, replacing the `SVG`/`svgpathtools` pipeline; bounding box is computed via `OpsSet.get_bbox()` rather than `svgpathtools.Path.bbox()`
 
 ### Added
+- `PageTurnTransition` and `PaperCrumpleTransition` (`animations/transitions.py`) — scene-level multi-page transitions with polygonal clipping (`OpsType.PUSH_CLIP` / `POP_CLIP`), geometric crease reflection with ink bleed-through, 2-phase paper-ball crunch + parabolic spin-and-toss, and automatic deactivation of previous-page world drawables
+- `Show`, `Hide`, and `Swap` (`animations/visibility.py`, `Scene.swap()`) — zero-duration instant visibility toggles and atomic/cross-fade drawable swaps, plus `initial_opacity` and automatic base-opacity restoration on `FadeInAnimation`
+- `CharacterRig`, `RigNode`, `VariantSlot`, `TwoJointLimb`, `Pose`, `PoseAnimation`, and `solve_two_joint_ik` (`primitives/character.py`, `animations/pose.py`) — hierarchical 2D character rigging with analytic 2-joint inverse kinematics, swappable eye/mouth expression slots, and smooth keyframe pose interpolation
+- `Captions` (`primitives/captions.py`) and `scene.overlay` (`core/scene.py`) — camera-independent overlay layer and single-drawable word-timed caption renderer with active-word highlighting, `max_width` auto-scaling, and pre-chunked dict support
+- Built-in easing functions and `PopAnimation` (`animations/easing.py`) — `linear`, `ease_in_quad`, `ease_out_quad`, `ease_in_out_quad`, `ease_in_cubic`, `ease_out_cubic`, `ease_in_out_cubic`, `ease_in_out`, `ease_in_back`, `ease_out_back`, `ease_in_out_back`, `ease_out_elastic`, `ease_out_bounce`
+- Ergonomic alignment & font helpers — `Drawable.center_at()`, `Drawable.centred()`, `Drawable.align_to()`, `Text(align=..., font=...)`, and `register_font()` (`stylings/fonts.py`), plus personal-use `UserWarning` and AST linter warning when `backstay` is used
+- `voiceanim` procedural audio & soundtrack mixer (`voiceanim/sfx.py`, `voiceanim/mixer.py`, `Scene.render`) — repeating background theme music (`generate_theme_music`, `loop_audio`, `scene.set_background_music`) with speech ducking, plus automatic chalk (`sketch_sound=True`), eraser (`eraser_sound=True`), and page-turn/crumple (`transition_sound=True`) sound effects
+- Full Sphinx + Furo documentation suite (`docs/source/`) covering `handanim`, `voiceanim`, and `aianim` for GitHub Pages
 - `Drawable.anchor(position)` — returns named anchor points (center, top_left, bottom_right, etc.) in world coordinates from the bounding box
 - `Scene.place_relative(target, reference, ...)` — position one drawable relative to another's anchor without manual coordinate math
 - `Scene.get_current_time()` — returns the end time of the latest event in the scene

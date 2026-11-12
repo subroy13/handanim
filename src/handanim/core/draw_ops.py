@@ -28,6 +28,8 @@ class OpsType(Enum):
     CLOSE_PATH = "close_path"
     DOT = "dot"
     IMAGE = "image"
+    PUSH_CLIP = "push_clip"
+    POP_CLIP = "pop_clip"
 
 
 class Ops:
@@ -194,6 +196,8 @@ class OpsSet:
                     min_y = min(min_y, iy)
                     max_x = max(max_x, ix + iw)
                     max_y = max(max_y, iy + ih)
+                elif ops.type in (OpsType.PUSH_CLIP, OpsType.POP_CLIP):
+                    continue
                 else:
                     data = ops.data
                     if isinstance(data, list):
@@ -513,6 +517,28 @@ class OpsSet:
                 x, y = ops.data.get("center", (0, 0))
                 ctx.move_to(x, y)
                 ctx.arc(x, y, ops.data.get("radius", 1), 0, 2 * np.pi)
+            elif ops.type == OpsType.PUSH_CLIP:
+                if has_path and mode == "stroke":
+                    ctx.stroke()
+                elif has_path and mode == "fill":
+                    ctx.fill()
+                has_path = False
+                ctx.save()
+                pts = ops.data if isinstance(ops.data, list) else []
+                if len(pts) >= 3:
+                    ctx.new_path()
+                    ctx.move_to(pts[0][0], pts[0][1])
+                    for px, py in pts[1:]:
+                        ctx.line_to(px, py)
+                    ctx.close_path()
+                    ctx.clip()
+            elif ops.type == OpsType.POP_CLIP:
+                if has_path and mode == "stroke":
+                    ctx.stroke()
+                elif has_path and mode == "fill":
+                    ctx.fill()
+                has_path = False
+                ctx.restore()
             else:
                 raise NotImplementedError(f"Unknown operation type {ops.type}")
 

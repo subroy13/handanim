@@ -131,3 +131,33 @@ def test_hershey_hyphen_and_apostrophe():
         assert len(ops_with_apos.opsset) > len(ops_without.opsset)
 
 
+def test_backstay_emits_personal_use_warning_and_linter_warning():
+    import warnings
+
+    from aianim.diagnostics import check_code
+
+    with pytest.warns(UserWarning, match="only allowed for personal use"):
+        _ = Text("Personal project", position=(0, 0), font_size=24, font_name="backstay")
+
+    with pytest.warns(UserWarning, match="only allowed for personal use"):
+        _ = get_font_path("backstay")
+
+    # Default Text without font_name should NOT pick backstay or emit the warning
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        t_default = Text("Commercial safe", position=(0, 0), font_size=24)
+        _ = t_default.draw()
+    assert not any("backstay" in str(w.message) for w in caught)
+
+    # Static AST linter should also warn when 'backstay' is used in code
+    report = check_code(
+        'from handanim import Scene, Text, Show\n'
+        'scene = Scene()\n'
+        't = Text("Hello", font_name="backstay")\n'
+        'scene.add(Show(0), t)\n'
+        'scene.render("out.mp4")\n'
+    )
+    assert any("backstay" in w and "personal use" in w for w in report.warnings)
+
+
+

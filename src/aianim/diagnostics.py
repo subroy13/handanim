@@ -67,6 +67,15 @@ class HandanimCodeAuditor(ast.NodeVisitor):
                 self.has_scene_render = True
         self.generic_visit(node)
 
+    def visit_Constant(self, node: ast.Constant):
+        if isinstance(node.value, str) and node.value.strip().lower() == "backstay":
+            self.warnings.append(
+                f"Line {node.lineno}: Font 'backstay' (BackstaySingleLine) is only allowed for personal use. "
+                "Use 'feasibly' or another commercial-friendly font for non-personal projects."
+            )
+            self.suggestions.append(f"Replace 'backstay' on line {node.lineno} with 'feasibly' if used outside personal projects.")
+        self.generic_visit(node)
+
 
 def check_code(code_str: str) -> DiagnosticReport:
     """Run static AST analysis on handanim Python code.

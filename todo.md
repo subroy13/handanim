@@ -49,6 +49,41 @@ Goal: create reproducible, hand-sketched explanation videos lasting 30–60 seco
 - [x] **`Eraser` paints white and leaves erased objects underneath (`primitives/eraser.py`, `core/scene.py`)** — default `Eraser` pen color to the scene's `background_color` when not explicitly set, and deactivate erased objects (and the eraser stroke) at `event.end_time`.
 - [x] **Visibility assumes events arrive in time order (`core/scene.py`, `add` and `get_active_objects`)** — keep each drawable's timeline sorted when events are added out of chronological order and iterate sorted timestamps in `get_active_objects`.
 
+---
+
+## Short-Form Storytelling: Visibility, Characters & Captions (Planned)
+
+### 1. Object Re-appearance, Frame-0 Visibility & Instant Toggles (`Show` / `Hide` / `Swap`)
+- [x] **Restore base opacity on re-appearance (`animations/fade.py`, `animations/visibility.py`)** — ensure objects that faded out via `FadeOutAnimation` restore their original `base_opacity` when re-shown via `FadeInAnimation` or `Show`, and support `initial_opacity` on `FadeInAnimation` when starting at `t=0`.
+- [x] **Instant `Show(t)` and `Hide(t)` events (`animations/visibility.py`, `core/scene.py`)** — zero-duration `CREATION` / `DELETION` events so hooks, blinks, mouth shapes, and labels can appear on frame 0 (`Show(0)`) or toggle cleanly at any timestamp `t` without zero-length fade hacks.
+- [x] **`Swap(a, b, t)` event & `scene.swap(a, b, t)` (`animations/visibility.py`, `core/scene.py`)** — atomically hide drawable `a` and show drawable `b` at timestamp `t` (with optional cross-fade `duration`).
+- [x] **Idempotent state-aware visibility timeline (`core/scene.py`)** — track explicit `(timestamp, is_visible)` transitions per drawable so back-to-back or simultaneous `Hide`/`Show` and `FadeOut`/`FadeIn` boundaries at the same timestamp `t` always resolve deterministically.
+
+### 2. Characters: Parent-Child Rig Transforms, Poses, 2-Joint IK & Swappable Parts
+- [x] **Hierarchical `RigNode` & `CharacterRig` (`primitives/character.py`)** — group node with its own local `pivot`, `angle`, `offset`, and `scale` that child nodes inherit via forward kinematics, allowing forearms to follow upper arms and heads/eyes/mouths to move with the torso.
+- [x] **`Pose` & `PoseAnimation` (`primitives/character.py`, `animations/pose.py`)** — declarative pose snapshots (joint angles, node offsets, IK targets, active slot variants) and keyframe-blending `PoseAnimation` that smoothly interpolates joint angles over time.
+- [x] **Two-joint IK limb (`TwoJointLimb` / `solve_two_joint_ik` in `primitives/character.py`)** — analytic 2D law-of-cosines inverse kinematics solver for two-bone chains (e.g. upper arm + forearm, thigh + calf) that reaches for a world/local target point `(x, y)` with configurable bend direction.
+- [x] **Swappable mouth and eye shapes (`VariantSlot` in `primitives/character.py`)** — named drawable variants (e.g. `eyes={"open": ..., "blink": ...}`, `mouth={"neutral": ..., "open": ..., "smile": ...}`) attached to a parent `RigNode` so expressions and lip-sync swap cleanly while inheriting parent transforms.
+
+### 3. Built-in Narration Captions & Camera-Independent Overlay Layer
+- [x] **`scene.overlay` camera-independent layer (`core/scene.py`)** — overlay layer (`scene.overlay.add(...)` and `scene.add(..., overlay=True)`) rendered under the static base viewport after camera-transformed world ops so HUD elements and captions ignore `CameraAnimation` pan/zoom.
+- [x] **`Captions(clip, words_per_chunk=3, highlight=RED, y=1590)` (`primitives/captions.py`)** — single-drawable, single-event caption renderer driven directly by `AudioClip` word timestamps, replacing hundreds of per-word `Text` + `ColorTransitionAnimation` events with pre-cached chunk layouts and active-word highlighting on the overlay layer.
+- [x] **Auto-scaling of `Captions` (`max_width`) & pre-chunked dict format (`primitives/captions.py`)** — automatically scale down wide caption chunks exceeding `max_width` (default `960.0` for 1080-wide portrait video) and accept both `AudioClip` / flat word dicts and `captions.json`-style pre-chunked dicts (`{"s", "e", "words": [{"d", "s", "e"}]}`).
+
+### 4. Ergonomic Helpers & Built-in Easing (from `handanim-short-meal-order` review)
+- [x] **Centering & alignment helpers (`core/drawable.py`, `primitives/text.py`)** — add `Drawable.center_at(x, y)`, `Drawable.centred(x, y)`, and `Drawable.align_to(x, y, anchor="center")`, plus `align="left" | "center" | "right"` and `font=` alias on `Text`.
+- [x] **Runtime font registration helper (`stylings/fonts.py`)** — add `register_font(name, file_path, font_type="ttf", persist=False)` and export `register_font`, `list_fonts`, and `get_font_path` at the top level of `handanim`.
+- [x] **Personal-use warning for `backstay` (`stylings/fonts.py`, `primitives/text.py`, `aianim/diagnostics.py`)** — emit a `UserWarning` (and AST linter warning) when `backstay` is used, and exclude `backstay` from automatic random font selection when `font_name` is not explicitly set.
+- [x] **Built-in easing functions & `PopAnimation` (`animations/easing.py`)** — provide ready-to-use easing callables (`linear`, `ease_in_quad`, `ease_out_quad`, `ease_in_out_quad`, `ease_in_cubic`, `ease_out_cubic`, `ease_in_out_cubic`, `ease_in_out`, `ease_in_back`, `ease_out_back`, `ease_in_out_back`, `ease_out_elastic`, `ease_out_bounce`) and `PopAnimation` for springy scale-in reveals.
+- [x] **Repeating background theme music (`voiceanim/sfx.py`, `voiceanim/mixer.py`, `core/scene.py`)** — `generate_theme_music`, `loop_audio`, `mix_soundtrack`, `scene.set_background_music(...)`, and `scene.render(..., background_music=..., music_loop=True)` with automatic speech ducking.
+- [x] **Automatic chalk sketch sound during `SketchAnimation` (`voiceanim/sfx.py`, `core/scene.py`)** — open-source procedural chalk/pen drawing sound (`synthesize_chalk_sound`) automatically timed to `SketchAnimation` intervals via `scene.enable_sketch_sound()` or `scene.render(..., sketch_sound=True)`.
+- [x] **Automatic eraser sound during `Eraser` (`voiceanim/sfx.py`, `core/scene.py`)** — open-source procedural felt/rubber board-wiping sound (`synthesize_eraser_sound`) automatically timed to `Eraser` events via `scene.enable_eraser_sound()` or `scene.render(..., eraser_sound=True)`.
+- [x] **Scene transitions (`PageTurnTransition` & `PaperCrumpleTransition` in `animations/transitions.py`, `core/draw_ops.py`, `core/scene.py`, `voiceanim/sfx.py`)** — polygonal clipping (`PUSH_CLIP`/`POP_CLIP`), geometric crease reflection with ink bleed-through (`PageTurnTransition`), multi-faceted paper-ball crunch + parabolic toss (`PaperCrumpleTransition`), automatic deactivation of previous-page world drawables, and procedural `page_turn` / `crumple` sound synthesis (`transition_sound=True`).
+- [ ] **Fast single-frame `Scene.render_snapshot(t)` (`core/scene.py`)** — evaluate only the active objects and ongoing animations at time `t` without running `create_event_timeline()` over all `max_length * fps` frames, making `--stills` keyframe previews instantaneous.
+- [ ] **Secondary emphasis & number highlighting in `Captions` (`primitives/captions.py`)** — support per-word secondary highlight colors (e.g. `em=True` or numeric tokens staying highlighted across the chunk) and an optional background pill/band behind captions.
+- [ ] **Periodic blink & lip-sync/chew loop helpers on `VariantSlot` (`primitives/character.py`)** — add `slot.add_periodic_switch(scene, period=3.2, pulse_duration=0.11)` and `slot.add_cycle(scene, variants=[...], interval=0.14)` so characters can blink or talk/chew across a time range in one call.
+- [ ] **Multi-beat parallel renderer & procedural sound effects (`voiceanim` / `handanim`)** — add a multi-beat scene runner that renders beats in parallel worker processes and concatenates via `ffmpeg`, plus optional procedural sound effect generators (`scribble`, `pop`, `whoosh`, `ding`) and `-14 LUFS` loudness normalization.
+
 
 ---
 
