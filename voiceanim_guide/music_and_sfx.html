@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -326,13 +334,59 @@
 </div>
 </section>
 </section>
-<section id="automatic-chalk-sketch-sound-during-sketchanimation">
-<h2>2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code><a class="headerlink" href="#automatic-chalk-sketch-sound-during-sketchanimation" title="Link to this heading">¶</a></h2>
-<p>When <code class="docutils literal notranslate"><span class="pre">sketch_sound=True</span></code> is enabled on <a class="reference internal" href="../api/handanim.core.html#handanim.core.scene.Scene" title="handanim.core.scene.Scene"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scene</span></code></a> (or passed to <code class="docutils literal notranslate"><span class="pre">scene.render(...,</span> <span class="pre">sketch_sound=True)</span></code>), <code class="docutils literal notranslate"><span class="pre">handanim</span></code> automatically scans the timeline for all <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.sketch.SketchAnimation" title="handanim.animations.sketch.SketchAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a> events, merges overlapping intervals, and synthesizes a realistic chalk / sketch-pen drawing sound (<a class="reference internal" href="../api/voiceanim.html#voiceanim.sfx.synthesize_chalk_sound" title="voiceanim.sfx.synthesize_chalk_sound"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize_chalk_sound()</span></code></a>) synchronized to every stroke reveal:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure chalk or felt-pen style and volume on the scene</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">enable_sketch_sound</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;chalk&quot;</span><span class="p">)</span>  <span class="c1"># style=&quot;chalk&quot; or &quot;pen&quot;</span>
+<section id="automatic-chalk-sketch-sound-during-sketchanimation-on-off-volume-control">
+<h2>2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code> (On / Off &amp; Volume Control)<a class="headerlink" href="#automatic-chalk-sketch-sound-during-sketchanimation-on-off-volume-control" title="Link to this heading">¶</a></h2>
+<p>Sketch drawing sound is <strong>off by default</strong> (<code class="docutils literal notranslate"><span class="pre">sketch_sound=False</span></code>) and uses a soft, non-distracting default volume (<code class="docutils literal notranslate"><span class="pre">0.25</span></code>) when enabled. When narration is present, continuous sketch sounds are also automatically ducked by 35% while the speaker is talking.</p>
+<p>You can turn sketch sound <strong>on, off, or down</strong> at three levels:</p>
+<section id="option-a-per-animation-control-on-sketchanimation">
+<h3>Option A: Per-Animation Control on <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code><a class="headerlink" href="#option-a-per-animation-control-on-sketchanimation" title="Link to this heading">¶</a></h3>
+<p>Control sound on any individual <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.sketch.SketchAnimation" title="handanim.animations.sketch.SketchAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a> using <code class="docutils literal notranslate"><span class="pre">sound</span></code>, <code class="docutils literal notranslate"><span class="pre">sound_volume</span></code>, and <code class="docutils literal notranslate"><span class="pre">sound_style</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">handanim</span><span class="w"> </span><span class="kn">import</span> <span class="n">SketchAnimation</span>
+
+<span class="c1"># 1. Mute sketch sound on a specific animation (e.g. a title or small label)</span>
+<span class="n">silent_sketch</span> <span class="o">=</span> <span class="n">SketchAnimation</span><span class="p">(</span><span class="n">start_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sound</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># 2. Play a quiet felt-pen sound on a specific animation</span>
+<span class="n">quiet_pen</span> <span class="o">=</span> <span class="n">SketchAnimation</span><span class="p">(</span>
+    <span class="n">start_time</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+    <span class="n">duration</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+    <span class="n">sound</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">sound_volume</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span>
+    <span class="n">sound_style</span><span class="o">=</span><span class="s2">&quot;pen&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Shorthand: pass a float volume directly (0.0 mutes, &gt; 0 enables at that volume)</span>
+<span class="n">subtle_chalk</span> <span class="o">=</span> <span class="n">SketchAnimation</span><span class="p">(</span><span class="n">start_time</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">sound</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+
+<span class="c1"># 4. Toggle or adjust after creation</span>
+<span class="n">subtle_chalk</span><span class="o">.</span><span class="n">set_sound</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="option-b-scene-level-control">
+<h3>Option B: Scene-Level Control<a class="headerlink" href="#option-b-scene-level-control" title="Link to this heading">¶</a></h3>
+<p>Configure or toggle sketch sound across the entire <a class="reference internal" href="../api/handanim.core.html#handanim.core.scene.Scene" title="handanim.core.scene.Scene"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scene</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Enable with softer volume (0.15) and felt-pen style</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">enable_sketch_sound</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;pen&quot;</span><span class="p">)</span>  <span class="c1"># style=&quot;chalk&quot; or &quot;pen&quot;</span>
+
+<span class="c1"># Or use the shorthand alias:</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">set_sketch_sound</span><span class="p">(</span><span class="mf">0.15</span><span class="p">)</span>   <span class="c1"># enables at volume 0.15</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">set_sketch_sound</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># turns off sketch sound</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">disable_sketch_sound</span><span class="p">()</span>   <span class="c1"># turns off sketch sound</span>
+</pre></div>
+</div>
+</section>
+<section id="option-c-render-time-master-override">
+<h3>Option C: Render-Time Master Override<a class="headerlink" href="#option-c-render-time-master-override" title="Link to this heading">¶</a></h3>
+<p>Override sketch sound or its volume for a single <a class="reference internal" href="../api/handanim.core.html#handanim.core.scene.Scene.render" title="handanim.core.scene.Scene.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a> call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Master mute for this render:</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s2">&quot;silent_sketch.mp4&quot;</span><span class="p">,</span> <span class="n">sketch_sound</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Render with quiet sketch sound (volume=0.12):</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s2">&quot;quiet_sketch.mp4&quot;</span><span class="p">,</span> <span class="n">sketch_sound</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sketch_sound_volume</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="automatic-board-wiping-sound-during-eraser">
 <h2>3. Automatic Board-Wiping Sound During <code class="docutils literal notranslate"><span class="pre">Eraser</span></code><a class="headerlink" href="#automatic-board-wiping-sound-during-eraser" title="Link to this heading">¶</a></h2>
@@ -447,7 +501,12 @@
 <li><a class="reference internal" href="#option-b-standalone-via-voiceanim-functions">Option B: Standalone via <code class="docutils literal notranslate"><span class="pre">voiceanim</span></code> Functions</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#automatic-chalk-sketch-sound-during-sketchanimation">2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a></li>
+<li><a class="reference internal" href="#automatic-chalk-sketch-sound-during-sketchanimation-on-off-volume-control">2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code> (On / Off &amp; Volume Control)</a><ul>
+<li><a class="reference internal" href="#option-a-per-animation-control-on-sketchanimation">Option A: Per-Animation Control on <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a></li>
+<li><a class="reference internal" href="#option-b-scene-level-control">Option B: Scene-Level Control</a></li>
+<li><a class="reference internal" href="#option-c-render-time-master-override">Option C: Render-Time Master Override</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#automatic-board-wiping-sound-during-eraser">3. Automatic Board-Wiping Sound During <code class="docutils literal notranslate"><span class="pre">Eraser</span></code></a></li>
 <li><a class="reference internal" href="#automatic-page-turn-paper-crumple-sounds-transition-sound-true">4. Automatic Page-Turn &amp; Paper-Crumple Sounds (<code class="docutils literal notranslate"><span class="pre">transition_sound=True</span></code>)</a></li>
 <li><a class="reference internal" href="#additional-procedural-sfx-pop-whoosh-ding-page-turn-crumple">5. Additional Procedural SFX (<code class="docutils literal notranslate"><span class="pre">pop</span></code>, <code class="docutils literal notranslate"><span class="pre">whoosh</span></code>, <code class="docutils literal notranslate"><span class="pre">ding</span></code>, <code class="docutils literal notranslate"><span class="pre">page_turn</span></code>, <code class="docutils literal notranslate"><span class="pre">crumple</span></code>)</a></li>

@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=398eb619" />
     
     
 
@@ -231,7 +231,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -294,20 +302,90 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        wait_before_fill (float): Delay in seconds before starting fill animation, capped at half the total duration.</span>
+<span class="sd">        sound (bool | None): Per-animation override to turn sketch drawing sound on (`True`) or off (`False`).</span>
+<span class="sd">            When `None` (default), inherits the scene&#39;s `sketch_sound` setting.</span>
+<span class="sd">        sound_volume (float | None): Optional per-animation volume multiplier (`0.0` to `1.0`) for the sketch sound.</span>
+<span class="sd">        sound_style (str | None): Optional per-animation sound style (`&quot;chalk&quot;` or `&quot;pen&quot;`).</span>
 
 <span class="sd">    Methods:</span>
 <span class="sd">        get_partial_sketch: Calculates a partial OpsSet representing the current sketching progress.</span>
 <span class="sd">        apply: Applies the sketch animation to a given OpsSet at a specific progress point.</span>
+<span class="sd">        set_sound: Enables, disables, or adjusts the volume/style of the sketch sound for this event.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">easing_fun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">AnimationEventType</span><span class="o">.</span><span class="n">CREATION</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">easing_fun</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wait_before_fill</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">easing_fun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">wait_before_fill</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">glowing_dot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sound_volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sound_style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">merged_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">wait_before_fill</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;wait_before_fill&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wait_before_fill</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">glowing_dot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;glowing_dot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">glowing_dot</span>
+        <span class="k">if</span> <span class="n">sound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sound</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sound</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="n">sound_volume</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound_volume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">sound_volume</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound_volume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sound_volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vol</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">sound_volume</span><span class="p">))</span>
+            <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound_volume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span>
+            <span class="k">if</span> <span class="n">vol</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="s2">&quot;sound&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">merged_data</span><span class="p">:</span>
+                <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">sound_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sound_style</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">AnimationEventType</span><span class="o">.</span><span class="n">CREATION</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">easing_fun</span><span class="p">,</span> <span class="n">merged_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_before_fill</span> <span class="o">=</span> <span class="n">merged_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;wait_before_fill&quot;</span><span class="p">,</span> <span class="mi">0</span>
         <span class="p">)</span>  <span class="c1"># seconds to wait before starting fill animation, if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_before_fill</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_before_fill</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># maximum wait is half of the duration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">merged_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound_volume&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">merged_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sound_volume&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s2">&quot;sound_style&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">merged_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sound_style&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SketchAnimation.set_sound">
+<a class="viewcode-back" href="../../../api/handanim.animations.html#handanim.SketchAnimation.set_sound">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_sound</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SketchAnimation&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn sketch sound on or off or adjust its volume/style for this animation event.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">enabled</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sound</span>
+        <span class="k">if</span> <span class="n">volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sound_volume</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">volume</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;sound_volume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sound_volume</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sound_volume</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sound</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sound_style</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;sound_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sound_style</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
 
 <div class="viewcode-block" id="SketchAnimation.get_partial_sketch">
 <a class="viewcode-back" href="../../../api/handanim.animations.html#handanim.SketchAnimation.get_partial_sketch">[docs]</a>
@@ -347,37 +425,46 @@
         <span class="c1"># based on progress, find out the total number of ops to be drawn</span>
         <span class="k">if</span> <span class="n">progress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">&lt;=</span> <span class="n">draw_end_time</span><span class="p">:</span>
             <span class="c1"># drawing is not completed yet</span>
-            <span class="n">draw_progress</span> <span class="o">=</span> <span class="n">progress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">/</span> <span class="n">draw_end_time</span>
-            <span class="n">n_active</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">draw_progress</span> <span class="o">*</span> <span class="n">draw_ops_count</span><span class="p">)</span>
+            <span class="n">draw_progress</span> <span class="o">=</span> <span class="n">progress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">/</span> <span class="n">draw_end_time</span> <span class="k">if</span> <span class="n">draw_end_time</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="n">exact_active</span> <span class="o">=</span> <span class="n">draw_progress</span> <span class="o">*</span> <span class="n">draw_ops_count</span>
+            <span class="n">n_active</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exact_active</span><span class="p">)</span>
+            <span class="n">partial_amount</span> <span class="o">=</span> <span class="n">exact_active</span> <span class="o">-</span> <span class="n">n_active</span>
         <span class="k">elif</span> <span class="n">progress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">&lt;=</span> <span class="n">fill_start_time</span><span class="p">:</span>
             <span class="c1"># drawing is completed, but filling is not started yet</span>
             <span class="n">n_active</span> <span class="o">=</span> <span class="n">draw_ops_count</span>
+            <span class="n">partial_amount</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># filling is in progress</span>
             <span class="n">fill_progress</span> <span class="o">=</span> <span class="p">(</span><span class="n">progress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="n">fill_start_time</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="n">fill_start_time</span><span class="p">)</span>
-            <span class="n">n_active</span> <span class="o">=</span> <span class="n">draw_ops_count</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">fill_progress</span> <span class="o">*</span> <span class="n">fill_ops_count</span><span class="p">)</span>
+            <span class="n">exact_active</span> <span class="o">=</span> <span class="n">draw_ops_count</span> <span class="o">+</span> <span class="n">fill_progress</span> <span class="o">*</span> <span class="n">fill_ops_count</span>
+            <span class="n">n_active</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exact_active</span><span class="p">)</span>
+            <span class="n">partial_amount</span> <span class="o">=</span> <span class="n">exact_active</span> <span class="o">-</span> <span class="n">n_active</span>
 
         <span class="c1"># create a new opsset with the partial ops</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">last_op</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">new_opsset</span> <span class="o">=</span> <span class="n">OpsSet</span><span class="p">(</span><span class="n">initial_set</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># initially start with blank opsset</span>
         <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">base_ops</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Ops</span><span class="o">.</span><span class="n">SETUP_OPS_TYPES</span> <span class="ow">and</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">n_active</span><span class="p">:</span>
-                <span class="n">new_opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
-                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">elif</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">n_active</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Ops</span><span class="o">.</span><span class="n">SETUP_OPS_TYPES</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">n_active</span><span class="p">:</span>
+                    <span class="n">new_opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+                    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">last_op</span> <span class="o">=</span> <span class="n">op</span>  <span class="c1"># the last operation for which it stopped</span>
+                    <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">n_active</span> <span class="ow">or</span> <span class="p">(</span><span class="n">counter</span> <span class="o">==</span> <span class="n">n_active</span> <span class="ow">and</span> <span class="n">partial_amount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
                 <span class="c1"># other operations keep adding, but don&#39;t increase counter</span>
                 <span class="n">new_opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">last_op</span> <span class="o">=</span> <span class="n">op</span>  <span class="c1"># the last operation for which it stopped</span>
                 <span class="k">break</span>
-        <span class="k">if</span> <span class="n">last_op</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">progress</span> <span class="o">*</span> <span class="n">total_ops_count</span> <span class="o">-</span> <span class="n">n_active</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">last_op</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">partial_amount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># need to calculate it partially</span>
             <span class="n">new_opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
                 <span class="n">Ops</span><span class="p">(</span>
                     <span class="nb">type</span><span class="o">=</span><span class="n">last_op</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
                     <span class="n">data</span><span class="o">=</span><span class="n">last_op</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-                    <span class="n">partial</span><span class="o">=</span><span class="n">progress</span> <span class="o">*</span> <span class="n">total_ops_count</span> <span class="o">-</span> <span class="n">n_active</span><span class="p">,</span>
+                    <span class="n">partial</span><span class="o">=</span><span class="n">partial_amount</span><span class="p">,</span>
+                    <span class="n">meta</span><span class="o">=</span><span class="n">last_op</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">new_opsset</span></div>

@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -287,30 +295,17 @@
         <article role="main" id="furo-main-content">
           <section id="installation-setup">
 <h1>Installation &amp; Setup<a class="headerlink" href="#installation-setup" title="Link to this heading">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">handanim</span></code> requires <strong>Python 3.11+</strong> and the native <strong>Cairo</strong> 2D graphics library.</p>
-<section id="system-prerequisites-cairo">
-<h2>1. System Prerequisites (Cairo)<a class="headerlink" href="#system-prerequisites-cairo" title="Link to this heading">¶</a></h2>
-<p>Install the Cairo system library before installing Python packages:</p>
-<p><strong>macOS (Homebrew)</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>cairo<span class="w"> </span>ffmpeg
-</pre></div>
+<p><code class="docutils literal notranslate"><span class="pre">handanim</span></code> requires <strong>Python 3.11+</strong>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul class="simple">
+<li><p><strong>Zero-Install Browser Playground</strong>: Try <code class="docutils literal notranslate"><span class="pre">handanim</span></code> immediately in Google Colab via <a class="reference external" href="https://colab.research.google.com/github/subroy13/handanim/blob/master/notebooks/handanim_colab_playground.ipynb">notebooks/handanim_colab_playground.ipynb</a>.</p></li>
+<li><p><strong>Bundled FFmpeg</strong>: <code class="docutils literal notranslate"><span class="pre">handanim</span></code> depends on <code class="docutils literal notranslate"><span class="pre">imageio-ffmpeg</span></code>, which ships a self-contained static <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> binary for macOS, Linux, and Windows. Video rendering and audio muxing work out of the box without installing <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> on your system <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p></li>
+<li><p><strong>Automatic Cairo Backend (`pycairo` → `cairocffi`)</strong>: <code class="docutils literal notranslate"><span class="pre">handanim</span></code> uses prebuilt <code class="docutils literal notranslate"><span class="pre">pycairo</span></code> binary wheels when available and automatically falls back to pure-Python <code class="docutils literal notranslate"><span class="pre">cairocffi</span></code> (with auto-discovery of Homebrew <code class="docutils literal notranslate"><span class="pre">/opt/homebrew/lib</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/lib</span></code>, and Conda <code class="docutils literal notranslate"><span class="pre">$CONDA_PREFIX/lib</span></code>). Inspect the active backend via <code class="docutils literal notranslate"><span class="pre">handanim.get_cairo_backend()</span></code> or force <code class="docutils literal notranslate"><span class="pre">HANDANIM_CAIRO_BACKEND=cairocffi</span></code>.</p></li>
+</ul>
 </div>
-<p><strong>Ubuntu / Debian</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libcairo2<span class="w"> </span>libcairo2-dev<span class="w"> </span>ffmpeg
-</pre></div>
-</div>
-<p><strong>Windows</strong></p>
-<ol class="arabic simple">
-<li><p>Install the <a class="reference external" href="https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases">GTK 3 Runtime</a> (which bundles Cairo DLLs) and ensure its <code class="docutils literal notranslate"><span class="pre">bin/</span></code> directory is on your <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, or use Conda (see below).</p></li>
-</ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">handanim</span></code> uses <code class="docutils literal notranslate"><span class="pre">imageio-ffmpeg</span></code>, which automatically bundles a portable <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> binary for MP4 video encoding and audio multiplexing—even if <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> is not installed globally on your system.</p>
-</div>
-</section>
 <section id="installing-via-pip-from-pypi">
-<h2>2. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)<a class="headerlink" href="#installing-via-pip-from-pypi" title="Link to this heading">¶</a></h2>
+<h2>1. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)<a class="headerlink" href="#installing-via-pip-from-pypi" title="Link to this heading">¶</a></h2>
 <p><strong>Core Animation Library (`handanim`)</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>handanim
 </pre></div>
@@ -328,23 +323,47 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </pre></div>
 </div>
 </section>
+<section id="platform-notes-for-cairo-if-prebuilt-wheel-is-unavailable">
+<h2>2. Platform Notes for Cairo (If Prebuilt Wheel Is Unavailable)<a class="headerlink" href="#platform-notes-for-cairo-if-prebuilt-wheel-is-unavailable" title="Link to this heading">¶</a></h2>
+<p>If <code class="docutils literal notranslate"><span class="pre">pip</span></code> attempts to compile <code class="docutils literal notranslate"><span class="pre">pycairo</span></code> from source on your platform or <code class="docutils literal notranslate"><span class="pre">libcairo</span></code> is missing:</p>
+<ul>
+<li><p><strong>Force Prebuilt Binary Wheel</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--only-binary<span class="o">=</span>:all:<span class="w"> </span>pycairo
+pip<span class="w"> </span>install<span class="w"> </span>handanim
+</pre></div>
+</div>
+</li>
+<li><p><strong>macOS (Homebrew)</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>cairo
+pip<span class="w"> </span>install<span class="w"> </span>handanim
+</pre></div>
+</div>
+</li>
+<li><p><strong>Ubuntu / Debian / Google Colab</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libcairo2-dev
+pip<span class="w"> </span>install<span class="w"> </span>handanim
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="installing-with-conda-mamba">
+<h2>3. Installing with Conda / Mamba<a class="headerlink" href="#installing-with-conda-mamba" title="Link to this heading">¶</a></h2>
+<p>If you use Conda or Miniforge, <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> provides precompiled Cairo binaries on all operating systems:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>handanim<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11
+conda<span class="w"> </span>activate<span class="w"> </span>handanim
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>cairo<span class="w"> </span>pycairo
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;handanim[all]&quot;</span>
+</pre></div>
+</div>
+</section>
 <section id="installing-from-source-poetry">
-<h2>3. Installing from Source (Poetry)<a class="headerlink" href="#installing-from-source-poetry" title="Link to this heading">¶</a></h2>
+<h2>4. Installing from Source (Poetry)<a class="headerlink" href="#installing-from-source-poetry" title="Link to this heading">¶</a></h2>
 <p>For contributors or local development:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/subroy13/handanim.git
 <span class="nb">cd</span><span class="w"> </span>handanim
 poetry<span class="w"> </span>install<span class="w"> </span>--all-extras
 poetry<span class="w"> </span>run<span class="w"> </span>pytest
-</pre></div>
-</div>
-</section>
-<section id="installing-with-conda">
-<h2>4. Installing with Conda<a class="headerlink" href="#installing-with-conda" title="Link to this heading">¶</a></h2>
-<p>If you use Conda or Miniforge, you can install Cairo and PyCairo directly from <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>handanim<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11
-conda<span class="w"> </span>activate<span class="w"> </span>handanim
-conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>cairo<span class="w"> </span>pycairo<span class="w"> </span>ffmpeg
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;handanim[all]&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -406,10 +425,10 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Installation &amp; Setup</a><ul>
-<li><a class="reference internal" href="#system-prerequisites-cairo">1. System Prerequisites (Cairo)</a></li>
-<li><a class="reference internal" href="#installing-via-pip-from-pypi">2. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)</a></li>
-<li><a class="reference internal" href="#installing-from-source-poetry">3. Installing from Source (Poetry)</a></li>
-<li><a class="reference internal" href="#installing-with-conda">4. Installing with Conda</a></li>
+<li><a class="reference internal" href="#installing-via-pip-from-pypi">1. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)</a></li>
+<li><a class="reference internal" href="#platform-notes-for-cairo-if-prebuilt-wheel-is-unavailable">2. Platform Notes for Cairo (If Prebuilt Wheel Is Unavailable)</a></li>
+<li><a class="reference internal" href="#installing-with-conda-mamba">3. Installing with Conda / Mamba</a></li>
+<li><a class="reference internal" href="#installing-from-source-poetry">4. Installing from Source (Poetry)</a></li>
 </ul>
 </li>
 </ul>

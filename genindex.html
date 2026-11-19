@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=398eb619" />
     
     
 
@@ -230,7 +230,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -302,19 +310,37 @@
           <li><a href="api/handanim.core.html#handanim.core.scene.Scene.add">(handanim.core.scene.Scene method)</a>
 </li>
         </ul></li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.add_beat_captions">add_beat_captions() (handanim.core.scene.Scene method)</a>
+</li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.add_camera">add_camera() (handanim.core.scene.Scene method)</a>
 </li>
-        <li><a href="api/handanim.primitives.html#handanim.primitives.character.RigNode.add_child">add_child() (handanim.primitives.character.RigNode method)</a>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.add_child">add_child() (handanim.primitives.character.CharacterRig method)</a>
+
+        <ul>
+          <li><a href="api/handanim.primitives.html#handanim.primitives.character.RigNode.add_child">(handanim.primitives.character.RigNode method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.VariantSlot.add_cycle">add_cycle() (handanim.primitives.character.VariantSlot method)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.add_limb">add_limb() (handanim.primitives.character.CharacterRig method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.OpsSet.add_meta">add_meta() (handanim.core.draw_ops.OpsSet method)</a>
 </li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.VariantSlot.add_periodic_switch">add_periodic_switch() (handanim.primitives.character.VariantSlot method)</a>
+</li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.add_slot">add_slot() (handanim.primitives.character.CharacterRig method)</a>
+
+        <ul>
+          <li><a href="api/handanim.primitives.html#handanim.primitives.character.RigNode.add_slot">(handanim.primitives.character.RigNode method)</a>
+</li>
+        </ul></li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.VariantSlot.add_switch">add_switch() (handanim.primitives.character.VariantSlot method)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.table.TableRevealEvent.add_to_scene">add_to_scene() (handanim.primitives.table.TableRevealEvent method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.add_transition">add_transition() (handanim.core.scene.Scene method)</a>
+</li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.add_two_joint_limb">add_two_joint_limb() (handanim.primitives.character.CharacterRig method)</a>
 </li>
         <li>
     aianim.assets
@@ -379,14 +405,14 @@
           <li><a href="api/aianim.html#module-aianim.schema">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/handanim.core.html#handanim.core.drawable.Drawable.align_to">align_to() (handanim.core.drawable.Drawable method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.drawable.Drawable.anchor">anchor() (handanim.core.drawable.Drawable method)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.Pose.angles">angles (handanim.primitives.character.Pose attribute)</a>, <a href="api/handanim.primitives.html#id4">[1]</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/handanim.primitives.html#handanim.primitives.table.Table.animate_by_cell">animate_by_cell() (handanim.primitives.table.Table method)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.table.Table.animate_by_row">animate_by_row() (handanim.primitives.table.Table method)</a>
@@ -485,12 +511,28 @@
           <li><a href="api/voiceanim.html#voiceanim.providers.base.BaseVoiceProvider">(class in voiceanim.providers.base)</a>
 </li>
         </ul></li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.beat">beat() (handanim.core.scene.Scene method)</a>
+</li>
         <li><a href="api/aianim.html#aianim.models.BedrockModel">BedrockModel (class in aianim.models)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.TwoJointLimb.bend_direction">bend_direction (handanim.primitives.character.TwoJointLimb attribute)</a>, <a href="api/handanim.primitives.html#id13">[1]</a>
 </li>
+        <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.blend_presets">blend_presets (voiceanim.KokoroProvider attribute)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.blend_presets">(voiceanim.providers.kokoro_provider.KokoroProvider attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.blend_voices">blend_voices() (voiceanim.KokoroProvider method)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.blend_voices">(voiceanim.providers.kokoro_provider.KokoroProvider method)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.VoiceEngine.blend_voices">(voiceanim.VoiceEngine class method)</a>
+</li>
+        </ul></li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.BoundingBox.bottom_right">bottom_right (handanim.core.draw_ops.BoundingBox property)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.drawable.DrawableFill.bound_box_list">bound_box_list (handanim.core.drawable.DrawableFill attribute)</a>
@@ -534,6 +576,8 @@
         <li><a href="api/handanim.primitives.html#handanim.primitives.captions.CaptionsAnimation">CaptionsAnimation (class in handanim.primitives.captions)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.captions.CaptionWord">CaptionWord (class in handanim.primitives.captions)</a>
+</li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.capture_pose">capture_pose() (handanim.primitives.character.CharacterRig method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.BoundingBox.center">center (handanim.core.draw_ops.BoundingBox property)</a>
 
@@ -581,6 +625,10 @@
 
         <ul>
           <li><a href="api/handanim.core.html#handanim.core.styles.StrokeStyle.color">(handanim.core.styles.StrokeStyle attribute)</a>
+</li>
+          <li><a href="api/handanim.primitives.html#handanim.primitives.captions.CaptionWord.color">(handanim.primitives.captions.CaptionWord attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.color">(voiceanim.SpeakerProfile attribute)</a>
 </li>
         </ul></li>
         <li><a href="api/handanim.animations.html#handanim.animations.color_transition.ColorTransitionAnimation">ColorTransitionAnimation (class in handanim.animations.color_transition)</a>
@@ -669,9 +717,17 @@
 </li>
         <li><a href="api/aianim.html#aianim.diagnostics.DiagnosticReport">DiagnosticReport (class in aianim.diagnostics)</a>
 </li>
+        <li><a href="api/voiceanim.html#voiceanim.DialogueTurn">DialogueTurn (class in voiceanim)</a>
+</li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.disable_eraser_sound">disable_eraser_sound() (handanim.core.scene.Scene method)</a>
+</li>
         <li><a href="api/handanim.core.html#handanim.core.styles.SketchStyle.disable_font_mixture">disable_font_mixture (handanim.core.styles.SketchStyle attribute)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.styles.SketchStyle.disable_multi_stroke">disable_multi_stroke (handanim.core.styles.SketchStyle attribute)</a>
+</li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.disable_sketch_sound">disable_sketch_sound() (handanim.core.scene.Scene method)</a>
+</li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.disable_transition_sound">disable_transition_sound() (handanim.core.scene.Scene method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.OpsType.DOT">DOT (handanim.core.draw_ops.OpsType attribute)</a>
 </li>
@@ -817,6 +873,8 @@
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.ellipse.Ellipse">Ellipse (class in handanim.primitives.ellipse)</a>
 </li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.captions.CaptionWord.em">em (handanim.primitives.captions.CaptionWord attribute)</a>
+</li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.enable_eraser_sound">enable_eraser_sound() (handanim.core.scene.Scene method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.enable_sketch_sound">enable_sketch_sound() (handanim.core.scene.Scene method)</a>
@@ -949,10 +1007,10 @@
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.flowchart.FlowchartDiamond">FlowchartDiamond (class in handanim.primitives.flowchart)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/handanim.primitives.html#handanim.primitives.flowchart.FlowchartNode">FlowchartNode (class in handanim.primitives.flowchart)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/handanim.primitives.html#handanim.primitives.math.Math.font_name">font_name (handanim.primitives.math.Math attribute)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.math.Math.font_size">font_size (handanim.primitives.math.Math attribute)</a>
@@ -963,6 +1021,12 @@
         </ul></li>
         <li><a href="api/aianim.html#aianim.assets.format_assets_markdown">format_assets_markdown() (in module aianim.assets)</a>
 </li>
+        <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.format_voice_spec">format_voice_spec() (voiceanim.KokoroProvider class method)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.format_voice_spec">(voiceanim.providers.kokoro_provider.KokoroProvider class method)</a>
+</li>
+        </ul></li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.fps">fps (handanim.core.scene.Scene attribute)</a>
 </li>
         <li><a href="api/aianim.html#aianim.schema.AnimationSpec.from_dict">from_dict() (aianim.schema.AnimationSpec class method)</a>
@@ -1117,7 +1181,7 @@
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.Pose.get_offset">get_offset() (handanim.primitives.character.Pose method)</a>
 </li>
-        <li><a href="api/handanim.animations.html#handanim.animations.sketch.SketchAnimation.get_partial_sketch">get_partial_sketch() (handanim.animations.sketch.SketchAnimation method)</a>, <a href="api/handanim.animations.html#id0">[1]</a>
+        <li><a href="api/handanim.animations.html#handanim.animations.sketch.SketchAnimation.get_partial_sketch">get_partial_sketch() (handanim.animations.sketch.SketchAnimation method)</a>, <a href="api/handanim.animations.html#id1">[1]</a>
 </li>
         <li><a href="api/handanim.animations.html#handanim.animations.pose.PoseAnimation.get_pose_at_progress">get_pose_at_progress() (handanim.animations.pose.PoseAnimation method)</a>
 </li>
@@ -1132,6 +1196,8 @@
         <li><a href="api/handanim.primitives.html#handanim.primitives.text.Text.get_random_font_choice">get_random_font_choice() (handanim.primitives.text.Text method)</a>, <a href="api/handanim.primitives.html#id0">[1]</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.Pose.get_scale">get_scale() (handanim.primitives.character.Pose method)</a>
+</li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.get_stitched_narration">get_stitched_narration() (handanim.core.scene.Scene method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.cache.GroupFrameCache.get_transformed">get_transformed() (handanim.core.cache.GroupFrameCache method)</a>
 </li>
@@ -1331,8 +1397,6 @@
           <li><a href="api/handanim.primitives.html#module-handanim.primitives.captions">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     handanim.primitives.character
 
@@ -1340,6 +1404,8 @@
           <li><a href="api/handanim.primitives.html#module-handanim.primitives.character">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     handanim.primitives.curves
 
@@ -1472,6 +1538,12 @@
 </li>
         <li><a href="api/aianim.html#aianim.mcp_server.HandanimMCPServer.handle_request">handle_request() (aianim.mcp_server.HandanimMCPServer method)</a>
 </li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.has_scheduled_variants">has_scheduled_variants() (handanim.primitives.character.CharacterRig method)</a>
+
+        <ul>
+          <li><a href="api/handanim.primitives.html#handanim.primitives.character.RigNode.has_scheduled_variants">(handanim.primitives.character.RigNode method)</a>
+</li>
+        </ul></li>
         <li><a href="api/handanim.stylings.html#handanim.stylings.fillpatterns.HatchFillPattern">HatchFillPattern (class in handanim.stylings.fillpatterns)</a>
 </li>
         <li><a href="api/aianim.html#aianim.schema.ScenePlan.height">height (aianim.schema.ScenePlan attribute)</a>
@@ -1489,6 +1561,8 @@
         <li><a href="api/handanim.animations.html#handanim.animations.visibility.Hide">Hide (class in handanim.animations.visibility)</a>
 </li>
         <li><a href="api/handanim.animations.html#handanim.animations.visibility.HideAnimation">HideAnimation (in module handanim.animations.visibility)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.highlight">highlight (voiceanim.SpeakerProfile attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1516,10 +1590,20 @@
 </li>
         <li><a href="api/aianim.html#aianim.diagnostics.HandanimCodeAuditor.IMMUTABLE_TRANSFORMS">IMMUTABLE_TRANSFORMS (aianim.diagnostics.HandanimCodeAuditor attribute)</a>
 </li>
+        <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.infer_language">infer_language() (voiceanim.KokoroProvider class method)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.infer_language">(voiceanim.providers.kokoro_provider.KokoroProvider class method)</a>
+</li>
+        </ul></li>
         <li><a href="api/voiceanim.html#voiceanim.AudioClip.instruct">instruct (voiceanim.AudioClip attribute)</a>
 
         <ul>
+          <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.instruct">(voiceanim.DialogueTurn attribute)</a>
+</li>
           <li><a href="api/voiceanim.html#voiceanim.schema.AudioClip.instruct">(voiceanim.schema.AudioClip attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.instruct">(voiceanim.SpeakerProfile attribute)</a>
 </li>
         </ul></li>
     </ul></td>
@@ -1578,6 +1662,8 @@
   <h2>L</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/voiceanim.html#voiceanim.latex_to_speech">latex_to_speech() (in module voiceanim)</a>
+</li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.limbs">limbs (handanim.primitives.character.CharacterRig attribute)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.lines.Line">Line (class in handanim.primitives.lines)</a>
@@ -1595,7 +1681,13 @@
         <li><a href="api/voiceanim.html#voiceanim.BaseVoiceProvider.list_voices">list_voices() (voiceanim.BaseVoiceProvider method)</a>
 
         <ul>
+          <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.list_voices">(voiceanim.KokoroProvider method)</a>
+</li>
           <li><a href="api/voiceanim.html#voiceanim.providers.base.BaseVoiceProvider.list_voices">(voiceanim.providers.base.BaseVoiceProvider method)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.list_voices">(voiceanim.providers.kokoro_provider.KokoroProvider method)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.VoiceEngine.list_voices">(voiceanim.VoiceEngine class method)</a>
 </li>
         </ul></li>
     </ul></td>
@@ -1645,6 +1737,8 @@
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.BoundingBox.max_x">max_x (handanim.core.draw_ops.BoundingBox attribute)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.BoundingBox.max_y">max_y (handanim.core.draw_ops.BoundingBox attribute)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.mixer.measure_integrated_lufs">measure_integrated_lufs() (in module voiceanim.mixer)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.OpsType.METADATA">METADATA (handanim.core.draw_ops.OpsType attribute)</a>
 </li>
@@ -1809,6 +1903,8 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.OpsType.MOVE_TO">MOVE_TO (handanim.core.draw_ops.OpsType attribute)</a>
 </li>
+        <li><a href="api/handanim.animations.html#handanim.animations.translate.MoveBy">MoveBy (class in handanim.animations.translate)</a>
+</li>
         <li><a href="api/handanim.core.html#handanim.core.animation.AnimationEventType.MUTATION">MUTATION (handanim.core.animation.AnimationEventType attribute)</a>
 </li>
     </ul></td>
@@ -1842,6 +1938,8 @@
 </li>
           <li><a href="api/voiceanim.html#voiceanim.QwenTTSProvider.name">(voiceanim.QwenTTSProvider attribute)</a>
 </li>
+          <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.name">(voiceanim.SpeakerProfile attribute)</a>
+</li>
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
@@ -1852,6 +1950,8 @@
 </li>
         </ul></li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.polygons.NGon">NGon (class in handanim.primitives.polygons)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.mixer.normalize_and_limit">normalize_and_limit() (in module voiceanim.mixer)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1915,13 +2015,23 @@
           <li><a href="api/aianim.html#aianim.schema.DrawableSpec.params">(aianim.schema.DrawableSpec attribute)</a>
 </li>
         </ul></li>
+        <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.parse_voice_spec">parse_voice_spec() (voiceanim.KokoroProvider class method)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.parse_voice_spec">(voiceanim.providers.kokoro_provider.KokoroProvider class method)</a>
+</li>
+        </ul></li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.Ops.partial">partial (handanim.core.draw_ops.Ops attribute)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.pause_after">pause_after (voiceanim.DialogueTurn attribute)</a>
 </li>
         <li><a href="api/aianim.html#aianim.pipeline.PipelineResult">PipelineResult (class in aianim.pipeline)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.place_relative">place_relative() (handanim.core.scene.Scene static method)</a>
 </li>
         <li><a href="api/aianim.html#aianim.compiler.plan_to_python">plan_to_python() (in module aianim.compiler)</a>
+</li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.point_at">point_at() (handanim.primitives.character.CharacterRig method)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.curves.Curve.points">points (handanim.primitives.curves.Curve attribute)</a>
 
@@ -1937,10 +2047,10 @@
           <li><a href="api/voiceanim.html#voiceanim.providers.polly_provider.PollyProvider">(class in voiceanim.providers.polly_provider)</a>
 </li>
         </ul></li>
-        <li><a href="api/handanim.primitives.html#handanim.primitives.polygons.Polygon">Polygon (class in handanim.primitives.polygons)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.polygons.Polygon">Polygon (class in handanim.primitives.polygons)</a>
+</li>
         <li><a href="api/handanim.stylings.html#handanim.stylings.utils.polygon_hachure_lines">polygon_hachure_lines() (in module handanim.stylings.utils)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.OpsType.POP_CLIP">POP_CLIP (handanim.core.draw_ops.OpsType attribute)</a>
@@ -1966,7 +2076,11 @@
         <li><a href="api/voiceanim.html#voiceanim.AudioClip.provider">provider (voiceanim.AudioClip attribute)</a>
 
         <ul>
+          <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.provider">(voiceanim.DialogueTurn attribute)</a>
+</li>
           <li><a href="api/voiceanim.html#voiceanim.schema.AudioClip.provider">(voiceanim.schema.AudioClip attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.provider">(voiceanim.SpeakerProfile attribute)</a>
 </li>
         </ul></li>
         <li><a href="api/handanim.core.html#handanim.core.draw_ops.OpsType.PUSH_CLIP">PUSH_CLIP (handanim.core.draw_ops.OpsType attribute)</a>
@@ -2021,7 +2135,11 @@
           <li><a href="api/handanim.core.html#handanim.core.scene.Scene.render">(handanim.core.scene.Scene method)</a>
 </li>
         </ul></li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.render_contact_sheet">render_contact_sheet() (handanim.core.scene.Scene method)</a>
+</li>
         <li><a href="api/handanim.stylings.html#handanim.stylings.fillpatterns.HachureFillPattern.render_fill_lines">render_fill_lines() (handanim.stylings.fillpatterns.HachureFillPattern method)</a>, <a href="api/handanim.stylings.html#id0">[1]</a>
+</li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.render_frame">render_frame() (handanim.core.scene.Scene method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.render_handout">render_handout() (handanim.core.scene.Scene method)</a>
 </li>
@@ -2033,10 +2151,10 @@
 </li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.render_tikz">render_tikz() (handanim.core.scene.Scene method)</a>
 </li>
-        <li><a href="api/handanim.core.html#handanim.core.tikz_renderer.TikZRenderer.render_tikzpicture">render_tikzpicture() (handanim.core.tikz_renderer.TikZRenderer method)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/handanim.core.html#handanim.core.tikz_renderer.TikZRenderer.render_tikzpicture">render_tikzpicture() (handanim.core.tikz_renderer.TikZRenderer method)</a>
+</li>
         <li><a href="api/handanim.core.html#handanim.core.cache.GroupFrameCache.reset">reset() (handanim.core.cache.GroupFrameCache method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.tikz_renderer.TikZRenderer.reset_colors">reset_colors() (handanim.core.tikz_renderer.TikZRenderer method)</a>
@@ -2147,6 +2265,10 @@
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.VariantSlot.set_schedule">set_schedule() (handanim.primitives.character.VariantSlot method)</a>
 </li>
+        <li><a href="api/handanim.core.html#handanim.core.scene.Scene.set_sketch_sound">set_sketch_sound() (handanim.core.scene.Scene method)</a>
+</li>
+        <li><a href="api/handanim.animations.html#handanim.animations.sketch.SketchAnimation.set_sound">set_sound() (handanim.animations.sketch.SketchAnimation method)</a>, <a href="api/handanim.animations.html#id0">[1]</a>
+</li>
         <li><a href="api/handanim.core.html#handanim.core.cache.GroupFrameCache.set_transformed">set_transformed() (handanim.core.cache.GroupFrameCache method)</a>
 </li>
         <li><a href="api/handanim.core.html#handanim.core.scene.Scene.set_viewport_to_identity">set_viewport_to_identity() (handanim.core.scene.Scene method)</a>
@@ -2195,6 +2317,38 @@
         </ul></li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.character.solve_two_joint_ik">solve_two_joint_ik() (in module handanim.primitives.character)</a>
 </li>
+        <li><a href="api/handanim.animations.html#handanim.animations.sketch.SketchAnimation.sound">sound (handanim.animations.sketch.SketchAnimation attribute)</a>
+</li>
+        <li><a href="api/handanim.animations.html#handanim.animations.sketch.SketchAnimation.sound_style">sound_style (handanim.animations.sketch.SketchAnimation attribute)</a>
+</li>
+        <li><a href="api/handanim.animations.html#handanim.animations.sketch.SketchAnimation.sound_volume">sound_volume (handanim.animations.sketch.SketchAnimation attribute)</a>
+</li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.captions.CaptionWord.speaker">speaker (handanim.primitives.captions.CaptionWord attribute)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.speaker">(voiceanim.DialogueTurn attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.schema.SentenceTimestamp.speaker">(voiceanim.schema.SentenceTimestamp attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.schema.WordTimestamp.speaker">(voiceanim.schema.WordTimestamp attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.SentenceTimestamp.speaker">(voiceanim.SentenceTimestamp attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.WordTimestamp.speaker">(voiceanim.WordTimestamp attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.captions.Captions.speaker_colors">speaker_colors (handanim.primitives.captions.Captions attribute)</a>
+</li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.captions.Captions.speaker_highlights">speaker_highlights (handanim.primitives.captions.Captions attribute)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile">SpeakerProfile (class in voiceanim)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.speed">speed (voiceanim.DialogueTurn attribute)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.speed">(voiceanim.SpeakerProfile attribute)</a>
+</li>
+        </ul></li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.polygons.Square">Square (class in handanim.primitives.polygons)</a>
 </li>
         <li><a href="api/handanim.primitives.html#handanim.primitives.math.Math.standard_glyph_opsset">standard_glyph_opsset() (handanim.primitives.math.Math method)</a>
@@ -2213,6 +2367,8 @@
           <li><a href="api/voiceanim.html#voiceanim.WordTimestamp.start">(voiceanim.WordTimestamp attribute)</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/aianim.html#aianim.schema.AnimationSpec.start_time">start_time (aianim.schema.AnimationSpec attribute)</a>
 
         <ul>
@@ -2221,8 +2377,6 @@
           <li><a href="api/voiceanim.html#voiceanim.schema.NarrationBeat.start_time">(voiceanim.schema.NarrationBeat attribute)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/aianim.html#aianim.executor.ExecutionResult.stderr">stderr (aianim.executor.ExecutionResult attribute)</a>
 </li>
         <li><a href="api/aianim.html#aianim.executor.ExecutionResult.stdout">stdout (aianim.executor.ExecutionResult attribute)</a>
@@ -2295,6 +2449,8 @@
           <li><a href="api/voiceanim.html#voiceanim.VoiceTimelineSync.sync_event_to_word">(voiceanim.VoiceTimelineSync static method)</a>
 </li>
         </ul></li>
+        <li><a href="api/handanim.primitives.html#handanim.primitives.character.CharacterRig.sync_to_audio">sync_to_audio() (handanim.primitives.character.CharacterRig method)</a>
+</li>
         <li><a href="api/voiceanim.html#voiceanim.BaseVoiceProvider.synthesize">synthesize() (voiceanim.BaseVoiceProvider method)</a>
 
         <ul>
@@ -2329,6 +2485,12 @@
 
         <ul>
           <li><a href="api/voiceanim.html#voiceanim.sfx.synthesize_crumple_sound">(in module voiceanim.sfx)</a>
+</li>
+        </ul></li>
+        <li><a href="api/voiceanim.html#voiceanim.synthesize_dialogue">synthesize_dialogue() (in module voiceanim)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.VoiceEngine.synthesize_dialogue">(voiceanim.VoiceEngine static method)</a>
 </li>
         </ul></li>
         <li><a href="api/voiceanim.html#voiceanim.synthesize_ding_sound">synthesize_ding_sound() (in module voiceanim)</a>
@@ -2394,6 +2556,8 @@
         <ul>
           <li><a href="api/voiceanim.html#voiceanim.AudioClip.text">(voiceanim.AudioClip attribute)</a>
 </li>
+          <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.text">(voiceanim.DialogueTurn attribute)</a>
+</li>
           <li><a href="api/voiceanim.html#voiceanim.NarrationBeat.text">(voiceanim.NarrationBeat attribute)</a>
 </li>
           <li><a href="api/voiceanim.html#voiceanim.schema.AudioClip.text">(voiceanim.schema.AudioClip attribute)</a>
@@ -2455,6 +2619,8 @@
           <li><a href="api/handanim.core.html#handanim.core.drawable.Drawable.translate">(handanim.core.drawable.Drawable method)</a>, <a href="api/handanim.core.html#id1">[1]</a>
 </li>
         </ul></li>
+        <li><a href="api/handanim.animations.html#handanim.animations.translate.TranslateByAnimation">TranslateByAnimation (in module handanim.animations.translate)</a>
+</li>
         <li><a href="api/handanim.animations.html#handanim.animations.translate.TranslateFromAnimation">TranslateFromAnimation (class in handanim.animations.translate)</a>
 </li>
         <li><a href="api/handanim.animations.html#handanim.animations.translate.TranslateToAnimation">TranslateToAnimation (class in handanim.animations.translate)</a>
@@ -2522,7 +2688,17 @@
         <li><a href="api/voiceanim.html#voiceanim.AudioClip.voice">voice (voiceanim.AudioClip attribute)</a>
 
         <ul>
+          <li><a href="api/voiceanim.html#voiceanim.DialogueTurn.voice">(voiceanim.DialogueTurn attribute)</a>
+</li>
           <li><a href="api/voiceanim.html#voiceanim.schema.AudioClip.voice">(voiceanim.schema.AudioClip attribute)</a>
+</li>
+          <li><a href="api/voiceanim.html#voiceanim.SpeakerProfile.voice">(voiceanim.SpeakerProfile attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="api/voiceanim.html#voiceanim.KokoroProvider.voice_catalog">voice_catalog (voiceanim.KokoroProvider attribute)</a>
+
+        <ul>
+          <li><a href="api/voiceanim.html#voiceanim.providers.kokoro_provider.KokoroProvider.voice_catalog">(voiceanim.providers.kokoro_provider.KokoroProvider attribute)</a>
 </li>
         </ul></li>
         <li>
@@ -2532,6 +2708,8 @@
           <li><a href="api/voiceanim.html#module-voiceanim">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     voiceanim.cache
 
@@ -2539,8 +2717,6 @@
           <li><a href="api/voiceanim.html#module-voiceanim.cache">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     voiceanim.mixer
 
@@ -2681,6 +2857,8 @@
 </li>
         </ul></li>
         <li><a href="api/voiceanim.html#voiceanim.sfx.write_wav_mono">write_wav_mono() (in module voiceanim.sfx)</a>
+</li>
+        <li><a href="api/voiceanim.html#voiceanim.sfx.write_wav_stereo">write_wav_stereo() (in module voiceanim.sfx)</a>
 </li>
     </ul></td>
   </tr></table>

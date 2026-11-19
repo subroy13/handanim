@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -303,9 +311,11 @@
 <li><p><a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.character.TwoJointLimb" title="handanim.primitives.character.TwoJointLimb"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwoJointLimb</span></code></a>: Creates a two-bone chain (e.g. <code class="docutils literal notranslate"><span class="pre">upper_arm</span></code> + <code class="docutils literal notranslate"><span class="pre">forearm</span></code>) and uses <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.character.solve_two_joint_ik" title="handanim.primitives.character.solve_two_joint_ik"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_two_joint_ik()</span></code></a> (2D law-of-cosines solver) to reach for any target <cite>(x, y)</cite> coordinate.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">handanim</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">CharacterRig</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">PoseAnimation</span><span class="p">,</span> <span class="n">Show</span><span class="p">,</span> <span class="n">SketchStyle</span><span class="p">,</span> <span class="n">VariantSlot</span><span class="p">,</span>
+    <span class="n">CharacterRig</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">PoseAnimation</span><span class="p">,</span> <span class="n">Scene</span><span class="p">,</span> <span class="n">Show</span><span class="p">,</span> <span class="n">SketchStyle</span><span class="p">,</span> <span class="n">VariantSlot</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="n">scene</span> <span class="o">=</span> <span class="n">Scene</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">set_viewport_to_identity</span><span class="p">()</span>
 <span class="n">clean</span> <span class="o">=</span> <span class="n">SketchStyle</span><span class="p">(</span><span class="n">roughness</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">bowing</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
 <span class="n">rig</span> <span class="o">=</span> <span class="n">CharacterRig</span><span class="p">(</span><span class="n">pivot</span><span class="o">=</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">960</span><span class="p">))</span>
@@ -348,8 +358,10 @@
 <span class="n">pose_idle</span> <span class="o">=</span> <span class="n">rig</span><span class="o">.</span><span class="n">capture_pose</span><span class="p">()</span>
 
 <span class="c1"># Wave &amp; point at (720, 640) while smiling/blinking</span>
+<span class="c1"># Use Pose(offsets={...}) to translate the character&#39;s root/torso while keeping IK targets aligned</span>
 <span class="n">pose_point</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">(</span>
     <span class="n">angles</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;head&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">8.0</span><span class="p">},</span>
+    <span class="n">offsets</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;torso&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)},</span>
     <span class="n">ik_targets</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;right_arm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">720</span><span class="p">,</span> <span class="mi">640</span><span class="p">)},</span>
     <span class="n">variants</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eyes&quot;</span><span class="p">:</span> <span class="s2">&quot;blink&quot;</span><span class="p">},</span>
 <span class="p">)</span>

@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=398eb619" />
     
     
 
@@ -231,7 +231,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -305,9 +313,176 @@
     <span class="n">synthesize_theme_loop</span><span class="p">,</span>
     <span class="n">synthesize_whoosh_sound</span><span class="p">,</span>
     <span class="n">write_wav_mono</span><span class="p">,</span>
+    <span class="n">write_wav_stereo</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_k_weight_channel</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply ITU-R BS.1770-4 K-weighting filter (high-shelf + RLB high-pass).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">lfilter</span>
+
+        <span class="c1"># ITU-R BS.1770-4 bilinear transform design for arbitrary sample_rate</span>
+        <span class="c1"># Stage 1: acoustic head-model high-shelf (+4 dB above ~1.5 kHz)</span>
+        <span class="n">f0_1</span> <span class="o">=</span> <span class="mf">1681.974450955533</span>
+        <span class="n">g_1</span> <span class="o">=</span> <span class="mf">3.999843853973347</span>
+        <span class="n">q_1</span> <span class="o">=</span> <span class="mf">0.7071752369554196</span>
+        <span class="n">k1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f0_1</span> <span class="o">/</span> <span class="n">sample_rate</span><span class="p">)</span>
+        <span class="n">vh</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="n">g_1</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span>
+        <span class="n">vb</span> <span class="o">=</span> <span class="n">vh</span><span class="o">**</span><span class="mf">0.4996667741545416</span>
+        <span class="n">a0_1</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">/</span> <span class="n">q_1</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">*</span> <span class="n">k1</span>
+        <span class="n">b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="n">vh</span> <span class="o">+</span> <span class="n">vb</span> <span class="o">*</span> <span class="n">k1</span> <span class="o">/</span> <span class="n">q_1</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">*</span> <span class="n">k1</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_1</span><span class="p">,</span>
+                <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">*</span> <span class="n">k1</span> <span class="o">-</span> <span class="n">vh</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_1</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">vh</span> <span class="o">-</span> <span class="n">vb</span> <span class="o">*</span> <span class="n">k1</span> <span class="o">/</span> <span class="n">q_1</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">*</span> <span class="n">k1</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_1</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mf">1.0</span><span class="p">,</span>
+                <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">*</span> <span class="n">k1</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_1</span><span class="p">,</span>
+                <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k1</span> <span class="o">/</span> <span class="n">q_1</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">*</span> <span class="n">k1</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_1</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Stage 2: RLB high-pass filter (~38 Hz)</span>
+        <span class="n">f0_2</span> <span class="o">=</span> <span class="mf">38.13547087602444</span>
+        <span class="n">q_2</span> <span class="o">=</span> <span class="mf">0.5003270373238773</span>
+        <span class="n">k2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f0_2</span> <span class="o">/</span> <span class="n">sample_rate</span><span class="p">)</span>
+        <span class="n">a0_2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">k2</span> <span class="o">/</span> <span class="n">q_2</span> <span class="o">+</span> <span class="n">k2</span> <span class="o">*</span> <span class="n">k2</span>
+        <span class="n">b2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_2</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mf">1.0</span><span class="p">,</span>
+                <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">k2</span> <span class="o">*</span> <span class="n">k2</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_2</span><span class="p">,</span>
+                <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k2</span> <span class="o">/</span> <span class="n">q_2</span> <span class="o">+</span> <span class="n">k2</span> <span class="o">*</span> <span class="n">k2</span><span class="p">)</span> <span class="o">/</span> <span class="n">a0_2</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lfilter</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="measure_integrated_lufs">
+<a class="viewcode-back" href="../../api/voiceanim.html#voiceanim.measure_integrated_lufs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">measure_integrated_lufs</span><span class="p">(</span><span class="n">audio</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_SR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure ITU-R BS.1770-4 integrated loudness in LUFS.&quot;&quot;&quot;</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span><span class="p">)))</span> <span class="o">&lt;</span> <span class="mf">1e-9</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pyloudnorm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pyln</span>  <span class="c1"># type: ignore[import-not-found]</span>
+
+        <span class="n">meter</span> <span class="o">=</span> <span class="n">pyln</span><span class="o">.</span><span class="n">Meter</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">integrated_loudness</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="n">_k_weight_channel</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="n">_k_weight_channel</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="n">c</span><span class="p">],</span> <span class="n">sample_rate</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">block_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">))</span>
+    <span class="n">step_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">block_len</span><span class="p">:</span>
+        <span class="n">mean_sq</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ch</span> <span class="o">*</span> <span class="n">ch</span><span class="p">))</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="mf">0.691</span> <span class="o">+</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">1e-18</span><span class="p">,</span> <span class="n">mean_sq</span><span class="p">)))</span>
+
+    <span class="n">starts</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">step_len</span><span class="p">)</span>
+    <span class="n">block_powers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="nb">sum</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ch</span><span class="p">[</span><span class="n">s</span> <span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">block_len</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span>
+        <span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">block_lufs</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.691</span> <span class="o">+</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1e-18</span><span class="p">,</span> <span class="n">block_powers</span><span class="p">))</span>
+
+    <span class="c1"># Absolute gate at -70 LUFS</span>
+    <span class="n">abs_mask</span> <span class="o">=</span> <span class="n">block_lufs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">70.0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">abs_mask</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+
+    <span class="n">rel_thresh</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.691</span> <span class="o">+</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">block_powers</span><span class="p">[</span><span class="n">abs_mask</span><span class="p">])))</span> <span class="o">-</span> <span class="mf">10.0</span>
+    <span class="n">rel_mask</span> <span class="o">=</span> <span class="n">abs_mask</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">block_lufs</span> <span class="o">&gt;</span> <span class="n">rel_thresh</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">rel_mask</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="mf">0.691</span> <span class="o">+</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">block_powers</span><span class="p">[</span><span class="n">abs_mask</span><span class="p">]))))</span>
+
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="mf">0.691</span> <span class="o">+</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">block_powers</span><span class="p">[</span><span class="n">rel_mask</span><span class="p">]))))</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_measure_true_peak</span><span class="p">(</span><span class="n">audio</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate 4x oversampled true peak of a 1D or 2D audio signal.&quot;&quot;&quot;</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="n">sample_peak</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sample_peak</span>
+    <span class="c1"># 4-point cubic/Catmull-Rom midpoint interpolation to catch inter-sample peaks</span>
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">arr</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0625</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="mf">0.5625</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mf">0.5625</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mf">0.0625</span> <span class="o">*</span> <span class="n">x3</span>
+        <span class="n">q1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0703125</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="mf">0.8671875</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mf">0.2265625</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mf">0.0234375</span> <span class="o">*</span> <span class="n">x3</span>
+        <span class="n">q3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0234375</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="mf">0.2265625</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mf">0.8671875</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mf">0.0703125</span> <span class="o">*</span> <span class="n">x3</span>
+        <span class="n">inter_peak</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mid</span><span class="p">))),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">q1</span><span class="p">))),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">q3</span><span class="p">))),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">sample_peak</span><span class="p">,</span> <span class="n">inter_peak</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">_measure_true_peak</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+
+<div class="viewcode-block" id="normalize_and_limit">
+<a class="viewcode-back" href="../../api/voiceanim.html#voiceanim.normalize_and_limit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_and_limit</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_SR</span><span class="p">,</span>
+    <span class="n">target_lufs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="o">-</span><span class="mf">14.0</span><span class="p">,</span>
+    <span class="n">ceiling_dbfs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize integrated loudness to `target_lufs` (-14 LUFS default) with a true-peak soft-knee limiter.&quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">y</span>
+
+    <span class="k">if</span> <span class="n">target_lufs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">current_lufs</span> <span class="o">=</span> <span class="n">measure_integrated_lufs</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">current_lufs</span><span class="p">)</span> <span class="ow">and</span> <span class="n">current_lufs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">70.0</span><span class="p">:</span>
+            <span class="n">gain</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">target_lufs</span><span class="p">)</span> <span class="o">-</span> <span class="n">current_lufs</span><span class="p">)</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">*=</span> <span class="n">gain</span>
+
+    <span class="n">ceiling</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ceiling_dbfs</span><span class="p">)</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span>
+    <span class="n">peak</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">peak</span> <span class="o">&gt;</span> <span class="n">ceiling</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">:</span>
+        <span class="n">thr</span> <span class="o">=</span> <span class="n">ceiling</span> <span class="o">*</span> <span class="mf">0.8</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">over</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">thr</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">over</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">over</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">thr</span> <span class="o">+</span> <span class="p">(</span><span class="n">ceiling</span> <span class="o">-</span> <span class="n">thr</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="n">over</span><span class="p">]</span> <span class="o">-</span> <span class="n">thr</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="n">ceiling</span> <span class="o">-</span> <span class="n">thr</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">_measure_true_peak</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tp</span> <span class="o">&gt;</span> <span class="n">ceiling</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">*=</span> <span class="p">(</span><span class="n">ceiling</span> <span class="o">*</span> <span class="mf">0.995</span><span class="p">)</span> <span class="o">/</span> <span class="n">tp</span>
+
+    <span class="k">return</span> <span class="n">y</span></div>
+
 
 
 <div class="viewcode-block" id="mix_soundtrack">
@@ -322,6 +497,9 @@
     <span class="n">sfx_events</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">sample_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_SR</span><span class="p">,</span>
+    <span class="n">target_lufs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="o">-</span><span class="mf">14.0</span><span class="p">,</span>
+    <span class="n">ceiling_dbfs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span>
+    <span class="n">stereo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix narration, repeating background theme music, and timed SFX (chalk, eraser, etc.) into a WAV file.</span>
 
@@ -388,14 +566,19 @@
             <span class="n">copy_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_total</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_music</span><span class="p">))</span>
             <span class="n">music_track</span><span class="p">[:</span><span class="n">copy_len</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_music</span><span class="p">[:</span><span class="n">copy_len</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">music_volume</span><span class="p">)</span>
 
-        <span class="c1"># Auto-duck music under narration speech so voice stays crystal-clear</span>
-        <span class="k">if</span> <span class="n">has_voice</span> <span class="ow">and</span> <span class="n">duck_music</span><span class="p">:</span>
-            <span class="n">win_short</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.08</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">))</span>
-            <span class="n">win_smooth</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.22</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">))</span>
-            <span class="n">env</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">voice_track</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">win_short</span><span class="p">)</span> <span class="o">/</span> <span class="n">win_short</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
-            <span class="n">speech_active</span> <span class="o">=</span> <span class="p">(</span><span class="n">env</span> <span class="o">&gt;</span> <span class="mf">0.015</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-            <span class="n">duck_curve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">speech_active</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">win_smooth</span><span class="p">)</span> <span class="o">/</span> <span class="n">win_smooth</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
-            <span class="n">music_track</span> <span class="o">*=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.55</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">duck_curve</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="c1"># Compute speech activity envelope for auto-ducking music and sketch SFX under voice</span>
+    <span class="n">duck_curve</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">has_voice</span> <span class="ow">and</span> <span class="n">duck_music</span><span class="p">:</span>
+        <span class="n">win_short</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.08</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">))</span>
+        <span class="n">win_smooth</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.22</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">))</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">voice_track</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">win_short</span><span class="p">)</span> <span class="o">/</span> <span class="n">win_short</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+        <span class="n">speech_active</span> <span class="o">=</span> <span class="p">(</span><span class="n">env</span> <span class="o">&gt;</span> <span class="mf">0.015</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">duck_curve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">speech_active</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">win_smooth</span><span class="p">)</span> <span class="o">/</span> <span class="n">win_smooth</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">),</span>
+            <span class="mf">0.0</span><span class="p">,</span>
+            <span class="mf">1.0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">music_track</span> <span class="o">*=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.55</span> <span class="o">*</span> <span class="n">duck_curve</span>
 
     <span class="c1"># 3. Synthesize and place timed SFX events (chalk, eraser, pop, whoosh, ding)</span>
     <span class="n">sfx_track</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_total</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -405,18 +588,18 @@
                 <span class="n">kind</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="s2">&quot;chalk&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                 <span class="n">start_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_time&quot;</span><span class="p">,</span> <span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)))</span>
                 <span class="n">ev_dur</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">))</span>
-                <span class="n">vol</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">))</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
                 <span class="n">style</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span> <span class="s2">&quot;chalk&quot;</span><span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ev</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">start_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="n">kind</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ev</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                 <span class="n">ev_dur</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="mf">0.35</span>
-                <span class="n">vol</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mf">0.45</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ev</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mf">0.25</span>
                 <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;chalk&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="k">if</span> <span class="n">ev_dur</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">start_t</span> <span class="o">&gt;=</span> <span class="n">dur</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ev_dur</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">vol</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">start_t</span> <span class="o">&gt;=</span> <span class="n">dur</span><span class="p">:</span>
                 <span class="k">continue</span>
 
             <span class="n">clipped_dur</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ev_dur</span><span class="p">,</span> <span class="n">dur</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">start_t</span><span class="p">))</span>
@@ -475,17 +658,34 @@
             <span class="k">if</span> <span class="n">end_sample</span> <span class="o">&gt;</span> <span class="n">start_sample</span><span class="p">:</span>
                 <span class="n">sfx_track</span><span class="p">[</span><span class="n">start_sample</span><span class="p">:</span><span class="n">end_sample</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fx_samples</span><span class="p">[:</span> <span class="n">end_sample</span> <span class="o">-</span> <span class="n">start_sample</span><span class="p">]</span>
 
-    <span class="n">combined</span> <span class="o">=</span> <span class="n">voice_track</span> <span class="o">+</span> <span class="n">music_track</span> <span class="o">+</span> <span class="n">sfx_track</span>
-    <span class="c1"># Soft limiter to prevent clipping when narration + music + chalk/eraser overlap</span>
-    <span class="n">peak</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">combined</span><span class="p">)))</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">combined</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-    <span class="k">if</span> <span class="n">peak</span> <span class="o">&gt;</span> <span class="mf">0.92</span><span class="p">:</span>
-        <span class="n">combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">combined</span> <span class="o">/</span> <span class="n">peak</span> <span class="o">*</span> <span class="mf">1.15</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.92</span>
+    <span class="k">if</span> <span class="n">duck_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sfx_track</span> <span class="o">*=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.35</span> <span class="o">*</span> <span class="n">duck_curve</span>
+
+    <span class="k">if</span> <span class="n">stereo</span><span class="p">:</span>
+        <span class="c1"># Build a clean stereo mix: centered voice, gentle stereo width on music &amp; SFX</span>
+        <span class="n">delay_samples</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.00045</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">)))</span>  <span class="c1"># ~0.45ms Haas decorrelation on music</span>
+        <span class="n">music_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">music_track</span><span class="p">,</span> <span class="n">delay_samples</span><span class="p">)</span>
+        <span class="n">music_r</span><span class="p">[:</span><span class="n">delay_samples</span><span class="p">]</span> <span class="o">=</span> <span class="n">music_track</span><span class="p">[:</span><span class="n">delay_samples</span><span class="p">]</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">voice_track</span> <span class="o">+</span> <span class="mf">1.03</span> <span class="o">*</span> <span class="n">music_track</span> <span class="o">+</span> <span class="mf">0.98</span> <span class="o">*</span> <span class="n">sfx_track</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">voice_track</span> <span class="o">+</span> <span class="mf">0.97</span> <span class="o">*</span> <span class="n">music_r</span> <span class="o">+</span> <span class="mf">1.02</span> <span class="o">*</span> <span class="n">sfx_track</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">voice_track</span> <span class="o">+</span> <span class="n">music_track</span> <span class="o">+</span> <span class="n">sfx_track</span>
+
+    <span class="n">combined</span> <span class="o">=</span> <span class="n">normalize_and_limit</span><span class="p">(</span>
+        <span class="n">combined</span><span class="p">,</span>
+        <span class="n">sample_rate</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">,</span>
+        <span class="n">target_lufs</span><span class="o">=</span><span class="n">target_lufs</span><span class="p">,</span>
+        <span class="n">ceiling_dbfs</span><span class="o">=</span><span class="n">ceiling_dbfs</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fd</span><span class="p">,</span> <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;handanim_mix_&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.wav&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">tmp_path</span>
 
+    <span class="k">if</span> <span class="n">stereo</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">write_wav_stereo</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">combined</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">write_wav_mono</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">combined</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)</span></div>
 
 

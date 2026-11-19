@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -290,17 +298,116 @@
 <p><code class="docutils literal notranslate"><span class="pre">voiceanim</span></code> supports four interchangeable speech synthesis providers via <a class="reference internal" href="../api/voiceanim.html#voiceanim.VoiceEngine.synthesize" title="voiceanim.VoiceEngine.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> and <a class="reference internal" href="../api/voiceanim.html#voiceanim.get_provider" title="voiceanim.get_provider"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_provider()</span></code></a>.</p>
 <section id="local-open-weight-default-kokoroprovider-provider-kokoro">
 <h2>1. Local Open-Weight Default: <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;kokoro&quot;</span></code>)<a class="headerlink" href="#local-open-weight-default-kokoroprovider-provider-kokoro" title="Link to this heading">¶</a></h2>
-<p>Uses the lightweight 82M-parameter Kokoro ONNX/PyTorch model for fast, high-fidelity local inference on CPU or Apple Silicon without cloud API keys:</p>
+<p>Uses the lightweight 82M-parameter Kokoro ONNX model for fast, high-fidelity local inference on CPU or Apple Silicon without cloud API keys. <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> exposes all <strong>54 built-in voice embeddings</strong> in <code class="docutils literal notranslate"><span class="pre">voices-v1.0.bin</span></code> as well as <strong>256-D latent voice blending</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">voiceanim</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceEngine</span>
 
 <span class="n">clip</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="s2">&quot;Pythagoras discovered a fundamental relation in right triangles.&quot;</span><span class="p">,</span>
     <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;kokoro&quot;</span><span class="p">,</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>  <span class="c1"># Presets: &quot;af_heart&quot;, &quot;am_adam&quot;, &quot;bf_emma&quot;, &quot;bm_george&quot;</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;am_fenrir&quot;</span><span class="p">,</span>  <span class="c1"># Any of the 54 built-in voices or a blend expression</span>
     <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
+<section id="all-54-built-in-kokoro-voices">
+<h3>All 54 Built-In Kokoro Voices<a class="headerlink" href="#all-54-built-in-kokoro-voices" title="Link to this heading">¶</a></h3>
+<p>You can query the catalog programmatically with <code class="docutils literal notranslate"><span class="pre">VoiceEngine.list_voices(&quot;kokoro&quot;,</span> <span class="pre">category=...,</span> <span class="pre">include_blends=True)</span></code> or inspect <code class="xref py py-data docutils literal notranslate"><span class="pre">KOKORO_VOICE_CATALOG</span></code>:</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24.0%" />
+<col style="width: 76.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Category</p></th>
+<th class="head"><p>Voice IDs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">american_female</span></code> (11)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">af_alloy</span></code>, <code class="docutils literal notranslate"><span class="pre">af_aoede</span></code>, <code class="docutils literal notranslate"><span class="pre">af_bella</span></code>, <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>, <code class="docutils literal notranslate"><span class="pre">af_jessica</span></code>, <code class="docutils literal notranslate"><span class="pre">af_kore</span></code>, <code class="docutils literal notranslate"><span class="pre">af_nicole</span></code>, <code class="docutils literal notranslate"><span class="pre">af_nova</span></code>, <code class="docutils literal notranslate"><span class="pre">af_river</span></code>, <code class="docutils literal notranslate"><span class="pre">af_sarah</span></code>, <code class="docutils literal notranslate"><span class="pre">af_sky</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">american_male</span></code> (9)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">am_adam</span></code>, <code class="docutils literal notranslate"><span class="pre">am_echo</span></code>, <code class="docutils literal notranslate"><span class="pre">am_eric</span></code>, <code class="docutils literal notranslate"><span class="pre">am_fenrir</span></code>, <code class="docutils literal notranslate"><span class="pre">am_liam</span></code>, <code class="docutils literal notranslate"><span class="pre">am_michael</span></code>, <code class="docutils literal notranslate"><span class="pre">am_onyx</span></code>, <code class="docutils literal notranslate"><span class="pre">am_puck</span></code>, <code class="docutils literal notranslate"><span class="pre">am_santa</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">british_female</span></code> (4)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bf_alice</span></code>, <code class="docutils literal notranslate"><span class="pre">bf_emma</span></code>, <code class="docutils literal notranslate"><span class="pre">bf_isabella</span></code>, <code class="docutils literal notranslate"><span class="pre">bf_lily</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">british_male</span></code> (4)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bm_daniel</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_fable</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_george</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_lewis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hindi</span></code> / Indian English (4)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hf_alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">hf_beta</span></code>, <code class="docutils literal notranslate"><span class="pre">hm_omega</span></code>, <code class="docutils literal notranslate"><span class="pre">hm_psi</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">spanish</span></code> (3)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ef_dora</span></code>, <code class="docutils literal notranslate"><span class="pre">em_alex</span></code>, <code class="docutils literal notranslate"><span class="pre">em_santa</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">french</span></code> (1)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ff_siwis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">italian</span></code> (2)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">if_sara</span></code>, <code class="docutils literal notranslate"><span class="pre">im_nicola</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">japanese</span></code> (5)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">jf_alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">jf_gongitsune</span></code>, <code class="docutils literal notranslate"><span class="pre">jf_nezumi</span></code>, <code class="docutils literal notranslate"><span class="pre">jf_tebukuro</span></code>, <code class="docutils literal notranslate"><span class="pre">jm_kumo</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">portuguese</span></code> (3)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pf_dora</span></code>, <code class="docutils literal notranslate"><span class="pre">pm_alex</span></code>, <code class="docutils literal notranslate"><span class="pre">pm_santa</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mandarin</span></code> (8)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zf_xiaobei</span></code>, <code class="docutils literal notranslate"><span class="pre">zf_xiaoni</span></code>, <code class="docutils literal notranslate"><span class="pre">zf_xiaoxiao</span></code>, <code class="docutils literal notranslate"><span class="pre">zf_xiaoyi</span></code>, <code class="docutils literal notranslate"><span class="pre">zm_yunjian</span></code>, <code class="docutils literal notranslate"><span class="pre">zm_yunxi</span></code>, <code class="docutils literal notranslate"><span class="pre">zm_yunxia</span></code>, <code class="docutils literal notranslate"><span class="pre">zm_yunyang</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="d-latent-voice-blending">
+<h3>256-D Latent Voice Blending<a class="headerlink" href="#d-latent-voice-blending" title="Link to this heading">¶</a></h3>
+<p>Every Kokoro voice is a <code class="docutils literal notranslate"><span class="pre">(510,</span> <span class="pre">1,</span> <span class="pre">256)</span></code> <code class="docutils literal notranslate"><span class="pre">float32</span></code> style matrix. <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> lets you linearly interpolate two or more voices to craft custom timbres, smooth out single-voice artifacts, or mix regional accents (all weights are automatically normalized to sum to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">voiceanim</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceEngine</span>
+
+<span class="c1"># 1. Weighted blend expression string (&#39;+&#39; or &#39;,&#39; separator)</span>
+<span class="n">clip</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="s2">&quot;Blending sixty percent Puck with forty percent Fable.&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;am_puck:0.6+bm_fable:0.4&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 2. Equal-weight shorthand (50% / 50%)</span>
+<span class="n">clip_equal</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="s2">&quot;Equal blend of Fenrir and Onyx.&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;am_fenrir+am_onyx&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Dictionary or sequence of (voice, weight) pairs</span>
+<span class="n">clip_dict</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="s2">&quot;Warm Indian-English presenter blend.&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hm_omega&quot;</span><span class="p">:</span> <span class="mf">0.55</span><span class="p">,</span> <span class="s2">&quot;am_liam&quot;</span><span class="p">:</span> <span class="mf">0.45</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Built-in named blend presets</span>
+<span class="n">clip_preset</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="s2">&quot;Using a built-in named blend preset.&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;blend_transatlantic&quot;</span><span class="p">,</span>  <span class="c1"># Or &quot;blend_professor&quot;, &quot;blend_storyteller&quot;,</span>
+                                  <span class="c1"># &quot;blend_host_female&quot;, &quot;blend_indian_male&quot;, &quot;blend_indian_female&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># 5. Pre-compute a reusable (510, 1, 256) style vector directly</span>
+<span class="n">custom_style</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">blend_voices</span><span class="p">({</span><span class="s2">&quot;af_aoede&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span> <span class="s2">&quot;af_kore&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">})</span>
+<span class="n">clip_style</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;Synthesized from a style matrix.&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">custom_style</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="phonemizer-language-selection-lang">
+<h3>Phonemizer Language Selection (<code class="docutils literal notranslate"><span class="pre">lang</span></code>)<a class="headerlink" href="#phonemizer-language-selection-lang" title="Link to this heading">¶</a></h3>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> selects <code class="docutils literal notranslate"><span class="pre">lang=&quot;en-gb&quot;</span></code> when the dominant voice is British (<code class="docutils literal notranslate"><span class="pre">bf_*</span></code> or <code class="docutils literal notranslate"><span class="pre">bm_*</span></code>) and <code class="docutils literal notranslate"><span class="pre">lang=&quot;en-us&quot;</span></code> otherwise (so cross-accent voices such as <code class="docutils literal notranslate"><span class="pre">hm_omega</span></code> or <code class="docutils literal notranslate"><span class="pre">hf_alpha</span></code> pronounce English scripts naturally out of the box). To synthesize non-English scripts or force a specific phonemizer, pass <code class="docutils literal notranslate"><span class="pre">lang</span></code> explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clip_uk</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="s2">&quot;Schedule and aluminium pronunciation.&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;am_puck:0.5+bm_daniel:0.5&quot;</span><span class="p">,</span>
+    <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="instruction-controllable-local-tts-qwenttsprovider-provider-qwen">
 <h2>2. Instruction-Controllable Local TTS: <code class="docutils literal notranslate"><span class="pre">QwenTTSProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;qwen&quot;</span></code>)<a class="headerlink" href="#instruction-controllable-local-tts-qwenttsprovider-provider-qwen" title="Link to this heading">¶</a></h2>
@@ -397,7 +504,12 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Voice Providers (Kokoro, Qwen3-TTS, Polly, Mock)</a><ul>
-<li><a class="reference internal" href="#local-open-weight-default-kokoroprovider-provider-kokoro">1. Local Open-Weight Default: <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;kokoro&quot;</span></code>)</a></li>
+<li><a class="reference internal" href="#local-open-weight-default-kokoroprovider-provider-kokoro">1. Local Open-Weight Default: <code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;kokoro&quot;</span></code>)</a><ul>
+<li><a class="reference internal" href="#all-54-built-in-kokoro-voices">All 54 Built-In Kokoro Voices</a></li>
+<li><a class="reference internal" href="#d-latent-voice-blending">256-D Latent Voice Blending</a></li>
+<li><a class="reference internal" href="#phonemizer-language-selection-lang">Phonemizer Language Selection (<code class="docutils literal notranslate"><span class="pre">lang</span></code>)</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#instruction-controllable-local-tts-qwenttsprovider-provider-qwen">2. Instruction-Controllable Local TTS: <code class="docutils literal notranslate"><span class="pre">QwenTTSProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;qwen&quot;</span></code>)</a></li>
 <li><a class="reference internal" href="#cloud-neural-generative-tts-pollyprovider-provider-polly">3. Cloud Neural &amp; Generative TTS: <code class="docutils literal notranslate"><span class="pre">PollyProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;polly&quot;</span></code>)</a></li>
 <li><a class="reference internal" href="#offline-deterministic-ci-testing-mockvoiceprovider-provider-mock">4. Offline Deterministic CI / Testing: <code class="docutils literal notranslate"><span class="pre">MockVoiceProvider</span></code> (<code class="docutils literal notranslate"><span class="pre">provider=&quot;mock&quot;</span></code>)</a></li>

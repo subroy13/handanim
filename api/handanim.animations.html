@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
@@ -291,14 +299,23 @@
 <span id="handanim-animations-sketch"></span><h2>handanim.animations.sketch<a class="headerlink" href="#module-handanim.animations.sketch" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.sketch.</span></span><span class="sig-name descname"><span class="pre">SketchAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.sketch.</span></span><span class="sig-name descname"><span class="pre">SketchAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_before_fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glowing_dot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sound_volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sound_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
 <p>A class representing a sketch animation event that progressively renders drawing operations.</p>
 <p>This animation supports partial rendering of drawing and fill operations with configurable timing
 and optional glowing dot effects. It allows for smooth, incremental visualization of drawing sequences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+<li><p><strong>wait_before_fill</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>glowing_dot</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>sound</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>sound_volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>sound_style</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -308,6 +325,40 @@ and optional glowing dot effects. It allows for smooth, incremental visualizatio
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.sound">
+<span class="sig-name descname"><span class="pre">sound</span></span><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.sound" title="Link to this definition">¶</a></dt>
+<dd><p>Per-animation override to turn sketch drawing sound on (<cite>True</cite>) or off (<cite>False</cite>).
+When <cite>None</cite> (default), inherits the scene’s <cite>sketch_sound</cite> setting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.sound_volume">
+<span class="sig-name descname"><span class="pre">sound_volume</span></span><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.sound_volume" title="Link to this definition">¶</a></dt>
+<dd><p>Optional per-animation volume multiplier (<cite>0.0</cite> to <cite>1.0</cite>) for the sketch sound.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.sound_style">
+<span class="sig-name descname"><span class="pre">sound_style</span></span><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.sound_style" title="Link to this definition">¶</a></dt>
+<dd><p>Optional per-animation sound style (<cite>“chalk”</cite> or <cite>“pen”</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -336,8 +387,44 @@ and optional glowing dot effects. It allows for smooth, incremental visualizatio
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="handanim.animations.sketch.SketchAnimation.set_sound">
+<span class="sig-name descname"><span class="pre">set_sound</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation.set_sound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.sketch.SketchAnimation.set_sound" title="Link to this definition">¶</a></dt>
+<dd><p>Enables, disables, or adjusts the volume/style of the sketch sound for this event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation" title="handanim.animations.sketch.SketchAnimation"><em>SketchAnimation</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation.get_partial_sketch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_sound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation.set_sound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd><p>Turn sketch sound on or off or adjust its volume/style for this animation event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation" title="handanim.animations.sketch.SketchAnimation"><em>SketchAnimation</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">get_partial_sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opsset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/sketch.html#SketchAnimation.get_partial_sketch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate a partial OpsSet representing the sketching progress of an operation set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -768,6 +855,31 @@ over the course of the animation’s duration, using an optional easing function
 <dd><p>Applies the translation from the specified point to the OpsSet’s center of gravity.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="handanim.animations.translate.MoveBy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">handanim.animations.translate.</span></span><span class="sig-name descname"><span class="pre">MoveBy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/handanim/animations/translate.html#MoveBy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#handanim.animations.translate.MoveBy" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="handanim.core.html#handanim.core.animation.AnimationEvent" title="handanim.core.animation.AnimationEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimationEvent</span></code></a></p>
+<p>Translate an <cite>OpsSet</cite> by a relative <cite>(dx, dy)</cite> offset over <cite>duration</cite> seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>dy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>)</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="handanim.animations.translate.TranslateByAnimation">
+<span class="sig-prename descclassname"><span class="pre">handanim.animations.translate.</span></span><span class="sig-name descname"><span class="pre">TranslateByAnimation</span></span><a class="headerlink" href="#handanim.animations.translate.TranslateByAnimation" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#handanim.animations.translate.MoveBy" title="handanim.animations.translate.MoveBy"><code class="xref py py-class docutils literal notranslate"><span class="pre">MoveBy</span></code></a></p>
 </dd></dl>
 
 </section>
@@ -1228,9 +1340,14 @@ revealed page underneath.</p></li>
 <li><a class="reference internal" href="#module-handanim.animations.sketch">handanim.animations.sketch</a><ul>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation"><code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a><ul>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.wait_before_fill"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.wait_before_fill</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.sound"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.sound</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.sound_volume"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.sound_volume</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.sound_style"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.sound_style</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.get_partial_sketch"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
 <li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.apply"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.apply()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.sketch.SketchAnimation.set_sound"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.set_sound()</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.set_sound()</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SketchAnimation.get_partial_sketch()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1277,6 +1394,8 @@ revealed page underneath.</p></li>
 <li><a class="reference internal" href="#handanim.animations.translate.TranslateFromAnimation.apply"><code class="docutils literal notranslate"><span class="pre">TranslateFromAnimation.apply()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#handanim.animations.translate.MoveBy"><code class="docutils literal notranslate"><span class="pre">MoveBy</span></code></a></li>
+<li><a class="reference internal" href="#handanim.animations.translate.TranslateByAnimation"><code class="docutils literal notranslate"><span class="pre">TranslateByAnimation</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-handanim.animations.rotate">handanim.animations.rotate</a><ul>

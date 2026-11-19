@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -315,12 +323,20 @@
 <h2>Visual Showcase<a class="headerlink" href="#visual-showcase" title="Link to this heading">¶</a></h2>
 <div class="gallery-grid">
   <div class="gallery-item">
-    <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif" alt="Pythagoras Theorem Animation">
-    <p><strong>Pythagoras Theorem</strong> — Hand-sketched geometry with hachure fills</p>
+    <img src="_static/gallery/pythagoras.gif" alt="Pythagoras Theorem Animation">
+    <p><strong><a href="gallery/math_and_geometry.html">Pythagoras Theorem</a></strong> — Hand-sketched geometry with hachure fills</p>
   </div>
   <div class="gallery-item">
-    <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
-    <p><strong>Algebraic Proof of (a + b)²</strong> — Step-by-step visual derivation</p>
+    <img src="_static/gallery/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
+    <p><strong><a href="gallery/math_and_geometry.html">Algebraic Proof of (a + b)²</a></strong> — Step-by-step visual derivation</p>
+  </div>
+  <div class="gallery-item">
+    <img src="_static/gallery/ml_workflow_demo.gif" alt="ML Workflow &amp; Table">
+    <p><strong><a href="gallery/flowcharts_and_tables.html">Flowcharts &amp; Tables</a></strong> — ML pipeline &amp; row-by-row model table</p>
+  </div>
+  <div class="gallery-item">
+    <video controls loop muted playsinline src="_static/gallery/scene_transitions_demo.mp4"></video>
+    <p><strong><a href="gallery/scene_transitions.html">Page Turn &amp; Paper Crumple</a></strong> — Multi-page sketchbook transitions with SFX</p>
   </div>
 </div></section>
 <section id="second-quick-example">
@@ -370,10 +386,10 @@
 <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation &amp; Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#system-prerequisites-cairo">1. System Prerequisites (Cairo)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-via-pip-from-pypi">2. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-from-source-poetry">3. Installing from Source (Poetry)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-with-conda">4. Installing with Conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-via-pip-from-pypi">1. Installing via <code class="docutils literal notranslate"><span class="pre">pip</span></code> (from PyPI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#platform-notes-for-cairo-if-prebuilt-wheel-is-unavailable">2. Platform Notes for Cairo (If Prebuilt Wheel Is Unavailable)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-with-conda-mamba">3. Installing with Conda / Mamba</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installing-from-source-poetry">4. Installing from Source (Poetry)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quickstart Tutorial</a><ul>
@@ -472,7 +488,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html">Background Music &amp; Automatic Chalk / Eraser SFX</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#repeating-background-theme-music">1. Repeating Background Theme Music</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-chalk-sketch-sound-during-sketchanimation">2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-chalk-sketch-sound-during-sketchanimation-on-off-volume-control">2. Automatic Chalk Sketch Sound During <code class="docutils literal notranslate"><span class="pre">SketchAnimation</span></code> (On / Off &amp; Volume Control)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-board-wiping-sound-during-eraser">3. Automatic Board-Wiping Sound During <code class="docutils literal notranslate"><span class="pre">Eraser</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#automatic-page-turn-paper-crumple-sounds-transition-sound-true">4. Automatic Page-Turn &amp; Paper-Crumple Sounds (<code class="docutils literal notranslate"><span class="pre">transition_sound=True</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="voiceanim_guide/music_and_sfx.html#additional-procedural-sfx-pop-whoosh-ding-page-turn-crumple">5. Additional Procedural SFX (<code class="docutils literal notranslate"><span class="pre">pop</span></code>, <code class="docutils literal notranslate"><span class="pre">whoosh</span></code>, <code class="docutils literal notranslate"><span class="pre">ding</span></code>, <code class="docutils literal notranslate"><span class="pre">page_turn</span></code>, <code class="docutils literal notranslate"><span class="pre">crumple</span></code>)</a></li>
@@ -509,10 +525,9 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Examples &amp; Visual Gallery</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#mathematical-proofs-geometry">Mathematical Proofs &amp; Geometry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#flowcharts-diagrams">Flowcharts &amp; Diagrams</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#short-form-storytelling-characters-captions-sound">Short-Form Storytelling: Characters, Captions &amp; Sound</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/examples.html">Gallery &amp; Tutorials Showcase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#visual-gallery-by-theme">Visual Gallery by Theme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/examples.html#browse-tutorials-by-theme">Browse Tutorials by Theme</a></li>
 </ul>
 </li>
 </ul>

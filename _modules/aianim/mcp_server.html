@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=398eb619" />
     
     
 
@@ -231,7 +231,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -339,6 +347,63 @@
                     <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
                         <span class="s2">&quot;script_path&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Path to the Python animation script&quot;</span><span class="p">},</span>
                         <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Optional max duration override&quot;</span><span class="p">},</span>
+                        <span class="s2">&quot;safe_zone&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Optional platform safe-zone preset (&#39;youtube_shorts&#39; or &#39;youtube_landscape&#39;)&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;check_overlaps&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to check for active drawable bounding-box overlaps (default true)&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="p">},</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;script_path&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;render_contact_sheet&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Render multiple storyboard keyframes into a single annotated PNG grid (contact sheet) with timestamps and optional safe-zone guides for fast visual review.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;inputSchema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;script_path&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Path to the Python animation script&quot;</span><span class="p">},</span>
+                        <span class="s2">&quot;timestamps&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">},</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Optional list of timestamps (in seconds) to sample&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;n_frames&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of evenly spaced frames if timestamps not provided (default 6)&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of grid columns (default 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                        <span class="s2">&quot;safe_zone&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Optional safe-zone overlay guide (&#39;youtube_shorts&#39; or &#39;youtube_landscape&#39;)&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;output_path&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Optional output PNG path&quot;</span><span class="p">},</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;script_path&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;render_video&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Render an existing handanim Python script to an MP4 video (supports fast preview mode or full final resolution).&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;inputSchema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;script_path&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Path to the Python animation script&quot;</span><span class="p">},</span>
+                        <span class="s2">&quot;output_path&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Target MP4 file path&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;preview.mp4&quot;</span><span class="p">},</span>
+                        <span class="s2">&quot;preview&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;If true, scales pixel dimensions to fast preview (360x640 or 640x360 @ 15fps) while preserving world coordinates&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Optional duration override in seconds&quot;</span><span class="p">},</span>
+                        <span class="s2">&quot;sketch_sound&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to enable automatic chalk sketch sound&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="p">},</span>
                     <span class="p">},</span>
                     <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;script_path&quot;</span><span class="p">],</span>
                 <span class="p">},</span>
@@ -587,6 +652,8 @@
         <span class="k">elif</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">&quot;introspect_scene&quot;</span><span class="p">:</span>
             <span class="n">script_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;script_path&quot;</span><span class="p">)</span>
             <span class="n">max_length</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_length&quot;</span><span class="p">)</span>
+            <span class="n">safe_zone</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;safe_zone&quot;</span><span class="p">)</span>
+            <span class="n">check_overlaps</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;check_overlaps&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">script_path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">script_path</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Error: script file &#39;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">}]</span>
 
@@ -612,7 +679,7 @@
 <span class="s2">                break</span>
 <span class="s2">    if scene_obj:</span>
 <span class="s2">        print(&quot;---JSON_START---&quot;)</span>
-<span class="s2">        print(json.dumps(scene_obj.introspect(max_length=</span><span class="si">{</span><span class="n">max_length</span><span class="si">}</span><span class="s2">)))</span>
+<span class="s2">        print(json.dumps(scene_obj.introspect(max_length=</span><span class="si">{</span><span class="n">max_length</span><span class="si">!r}</span><span class="s2">, safe_zone=</span><span class="si">{</span><span class="n">safe_zone</span><span class="si">!r}</span><span class="s2">, check_overlaps=</span><span class="si">{</span><span class="n">check_overlaps</span><span class="si">!r}</span><span class="s2">)))</span>
 <span class="s2">        print(&quot;---JSON_END---&quot;)</span>
 <span class="s2">    else:</span>
 <span class="s2">        print(&quot;ERROR: No &#39;scene&#39; variable found in script.&quot;)</span>
@@ -624,6 +691,130 @@
                 <span class="n">json_str</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;---JSON_START---&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;---JSON_END---&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">json_str</span><span class="p">}]</span>
             <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Introspection output:</span><span class="se">\n</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="se">\n</span><span class="s2">Errors:</span><span class="se">\n</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}]</span>
+
+        <span class="k">elif</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">&quot;render_contact_sheet&quot;</span><span class="p">:</span>
+            <span class="n">script_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;script_path&quot;</span><span class="p">)</span>
+            <span class="n">timestamps</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamps&quot;</span><span class="p">)</span>
+            <span class="n">n_frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_frames&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cols&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">safe_zone</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;safe_zone&quot;</span><span class="p">)</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_path&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;contact_sheet.png&quot;</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">script_path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">script_path</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Error: script file &#39;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">}]</span>
+
+            <span class="n">runner_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">import sys, os</span>
+<span class="s2">from pathlib import Path</span>
+<span class="s2">sys.path.insert(0, str(Path(&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;).parent))</span>
+<span class="s2">import importlib.util</span>
+<span class="s2">spec = importlib.util.spec_from_file_location(&quot;user_scene&quot;, &quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;)</span>
+<span class="s2">mod = importlib.util.module_from_spec(spec)</span>
+<span class="s2">from handanim import Scene</span>
+<span class="s2">orig_render = Scene.render</span>
+<span class="s2">Scene.render = lambda *args, **kwargs: None</span>
+<span class="s2">try:</span>
+<span class="s2">    spec.loader.exec_module(mod)</span>
+<span class="s2">    scene_obj = getattr(mod, &#39;scene&#39;, None)</span>
+<span class="s2">    if not scene_obj:</span>
+<span class="s2">        for val in mod.__dict__.values():</span>
+<span class="s2">            if isinstance(val, Scene):</span>
+<span class="s2">                scene_obj = val</span>
+<span class="s2">                break</span>
+<span class="s2">    if scene_obj:</span>
+<span class="s2">        scene_obj.render_contact_sheet(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;,</span>
+<span class="s2">            timestamps=</span><span class="si">{</span><span class="n">timestamps</span><span class="si">!r}</span><span class="s2">,</span>
+<span class="s2">            n_frames=</span><span class="si">{</span><span class="n">n_frames</span><span class="si">!r}</span><span class="s2">,</span>
+<span class="s2">            cols=</span><span class="si">{</span><span class="n">cols</span><span class="si">!r}</span><span class="s2">,</span>
+<span class="s2">            safe_zone=</span><span class="si">{</span><span class="n">safe_zone</span><span class="si">!r}</span><span class="s2">,</span>
+<span class="s2">        )</span>
+<span class="s2">        print(&quot;CONTACT_SHEET_SUCCESS&quot;)</span>
+<span class="s2">    else:</span>
+<span class="s2">        print(&quot;ERROR: No scene object found.&quot;)</span>
+<span class="s2">finally:</span>
+<span class="s2">    Scene.render = orig_render</span>
+<span class="s2">&quot;&quot;&quot;</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">runner_code</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;CONTACT_SHEET_SUCCESS&quot;</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Contact sheet rendered successfully to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}]</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">b64_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">b64_data</span><span class="p">,</span>
+                        <span class="s2">&quot;mimeType&quot;</span><span class="p">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">content</span>
+            <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Failed to render contact sheet:</span><span class="se">\n</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}]</span>
+
+        <span class="k">elif</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">&quot;render_video&quot;</span><span class="p">:</span>
+            <span class="n">script_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;script_path&quot;</span><span class="p">)</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_path&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;preview.mp4&quot;</span>
+            <span class="n">preview</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;preview&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+            <span class="n">max_length</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_length&quot;</span><span class="p">)</span>
+            <span class="n">sketch_sound</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sketch_sound&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">script_path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">script_path</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Error: script file &#39;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">}]</span>
+
+            <span class="n">runner_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">import sys, os, json</span>
+<span class="s2">from pathlib import Path</span>
+<span class="s2">sys.path.insert(0, str(Path(&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;).parent))</span>
+<span class="s2">import importlib.util</span>
+<span class="s2">spec = importlib.util.spec_from_file_location(&quot;user_scene&quot;, &quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;)</span>
+<span class="s2">mod = importlib.util.module_from_spec(spec)</span>
+<span class="s2">from handanim import Scene</span>
+<span class="s2">orig_render = Scene.render</span>
+<span class="s2">Scene.render = lambda *args, **kwargs: None</span>
+<span class="s2">try:</span>
+<span class="s2">    spec.loader.exec_module(mod)</span>
+<span class="s2">finally:</span>
+<span class="s2">    Scene.render = orig_render</span>
+
+<span class="s2">scene_obj = getattr(mod, &#39;scene&#39;, None)</span>
+<span class="s2">if not scene_obj:</span>
+<span class="s2">    for val in mod.__dict__.values():</span>
+<span class="s2">        if isinstance(val, Scene):</span>
+<span class="s2">            scene_obj = val</span>
+<span class="s2">            break</span>
+
+<span class="s2">if scene_obj is None:</span>
+<span class="s2">    print(&quot;ERROR: No scene object found.&quot;)</span>
+<span class="s2">    sys.exit(1)</span>
+
+<span class="s2">if </span><span class="si">{</span><span class="n">preview</span><span class="si">!r}</span><span class="s2">:</span>
+<span class="s2">    if scene_obj.height &gt; scene_obj.width:</span>
+<span class="s2">        scene_obj.width, scene_obj.height = 360, 640</span>
+<span class="s2">    else:</span>
+<span class="s2">        scene_obj.width, scene_obj.height = 640, 360</span>
+<span class="s2">    scene_obj.viewport.screen_width = scene_obj.width</span>
+<span class="s2">    scene_obj.viewport.screen_height = scene_obj.height</span>
+<span class="s2">    scene_obj.fps = min(scene_obj.fps, 15)</span>
+
+<span class="s2">out_file = &#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">os.makedirs(os.path.dirname(out_file) or &quot;.&quot;, exist_ok=True)</span>
+<span class="s2">scene_obj.render(out_file, max_length=</span><span class="si">{</span><span class="n">max_length</span><span class="si">!r}</span><span class="s2">, sketch_sound=</span><span class="si">{</span><span class="n">sketch_sound</span><span class="si">!r}</span><span class="s2">)</span>
+<span class="s2">info = </span><span class="se">{{</span>
+<span class="s2">    &quot;success&quot;: True,</span>
+<span class="s2">    &quot;output_path&quot;: out_file,</span>
+<span class="s2">    &quot;width&quot;: scene_obj.width,</span>
+<span class="s2">    &quot;height&quot;: scene_obj.height,</span>
+<span class="s2">    &quot;fps&quot;: scene_obj.fps,</span>
+<span class="s2">    &quot;duration&quot;: round(float(scene_obj.get_current_time()), 2),</span>
+<span class="se">}}</span>
+<span class="s2">print(&quot;---VIDEO_JSON_START---&quot;)</span>
+<span class="s2">print(json.dumps(info))</span>
+<span class="s2">print(&quot;---VIDEO_JSON_END---&quot;)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">runner_code</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;---VIDEO_JSON_START---&quot;</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+                <span class="n">json_str</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;---VIDEO_JSON_START---&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;---VIDEO_JSON_END---&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">json_str</span><span class="p">}]</span>
+            <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Failed to render video:</span><span class="se">\n</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}]</span>
 
         <span class="k">elif</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">&quot;render_snapshot&quot;</span><span class="p">:</span>
             <span class="n">script_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;script_path&quot;</span><span class="p">)</span>
@@ -707,6 +898,8 @@
                         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Kokoro-82M (Local ONNX)&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;default_voice&quot;</span><span class="p">:</span> <span class="n">KokoroProvider</span><span class="o">.</span><span class="n">default_voice</span><span class="p">,</span>
                         <span class="s2">&quot;voices&quot;</span><span class="p">:</span> <span class="n">KokoroProvider</span><span class="o">.</span><span class="n">supported_voices</span><span class="p">,</span>
+                        <span class="s2">&quot;categories&quot;</span><span class="p">:</span> <span class="n">KokoroProvider</span><span class="o">.</span><span class="n">voice_catalog</span><span class="p">,</span>
+                        <span class="s2">&quot;blend_presets&quot;</span><span class="p">:</span> <span class="n">KokoroProvider</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">,</span>
                     <span class="p">},</span>
                 <span class="p">},</span>
             <span class="p">}</span>
@@ -720,7 +913,7 @@
             <span class="n">voice</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;voice&quot;</span><span class="p">)</span>
             <span class="n">speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;speed&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
             <span class="n">instruct</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;instruct&quot;</span><span class="p">)</span>
-            <span class="n">output_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_path&quot;</span><span class="p">)</span>
+            <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_path&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
             <span class="n">clip</span> <span class="o">=</span> <span class="n">VoiceEngine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
                 <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
@@ -788,7 +981,7 @@
                 <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Error: voiceanim package is not available.&quot;</span><span class="p">}]</span>
             <span class="n">video_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;video_path&quot;</span><span class="p">)</span>
             <span class="n">audio_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;audio_path&quot;</span><span class="p">)</span>
-            <span class="n">output_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_path&quot;</span><span class="p">)</span>
+            <span class="n">output_path</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_path&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="n">audio_offset</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;audio_offset&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
             <span class="n">shortest</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shortest&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
 

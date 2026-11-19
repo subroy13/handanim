@@ -45,10 +45,37 @@
     padding: 1rem;
     background-color: var(--color-background-secondary);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.gallery-item img {
+.gallery-item img,
+.gallery-item video,
+.tutorial-media video,
+.tutorial-media img {
     max-width: 100%;
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tutorial-media {
+    margin: 1.25rem 0;
+    padding: 1rem;
+    border: 1px solid var(--color-background-border);
+    border-radius: 10px;
+    background-color: var(--color-background-secondary);
+    text-align: center;
+}
+
+.tutorial-badge {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(29, 78, 216, 0.12);
+    color: var(--color-brand-primary);
+    margin-bottom: 0.45rem;
 }
 

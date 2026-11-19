@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=398eb619" />
     
     
 
@@ -231,7 +231,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -282,7 +290,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVoiceProvider</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.kokoro_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.kokoro_provider</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">KOKORO_ALL_VOICES</span><span class="p">,</span>
+    <span class="n">KOKORO_BLEND_PRESETS</span><span class="p">,</span>
+    <span class="n">KOKORO_VOICE_CATALOG</span><span class="p">,</span>
+    <span class="n">KokoroProvider</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mock_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockVoiceProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.polly_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">PollyProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.qwen_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">QwenTTSProvider</span>
@@ -315,6 +328,20 @@
     <span class="n">provider_cls</span> <span class="o">=</span> <span class="n">PROVIDERS</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">provider_cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;BaseVoiceProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KokoroProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KOKORO_ALL_VOICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KOKORO_BLEND_PRESETS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KOKORO_VOICE_CATALOG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MockVoiceProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PollyProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;QwenTTSProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PROVIDERS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_provider&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
 </pre></div>
         </article>

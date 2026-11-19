@@ -3,14 +3,14 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="handanim Package" href="../api/handanim.html"><link rel="prev" title="AST Guardrails &amp; Headless Scene Introspection" href="../aianim_guide/diagnostics_and_linting.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Theme 1: Mathematical Proofs &amp; Geometry" href="math_and_geometry.html"><link rel="prev" title="AST Guardrails &amp; Headless Scene Introspection" href="../aianim_guide/diagnostics_and_linting.html">
 
     <!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Examples &amp; Visual Gallery - handanim — Hand-Drawn Whiteboard Animation Studio</title>
+        <title>Gallery &amp; Tutorials Showcase - handanim — Hand-Drawn Whiteboard Animation Studio</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=398eb619" />
     
     
 
@@ -232,7 +232,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -285,97 +293,136 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="examples-visual-gallery">
-<h1>Examples &amp; Visual Gallery<a class="headerlink" href="#examples-visual-gallery" title="Link to this heading">¶</a></h1>
-<p>Explore complete runnable scripts in the <a class="reference external" href="https://github.com/subroy13/handanim/tree/master/examples">examples/</a> directory of the repository.</p>
-<section id="mathematical-proofs-geometry">
-<h2>Mathematical Proofs &amp; Geometry<a class="headerlink" href="#mathematical-proofs-geometry" title="Link to this heading">¶</a></h2>
-<section id="pythagoras-theorem-examples-pythagoras-py">
-<h3>1. Pythagoras Theorem (<cite>examples/pythagoras.py</cite>)<a class="headerlink" href="#pythagoras-theorem-examples-pythagoras-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates polygon construction, rotated square alignment, hachure fills, and sequential <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.sketch.SketchAnimation" title="handanim.animations.sketch.SketchAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a> reveals.</p>
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif"><img alt="Pythagoras Theorem Animation" class="align-center" src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif" style="width: 520px;" />
-</a>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/pythagoras.py
+          <section id="gallery-tutorials-showcase">
+<h1>Gallery &amp; Tutorials Showcase<a class="headerlink" href="#gallery-tutorials-showcase" title="Link to this heading">¶</a></h1>
+<p>Welcome to the <strong>handanim Documentation Gallery</strong>. Every tutorial in this gallery is organized around a practical whiteboard animation theme and includes both the rendered output (GIF or MP4 with audio) and the complete, self-contained Python source code.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All gallery media lives inside the documentation bundle (<code class="docutils literal notranslate"><span class="pre">docs/source/_static/gallery/</span></code>) and can be regenerated at any time using the unified gallery builder script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List all available gallery tutorials</span>
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>docs/source/gallery/build_gallery.py<span class="w"> </span>--list
+
+<span class="c1"># Render a single tutorial (e.g. sketch_sound_control)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>docs/source/gallery/build_gallery.py<span class="w"> </span>--only<span class="w"> </span>sketch_sound_control
+
+<span class="c1"># Rebuild all gallery GIFs and MP4 videos</span>
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>docs/source/gallery/build_gallery.py<span class="w"> </span>--all
 </pre></div>
 </div>
-</section>
-<section id="visual-proof-of-a-b-2-examples-a-plus-b-square-py">
-<h3>2. Visual Proof of <span class="math notranslate nohighlight">\((a + b)^2\)</span> (<cite>examples/a_plus_b_square.py</cite>)<a class="headerlink" href="#visual-proof-of-a-b-2-examples-a-plus-b-square-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates geometric partitioning of a square into <span class="math notranslate nohighlight">\(a^2\)</span>, <span class="math notranslate nohighlight">\(b^2\)</span>, and two <span class="math notranslate nohighlight">\(ab\)</span> rectangles alongside step-by-step algebraic equations.</p>
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif"><img alt="(a+b)^2 Visual Proof" class="align-center" src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif" style="width: 520px;" />
-</a>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/a_plus_b_square.py
-</pre></div>
 </div>
-</section>
-<section id="distributive-property-examples-distributive-property-py">
-<h3>3. Distributive Property (<cite>examples/distributive_property.py</cite>)<a class="headerlink" href="#distributive-property-examples-distributive-property-py" title="Link to this heading">¶</a></h3>
-<p>Shows grouped drawable transformations, <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.translate.TranslateToAnimation" title="handanim.animations.translate.TranslateToAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">TranslateToAnimation</span></code></a>, and equation derivations.</p>
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/distributive_property.gif"><img alt="Distributive Property Animation" class="align-center" src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/distributive_property.gif" style="width: 520px;" />
-</a>
-</section>
-</section>
-<section id="flowcharts-diagrams">
-<h2>Flowcharts &amp; Diagrams<a class="headerlink" href="#flowcharts-diagrams" title="Link to this heading">¶</a></h2>
-<section id="machine-learning-workflow-examples-ml-workflow-demo-py">
-<h3>4. Machine Learning Workflow (<cite>examples/ml_workflow_demo.py</cite>)<a class="headerlink" href="#machine-learning-workflow-examples-ml-workflow-demo-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.flowchart.FlowchartNode" title="handanim.primitives.flowchart.FlowchartNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlowchartNode</span></code></a>, <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.flowchart.FlowchartDiamond" title="handanim.primitives.flowchart.FlowchartDiamond"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlowchartDiamond</span></code></a>, <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.flowchart.FlowchartConnector" title="handanim.primitives.flowchart.FlowchartConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlowchartConnector</span></code></a>, and <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.table.Table" title="handanim.primitives.table.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> animations.</p>
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/ml_workflow_demo.gif"><img alt="ML Workflow Demo" class="align-center" src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/ml_workflow_demo.gif" style="width: 520px;" />
-</a>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/ml_workflow_demo.py
-</pre></div>
-</div>
-</section>
-</section>
-<section id="short-form-storytelling-characters-captions-sound">
-<h2>Short-Form Storytelling: Characters, Captions &amp; Sound<a class="headerlink" href="#short-form-storytelling-characters-captions-sound" title="Link to this heading">¶</a></h2>
-<section id="character-rig-2-joint-ik-expressions-examples-character-rig-demo-py">
-<h3>5. Character Rig, 2-Joint IK &amp; Expressions (<cite>examples/character_rig_demo.py</cite>)<a class="headerlink" href="#character-rig-2-joint-ik-expressions-examples-character-rig-demo-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates a 9:16 portrait scene featuring:</p>
-<ul class="simple">
-<li><p>Hierarchical <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.character.CharacterRig" title="handanim.primitives.character.CharacterRig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterRig</span></code></a> (<cite>torso -&gt; head -&gt; eyes/mouth</cite>)</p></li>
-<li><p>Analytic 2-joint inverse kinematics (<a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.character.TwoJointLimb" title="handanim.primitives.character.TwoJointLimb"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwoJointLimb</span></code></a>) reaching for whiteboard points</p></li>
-<li><p>Swappable <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.character.VariantSlot" title="handanim.primitives.character.VariantSlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">VariantSlot</span></code></a> eye blinks (<cite>open</cite> / <cite>blink</cite> / <cite>wink</cite>) and mouth shapes (<cite>neutral</cite> / <cite>talk</cite> / <cite>smile</cite>)</p></li>
-<li><p>Smooth keyframe interpolation via <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.pose.PoseAnimation" title="handanim.animations.pose.PoseAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseAnimation</span></code></a></p></li>
-<li><p>Instant <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.visibility.Show" title="handanim.animations.visibility.Show"><code class="xref py py-class docutils literal notranslate"><span class="pre">Show</span></code></a>, <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.visibility.Hide" title="handanim.animations.visibility.Hide"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hide</span></code></a>, and <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.visibility.Swap" title="handanim.animations.visibility.Swap"><code class="xref py py-class docutils literal notranslate"><span class="pre">Swap</span></code></a> events</p></li>
+<hr class="docutils" />
+<section id="visual-gallery-by-theme">
+<h2>Visual Gallery by Theme<a class="headerlink" href="#visual-gallery-by-theme" title="Link to this heading">¶</a></h2>
+<div class="gallery-grid">
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 1 · Math &amp; Geometry</span>
+      <img src="../_static/gallery/pythagoras.gif" alt="Pythagoras Theorem Animation">
+    </div>
+    <p><strong><a href="math_and_geometry.html">Mathematical Proofs &amp; Geometry</a></strong><br>
+    Pythagorean theorem, visual proof of (a + b)², distributive property with SVG, and single-stroke Hershey calculus.</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 1 · Algebraic Proof</span>
+      <img src="../_static/gallery/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
+    </div>
+    <p><strong><a href="math_and_geometry.html#tutorial-1-2-geometric-proof-of-a-b-2-a-2-2ab-b-2">Binomial Expansion (a + b)²</a></strong><br>
+    Area partitioning into a², b², and two ab rectangles with CompositeAnimationEvent &amp; flying labels.</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 2 · Flowcharts &amp; Tables</span>
+      <img src="../_static/gallery/ml_workflow_demo.gif" alt="ML Workflow &amp; Table Demo">
+    </div>
+    <p><strong><a href="flowcharts_and_tables.html">Data Science, Flowcharts &amp; Tables</a></strong><br>
+    Declarative ML training pipeline Flowchart paired with a row-by-row animated model benchmark Table.</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 3 · Character Rigging &amp; IK</span>
+      <video controls loop muted playsinline src="../_static/gallery/character_rig_demo.mp4"></video>
+    </div>
+    <p><strong><a href="character_animation.html">2D Character Rigging &amp; 2-Joint IK</a></strong><br>
+    Articulated CharacterRig with scheduled eye blinks, mouth variants, PoseAnimation, and 2-joint IK reaching targets.</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 4 · Notebook Transitions</span>
+      <video controls loop muted playsinline src="../_static/gallery/scene_transitions_demo.mp4"></video>
+    </div>
+    <p><strong><a href="scene_transitions.html">Multi-Page Sketchbook Transitions</a></strong><br>
+    3-page story using PageTurnTransition (with ink bleed-through) and PaperCrumpleTransition (3D paper ball toss).</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 5 · Sketch Sound Control</span>
+      <video controls loop playsinline src="../_static/gallery/sketch_sound_control.mp4"></video>
+    </div>
+    <p><strong><a href="voice_captions_and_sound.html">Voice, Captions &amp; Sketch Sound Control</a></strong><br>
+    Turn sketch sound on/off, tune volume per SketchAnimation or globally, and pin word-timed Captions to scene.overlay.</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 5 · 9:16 Portrait Short</span>
+      <video controls loop muted playsinline style="max-height: 260px;" src="../_static/gallery/captions_overlay_demo.mp4"></video>
+    </div>
+    <p><strong><a href="voice_captions_and_sound.html#tutorial-5-2-built-in-captions-camera-overlay-soundtrack">Camera-Invariant Captions &amp; HUD</a></strong><br>
+    CameraAnimation pan/zoom while overlay HUD &amp; word-by-word highlighted Captions stay pinned on screen.</p>
+  </div>
+
+  <div class="gallery-item">
+    <div>
+      <span class="tutorial-badge">Theme 6 · Blackboard &amp; LaTeX</span>
+      <video controls loop muted playsinline src="../_static/gallery/solar_system_journey.mp4"></video>
+    </div>
+    <p><strong><a href="storytelling_and_export.html">Scientific Storytelling &amp; LaTeX/TikZ Export</a></strong><br>
+    Dark-mode Solar System journey, plus native TikZ &amp; LaTeX Beamer slide deck export.</p>
+  </div>
+</div></section>
+<hr class="docutils" />
+<section id="browse-tutorials-by-theme">
+<h2>Browse Tutorials by Theme<a class="headerlink" href="#browse-tutorials-by-theme" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="math_and_geometry.html#tutorial-1-1-visual-introduction-to-the-pythagorean-theorem">Tutorial 1.1: Visual Introduction to the Pythagorean Theorem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_and_geometry.html#tutorial-1-2-geometric-proof-of-a-b-2-a-2-2ab-b-2">Tutorial 1.2: Geometric Proof of <span class="math notranslate nohighlight">\((a + b)^2 = a^2 + 2ab + b^2\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_and_geometry.html#tutorial-1-3-distributive-property-with-svg-illustration">Tutorial 1.3: Distributive Property with SVG Illustration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_and_geometry.html#tutorial-1-4-single-stroke-hershey-math-calculus-board">Tutorial 1.4: Single-Stroke Hershey Math &amp; Calculus Board</a></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/character_rig_demo.py
-</pre></div>
-</div>
-</section>
-<section id="built-in-captions-camera-overlay-soundtrack-examples-captions-overlay-demo-py">
-<h3>6. Built-In Captions, Camera Overlay &amp; Soundtrack (<cite>examples/captions_overlay_demo.py</cite>)<a class="headerlink" href="#built-in-captions-camera-overlay-soundtrack-examples-captions-overlay-demo-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates:</p>
-<ul class="simple">
-<li><p>Word-timed <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.captions.Captions" title="handanim.primitives.captions.Captions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Captions</span></code></a> pinned to <code class="docutils literal notranslate"><span class="pre">scene.overlay</span></code></p></li>
-<li><p><a class="reference internal" href="../api/handanim.animations.html#handanim.animations.camera.CameraAnimation" title="handanim.animations.camera.CameraAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">CameraAnimation</span></code></a> zooming into a diagram while the overlay HUD and captions remain stationary</p></li>
-<li><p>Repeating <code class="docutils literal notranslate"><span class="pre">&quot;marimba&quot;</span></code> background theme music (<cite>background_music=”marimba”</cite>)</p></li>
-<li><p>Automatic chalk drawing sound during <a class="reference internal" href="../api/handanim.animations.html#handanim.animations.sketch.SketchAnimation" title="handanim.animations.sketch.SketchAnimation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SketchAnimation</span></code></a> (<cite>sketch_sound=True</cite>) and board-wiping sound during <a class="reference internal" href="../api/handanim.primitives.html#handanim.primitives.eraser.Eraser" title="handanim.primitives.eraser.Eraser"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eraser</span></code></a> (<cite>eraser_sound=True</cite>)</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flowcharts_and_tables.html#tutorial-2-1-machine-learning-pipeline-model-comparison-table">Tutorial 2.1: Machine Learning Pipeline &amp; Model Comparison Table</a></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/captions_overlay_demo.py
-</pre></div>
-</div>
-</section>
-<section id="multi-page-scene-transitions-examples-scene-transitions-demo-py">
-<h3>7. Multi-Page Scene Transitions (<cite>examples/scene_transitions_demo.py</cite>)<a class="headerlink" href="#multi-page-scene-transitions-examples-scene-transitions-demo-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates a 3-page sketchbook story using:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../api/handanim.animations.html#handanim.animations.transitions.PageTurnTransition" title="handanim.animations.transitions.PageTurnTransition"><code class="xref py py-class docutils literal notranslate"><span class="pre">PageTurnTransition</span></code></a> folding Page 1 from the bottom-right corner with ink bleed-through on the backside flap</p></li>
-<li><p><a class="reference internal" href="../api/handanim.animations.html#handanim.animations.transitions.PaperCrumpleTransition" title="handanim.animations.transitions.PaperCrumpleTransition"><code class="xref py py-class docutils literal notranslate"><span class="pre">PaperCrumpleTransition</span></code></a> grabbing a “wrong draft” on Page 2, crunching all its strokes into a multi-faceted 3D paper ball, and tossing it off to the right to reveal Page 3</p></li>
-<li><p>Persistent header badge pinned to <code class="docutils literal notranslate"><span class="pre">scene.overlay</span></code></p></li>
-<li><p>Automatic <code class="docutils literal notranslate"><span class="pre">page_turn</span></code> and <code class="docutils literal notranslate"><span class="pre">crumple</span></code> procedural sound effects (<cite>transition_sound=True</cite>) combined with <code class="docutils literal notranslate"><span class="pre">sketch_sound=True</span></code> and <code class="docutils literal notranslate"><span class="pre">background_music=&quot;calm&quot;</span></code></p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="character_animation.html#tutorial-3-1-articulated-presenter-with-2-joint-ik-facial-expressions">Tutorial 3.1: Articulated Presenter with 2-Joint IK &amp; Facial Expressions</a></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/scene_transitions_demo.py
-</pre></div>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scene_transitions.html#tutorial-4-1-3-page-sketchbook-story-page-turn-paper-crumple">Tutorial 4.1: 3-Page Sketchbook Story (Page Turn &amp; Paper Crumple)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voice_captions_and_sound.html#tutorial-5-1-controlling-sketch-sound-on-off-volume-tuning-pen-vs-chalk">Tutorial 5.1: Controlling Sketch Sound (On / Off, Volume Tuning &amp; Pen vs. Chalk)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voice_captions_and_sound.html#tutorial-5-2-built-in-captions-camera-overlay-soundtrack">Tutorial 5.2: Built-In Captions, Camera Overlay &amp; Soundtrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voice_captions_and_sound.html#tutorial-5-3-word-synced-voice-narration-voicetimelinesync">Tutorial 5.3: Word-Synced Voice Narration (<cite>VoiceTimelineSync</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storytelling_and_export.html#tutorial-6-1-the-solar-system-dark-mode-blackboard-journey">Tutorial 6.1: The Solar System — Dark-Mode Blackboard Journey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storytelling_and_export.html#tutorial-6-2-exporting-to-latex-beamer-slides-native-tikz-handouts">Tutorial 6.2: Exporting to LaTeX Beamer Slides, Native TikZ &amp; Handouts</a></li>
+</ul>
+</li>
+</ul>
 </div>
-</section>
-<section id="latex-beamer-native-tikz-export-examples-tikz-beamer-demo-py">
-<h3>8. LaTeX Beamer &amp; Native TikZ Export (<cite>examples/tikz_beamer_demo.py</cite>)<a class="headerlink" href="#latex-beamer-native-tikz-export-examples-tikz-beamer-demo-py" title="Link to this heading">¶</a></h3>
-<p>Demonstrates exporting an animation directly to a compilable LaTeX Beamer presentation using inline TikZ commands (<a class="reference internal" href="../api/handanim.core.html#handanim.core.scene.Scene.export_beamer" title="handanim.core.scene.Scene.export_beamer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">export_beamer()</span></code></a>).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/tikz_beamer_demo.py
-</pre></div>
-</div>
-</section>
 </section>
 </section>
 
@@ -384,12 +431,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../api/handanim.html">
+          <a class="next-page" href="math_and_geometry.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">handanim Package</div>
+                <div class="title">Theme 1: Mathematical Proofs &amp; Geometry</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -434,24 +481,9 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Examples &amp; Visual Gallery</a><ul>
-<li><a class="reference internal" href="#mathematical-proofs-geometry">Mathematical Proofs &amp; Geometry</a><ul>
-<li><a class="reference internal" href="#pythagoras-theorem-examples-pythagoras-py">1. Pythagoras Theorem (<cite>examples/pythagoras.py</cite>)</a></li>
-<li><a class="reference internal" href="#visual-proof-of-a-b-2-examples-a-plus-b-square-py">2. Visual Proof of <span class="math notranslate nohighlight">\((a + b)^2\)</span> (<cite>examples/a_plus_b_square.py</cite>)</a></li>
-<li><a class="reference internal" href="#distributive-property-examples-distributive-property-py">3. Distributive Property (<cite>examples/distributive_property.py</cite>)</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#flowcharts-diagrams">Flowcharts &amp; Diagrams</a><ul>
-<li><a class="reference internal" href="#machine-learning-workflow-examples-ml-workflow-demo-py">4. Machine Learning Workflow (<cite>examples/ml_workflow_demo.py</cite>)</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#short-form-storytelling-characters-captions-sound">Short-Form Storytelling: Characters, Captions &amp; Sound</a><ul>
-<li><a class="reference internal" href="#character-rig-2-joint-ik-expressions-examples-character-rig-demo-py">5. Character Rig, 2-Joint IK &amp; Expressions (<cite>examples/character_rig_demo.py</cite>)</a></li>
-<li><a class="reference internal" href="#built-in-captions-camera-overlay-soundtrack-examples-captions-overlay-demo-py">6. Built-In Captions, Camera Overlay &amp; Soundtrack (<cite>examples/captions_overlay_demo.py</cite>)</a></li>
-<li><a class="reference internal" href="#multi-page-scene-transitions-examples-scene-transitions-demo-py">7. Multi-Page Scene Transitions (<cite>examples/scene_transitions_demo.py</cite>)</a></li>
-<li><a class="reference internal" href="#latex-beamer-native-tikz-export-examples-tikz-beamer-demo-py">8. LaTeX Beamer &amp; Native TikZ Export (<cite>examples/tikz_beamer_demo.py</cite>)</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Gallery &amp; Tutorials Showcase</a><ul>
+<li><a class="reference internal" href="#visual-gallery-by-theme">Visual Gallery by Theme</a></li>
+<li><a class="reference internal" href="#browse-tutorials-by-theme">Browse Tutorials by Theme</a></li>
 </ul>
 </li>
 </ul>

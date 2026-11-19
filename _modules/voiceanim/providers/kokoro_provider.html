@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=398eb619" />
     
     
 
@@ -231,7 +231,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -278,14 +286,17 @@
 <span></span><span class="sd">&quot;&quot;&quot;Kokoro-82M local offline TTS provider.</span>
 
 <span class="sd">High-fidelity, 82M-parameter lightweight open-weight TTS model running on macOS</span>
-<span class="sd">via ONNX runtime or PyTorch.</span>
+<span class="sd">via ONNX runtime or PyTorch, supporting all 54 built-in voice embeddings as well</span>
+<span class="sd">as arbitrary 256-D latent style-vector blending across voices.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
@@ -300,26 +311,132 @@
 <span class="n">KOKORO_MODEL_URL</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/fastrtc/kokoro-onnx/resolve/main/kokoro-v1.0.onnx&quot;</span>
 <span class="n">KOKORO_VOICES_URL</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/fastrtc/kokoro-onnx/resolve/main/voices-v1.0.bin&quot;</span>
 
+<span class="c1"># Full catalog of all 54 voice embeddings shipped in Kokoro v1.0 (voices-v1.0.bin)</span>
+<span class="n">KOKORO_VOICE_CATALOG</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;american_female&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;af_alloy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_aoede&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_jessica&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_kore&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_nicole&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_nova&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_river&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;af_sky&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;american_male&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;am_adam&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_echo&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_eric&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_fenrir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_liam&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_michael&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_onyx&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_puck&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;am_santa&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;british_female&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;bf_alice&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bf_emma&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bf_isabella&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bf_lily&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;british_male&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;bm_daniel&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bm_fable&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bm_george&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bm_lewis&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;spanish&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;ef_dora&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;em_alex&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;em_santa&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;french&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;ff_siwis&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;hindi&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;hf_alpha&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hf_beta&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hm_omega&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hm_psi&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;italian&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;if_sara&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;im_nicola&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;japanese&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;jf_alpha&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jf_gongitsune&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jf_nezumi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jf_tebukuro&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jm_kumo&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;portuguese&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;pf_dora&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pm_alex&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pm_santa&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;mandarin&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;zf_xiaobei&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zf_xiaoni&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zf_xiaoxiao&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zf_xiaoyi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zm_yunjian&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zm_yunxi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zm_yunxia&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zm_yunyang&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">KOKORO_ALL_VOICES</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">voice_id</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">KOKORO_VOICE_CATALOG</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">voice_id</span> <span class="ow">in</span> <span class="n">group</span>
+<span class="p">]</span>
+
+<span class="c1"># Built-in named 256-D latent voice blend presets</span>
+<span class="n">KOKORO_BLEND_PRESETS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;blend_transatlantic&quot;</span><span class="p">:</span> <span class="s2">&quot;am_puck:0.6+bm_fable:0.4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;blend_professor&quot;</span><span class="p">:</span> <span class="s2">&quot;am_fenrir:0.55+am_onyx:0.45&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;blend_storyteller&quot;</span><span class="p">:</span> <span class="s2">&quot;bm_fable:0.6+am_liam:0.4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;blend_host_female&quot;</span><span class="p">:</span> <span class="s2">&quot;af_aoede:0.6+af_kore:0.4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;blend_indian_male&quot;</span><span class="p">:</span> <span class="s2">&quot;hm_omega:0.55+am_liam:0.45&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;blend_indian_female&quot;</span><span class="p">:</span> <span class="s2">&quot;hf_alpha:0.55+af_aoede:0.45&quot;</span><span class="p">,</span>
+    <span class="c1"># Studio aliases for convenience</span>
+    <span class="s2">&quot;studio_transatlantic&quot;</span><span class="p">:</span> <span class="s2">&quot;am_puck:0.6+bm_fable:0.4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;studio_professor&quot;</span><span class="p">:</span> <span class="s2">&quot;am_fenrir:0.55+am_onyx:0.45&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;studio_indian_en&quot;</span><span class="p">:</span> <span class="s2">&quot;hm_omega:0.55+am_liam:0.45&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;studio_indian_f&quot;</span><span class="p">:</span> <span class="s2">&quot;hf_alpha:0.55+af_aoede:0.45&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;studio_host_f&quot;</span><span class="p">:</span> <span class="s2">&quot;af_aoede:0.6+af_kore:0.4&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">VoiceSpec</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+
 
 <div class="viewcode-block" id="KokoroProvider">
 <a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KokoroProvider</span><span class="p">(</span><span class="n">BaseVoiceProvider</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Local, offline text-to-speech provider using the Kokoro-82M model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Local, offline text-to-speech provider using the Kokoro-82M model.</span>
+
+<span class="sd">    Supports all 54 built-in Kokoro v1.0 voices as well as arbitrary weighted</span>
+<span class="sd">    blends of voices in the 256-D style embedding space:</span>
+<span class="sd">    - Single voice ID: ``voice=&quot;am_fenrir&quot;``, ``voice=&quot;bm_fable&quot;``, ``voice=&quot;af_aoede&quot;``</span>
+<span class="sd">    - Named blend preset: ``voice=&quot;blend_transatlantic&quot;``, ``voice=&quot;blend_professor&quot;``</span>
+<span class="sd">    - Weighted blend string: ``voice=&quot;am_puck:0.6+bm_fable:0.4&quot;`` or ``&quot;am_puck:60,bm_fable:40&quot;``</span>
+<span class="sd">    - Equal-weight blend string: ``voice=&quot;am_puck+bm_fable&quot;`` (50% / 50%)</span>
+<span class="sd">    - Dictionary of weights: ``voice={&quot;am_puck&quot;: 0.6, &quot;bm_fable&quot;: 0.4}``</span>
+<span class="sd">    - Sequence of ``(voice, weight)`` pairs or voice names: ``voice=[(&quot;am_puck&quot;, 0.6), (&quot;bm_fable&quot;, 0.4)]``</span>
+<span class="sd">    - Pre-computed ``(510, 1, 256)`` float32 NumPy style array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;kokoro&quot;</span>
     <span class="n">default_voice</span> <span class="o">=</span> <span class="s2">&quot;af_heart&quot;</span>
-    <span class="n">supported_voices</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>  <span class="c1"># Warm American female (flagship voice)</span>
-        <span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>  <span class="c1"># Bright American female</span>
-        <span class="s2">&quot;af_nicole&quot;</span><span class="p">,</span>  <span class="c1"># Soft American female</span>
-        <span class="s2">&quot;af_sky&quot;</span><span class="p">,</span>  <span class="c1"># Animated American female</span>
-        <span class="s2">&quot;am_adam&quot;</span><span class="p">,</span>  <span class="c1"># Conversational American male</span>
-        <span class="s2">&quot;am_michael&quot;</span><span class="p">,</span>  <span class="c1"># Clear American male</span>
-        <span class="s2">&quot;bf_emma&quot;</span><span class="p">,</span>  <span class="c1"># British female</span>
-        <span class="s2">&quot;bf_isabella&quot;</span><span class="p">,</span>  <span class="c1"># Expressive British female</span>
-        <span class="s2">&quot;bm_george&quot;</span><span class="p">,</span>  <span class="c1"># British male narrator</span>
-        <span class="s2">&quot;bm_lewis&quot;</span><span class="p">,</span>  <span class="c1"># British male deep</span>
-    <span class="p">]</span>
+    <span class="n">supported_voices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">KOKORO_ALL_VOICES</span><span class="p">)</span>
+    <span class="n">voice_catalog</span> <span class="o">=</span> <span class="n">KOKORO_VOICE_CATALOG</span>
+    <span class="n">blend_presets</span> <span class="o">=</span> <span class="n">KOKORO_BLEND_PRESETS</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -332,6 +449,226 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fallback_to_mock</span> <span class="o">=</span> <span class="n">fallback_to_mock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kokoro_instance</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_onnx_available</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="KokoroProvider.list_voices">
+<a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider.list_voices">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_voices</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_blends</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return available Kokoro voice IDs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            category: Optional category filter (e.g., ``&quot;american_male&quot;``,</span>
+<span class="sd">                ``&quot;american_female&quot;``, ``&quot;british_male&quot;``, ``&quot;british_female&quot;``,</span>
+<span class="sd">                ``&quot;hindi&quot;``, ``&quot;spanish&quot;``, ``&quot;french&quot;``, ``&quot;italian&quot;``,</span>
+<span class="sd">                ``&quot;japanese&quot;``, ``&quot;portuguese&quot;``, ``&quot;mandarin&quot;``).</span>
+<span class="sd">            include_blends: If True, appends built-in named blend presets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice_catalog</span><span class="p">:</span>
+                <span class="n">valid</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">voice_catalog</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown Kokoro voice category &#39;</span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2">&#39;. Valid categories: </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">voices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">voice_catalog</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">voices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supported_voices</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">include_blends</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">preset_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">preset_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">voices</span><span class="p">:</span>
+                    <span class="n">voices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">preset_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">voices</span></div>
+
+
+<div class="viewcode-block" id="KokoroProvider.parse_voice_spec">
+<a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider.parse_voice_spec">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_voice_spec</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">voice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">available_voices</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a voice name, blend expression, dict, or sequence into normalized ``(voice_id, weight)`` pairs.</span>
+
+<span class="sd">        Weights are normalized so that they sum to ``1.0``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">voice_spec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">voice_spec</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">default_voice</span>
+
+        <span class="n">valid_voices</span> <span class="o">=</span> <span class="n">available_voices</span> <span class="k">if</span> <span class="n">available_voices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">supported_voices</span><span class="p">)</span>
+
+        <span class="n">raw_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">spec_str</span> <span class="o">=</span> <span class="n">voice_spec</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">spec_str</span><span class="p">:</span>
+                <span class="n">spec_str</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">default_voice</span>
+
+            <span class="c1"># Expand top-level named preset if exact match</span>
+            <span class="k">if</span> <span class="n">spec_str</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">:</span>
+                <span class="n">spec_str</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">[</span><span class="n">spec_str</span><span class="p">]</span>
+
+            <span class="c1"># Split on &#39;+&#39; or &#39;,&#39;</span>
+            <span class="n">normalized_expr</span> <span class="o">=</span> <span class="n">spec_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">)</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">tok</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">normalized_expr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">tok</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">tokens</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid empty voice specification: </span><span class="si">{</span><span class="n">voice_spec</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">tok</span><span class="p">:</span>
+                    <span class="n">v_name</span><span class="p">,</span> <span class="n">w_str</span> <span class="o">=</span> <span class="n">tok</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">v_name</span> <span class="o">=</span> <span class="n">v_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w_str</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Invalid blend weight &#39;</span><span class="si">{</span><span class="n">w_str</span><span class="si">}</span><span class="s2">&#39; for voice &#39;</span><span class="si">{</span><span class="n">v_name</span><span class="si">}</span><span class="s2">&#39; in &#39;</span><span class="si">{</span><span class="n">voice_spec</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">v_name</span> <span class="o">=</span> <span class="n">tok</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">weight</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+                <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voice blend weight must be positive, got </span><span class="si">{</span><span class="n">weight</span><span class="si">}</span><span class="s2"> for &#39;</span><span class="si">{</span><span class="n">v_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Allow recursive expansion if a blend component itself is a preset</span>
+                <span class="k">if</span> <span class="n">v_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">:</span>
+                    <span class="n">sub_pairs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">[</span><span class="n">v_name</span><span class="p">],</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">valid_voices</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">sub_v</span><span class="p">,</span> <span class="n">sub_w</span> <span class="ow">in</span> <span class="n">sub_pairs</span><span class="p">:</span>
+                        <span class="n">raw_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sub_v</span><span class="p">,</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">sub_w</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">raw_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">voice_spec</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Voice blend mapping cannot be empty.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight_val</span> <span class="ow">in</span> <span class="n">voice_spec</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">v_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v_name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight_val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voice blend weight must be positive, got </span><span class="si">{</span><span class="n">weight</span><span class="si">}</span><span class="s2"> for &#39;</span><span class="si">{</span><span class="n">v_str</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">v_str</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">:</span>
+                    <span class="n">sub_pairs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">[</span><span class="n">v_str</span><span class="p">],</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">valid_voices</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">sub_v</span><span class="p">,</span> <span class="n">sub_w</span> <span class="ow">in</span> <span class="n">sub_pairs</span><span class="p">:</span>
+                        <span class="n">raw_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sub_v</span><span class="p">,</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">sub_w</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">raw_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v_str</span><span class="p">,</span> <span class="n">weight</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">voice_spec</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Voice blend sequence cannot be empty.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">voice_spec</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">v_str</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">weight</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">v_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Expected voice name string or (voice, weight) pair in blend sequence, got </span><span class="si">{</span><span class="n">item</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voice blend weight must be positive, got </span><span class="si">{</span><span class="n">weight</span><span class="si">}</span><span class="s2"> for &#39;</span><span class="si">{</span><span class="n">v_str</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">v_str</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">:</span>
+                    <span class="n">sub_pairs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">[</span><span class="n">v_str</span><span class="p">],</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">valid_voices</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">sub_v</span><span class="p">,</span> <span class="n">sub_w</span> <span class="ow">in</span> <span class="n">sub_pairs</span><span class="p">:</span>
+                        <span class="n">raw_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sub_v</span><span class="p">,</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">sub_w</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">raw_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v_str</span><span class="p">,</span> <span class="n">weight</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported voice specification type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Combine duplicate voice entries in order of first appearance</span>
+        <span class="n">merged</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">raw_pairs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">valid_voices</span> <span class="ow">and</span> <span class="n">v_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_voices</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Unknown Kokoro voice &#39;</span><span class="si">{</span><span class="n">v_name</span><span class="si">}</span><span class="s2">&#39;. Call KokoroProvider().list_voices() to inspect all 54 voices.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">merged</span><span class="p">[</span><span class="n">v_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v_name</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">weight</span>
+
+        <span class="n">total_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">total_weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Total voice blend weight must be greater than 0.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[(</span><span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="o">/</span> <span class="n">total_weight</span><span class="p">)</span> <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">merged</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="KokoroProvider.format_voice_spec">
+<a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider.format_voice_spec">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_voice_spec</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">voice_spec</span><span class="p">:</span> <span class="n">VoiceSpec</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">available_voices</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert any voice specification into a canonical string label for caching and metadata.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;custom_style_</span><span class="si">{</span><span class="n">digest</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">stripped</span> <span class="o">=</span> <span class="n">voice_spec</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">stripped</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blend_presets</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">stripped</span>
+
+        <span class="n">pairs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">available_voices</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KokoroProvider.infer_language">
+<a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider.infer_language">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">infer_language</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">voice_spec</span><span class="p">:</span> <span class="n">VoiceSpec</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">native_non_english</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Infer espeak-ng phonemizer language code from the dominant voice in `voice_spec`.</span>
+
+<span class="sd">        By default (`native_non_english=False`), British voices (`bf_*`, `bm_*`)</span>
+<span class="sd">        select `&quot;en-gb&quot;` and all other voices default to `&quot;en-us&quot;` so cross-accent</span>
+<span class="sd">        voices (e.g. `hm_omega`, `hf_alpha`) speak English scripts seamlessly.</span>
+<span class="sd">        When `native_non_english=True`, non-English prefixes map to their native</span>
+<span class="sd">        espeak-ng language code (`&quot;es&quot;`, `&quot;fr-fr&quot;`, `&quot;hi&quot;`, `&quot;it&quot;`, `&quot;ja&quot;`, `&quot;pt-br&quot;`, `&quot;cmn&quot;`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;en-us&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pairs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">available_voices</span><span class="o">=</span><span class="nb">set</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;en-us&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pairs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;en-us&quot;</span>
+
+        <span class="n">dominant_voice</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">dominant_voice</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;en-gb&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">native_non_english</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;en-us&quot;</span>
+
+        <span class="n">native_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="s2">&quot;en-gb&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">:</span> <span class="s2">&quot;es&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="s2">&quot;fr-fr&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="s2">&quot;hi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="s2">&quot;it&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;j&quot;</span><span class="p">:</span> <span class="s2">&quot;ja&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="s2">&quot;pt-br&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;cmn&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">native_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">)</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_model_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify model weights exist locally or download from Hugging Face.&quot;&quot;&quot;</span>
@@ -364,6 +701,10 @@
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_onnx_available</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_to_mock</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;kokoro-onnx is not installed in this Python environment (</span><span class="si">%s</span><span class="s2">); falling back to mock sine-wave audio.&quot;</span><span class="p">,</span>
+                    <span class="n">err</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
                 <span class="s2">&quot;Kokoro TTS requires &#39;kokoro-onnx&#39; and &#39;soundfile&#39;. &quot;</span>
@@ -376,21 +717,103 @@
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize Kokoro model: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
+<div class="viewcode-block" id="KokoroProvider.blend_voices">
+<a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider.blend_voices">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blend_voices</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">voice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a blended `(510, 1, 256)` float32 style embedding from two or more Kokoro voices.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            voice_spec: A blend string (e.g. ``&quot;am_puck:0.6+bm_fable:0.4&quot;`` or ``&quot;am_puck+bm_fable&quot;``),</span>
+<span class="sd">                preset name (e.g. ``&quot;blend_transatlantic&quot;``), dict ``{&quot;am_puck&quot;: 0.6, &quot;bm_fable&quot;: 0.4}``,</span>
+<span class="sd">                or sequence of ``(voice_name, weight)`` pairs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``(510, 1, 256)`` float32 NumPy style vector suitable for passing to ``synthesize(voice=...)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_engine</span><span class="p">()</span>
+        <span class="n">available</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">voices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">if</span> <span class="p">(</span><span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;voices&quot;</span><span class="p">))</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="n">voice_spec</span><span class="p">,</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">available</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Deterministic synthetic style tensor when running in mock fallback mode</span>
+            <span class="n">blended</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">510</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+                <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">v_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()[:</span><span class="mi">4</span><span class="p">],</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span>
+                <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+                <span class="n">blended</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">510</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">blended</span>
+
+        <span class="n">blended_style</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">get_voice_style</span><span class="p">(</span><span class="n">v_name</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">blended_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">blended_style</span> <span class="o">=</span> <span class="n">style</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">blended_style</span> <span class="o">=</span> <span class="n">blended_style</span> <span class="o">+</span> <span class="n">style</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">blended_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">blended_style</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_engine_voice</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">voice</span><span class="p">:</span> <span class="n">VoiceSpec</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">engine</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve `voice` into `(engine_voice_arg, canonical_voice_label, components)`.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_voice_spec</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">arr</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="p">[(</span><span class="n">label</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]</span>
+
+        <span class="n">available</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">set</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">voices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supported_voices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;voices&quot;</span><span class="p">))</span>
+            <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supported_voices</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_voice_spec</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">available</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_voice_spec</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">available_voices</span><span class="o">=</span><span class="n">available</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="p">,</span> <span class="n">pairs</span>
+
+        <span class="k">if</span> <span class="n">engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">label</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">pairs</span>
+
+        <span class="n">blended_style</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">get_voice_style</span><span class="p">(</span><span class="n">v_name</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">blended_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">blended_style</span> <span class="o">=</span> <span class="n">style</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">blended_style</span> <span class="o">=</span> <span class="n">blended_style</span> <span class="o">+</span> <span class="n">style</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">blended_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">blended_style</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">label</span><span class="p">,</span> <span class="n">pairs</span>
+
 <div class="viewcode-block" id="KokoroProvider.synthesize">
 <a class="viewcode-back" href="../../../api/voiceanim.html#voiceanim.KokoroProvider.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">voice</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">voice</span><span class="p">:</span> <span class="n">VoiceSpec</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">instruct</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AudioClip</span><span class="p">:</span>
-        <span class="n">voice</span> <span class="o">=</span> <span class="n">voice</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_voice</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_engine</span><span class="p">()</span>
+        <span class="n">engine_voice</span><span class="p">,</span> <span class="n">voice_label</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_engine_voice</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+        <span class="n">resolved_lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_language</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
+
+        <span class="n">cache_voice_key</span> <span class="o">=</span> <span class="n">voice_label</span> <span class="k">if</span> <span class="n">resolved_lang</span> <span class="o">==</span> <span class="s2">&quot;en-us&quot;</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">voice_label</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">resolved_lang</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">compute_key</span><span class="p">(</span>
             <span class="n">provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span>
+            <span class="n">voice</span><span class="o">=</span><span class="n">cache_voice_key</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
             <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
             <span class="n">instruct</span><span class="o">=</span><span class="n">instruct</span><span class="p">,</span>
@@ -407,11 +830,23 @@
             <span class="k">return</span> <span class="n">cached_clip</span>
 
         <span class="c1"># 2. Synthesize using Kokoro engine</span>
-        <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_engine</span><span class="p">()</span>
         <span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">24000</span>
 
         <span class="k">if</span> <span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">samples</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">samples</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                    <span class="n">text</span><span class="p">,</span>
+                    <span class="n">voice</span><span class="o">=</span><span class="n">engine_voice</span><span class="p">,</span>
+                    <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
+                    <span class="n">lang</span><span class="o">=</span><span class="n">resolved_lang</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="c1"># Backwards compatibility for custom/mocked engine.create without `lang` parameter</span>
+                <span class="n">samples</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                    <span class="n">text</span><span class="p">,</span>
+                    <span class="n">voice</span><span class="o">=</span><span class="n">engine_voice</span><span class="p">,</span>
+                    <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="n">duration</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Fallback mock synthesis if engine is not available</span>
@@ -428,6 +863,16 @@
         <span class="n">word_timings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimate_word_timings</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
         <span class="n">sentences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">word_timings</span><span class="p">)</span>
 
+        <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;speed&quot;</span><span class="p">:</span> <span class="n">speed</span><span class="p">,</span>
+            <span class="s2">&quot;samples_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span>
+            <span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="n">resolved_lang</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;blend_components&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;voice&quot;</span><span class="p">:</span> <span class="n">v_name</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="mi">4</span><span class="p">)}</span> <span class="k">for</span> <span class="n">v_name</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">components</span>
+            <span class="p">]</span>
+
         <span class="n">clip</span> <span class="o">=</span> <span class="n">AudioClip</span><span class="p">(</span>
             <span class="n">audio_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">target_path</span><span class="p">),</span>
             <span class="n">duration</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
@@ -436,9 +881,9 @@
             <span class="n">words</span><span class="o">=</span><span class="n">word_timings</span><span class="p">,</span>
             <span class="n">sentences</span><span class="o">=</span><span class="n">sentences</span><span class="p">,</span>
             <span class="n">provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span>
+            <span class="n">voice</span><span class="o">=</span><span class="n">voice_label</span><span class="p">,</span>
             <span class="n">instruct</span><span class="o">=</span><span class="n">instruct</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;speed&quot;</span><span class="p">:</span> <span class="n">speed</span><span class="p">,</span> <span class="s2">&quot;samples_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)},</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># 5. Store into cache</span>

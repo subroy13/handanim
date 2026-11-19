@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=64e9d2db" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=398eb619" />
     
     
 
@@ -231,7 +231,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Showcase</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gallery/examples.html">Examples &amp; Visual Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../gallery/examples.html">Gallery &amp; Tutorials Showcase</a><input aria-label="Toggle navigation of Gallery &amp; Tutorials Showcase" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/math_and_geometry.html">Theme 1: Mathematical Proofs &amp; Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/flowcharts_and_tables.html">Theme 2: Data Science, Flowcharts &amp; Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/character_animation.html">Theme 3: 2D Character Rigging, Inverse Kinematics &amp; Poses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/scene_transitions.html">Theme 4: Multi-Page Sketchbook &amp; Scene Transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/voice_captions_and_sound.html">Theme 5: Voice Narration, Captions, Camera &amp; Sketch Sound Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gallery/storytelling_and_export.html">Theme 6: Scientific Storytelling &amp; Academic LaTeX/TikZ Export</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -321,11 +329,15 @@
             <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drawable_cache</span><span class="p">,</span> <span class="s2">&quot;background_color&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="ow">or</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="p">)</span>
+        <span class="n">explicit_color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stroke_style</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">explicit_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stroke_style</span><span class="o">.</span><span class="n">color</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">explicit_color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stroke_style</span><span class="o">.</span><span class="n">color</span>
+        <span class="n">pen_color</span> <span class="o">=</span> <span class="n">explicit_color</span> <span class="k">if</span> <span class="n">explicit_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default_color</span>
         <span class="n">opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
             <span class="n">Ops</span><span class="p">(</span>
                 <span class="n">OpsType</span><span class="o">.</span><span class="n">SET_PEN</span><span class="p">,</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stroke_style</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="n">default_color</span><span class="p">),</span>
+                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">pen_color</span><span class="p">,</span>
                     <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stroke_style</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>  <span class="c1"># make it like pastel blend</span>
                     <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stroke_style</span><span class="o">.</span><span class="n">opacity</span><span class="p">,</span>
                 <span class="p">},</span>
@@ -344,6 +356,9 @@
             <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">max_y</span><span class="p">:</span>
                 <span class="c1"># we can do zigzag motion now</span>
                 <span class="n">opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Ops</span><span class="p">(</span><span class="n">OpsType</span><span class="o">.</span><span class="n">LINE_TO</span><span class="p">,</span> <span class="p">[(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">y</span><span class="p">)]))</span>
+        <span class="k">if</span> <span class="n">max_y</span> <span class="o">&gt;</span> <span class="n">min_y</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">spacing</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_y</span><span class="p">:</span>
+            <span class="n">opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Ops</span><span class="p">(</span><span class="n">OpsType</span><span class="o">.</span><span class="n">LINE_TO</span><span class="p">,</span> <span class="p">[(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">max_y</span><span class="p">)]))</span>
+            <span class="n">opsset</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Ops</span><span class="p">(</span><span class="n">OpsType</span><span class="o">.</span><span class="n">LINE_TO</span><span class="p">,</span> <span class="p">[(</span><span class="n">max_x</span><span class="p">,</span> <span class="n">max_y</span><span class="p">)]))</span>
 
         <span class="k">return</span> <span class="n">opsset</span></div>
 </div>
