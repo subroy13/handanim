@@ -558,6 +558,23 @@ class TestRenderSnapshot:
         assert os.path.exists(out)
         assert os.path.getsize(out) > 0
 
+    def test_render_frame_returns_rgb_array_and_writes_optional_file(self, tmp_path):
+        s = Scene(width=320, height=240, fps=10)
+        s.add(make_sketch(start=0.0, duration=0.5), make_line())
+        out_png = tmp_path / "frame.png"
+        arr = s.render_frame(0.5, output_path=out_png)
+        assert arr.shape == (240, 320, 3)
+        assert arr.dtype.name == "uint8"
+        assert out_png.exists() and out_png.stat().st_size > 0
+
+    def test_render_with_crf_preset_and_multi_workers(self, tmp_path):
+        s = Scene(width=320, height=240, fps=10)
+        s.add(make_sketch(start=0.0, duration=0.6), make_line())
+        out_mp4 = str(tmp_path / "multi_worker.mp4")
+        s.render(out_mp4, max_length=0.6, crf=18, preset="ultrafast", tune="animation", workers=2)
+        assert os.path.exists(out_mp4)
+        assert os.path.getsize(out_mp4) > 0
+
 
 # ---------------------------------------------------------------------------
 # get_current_time / wait

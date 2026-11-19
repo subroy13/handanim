@@ -8,6 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+- Full 54-voice Kokoro-82M catalog (`KOKORO_ALL_VOICES`, `KOKORO_VOICE_CATALOG`) and 256-D latent voice blending (`KokoroProvider.blend_voices`, `VoiceEngine.blend_voices`, `KOKORO_BLEND_PRESETS`, weighted strings like `"am_puck:0.6+bm_fable:0.4"`, equal-weight `"am_puck+bm_fable"`, and dicts `{"hm_omega": 0.55, "am_liam": 0.45}`) with automatic phonemizer language inference (`lang="en-us"` / `"en-gb"`) in `voiceanim/providers/kokoro_provider.py`
+- Automatic Cairo backend selector (`handanim/core/_cairo.py`, `ensure_cairo()`, `get_cairo_backend()`) with seamless `pycairo` → `cairocffi` fallback and Homebrew/Conda `libcairo` auto-discovery
+- Ergonomic `CharacterRig` builder API (`CharacterRig(pivot=...)`, `add_child(name, pivot=..., drawables=...)`, `add_slot(name, variants=...)`, `add_two_joint_limb(...)`, `capture_pose()`, list-of-drawables support in `VariantSlot`) and doctest execution in `.github/workflows/docs.yml`
+- `MoveBy(dx, dy)` / `TranslateByAnimation` relative offset animation (`animations/translate.py`)
+- Public `Scene.render_frame(t)` single-frame NumPy renderer and `Scene.render(..., crf=..., preset=..., tune=..., workers=...)` multi-worker encoding controls
+- `-14.0 LUFS` integrated loudness normalization, true-peak soft-knee limiting (`-1.5 dBFS`), and 2-channel stereo output in `voiceanim/mixer.py`, with rebalanced procedural SFX levels (~12 dB under speech) in `voiceanim/sfx.py`
+- Zero-install Google Colab interactive playground (`notebooks/handanim_colab_playground.ipynb`), Hugging Face Spaces Gradio studio (`huggingface_space/`), and 5-second README hero showcase (`docs/source/_static/gallery/hero_showcase.gif` and `hero_showcase.mp4`)
+
+### Fixed
+- `Eraser` mid-erase rendering (`animations/sketch.py`, `primitives/eraser.py`, `core/cache.py`): renders the visible eraser stroke and glowing cursor while progressively clipping erased segments instead of drawing nothing mid-erase
+- `Scene.get_animated_opsset_at_time` (`core/scene.py`): only uses the finished-event cache when all events on a drawable have finished (`all_complete`) and the drawable has no time-varying scheduled slots, preventing running `PoseAnimation` rigs from freezing after `SketchAnimation`, `PopAnimation`, or `FadeInAnimation` finishes
+- `CharacterRig` & `VariantSlot` time propagation (`core/scene.py`, `animations/pose.py`): passes frame time `t / self.fps` to every `CharacterRig` even without an active `PoseAnimation`, and evaluates `PoseAnimation` before non-pose spatial transforms (`TranslateToAnimation`, `MoveBy`) so prior moves are preserved
+- `RoundedRectangle` (`primitives/polygons.py`): constructs all four corners from explicit 90-degree circular arcs (fixing the chamfered top-left corner) and supports `corner_radius=` in pixels
+- `Scene.add(CameraAnimation(...))` (`core/scene.py`): routes camera events directly to `Scene.add_camera()` instead of raising `ValueError("drawable is required")`
+- Snapshot tests (`tests/conftest.py`, `tests/ai/test_models.py`): compares rendered PNG frames by decoded pixel arrays with tolerance for cross-platform FreeType/Cairo differences and uses `pytest.importorskip("boto3")` when `boto3` is absent
+
 ### Removed
 - `SVG` legacy primitive (`primitives/svg.py`) — deleted entirely; use `VectorSVG` for all SVG import
 - `svgpathtools` dev dependency — no longer needed now that `svg.py` is gone

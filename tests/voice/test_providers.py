@@ -3,8 +3,15 @@
 import io
 from pathlib import Path
 
+import numpy as np
 import pytest
 
+from voiceanim import (
+    KOKORO_ALL_VOICES,
+    KOKORO_BLEND_PRESETS,
+    KOKORO_VOICE_CATALOG,
+    VoiceEngine,
+)
 from voiceanim.cache import AudioCache
 from voiceanim.providers import (
     KokoroProvider,
@@ -55,14 +62,119 @@ def test_kokoro_provider_fallback(tmp_path):
     # Using fallback_to_mock=True allows testing the full pipeline in environments without local weights
     provider = KokoroProvider(cache=cache, fallback_to_mock=True)
     assert provider.name == "kokoro"
-    assert "af_heart" in provider.list_voices()
-    assert "am_adam" in provider.list_voices()
+    voices = provider.list_voices()
+    assert len(voices) == 54
+    assert len(KOKORO_ALL_VOICES) == 54
+    assert "af_heart" in voices
+    assert "am_adam" in voices
+    assert "am_fenrir" in voices
+    assert "am_puck" in voices
+    assert "bm_fable" in voices
+    assert "hm_omega" in voices
+    assert "zf_xiaobei" in voices
+
+    # Category filtering and blend presets
+    am_voices = provider.list_voices(category="american_male")
+    assert len(am_voices) == 9
+    assert "am_fenrir" in am_voices
+    assert "af_heart" not in am_voices
+
+    with_blends = provider.list_voices(include_blends=True)
+    assert len(with_blends) == 54 + len(KOKORO_BLEND_PRESETS)
+    assert "blend_transatlantic" in with_blends
+
+    with pytest.raises(ValueError, match="Unknown Kokoro voice category"):
+        provider.list_voices(category="klingon")
 
     clip = provider.synthesize("Whiteboard animation with Kokoro voice.", voice="am_adam")
     assert clip.provider == "kokoro"
     assert clip.voice == "am_adam"
     assert Path(clip.audio_path).exists()
     assert len(clip.words) == 5
+
+
+def test_kokoro_voice_blending_and_mocked_engine(monkeypatch, tmp_path):
+    cache = AudioCache(cache_dir=tmp_path)
+    provider = KokoroProvider(cache=cache, fallback_to_mock=True)
+
+    # 1. Verify parsing of various blend syntax forms
+    assert KokoroProvider.parse_voice_spec("am_puck:0.6+bm_fable:0.4") == [
+        ("am_puck", pytest.approx(0.6)),
+        ("bm_fable", pytest.approx(0.4)),
+    ]
+    assert KokoroProvider.parse_voice_spec("am_puck:60,bm_fable:40") == [
+        ("am_puck", pytest.approx(0.6)),
+        ("bm_fable", pytest.approx(0.4)),
+    ]
+    assert KokoroProvider.parse_voice_spec("am_fenrir+am_onyx") == [
+        ("am_fenrir", pytest.approx(0.5)),
+        ("am_onyx", pytest.approx(0.5)),
+    ]
+    assert KokoroProvider.parse_voice_spec({"hm_omega": 0.55, "am_liam": 0.45}) == [
+        ("hm_omega", pytest.approx(0.55)),
+        ("am_liam", pytest.approx(0.45)),
+    ]
+    assert KokoroProvider.parse_voice_spec("blend_transatlantic") == [
+        ("am_puck", pytest.approx(0.6)),
+        ("bm_fable", pytest.approx(0.4)),
+    ]
+
+    with pytest.raises(ValueError, match="Unknown Kokoro voice"):
+        KokoroProvider.parse_voice_spec("nonexistent_voice:0.5+am_adam:0.5")
+
+    with pytest.raises(ValueError, match="must be positive"):
+        KokoroProvider.parse_voice_spec("am_puck:0+bm_fable:1")
+
+    # 2. Language inference from dominant voice
+    assert KokoroProvider.infer_language("am_puck:0.6+bm_fable:0.4") == "en-us"
+    assert KokoroProvider.infer_language("am_puck:0.3+bm_fable:0.7") == "en-gb"
+    assert KokoroProvider.infer_language("hm_omega:0.55+am_liam:0.45") == "en-us"
+    assert KokoroProvider.infer_language("hm_omega", native_non_english=True) == "hi"
+
+    # 3. Verify linear combination of (510, 1, 256) style tensors on a mocked engine
+    style_puck = np.full((510, 1, 256), 2.0, dtype=np.float32)
+    style_fable = np.full((510, 1, 256), 12.0, dtype=np.float32)
+    captured_calls: list[dict] = []
+
+    class DummyKokoroEngine:
+        voices = {v: np.ones((510, 1, 256), dtype=np.float32) for v in KOKORO_ALL_VOICES}
+        voices["am_puck"] = style_puck
+        voices["bm_fable"] = style_fable
+
+        def get_voice_style(self, name: str) -> np.ndarray:
+            return self.voices[name]
+
+        def create(self, text: str, voice, speed: float = 1.0, lang: str = "en-us"):
+            captured_calls.append({"text": text, "voice": voice, "speed": speed, "lang": lang})
+            return np.zeros(24000, dtype=np.float32), 24000
+
+    monkeypatch.setattr(provider, "_get_engine", lambda: DummyKokoroEngine())
+
+    blended_vec = provider.blend_voices("am_puck:0.6+bm_fable:0.4")
+    assert blended_vec.shape == (510, 1, 256)
+    assert blended_vec.dtype == np.float32
+    # 0.6 * 2.0 + 0.4 * 12.0 = 1.2 + 4.8 = 6.0
+    assert np.allclose(blended_vec, 6.0)
+
+    clip = provider.synthesize(
+        "Testing blended voice synthesis.",
+        voice={"am_puck": 0.6, "bm_fable": 0.4},
+    )
+    assert clip.voice == "am_puck:0.6+bm_fable:0.4"
+    assert clip.metadata["lang"] == "en-us"
+    assert clip.metadata["blend_components"] == [
+        {"voice": "am_puck", "weight": 0.6},
+        {"voice": "bm_fable", "weight": 0.4},
+    ]
+    assert len(captured_calls) == 1
+    assert isinstance(captured_calls[0]["voice"], np.ndarray)
+    assert np.allclose(captured_calls[0]["voice"], 6.0)
+
+    # VoiceEngine facade convenience methods
+    assert len(VoiceEngine.list_voices("kokoro")) == 54
+    assert len(VoiceEngine.list_voices("kokoro", category="british_female")) == len(
+        KOKORO_VOICE_CATALOG["british_female"]
+    )
 
 
 def test_qwen_provider_instruction_and_fallback(tmp_path):

@@ -11,7 +11,7 @@ def get_available_assets() -> dict[str, Any]:
     """Scan and return available fonts, colors, and asset files."""
     repo_root = Path(__file__).resolve().parent.parent.parent
     assets_dir = repo_root / "assets"
-    examples_assets_dir = repo_root / "examples" / "assets"
+    legacy_examples_assets_dir = repo_root / "examples" / "assets"
 
     ttf_fonts = []
     custom_json_fonts = []
@@ -37,7 +37,7 @@ def get_available_assets() -> dict[str, Any]:
 
     # Discover image / SVG assets
     media_assets = []
-    for search_dir in (assets_dir, examples_assets_dir):
+    for search_dir in (assets_dir, legacy_examples_assets_dir):
         if search_dir.exists():
             for p in search_dir.rglob("*"):
                 if p.is_file() and p.suffix.lower() in (".svg", ".png", ".jpg", ".jpeg"):

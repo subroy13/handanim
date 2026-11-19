@@ -4,22 +4,19 @@
 
 Goal: create reproducible, hand-sketched explanation videos lasting 30–60 seconds through an agent + MCP + human review loop. Grow this backlog from real video-making experience; audit existing capabilities before implementing a feature.
 
-- [x] **Video sandbox** — create `sandbox/` for per-video scripts, storyboards, and renders, separate from package source.
-- [x] **Agent workflow prompt** — document content research, central takeaway, narration, visual planning, implementation, review, and revision in [sandbox/AGENTS.md](sandbox/AGENTS.md).
-- [x] **Portrait production convention** — use 9:16, 1080 × 1920 at 30 fps for final videos; 360 × 640 previews. Apply this to new sandbox videos without changing general library defaults.
-- [x] **First complete render** — [Ptolemy's theorem](sandbox/ptolemy/storyboard.md): a 58-second portrait proof using two similar-triangle pairs, captions, and local synthetic narration. Saved scene and narration scripts reproduce the assets; the geometric explanation does not need a decorative character.
-- [ ] **First viewing review** — watch the full Ptolemy video with the user; revise pacing, narration, and clarity based on actual feedback. Programmatic decoding and sampled-frame review are complete; listening review remains pending.
+- [x] **Separate Studio Repository (`handanim-studio`)** — keep `handanim` as a clean, general-purpose Python package and host episode sandboxing, channel branding, logos, timers, storyboards, and renders in `/Users/subroy13/Documents/handanim-studio/`.
+- [x] **Portrait production convention** — support 9:16, 1080 × 1920 at 30 fps for final videos (`360 × 640` previews) via `ChannelTheme.create_scene(format="shorts", preview=...)` without changing general library defaults.
 - [x] **Exercise the MCP workflow** — used linting, introspection, and rendered snapshots on Ptolemy; the fixes below have targeted regression tests (148 relevant tests passed).
 - [x] **Bundled font discovery** — use the renderer's font registry instead of scanning the nonexistent root `fonts/` directory. Reports valid font names, including registered user fonts. Restart an already-running MCP server to load this fix.
 - [x] **Geometry glyphs** — add Hershey strokes for triangle, angle, and similarity symbols; these silently disappeared in the first proof render.
 - [x] **Exact portrait dimensions** — prevent imageio from resizing 1080-pixel and 360-pixel widths to multiples of 16 during MP4 rendering.
 - [x] **Translucent fades** — scale existing opacity instead of replacing it, preventing pale hatching from flashing opaque when a fade starts.
 - [ ] **Unsupported-glyph diagnostics** — surface missing mathematical glyphs before rendering; passing lint/layout checks did not detect the missing similarity symbols.
-- [ ] **Efficient single-frame inspection** — avoid calculating the entire video timeline for each snapshot; current snapshot review repeats full timeline work.
+- [x] **Efficient single-frame inspection** — avoid calculating the entire video timeline for each snapshot; current snapshot review repeats full timeline work.
 - [ ] **API/schema discovery tool** — expose supported primitives, animation signatures, styles, and the ScenePlan schema with minimal valid examples; verify examples compile against the current package.
-- [ ] **Render an existing script through MCP** — expose preview/final rendering with resolution, frame rate, and time-range controls, returning output paths and useful failures. Reuse existing rendering support where possible.
-- [ ] **Batch visual review through MCP** — expose multiple timestamp snapshots or a contact sheet; build on existing `Scene.render_keyframes` if suitable.
-- [ ] **Actionable scene diagnostics** — report object identity, timestamp, and bounds for clipping and timing problems; distinguish intentional overlap from likely mistakes and inspect motion between keyframes.
+- [x] **Render an existing script through MCP** — expose preview/final rendering with resolution, frame rate, and time-range controls, returning output paths and useful failures. Reuse existing rendering support where possible.
+- [x] **Batch visual review through MCP** — expose multiple timestamp snapshots or a contact sheet; build on existing `Scene.render_keyframes` if suitable.
+- [x] **Actionable scene diagnostics** — report object identity, timestamp, and bounds for clipping and timing problems; distinguish intentional overlap from likely mistakes and inspect motion between keyframes.
 - [ ] **Reproducible rerenders** — verify seed control across sketch/text randomness and record package version, fonts/assets, and render settings alongside each finished video. Compare repeated snapshots before claiming reproducibility.
 - [ ] **Portrait readability checks** — develop reusable caption space and configurable overlay margins; check text and strokes at phone size using actual previews.
 - [ ] **Narration-led timing** — start with recorded audio, align scene beats and captions, and verify the final mix. Coordinate with Phase 5 below rather than creating a second audio system.
@@ -79,9 +76,9 @@ Goal: create reproducible, hand-sketched explanation videos lasting 30–60 seco
 - [x] **Automatic chalk sketch sound during `SketchAnimation` (`voiceanim/sfx.py`, `core/scene.py`)** — open-source procedural chalk/pen drawing sound (`synthesize_chalk_sound`) automatically timed to `SketchAnimation` intervals via `scene.enable_sketch_sound()` or `scene.render(..., sketch_sound=True)`.
 - [x] **Automatic eraser sound during `Eraser` (`voiceanim/sfx.py`, `core/scene.py`)** — open-source procedural felt/rubber board-wiping sound (`synthesize_eraser_sound`) automatically timed to `Eraser` events via `scene.enable_eraser_sound()` or `scene.render(..., eraser_sound=True)`.
 - [x] **Scene transitions (`PageTurnTransition` & `PaperCrumpleTransition` in `animations/transitions.py`, `core/draw_ops.py`, `core/scene.py`, `voiceanim/sfx.py`)** — polygonal clipping (`PUSH_CLIP`/`POP_CLIP`), geometric crease reflection with ink bleed-through (`PageTurnTransition`), multi-faceted paper-ball crunch + parabolic toss (`PaperCrumpleTransition`), automatic deactivation of previous-page world drawables, and procedural `page_turn` / `crumple` sound synthesis (`transition_sound=True`).
-- [ ] **Fast single-frame `Scene.render_snapshot(t)` (`core/scene.py`)** — evaluate only the active objects and ongoing animations at time `t` without running `create_event_timeline()` over all `max_length * fps` frames, making `--stills` keyframe previews instantaneous.
-- [ ] **Secondary emphasis & number highlighting in `Captions` (`primitives/captions.py`)** — support per-word secondary highlight colors (e.g. `em=True` or numeric tokens staying highlighted across the chunk) and an optional background pill/band behind captions.
-- [ ] **Periodic blink & lip-sync/chew loop helpers on `VariantSlot` (`primitives/character.py`)** — add `slot.add_periodic_switch(scene, period=3.2, pulse_duration=0.11)` and `slot.add_cycle(scene, variants=[...], interval=0.14)` so characters can blink or talk/chew across a time range in one call.
+- [x] **Fast single-frame `Scene.render_snapshot(t)` (`core/scene.py`)** — evaluate only the active objects and ongoing animations at time `t` without running `create_event_timeline()` over all `max_length * fps` frames, making `--stills` keyframe previews instantaneous.
+- [x] **Secondary emphasis & number highlighting in `Captions` (`primitives/captions.py`)** — support per-word secondary highlight colors (e.g. `em=True` or numeric tokens staying highlighted across the chunk) and an optional background pill/band behind captions.
+- [x] **Periodic blink & lip-sync/chew loop helpers on `VariantSlot` (`primitives/character.py`)** — add `slot.add_periodic_switch(scene, period=3.2, pulse_duration=0.11)` and `slot.add_cycle(scene, variants=[...], interval=0.14)` so characters can blink or talk/chew across a time range in one call.
 - [ ] **Multi-beat parallel renderer & procedural sound effects (`voiceanim` / `handanim`)** — add a multi-beat scene runner that renders beats in parallel worker processes and concatenates via `ffmpeg`, plus optional procedural sound effect generators (`scribble`, `pop`, `whoosh`, `ding`) and `-14 LUFS` loudness normalization.
 
 
@@ -354,11 +351,43 @@ Realistic human-style voice synthesis, word-level alignment, and timeline synchr
 - [x] **Native `Scene.render(..., narration=...)` Integration** — Direct support in `Scene.render()` for `AudioClip` or audio file paths; auto-adjusts scene length and muxes final video.
 - [x] **Subtitle Export** — `AudioClip.export_srt()` and `AudioClip.export_vtt()` export standard subtitle files matching word/sentence boundaries.
 - [x] **MCP Audio Server Tools** — Added `list_voices`, `synthesize_narration`, `get_word_timestamps`, and `mux_video_audio` to `aianim mcp` (and `handanim-ai mcp`) for agentic, multi-modal video production.
+- [x] **Three-Level Sketch Sound Controls & Speech Auto-Ducking** — Per-`SketchAnimation(sound=..., sound_volume=..., sound_style=...)`, scene-level `enable_sketch_sound()` / `disable_sketch_sound()` / `set_sketch_sound()`, and render-time `sketch_sound` overrides, plus automatic 35% SFX ducking during spoken narration.
+- [x] **Documentation Gallery (`docs/source/gallery/`)** — Replaced standalone `examples/` scripts with a 6-theme Sphinx documentation gallery (`build_gallery.py`) featuring embedded MP4s/GIFs and collapsible source code.
 
 ### Things to Do (Next Steps)
-- [ ] **Math & LaTeX Pronunciation Engine** — Translates LaTeX expressions into natural spoken English (e.g. `\int_0^\pi \sin(x) dx` $\to$ "integral from zero to pi of sine of x dx", `\frac{a}{b}` $\to$ "a over b") before sending to TTS.
-- [ ] **Auto-Burned Whiteboard Subtitles** — Burn sketchy handwriting-style subtitle captions onto Cairo frames using Hershey/custom single-line stroke fonts.
-- [ ] **Lip-Sync SVG Characters** — Map phoneme sequences from `AudioClip` to mouth open/closed shape keys in `VectorSVG` characters.
+- [x] **Math & LaTeX Pronunciation Engine (`latex_to_speech`)** — Translates LaTeX expressions into natural spoken English (e.g. `\int_0^\pi \sin(x) dx` $\to$ "integral from zero to pi of sine of x dx", `\frac{a}{b}` $\to$ "a over b") before sending to TTS.
+- [x] **Auto-Burned Whiteboard Subtitles (`Captions`)** — Burn sketchy handwriting-style subtitle captions onto Cairo frames on the camera-independent `scene.overlay` layer.
+- [x] **Audio-Driven Auto Lip-Sync & Gestures for `CharacterRig`** — Add `rig.sync_to_audio(scene, audio_clip)` to read the `AudioClip` amplitude envelope and automatically drive `VariantSlot("mouth")` (`neutral` $\leftrightarrow$ `open` $\leftrightarrow$ `smile`) with subtle head bobbing, plus a high-level `rig.point_at(scene, target_drawable, start_time=..., duration=...)` helper using `TwoJointLimb` IK.
+- [x] **Multi-Voice Dialogue ("Socratic Conversations")** — Support alternating speaker voices (e.g. student `am_adam` + narrator `af_heart`) across beats with per-speaker caption color themes.
+
+---
+
+## Phase 6 — Autonomous Video Production & Educational Storytelling Studio
+
+Goal: eliminate timestamp arithmetic, layout overlaps, and missing visual primitives so AI agents can autonomously research, storyboard, narrate, and render YouTube-ready Shorts (9:16) and Deep Dives (16:9).
+
+### 1. Timeline & Beat Ergonomics (`scene.beat()`)
+- [x] **Voice-Driven Beat Context Manager (`with scene.beat(name, narration=clip, pad_after=0.4) as b:`)** — Automatically derive beat start, end, and duration from the `AudioClip`, advance the scene time cursor, and scope beat-local drawables so editing Beat 2 never breaks timestamps in Beats 3–6.
+- [x] **Relative Word-Trigger Timing (`b.t("word")`)** — Resolve the exact timestamp when a target word is spoken inside the active beat's `AudioClip` (with optional `lead_in`), eliminating manual timestamp math.
+- [x] **Automatic Beat Exit Cleanup (`b.clear_on_exit(*drawables)`)** — Automatically fade out or erase temporary labels and annotations at the end of a beat while preserving persistent core diagrams.
+
+### 2. Layout Intelligence, Safe Zones & MCP Visual Review
+- [x] **Active Drawable Collision Detection in `Scene.introspect()`** — Detect unintended bounding-box overlaps between simultaneously visible drawables (especially `Text`/`Math` colliding with arrows or geometry) across beat boundaries.
+- [x] **Platform Safe-Zone Guardrails (`safe_zone="youtube_shorts" | "youtube_landscape"`)** — Warn in `introspect_scene` when important labels or diagrams enter the right-side UI action strip or bottom caption/progress-bar overlay zones.
+- [x] **MCP `render_contact_sheet` Tool** — Render 6–8 beat boundary keyframes into a single annotated grid image (with timestamps and safe-zone guides) so a vision LLM can inspect an entire 60s storyboard in one image call.
+- [x] **MCP `render_video` Tool** — Expose preview (`360x640 @ 15fps`) and final (`1080x1920 @ 30fps` or `1920x1080 @ 30fps`) video rendering directly as an MCP tool returning output file paths, duration, and audio-sync diagnostics.
+
+### 3. Educational Storytelling & Data Visualization Primitives
+- [x] **Hand-Sketched Coordinate Axes & Plots (`Axes`, `FunctionGraph`, `NumberLine`)** — Sketch coordinate axes with tick marks, labels, and smooth or dashed curves $y = f(x)$ in hand-drawn style.
+- [x] **Hand-Sketched Charts (`BarChart`, `LineChart`)** — Data-driven bar and line charts with progressive per-bar / per-series `SketchAnimation` reveals.
+- [x] **Editorial Emphasis Primitives (`HighlightMarker`, `CurlyBrace`, `CalloutBubble`, `CrossOut`)** — Semi-transparent marker highlighter strokes behind text/equations, hand-drawn curly braces (`{`) for grouping terms, callout speech/thought bubbles, and bold red `CrossOut` strokes for visually debunking misconceptions.
+- [x] **Path Morphing (`MorphAnimation`)** — Smoothly interpolate the resampled `OpsSet` strokes of drawable $A$ into drawable $B$ so shapes and equations visually transform across beats.
+
+### 4. Dual-Format YouTube Production, Background Overlays & Studio Packaging
+- [x] **Camera-Independent Background Layer (`scene.background`) & Time-Driven Overlay Widgets (`TimeDrivenDrawable`, `CustomTimeDrawable`, `CountdownTimer`, `ProgressBar`, `BackgroundGrid`)** — First-class `scene.background` layer rendered underneath world animations (surviving `CameraAnimation` and `PageTurnTransition` / `PaperCrumpleTransition`), plus self-driving timer, progress bar, paper grid, and custom callback widgets for studio repositories.
+- [x] **Reusable Channel Theme Presets (`ChannelTheme`)** — General-purpose visual identity config (paper background tone, 4-color accent palette, default typography, `background_factory` / `overlay_factory` hooks) to keep studio channels visually cohesive without hardcoding channel-specific branding in `handanim`.
+- [x] **Dual-Aspect Episode Composition (`9:16` Shorts $\to$ `16:9` Deep Dives)** — Helpers to compose modular beat scenes into standalone portrait Shorts or 16:9 landscape videos with `ExportChapter` YouTube timestamps and `.srt` captions.
+- [x] **Automated High-CTR Thumbnail Generator (`render_thumbnail`)** — Dedicated 1920×1080 high-contrast frame composer with oversized hand-drawn title text and hero diagram export.
 
 ---
 
@@ -366,7 +395,7 @@ Realistic human-style voice synthesis, word-level alignment, and timeline synchr
 
 - [ ] **Deprecate legacy `SVG`** — funnel all SVG import through `VectorSVG`; remove `svgpathtools` as a hard requirement
 - [ ] **Unify style location** — `core/styles.py` has type definitions, `stylings/` has utility functions; add a top-level note in each file pointing to the other; consider moving `color.py` constants into `core/styles.py` so a single import suffices
-- [ ] **`Scene.add()` return value** — return the `drawable` (or a handle) so calls can be chained: `handle = scene.add(event, rect)`
+- [x] **`Scene.add()` return value** — return the `drawable` (or a handle) so calls can be chained: `handle = scene.add(event, rect)`
 - [ ] **Type annotations audit** — several functions use `Any` loosely; tighten with `TypeVar` for `Drawable` subclasses and overloads for `OpsSet` transforms
 - [x] **`handanim_ai` as proper subpackage (`aianim`)** — renamed package to `aianim` uniting visual drawing (`handanim`) and speech synthesis (`voiceanim`); backwards compatibility shim maintained in `handanim_ai`; added CLI entry points `aianim` and `handanim-ai`
 

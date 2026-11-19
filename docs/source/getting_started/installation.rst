@@ -1,35 +1,15 @@
 Installation & Setup
 ====================
 
-``handanim`` requires **Python 3.11+** and the native **Cairo** 2D graphics library.
+``handanim`` requires **Python 3.11+**.
 
-1. System Prerequisites (Cairo)
--------------------------------
+.. tip::
 
-Install the Cairo system library before installing Python packages:
+   - **Zero-Install Browser Playground**: Try ``handanim`` immediately in Google Colab via `notebooks/handanim_colab_playground.ipynb <https://colab.research.google.com/github/subroy13/handanim/blob/master/notebooks/handanim_colab_playground.ipynb>`_.
+   - **Bundled FFmpeg**: ``handanim`` depends on ``imageio-ffmpeg``, which ships a self-contained static ``ffmpeg`` binary for macOS, Linux, and Windows. Video rendering and audio muxing work out of the box without installing ``ffmpeg`` on your system ``PATH``.
+   - **Automatic Cairo Backend (`pycairo` → `cairocffi`)**: ``handanim`` uses prebuilt ``pycairo`` binary wheels when available and automatically falls back to pure-Python ``cairocffi`` (with auto-discovery of Homebrew ``/opt/homebrew/lib``, ``/usr/local/lib``, and Conda ``$CONDA_PREFIX/lib``). Inspect the active backend via ``handanim.get_cairo_backend()`` or force ``HANDANIM_CAIRO_BACKEND=cairocffi``.
 
-**macOS (Homebrew)**
-
-.. code-block:: bash
-
-   brew install cairo ffmpeg
-
-**Ubuntu / Debian**
-
-.. code-block:: bash
-
-   sudo apt update
-   sudo apt install libcairo2 libcairo2-dev ffmpeg
-
-**Windows**
-
-1. Install the `GTK 3 Runtime <https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases>`_ (which bundles Cairo DLLs) and ensure its ``bin/`` directory is on your ``PATH``, or use Conda (see below).
-
-.. note::
-
-   ``handanim`` uses ``imageio-ffmpeg``, which automatically bundles a portable ``ffmpeg`` binary for MP4 video encoding and audio multiplexing—even if ``ffmpeg`` is not installed globally on your system.
-
-2. Installing via ``pip`` (from PyPI)
+1. Installing via ``pip`` (from PyPI)
 -------------------------------------
 
 **Core Animation Library (`handanim`)**
@@ -56,7 +36,45 @@ Install the Cairo system library before installing Python packages:
 
    pip install "handanim[all]"
 
-3. Installing from Source (Poetry)
+2. Platform Notes for Cairo (If Prebuilt Wheel Is Unavailable)
+--------------------------------------------------------------
+
+If ``pip`` attempts to compile ``pycairo`` from source on your platform or ``libcairo`` is missing:
+
+- **Force Prebuilt Binary Wheel**:
+
+  .. code-block:: bash
+
+     pip install --only-binary=:all: pycairo
+     pip install handanim
+
+- **macOS (Homebrew)**:
+
+  .. code-block:: bash
+
+     brew install cairo
+     pip install handanim
+
+- **Ubuntu / Debian / Google Colab**:
+
+  .. code-block:: bash
+
+     sudo apt-get update && sudo apt-get install -y libcairo2-dev
+     pip install handanim
+
+3. Installing with Conda / Mamba
+--------------------------------
+
+If you use Conda or Miniforge, ``conda-forge`` provides precompiled Cairo binaries on all operating systems:
+
+.. code-block:: bash
+
+   conda create -n handanim python=3.11
+   conda activate handanim
+   conda install -c conda-forge cairo pycairo
+   pip install "handanim[all]"
+
+4. Installing from Source (Poetry)
 ----------------------------------
 
 For contributors or local development:
@@ -67,16 +85,3 @@ For contributors or local development:
    cd handanim
    poetry install --all-extras
    poetry run pytest
-
-4. Installing with Conda
-------------------------
-
-If you use Conda or Miniforge, you can install Cairo and PyCairo directly from ``conda-forge``:
-
-.. code-block:: bash
-
-   conda create -n handanim python=3.11
-   conda activate handanim
-   conda install -c conda-forge cairo pycairo ffmpeg
-   pip install "handanim[all]"
-

@@ -91,3 +91,46 @@ def test_mix_soundtrack_combines_narration_music_and_sfx(tmp_path):
     assert len(samples) == int(round(2.0 * 22050))
     assert float(np.max(np.abs(samples))) > 0.02
 
+
+def test_sfx_presets_under_speech_and_stereo_lufs_normalization(tmp_path):
+    import math
+    import wave
+
+    from voiceanim.mixer import measure_integrated_lufs
+    from voiceanim.sfx import synthesize_ding_sound, synthesize_pop_sound
+
+    # At volume=0.3, pop and ding RMS should sit ~12 dB under typical active speech RMS (~0.085)
+    speech_rms = 0.085
+    pop_30 = synthesize_pop_sound(volume=0.3)
+    ding_30 = synthesize_ding_sound(volume=0.3)
+    pop_rms = float(np.sqrt(np.mean(pop_30**2)))
+    ding_rms = float(np.sqrt(np.mean(ding_30**2)))
+    assert 20.0 * math.log10(pop_rms / speech_rms) <= -10.0
+    assert 20.0 * math.log10(ding_rms / speech_rms) <= -10.0
+
+    # mix_soundtrack outputs stereo (2-channel) WAV normalized near -14 LUFS with peak <= -1.5 dBFS
+    provider = MockVoiceProvider()
+    narration = provider.synthesize("Testing stereo loudness normalization.", output_path=tmp_path / "narr_lufs.wav")
+    mixed_wav = mix_soundtrack(
+        duration=2.0,
+        narration=narration,
+        background_music="marimba",
+        music_volume=0.15,
+        sfx_events=[
+            {"type": "pop", "start_time": 0.2, "duration": 0.2, "volume": 0.3},
+            {"type": "ding", "start_time": 0.9, "duration": 0.6, "volume": 0.3},
+        ],
+        output_path=tmp_path / "mixed_stereo.wav",
+    )
+    with wave.open(str(mixed_wav), "rb") as wf:
+        assert wf.getnchannels() == 2
+        sr = wf.getframerate()
+        raw = np.frombuffer(wf.readframes(wf.getnframes()), dtype=np.int16).astype(np.float64) / 32768.0
+        stereo = raw.reshape(-1, 2)
+
+    lufs = measure_integrated_lufs(stereo, sample_rate=sr)
+    peak_dbfs = 20.0 * math.log10(float(np.max(np.abs(stereo))) + 1e-12)
+    assert -16.0 <= lufs <= -12.5
+    assert peak_dbfs <= -1.4
+
+

@@ -6,7 +6,7 @@ voiceanim Overview
 Key Capabilities
 ----------------
 
-1. **Unified TTS Facade (:class:`~voiceanim.VoiceEngine`)**: Synthesize natural speech with millisecond-accurate word and sentence timestamps using local open-weight models (`Kokoro-82M`, `Qwen3-TTS`), cloud APIs (`AWS Polly`), or deterministic CI mocks (`MockVoiceProvider`).
+1. **Unified TTS Facade (:class:`~voiceanim.VoiceEngine`)**: Synthesize natural speech with millisecond-accurate word and sentence timestamps using local open-weight models (`Kokoro-82M` with all 54 built-in voices and 256-D latent voice blending, `Qwen3-TTS`), cloud APIs (`AWS Polly`), or deterministic CI mocks (`MockVoiceProvider`).
 2. **Content-Addressed Caching (:class:`~voiceanim.cache.AudioCache`)**: Hashes `(provider, model, voice, speed, instruct, text)` with SHA-256 so re-running an animation script reuses the cached WAV and word timestamps in `< 1 ms`.
 3. **Word-Level Visual Sync (:class:`~voiceanim.timeline.VoiceTimelineSync`)**: Anchor visual ``SketchAnimation`` or ``FadeInAnimation`` events to the exact timestamp when a word or phrase is spoken.
 4. **Built-in Word-Timed Captions (:class:`~handanim.primitives.captions.Captions`)**: Render multi-word subtitle chunks with active-word highlighting and automatic width scaling on ``scene.overlay``.

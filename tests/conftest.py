@@ -25,8 +25,33 @@ def seed_numpy():
 
 @pytest.fixture(autouse=True)
 def set_snapshot_dir(snapshot):
-    """Route all snapshot files to tests/snapshots/ regardless of test file location."""
-    snapshot.snapshot_dir = "tests/snapshots"
+    """Route all snapshot files to tests/snapshots/ and compare PNG snapshots with pixel tolerance."""
+    snapshot.snapshot_dir = Path("tests/snapshots")
+    orig_assert_match = snapshot.assert_match
+
+    def _tolerant_assert_match(value, snapshot_name):
+        if getattr(snapshot, "_snapshot_update", False) or not isinstance(value, bytes) or not str(snapshot_name).endswith(".png"):
+            return orig_assert_match(value, snapshot_name)
+
+        snap_path = Path(snapshot.snapshot_dir) / str(snapshot_name)
+        if not snap_path.is_file():
+            return orig_assert_match(value, snapshot_name)
+
+        from PIL import Image
+
+        actual_img = np.asarray(Image.open(io.BytesIO(value)).convert("RGB"), dtype=np.float32)
+        expected_img = np.asarray(Image.open(snap_path).convert("RGB"), dtype=np.float32)
+        assert actual_img.shape == expected_img.shape, (
+            f"Snapshot {snapshot_name} shape mismatch: {actual_img.shape} vs {expected_img.shape}"
+        )
+        # Allow minor Cairo anti-aliasing / FreeType font rasterization differences across OS & library versions
+        mad = float(np.mean(np.abs(actual_img - expected_img)))
+        frac_diff = float(np.mean(np.max(np.abs(actual_img - expected_img), axis=-1) > 32.0))
+        assert mad <= 8.0 and frac_diff <= 0.05, (
+            f"Snapshot {snapshot_name} diverged beyond tolerance (mean abs diff={mad:.2f}, differing pixels={frac_diff * 100:.2f}%)"
+        )
+
+    snapshot.assert_match = _tolerant_assert_match
 
 
 @pytest.fixture

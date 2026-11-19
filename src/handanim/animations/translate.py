@@ -64,3 +64,52 @@ class TranslateFromAnimation(TranslateToAnimation):
 
     def _apply(self, opsset, progress):
         return super()._apply(opsset, 1 - progress)
+
+
+class MoveBy(AnimationEvent):
+    """Translate an `OpsSet` by a relative `(dx, dy)` offset over `duration` seconds."""
+
+    def __init__(
+        self,
+        dx: float = 0.0,
+        dy: float = 0.0,
+        start_time: float = 0.0,
+        duration: float = 0.0,
+        easing_fun=None,
+        data: dict | None = None,
+        *,
+        offset: tuple[float, float] | None = None,
+    ) -> None:
+        merged_data = dict(data) if data else {}
+        if offset is not None:
+            dx, dy = float(offset[0]), float(offset[1])
+        elif "offset" in merged_data and dx == 0.0 and dy == 0.0:
+            off = merged_data["offset"]
+            dx, dy = float(off[0]), float(off[1])
+        elif ("dx" in merged_data or "dy" in merged_data) and dx == 0.0 and dy == 0.0:
+            dx = float(merged_data.get("dx", 0.0))
+            dy = float(merged_data.get("dy", 0.0))
+        self.dx = float(dx)
+        self.dy = float(dy)
+        merged_data["dx"] = self.dx
+        merged_data["dy"] = self.dy
+        merged_data["offset"] = (self.dx, self.dy)
+        super().__init__(
+            AnimationEventType.MUTATION,
+            start_time=start_time,
+            duration=duration,
+            easing_fun=easing_fun,
+            data=merged_data,
+        )
+
+    def _opsset_apply(self, opsset: OpsSet, progress: float) -> OpsSet:
+        new_opsset = OpsSet(initial_set=list(opsset.opsset))
+        new_opsset.translate(self.dx * progress, self.dy * progress)
+        return new_opsset
+
+    def _apply(self, opsset: OpsSet, progress: float) -> OpsSet:
+        return self._opsset_apply(opsset, progress)
+
+
+TranslateByAnimation = MoveBy
+

@@ -1,5 +1,5 @@
 
-import cairo
+from ._cairo import cairo
 
 
 class Viewport:

@@ -13,6 +13,7 @@ BACKSTAY_PERSONAL_USE_WARNING = (
 
 _BUILTIN_FONTS: dict[str, dict[str, str]] = {
     "feasibly": {"type": "ttf", "file": "FeasiblySingleLine-z8D90.ttf"},
+    "hoarsely": {"type": "ttf", "file": "HoarselySingleLine-K7g0o.ttf"},
     "backstay": {"type": "ttf", "file": "BackstaySingleLine-rgOw8.ttf", "license": "personal_use_only"},
     "handanimtype1": {"type": "custom", "file": "handanimtype1.json"},
     "noto_sans_math": {"type": "custom", "file": "noto_sans_math_skeleton.json"},

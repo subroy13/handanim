@@ -41,12 +41,20 @@ Visual Showcase
 
    <div class="gallery-grid">
      <div class="gallery-item">
-       <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif" alt="Pythagoras Theorem Animation">
-       <p><strong>Pythagoras Theorem</strong> — Hand-sketched geometry with hachure fills</p>
+       <img src="_static/gallery/pythagoras.gif" alt="Pythagoras Theorem Animation">
+       <p><strong><a href="gallery/math_and_geometry.html">Pythagoras Theorem</a></strong> — Hand-sketched geometry with hachure fills</p>
      </div>
      <div class="gallery-item">
-       <img src="https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
-       <p><strong>Algebraic Proof of (a + b)²</strong> — Step-by-step visual derivation</p>
+       <img src="_static/gallery/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
+       <p><strong><a href="gallery/math_and_geometry.html">Algebraic Proof of (a + b)²</a></strong> — Step-by-step visual derivation</p>
+     </div>
+     <div class="gallery-item">
+       <img src="_static/gallery/ml_workflow_demo.gif" alt="ML Workflow &amp; Table">
+       <p><strong><a href="gallery/flowcharts_and_tables.html">Flowcharts &amp; Tables</a></strong> — ML pipeline &amp; row-by-row model table</p>
+     </div>
+     <div class="gallery-item">
+       <video controls loop muted playsinline src="_static/gallery/scene_transitions_demo.mp4"></video>
+       <p><strong><a href="gallery/scene_transitions.html">Page Turn &amp; Paper Crumple</a></strong> — Multi-page sketchbook transitions with SFX</p>
      </div>
    </div>
 

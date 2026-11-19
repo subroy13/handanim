@@ -63,17 +63,29 @@ def _lowpass(x: np.ndarray, cutoff_hz: float, sr: int = DEFAULT_SR) -> np.ndarra
 
 
 def write_wav_mono(path: str | Path, samples: np.ndarray, sample_rate: int = DEFAULT_SR) -> str:
-    """Write a 1D float64 numpy array in [-1, 1] to a 16-bit PCM mono WAV file."""
+    """Write a 1D (mono) or 2D `(N, C)` float64 numpy array in [-1, 1] to a 16-bit PCM WAV file."""
     out_path = Path(path).resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    clipped = np.clip(samples, -0.99, 0.99)
+    arr = np.asarray(samples, dtype=np.float64)
+    n_channels = 1 if arr.ndim == 1 else int(arr.shape[1])
+    clipped = np.clip(arr, -0.99, 0.99)
     pcm16 = (clipped * 32767.0).astype(np.int16)
     with wave.open(str(out_path), "wb") as wf:
-        wf.setnchannels(1)
+        wf.setnchannels(n_channels)
         wf.setsampwidth(2)
         wf.setframerate(sample_rate)
         wf.writeframes(pcm16.tobytes())
     return str(out_path)
+
+
+def write_wav_stereo(path: str | Path, samples: np.ndarray, sample_rate: int = DEFAULT_SR) -> str:
+    """Write a 1D or `(N, 2)` float64 array to a 2-channel 16-bit PCM stereo WAV file."""
+    arr = np.asarray(samples, dtype=np.float64)
+    if arr.ndim == 1:
+        arr = np.column_stack([arr, arr])
+    elif arr.shape[1] == 1:
+        arr = np.column_stack([arr[:, 0], arr[:, 0]])
+    return write_wav_mono(path, arr[:, :2], sample_rate=sample_rate)
 
 
 def read_audio_mono(path: str | Path, target_sr: int = DEFAULT_SR) -> np.ndarray:
@@ -159,16 +171,18 @@ def synthesize_chalk_sound(
     sample_rate: int = DEFAULT_SR,
     seed: int = 42,
     style: str = "chalk",
-    volume: float = 0.45,
+    volume: float = 0.25,
 ) -> np.ndarray:
     """Synthesize an open-source chalk or sketch-pen drawing sound over `duration` seconds.
 
     Combines:
     - Initial chalk-to-board contact tap transient
-    - High-frequency chalky grain (1800-7200 Hz) + warm board resonance (800-1750 Hz)
+    - Balanced chalky grain (1500-5200 Hz) + warm board resonance (650-1650 Hz)
     - Hand-stroke velocity modulation (8-14 Hz) with natural micro-lifts between sub-strokes
     """
     dur = max(0.05, float(duration))
+    if float(volume) <= 0.0:
+        return np.zeros(int(round(dur * sample_rate)), dtype=np.float64)
     n = int(round(dur * sample_rate))
     if n <= 0:
         return np.zeros(0, dtype=np.float64)
@@ -178,12 +192,12 @@ def synthesize_chalk_sound(
 
     noise = rng.standard_normal(n)
     if style == "pen":
-        grit = _bandpass(noise, 2100.0, 7800.0, sample_rate) * 0.75
-        body = _bandpass(noise, 950.0, 2100.0, sample_rate) * 0.25
+        grit = _bandpass(noise, 1850.0, 5800.0, sample_rate) * 0.55
+        body = _bandpass(noise, 850.0, 1950.0, sample_rate) * 0.45
     else:
-        # Chalk on slate/whiteboard: gritty high band + warm resonant mid band + occasional squeak harmonic
-        grit = _bandpass(noise, 1750.0, 6800.0, sample_rate) * 0.65
-        body = _bandpass(noise, 720.0, 1700.0, sample_rate) * 0.35
+        # Chalk on slate/whiteboard: softer mid-high grain + warm resonant mid band
+        grit = _bandpass(noise, 1500.0, 5200.0, sample_rate) * 0.50
+        body = _bandpass(noise, 650.0, 1650.0, sample_rate) * 0.50
 
     texture = grit + body
 
@@ -216,7 +230,7 @@ def synthesize_chalk_sound(
     release = np.minimum(1.0, np.maximum(0.0, (dur - t) / 0.04))
     env = attack * release
 
-    signal = (texture * flutter * micro_lift * env + tap) * 0.36 * float(volume)
+    signal = (texture * flutter * micro_lift * env + tap) * 0.18 * float(volume)
     return np.asarray(np.clip(signal, -0.95, 0.95), dtype=np.float64)
 
 
@@ -258,23 +272,23 @@ def synthesize_eraser_sound(
     release = np.minimum(1.0, np.maximum(0.0, (dur - t) / 0.05))
     env = attack * release
 
-    signal = rub * swipe_speed * env * 0.42 * float(volume)
+    signal = rub * swipe_speed * env * 0.22 * float(volume)
     return np.asarray(np.clip(signal, -0.95, 0.95), dtype=np.float64)
 
 
 def synthesize_pop_sound(pitch: float = 1.0, sample_rate: int = DEFAULT_SR, volume: float = 0.5) -> np.ndarray:
-    """Synthesize a crisp cartoon pop sound effect."""
+    """Synthesize a crisp cartoon pop sound effect (~12 dB under active speech at typical volumes)."""
     dur = 0.11
     n = int(round(dur * sample_rate))
     t = np.arange(n, dtype=np.float64) / sample_rate
     freq = (920.0 * np.exp(-t * 19.0) + 410.0) * float(pitch)
     phase = 2.0 * np.pi * np.cumsum(freq) / sample_rate
     env = np.minimum(1.0, t / 0.002) * np.exp(-np.maximum(t - 0.002, 0.0) / 0.04)
-    return np.asarray(np.sin(phase) * env * float(volume), dtype=np.float64)
+    return np.asarray(np.sin(phase) * env * 0.18 * float(volume), dtype=np.float64)
 
 
 def synthesize_whoosh_sound(duration: float = 0.38, sample_rate: int = DEFAULT_SR, volume: float = 0.45) -> np.ndarray:
-    """Synthesize a smooth transition whoosh sound effect."""
+    """Synthesize a smooth transition whoosh sound effect (~12 dB under active speech)."""
     dur = max(0.1, float(duration))
     n = int(round(dur * sample_rate))
     rng = np.random.default_rng(77)
@@ -285,11 +299,11 @@ def synthesize_whoosh_sound(duration: float = 0.38, sample_rate: int = DEFAULT_S
     sweep = np.sin(np.pi * t_norm) ** 1.6
     combined = (1.0 - sweep) * low_band + sweep * high_band
     env = np.sin(np.pi * t_norm) ** 2
-    return np.asarray(combined * env * 0.4 * float(volume), dtype=np.float64)
+    return np.asarray(combined * env * 0.22 * float(volume), dtype=np.float64)
 
 
 def synthesize_ding_sound(sample_rate: int = DEFAULT_SR, volume: float = 0.45) -> np.ndarray:
-    """Synthesize a pleasant two-note bell ding sound effect."""
+    """Synthesize a pleasant two-note bell ding sound effect (~12 dB under active speech)."""
     dur = 0.95
     n = int(round(dur * sample_rate))
     t = np.arange(n, dtype=np.float64) / sample_rate
@@ -305,7 +319,7 @@ def synthesize_ding_sound(sample_rate: int = DEFAULT_SR, volume: float = 0.45) -
     out = note1.copy()
     if offset < n:
         out[offset:] += _tone(1568.0, t[: n - offset]) * 0.9
-    return np.asarray(np.clip(out * 0.28 * float(volume), -0.95, 0.95), dtype=np.float64)
+    return np.asarray(np.clip(out * 0.07 * float(volume), -0.95, 0.95), dtype=np.float64)
 
 
 def synthesize_page_turn_sound(
@@ -355,7 +369,7 @@ def synthesize_page_turn_sound(
         settle_noise = _bandpass(rng.standard_normal(settle_len), 500.0, 2600.0, sample_rate)
         settle[settle_start : settle_start + settle_len] = settle_noise * np.exp(-st / 0.015) * 0.45
 
-    signal = (slide * slide_env * 0.38 + flick + settle) * float(volume)
+    signal = (slide * slide_env * 0.38 + flick + settle) * 0.55 * float(volume)
     return np.asarray(np.clip(signal, -0.95, 0.95), dtype=np.float64)
 
 
@@ -423,7 +437,7 @@ def synthesize_crumple_sound(
         copy_len = min(whoosh_len, len(w_sound))
         out[whoosh_start : whoosh_start + copy_len] += w_sound[:copy_len]
 
-    signal = out * float(volume)
+    signal = out * 0.55 * float(volume)
     peak = float(np.max(np.abs(signal))) if len(signal) > 0 else 0.0
     if peak > 0.92:
         signal = np.tanh(signal / peak * 1.2) * 0.90

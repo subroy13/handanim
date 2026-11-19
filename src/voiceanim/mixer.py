@@ -28,9 +28,170 @@ from .sfx import (
     synthesize_theme_loop,
     synthesize_whoosh_sound,
     write_wav_mono,
+    write_wav_stereo,
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _k_weight_channel(x: np.ndarray, sample_rate: int) -> np.ndarray:
+    """Apply ITU-R BS.1770-4 K-weighting filter (high-shelf + RLB high-pass)."""
+    if len(x) < 8:
+        return x
+    try:
+        from scipy.signal import lfilter
+
+        # ITU-R BS.1770-4 bilinear transform design for arbitrary sample_rate
+        # Stage 1: acoustic head-model high-shelf (+4 dB above ~1.5 kHz)
+        f0_1 = 1681.974450955533
+        g_1 = 3.999843853973347
+        q_1 = 0.7071752369554196
+        k1 = math.tan(math.pi * f0_1 / sample_rate)
+        vh = 10.0 ** (g_1 / 20.0)
+        vb = vh**0.4996667741545416
+        a0_1 = 1.0 + k1 / q_1 + k1 * k1
+        b1 = np.array(
+            [
+                (vh + vb * k1 / q_1 + k1 * k1) / a0_1,
+                2.0 * (k1 * k1 - vh) / a0_1,
+                (vh - vb * k1 / q_1 + k1 * k1) / a0_1,
+            ],
+            dtype=np.float64,
+        )
+        a1 = np.array(
+            [
+                1.0,
+                2.0 * (k1 * k1 - 1.0) / a0_1,
+                (1.0 - k1 / q_1 + k1 * k1) / a0_1,
+            ],
+            dtype=np.float64,
+        )
+
+        # Stage 2: RLB high-pass filter (~38 Hz)
+        f0_2 = 38.13547087602444
+        q_2 = 0.5003270373238773
+        k2 = math.tan(math.pi * f0_2 / sample_rate)
+        a0_2 = 1.0 + k2 / q_2 + k2 * k2
+        b2 = np.array([1.0, -2.0, 1.0], dtype=np.float64) / a0_2
+        a2 = np.array(
+            [
+                1.0,
+                2.0 * (k2 * k2 - 1.0) / a0_2,
+                (1.0 - k2 / q_2 + k2 * k2) / a0_2,
+            ],
+            dtype=np.float64,
+        )
+        y = lfilter(b1, a1, x)
+        return np.asarray(lfilter(b2, a2, y), dtype=np.float64)
+    except Exception:
+        return x
+
+
+def measure_integrated_lufs(audio: np.ndarray, sample_rate: int = DEFAULT_SR) -> float:
+    """Measure ITU-R BS.1770-4 integrated loudness in LUFS."""
+    arr = np.asarray(audio, dtype=np.float64)
+    if arr.size == 0 or float(np.max(np.abs(arr))) < 1e-9:
+        return -float("inf")
+
+    try:
+        import pyloudnorm as pyln  # type: ignore[import-not-found]
+
+        meter = pyln.Meter(sample_rate)
+        return float(meter.integrated_loudness(arr))
+    except Exception:
+        pass
+
+    if arr.ndim == 1:
+        channels = [_k_weight_channel(arr, sample_rate)]
+    else:
+        channels = [_k_weight_channel(arr[:, c], sample_rate) for c in range(arr.shape[1])]
+
+    n = len(channels[0])
+    block_len = int(round(0.4 * sample_rate))
+    step_len = max(1, int(round(0.1 * sample_rate)))
+
+    if n < block_len:
+        mean_sq = sum(float(np.mean(ch * ch)) for ch in channels)
+        return float(-0.691 + 10.0 * math.log10(max(1e-18, mean_sq)))
+
+    starts = range(0, n - block_len + 1, step_len)
+    block_powers = np.array(
+        [
+            sum(float(np.mean(ch[s : s + block_len] ** 2)) for ch in channels)
+            for s in starts
+        ],
+        dtype=np.float64,
+    )
+    block_lufs = -0.691 + 10.0 * np.log10(np.maximum(1e-18, block_powers))
+
+    # Absolute gate at -70 LUFS
+    abs_mask = block_lufs > -70.0
+    if not np.any(abs_mask):
+        return -float("inf")
+
+    rel_thresh = -0.691 + 10.0 * math.log10(float(np.mean(block_powers[abs_mask]))) - 10.0
+    rel_mask = abs_mask & (block_lufs > rel_thresh)
+    if not np.any(rel_mask):
+        return float(-0.691 + 10.0 * math.log10(float(np.mean(block_powers[abs_mask]))))
+
+    return float(-0.691 + 10.0 * math.log10(float(np.mean(block_powers[rel_mask]))))
+
+
+def _measure_true_peak(audio: np.ndarray) -> float:
+    """Estimate 4x oversampled true peak of a 1D or 2D audio signal."""
+    arr = np.asarray(audio, dtype=np.float64)
+    if arr.size == 0:
+        return 0.0
+    sample_peak = float(np.max(np.abs(arr)))
+    if len(arr) < 4:
+        return sample_peak
+    # 4-point cubic/Catmull-Rom midpoint interpolation to catch inter-sample peaks
+    if arr.ndim == 1:
+        x0, x1, x2, x3 = arr[:-3], arr[1:-2], arr[2:-1], arr[3:]
+        mid = -0.0625 * x0 + 0.5625 * x1 + 0.5625 * x2 - 0.0625 * x3
+        q1 = -0.0703125 * x0 + 0.8671875 * x1 + 0.2265625 * x2 - 0.0234375 * x3
+        q3 = -0.0234375 * x0 + 0.2265625 * x1 + 0.8671875 * x2 - 0.0703125 * x3
+        inter_peak = max(
+            float(np.max(np.abs(mid))),
+            float(np.max(np.abs(q1))),
+            float(np.max(np.abs(q3))),
+        )
+        return max(sample_peak, inter_peak)
+    return max(_measure_true_peak(arr[:, c]) for c in range(arr.shape[1]))
+
+
+def normalize_and_limit(
+    audio: np.ndarray,
+    sample_rate: int = DEFAULT_SR,
+    target_lufs: float | None = -14.0,
+    ceiling_dbfs: float = -1.5,
+) -> np.ndarray:
+    """Normalize integrated loudness to `target_lufs` (-14 LUFS default) with a true-peak soft-knee limiter."""
+    y = np.asarray(audio, dtype=np.float64).copy()
+    if y.size == 0:
+        return y
+
+    if target_lufs is not None:
+        current_lufs = measure_integrated_lufs(y, sample_rate=sample_rate)
+        if math.isfinite(current_lufs) and current_lufs > -70.0:
+            gain = 10.0 ** ((float(target_lufs) - current_lufs) / 20.0)
+            y *= gain
+
+    ceiling = 10.0 ** (float(ceiling_dbfs) / 20.0)
+    peak = float(np.max(np.abs(y)))
+    if peak > ceiling * 0.8:
+        thr = ceiling * 0.8
+        a = np.abs(y)
+        over = a > thr
+        y[over] = np.sign(y[over]) * (
+            thr + (ceiling - thr) * np.tanh((a[over] - thr) / max(1e-9, ceiling - thr))
+        )
+
+    tp = _measure_true_peak(y)
+    if tp > ceiling:
+        y *= (ceiling * 0.995) / tp
+
+    return y
 
 
 def mix_soundtrack(
@@ -43,6 +204,9 @@ def mix_soundtrack(
     sfx_events: Sequence[dict[str, Any] | tuple[Any, ...]] | None = None,
     output_path: str | Path | None = None,
     sample_rate: int = DEFAULT_SR,
+    target_lufs: float | None = -14.0,
+    ceiling_dbfs: float = -1.5,
+    stereo: bool = True,
 ) -> str:
     """Mix narration, repeating background theme music, and timed SFX (chalk, eraser, etc.) into a WAV file.
 
@@ -109,14 +273,19 @@ def mix_soundtrack(
             copy_len = min(n_total, len(raw_music))
             music_track[:copy_len] = raw_music[:copy_len] * float(music_volume)
 
-        # Auto-duck music under narration speech so voice stays crystal-clear
-        if has_voice and duck_music:
-            win_short = max(1, int(0.08 * sample_rate))
-            win_smooth = max(1, int(0.22 * sample_rate))
-            env = np.convolve(np.abs(voice_track), np.ones(win_short) / win_short, mode="same")
-            speech_active = (env > 0.015).astype(np.float64)
-            duck_curve = np.convolve(speech_active, np.ones(win_smooth) / win_smooth, mode="same")
-            music_track *= 1.0 - 0.55 * np.clip(duck_curve, 0.0, 1.0)
+    # Compute speech activity envelope for auto-ducking music and sketch SFX under voice
+    duck_curve: np.ndarray | None = None
+    if has_voice and duck_music:
+        win_short = max(1, int(0.08 * sample_rate))
+        win_smooth = max(1, int(0.22 * sample_rate))
+        env = np.convolve(np.abs(voice_track), np.ones(win_short) / win_short, mode="same")
+        speech_active = (env > 0.015).astype(np.float64)
+        duck_curve = np.clip(
+            np.convolve(speech_active, np.ones(win_smooth) / win_smooth, mode="same"),
+            0.0,
+            1.0,
+        )
+        music_track *= 1.0 - 0.55 * duck_curve
 
     # 3. Synthesize and place timed SFX events (chalk, eraser, pop, whoosh, ding)
     sfx_track = np.zeros(n_total, dtype=np.float64)
@@ -126,18 +295,18 @@ def mix_soundtrack(
                 kind = str(ev.get("type", ev.get("kind", "chalk"))).lower()
                 start_t = float(ev.get("start_time", ev.get("start", 0.0)))
                 ev_dur = float(ev.get("duration", 0.35))
-                vol = float(ev.get("volume", 0.45))
+                vol = float(ev.get("volume", 0.25))
                 style = str(ev.get("style", "chalk"))
             elif isinstance(ev, (tuple, list)) and len(ev) >= 2:
                 start_t = float(ev[0])
                 kind = str(ev[1]).lower()
                 ev_dur = float(ev[2]) if len(ev) >= 3 else 0.35
-                vol = float(ev[3]) if len(ev) >= 4 else 0.45
+                vol = float(ev[3]) if len(ev) >= 4 else 0.25
                 style = "chalk"
             else:
                 continue
 
-            if ev_dur <= 0.0 or start_t >= dur:
+            if ev_dur <= 0.0 or vol <= 0.0 or start_t >= dur:
                 continue
 
             clipped_dur = min(ev_dur, dur - max(0.0, start_t))
@@ -196,17 +365,34 @@ def mix_soundtrack(
             if end_sample > start_sample:
                 sfx_track[start_sample:end_sample] += fx_samples[: end_sample - start_sample]
 
-    combined = voice_track + music_track + sfx_track
-    # Soft limiter to prevent clipping when narration + music + chalk/eraser overlap
-    peak = float(np.max(np.abs(combined))) if len(combined) > 0 else 0.0
-    if peak > 0.92:
-        combined = np.tanh(combined / peak * 1.15) * 0.92
+    if duck_curve is not None:
+        sfx_track *= 1.0 - 0.35 * duck_curve
+
+    if stereo:
+        # Build a clean stereo mix: centered voice, gentle stereo width on music & SFX
+        delay_samples = max(1, int(round(0.00045 * sample_rate)))  # ~0.45ms Haas decorrelation on music
+        music_r = np.roll(music_track, delay_samples)
+        music_r[:delay_samples] = music_track[:delay_samples]
+        left = voice_track + 1.03 * music_track + 0.98 * sfx_track
+        right = voice_track + 0.97 * music_r + 1.02 * sfx_track
+        combined = np.column_stack([left, right])
+    else:
+        combined = voice_track + music_track + sfx_track
+
+    combined = normalize_and_limit(
+        combined,
+        sample_rate=sample_rate,
+        target_lufs=target_lufs,
+        ceiling_dbfs=ceiling_dbfs,
+    )
 
     if output_path is None:
         fd, tmp_path = tempfile.mkstemp(prefix="handanim_mix_", suffix=".wav")
         os.close(fd)
         output_path = tmp_path
 
+    if stereo:
+        return write_wav_stereo(output_path, combined, sample_rate=sample_rate)
     return write_wav_mono(output_path, combined, sample_rate=sample_rate)
 
 

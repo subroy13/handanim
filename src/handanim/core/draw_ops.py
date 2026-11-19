@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
-import cairo
 import numpy as np
 
 from ..utils.geometry import (
@@ -14,6 +13,7 @@ from ..utils.geometry import (
     get_bezier_points_from_quadcurve,
     slice_bezier,
 )
+from ._cairo import cairo
 from .viewport import Viewport
 
 

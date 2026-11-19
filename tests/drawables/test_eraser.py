@@ -131,3 +131,49 @@ def test_eraser_defaults_to_scene_background_and_removes_erased_objects():
     assert rect.id not in scene.get_active_objects(2.0)
     assert rect.id not in scene.get_active_objects(2.5)
 
+
+def test_colored_eraser_draws_visible_stroke_mid_erase_and_clears_after():
+    import cairo
+    import numpy as np
+
+    from handanim.primitives.text import Text
+    from handanim.utils.geometry import cairo_surface_to_numpy
+
+    scene = Scene(width=400, height=300, fps=10, background_color=(0.98, 0.96, 0.90))
+    word = Text(
+        "EraseMe",
+        position=(120, 140),
+        font_size=48,
+        stroke_style=StrokeStyle(color=(0.0, 0.0, 0.0), width=3),
+    )
+    scene.add(SketchAnimation(start_time=0.0, duration=1.0), word)
+
+    eraser = Eraser(
+        objects_to_erase=[word],
+        stroke_style=StrokeStyle(color=(1.0, 0.0, 0.0), width=10),
+    )
+    scene.add(SketchAnimation(start_time=1.0, duration=1.0), eraser)
+
+    ops_list = scene.create_event_timeline(max_length=2.2)
+
+    def _render_frame_np(frame_idx: int) -> np.ndarray:
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, scene.width, scene.height)
+        ctx = cairo.Context(surface)
+        ctx.set_source_rgb(*scene.background_color)
+        ctx.paint()
+        scene._render_opsset_on_context(ctx, ops_list[frame_idx], frame_idx / scene.fps)
+        return cairo_surface_to_numpy(surface)
+
+    # Mid-erase (frame 15 -> t=1.5s): red eraser stroke must leave visible red pixels
+    mid_frame = _render_frame_np(15)
+    red_mask = (mid_frame[:, :, 0] > 200) & (mid_frame[:, :, 1] < 60) & (mid_frame[:, :, 2] < 60)
+    assert int(np.sum(red_mask)) > 50
+
+    # After erase (frame 21 -> t=2.1s): both word and red eraser are gone
+    end_frame = _render_frame_np(21)
+    end_red_mask = (end_frame[:, :, 0] > 200) & (end_frame[:, :, 1] < 60) & (end_frame[:, :, 2] < 60)
+    end_black_mask = (end_frame[:, :, 0] < 60) & (end_frame[:, :, 1] < 60) & (end_frame[:, :, 2] < 60)
+    assert int(np.sum(end_red_mask)) == 0
+    assert int(np.sum(end_black_mask)) == 0
+
+

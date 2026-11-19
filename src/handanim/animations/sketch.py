@@ -15,20 +15,87 @@ class SketchAnimation(AnimationEvent):
 
     Attributes:
         wait_before_fill (float): Delay in seconds before starting fill animation, capped at half the total duration.
+        sound (bool | None): Per-animation override to turn sketch drawing sound on (`True`) or off (`False`).
+            When `None` (default), inherits the scene's `sketch_sound` setting.
+        sound_volume (float | None): Optional per-animation volume multiplier (`0.0` to `1.0`) for the sketch sound.
+        sound_style (str | None): Optional per-animation sound style (`"chalk"` or `"pen"`).
 
     Methods:
         get_partial_sketch: Calculates a partial OpsSet representing the current sketching progress.
         apply: Applies the sketch animation to a given OpsSet at a specific progress point.
+        set_sound: Enables, disables, or adjusts the volume/style of the sketch sound for this event.
     """
 
-    def __init__(self, start_time=0.0, duration=0.0, easing_fun=None, data=None):
-        super().__init__(AnimationEventType.CREATION, start_time, duration, easing_fun, data)
-        if data is None:
-            data = {}
-        self.wait_before_fill = data.get(
+    def __init__(
+        self,
+        start_time: float = 0.0,
+        duration: float = 0.0,
+        easing_fun=None,
+        data: dict | None = None,
+        *,
+        wait_before_fill: float | None = None,
+        glowing_dot: bool | dict | None = None,
+        sound: bool | float | None = None,
+        sound_volume: float | None = None,
+        sound_style: str | None = None,
+    ):
+        merged_data = dict(data) if data is not None else {}
+        if wait_before_fill is not None:
+            merged_data["wait_before_fill"] = float(wait_before_fill)
+        if glowing_dot is not None:
+            merged_data["glowing_dot"] = glowing_dot
+        if sound is not None:
+            if isinstance(sound, (int, float)) and not isinstance(sound, bool):
+                if float(sound) <= 0.0:
+                    merged_data["sound"] = False
+                    if sound_volume is None:
+                        merged_data["sound_volume"] = 0.0
+                else:
+                    merged_data["sound"] = True
+                    if sound_volume is None:
+                        merged_data["sound_volume"] = float(sound)
+            else:
+                merged_data["sound"] = bool(sound)
+        if sound_volume is not None:
+            vol = max(0.0, float(sound_volume))
+            merged_data["sound_volume"] = vol
+            if vol <= 0.0 and "sound" not in merged_data:
+                merged_data["sound"] = False
+        if sound_style is not None:
+            merged_data["sound_style"] = str(sound_style)
+
+        super().__init__(AnimationEventType.CREATION, start_time, duration, easing_fun, merged_data)
+        self.wait_before_fill = merged_data.get(
             "wait_before_fill", 0
         )  # seconds to wait before starting fill animation, if any
         self.wait_before_fill = min(self.wait_before_fill, self.duration / 2)  # maximum wait is half of the duration
+        self.sound: bool | None = merged_data.get("sound", None)
+        self.sound_volume: float | None = (
+            float(merged_data["sound_volume"]) if merged_data.get("sound_volume") is not None else None
+        )
+        self.sound_style: str | None = (
+            str(merged_data["sound_style"]) if merged_data.get("sound_style") is not None else None
+        )
+
+    def set_sound(
+        self,
+        enabled: bool = True,
+        volume: float | None = None,
+        style: str | None = None,
+    ) -> "SketchAnimation":
+        """Turn sketch sound on or off or adjust its volume/style for this animation event."""
+        self.sound = bool(enabled)
+        self.data["sound"] = self.sound
+        if volume is not None:
+            self.sound_volume = max(0.0, float(volume))
+            self.data["sound_volume"] = self.sound_volume
+            if self.sound_volume <= 0.0:
+                self.sound = False
+                self.data["sound"] = False
+        if style is not None:
+            self.sound_style = str(style)
+            self.data["sound_style"] = self.sound_style
+        return self
 
     def get_partial_sketch(self, opsset: OpsSet, progress: float) -> OpsSet:
         """
@@ -66,37 +133,46 @@ class SketchAnimation(AnimationEvent):
         # based on progress, find out the total number of ops to be drawn
         if progress * self.duration <= draw_end_time:
             # drawing is not completed yet
-            draw_progress = progress * self.duration / draw_end_time
-            n_active = int(draw_progress * draw_ops_count)
+            draw_progress = progress * self.duration / draw_end_time if draw_end_time > 0 else 1.0
+            exact_active = draw_progress * draw_ops_count
+            n_active = int(exact_active)
+            partial_amount = exact_active - n_active
         elif progress * self.duration <= fill_start_time:
             # drawing is completed, but filling is not started yet
             n_active = draw_ops_count
+            partial_amount = 0.0
         else:
             # filling is in progress
             fill_progress = (progress * self.duration - fill_start_time) / (self.duration - fill_start_time)
-            n_active = draw_ops_count + int(fill_progress * fill_ops_count)
+            exact_active = draw_ops_count + fill_progress * fill_ops_count
+            n_active = int(exact_active)
+            partial_amount = exact_active - n_active
 
         # create a new opsset with the partial ops
         counter = 0
         last_op = None
         new_opsset = OpsSet(initial_set=[])  # initially start with blank opsset
         for op in base_ops:
-            if op.type not in Ops.SETUP_OPS_TYPES and counter < n_active:
-                new_opsset.add(op)
-                counter += 1
-            elif counter < n_active:
+            if op.type not in Ops.SETUP_OPS_TYPES:
+                if counter < n_active:
+                    new_opsset.add(op)
+                    counter += 1
+                else:
+                    last_op = op  # the last operation for which it stopped
+                    break
+            elif counter < n_active or (counter == n_active and partial_amount > 0):
                 # other operations keep adding, but don't increase counter
                 new_opsset.add(op)
             else:
-                last_op = op  # the last operation for which it stopped
                 break
-        if last_op is not None and (progress * total_ops_count - n_active) > 0:
+        if last_op is not None and partial_amount > 0:
             # need to calculate it partially
             new_opsset.add(
                 Ops(
                     type=last_op.type,
                     data=last_op.data,
-                    partial=progress * total_ops_count - n_active,
+                    partial=partial_amount,
+                    meta=last_op.meta,
                 )
             )
         return new_opsset

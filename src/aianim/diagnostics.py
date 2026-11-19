@@ -61,9 +61,9 @@ class HandanimCodeAuditor(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call):
         if isinstance(node.func, ast.Attribute):
-            if node.func.attr == "add":
+            if node.func.attr in ("add", "sketch", "fade_in", "pop_in", "show"):
                 self.has_scene_add = True
-            elif node.func.attr in ("render", "render_snapshot", "render_keyframes"):
+            elif node.func.attr in ("render", "render_snapshot", "render_keyframes", "render_contact_sheet"):
                 self.has_scene_render = True
         self.generic_visit(node)
 

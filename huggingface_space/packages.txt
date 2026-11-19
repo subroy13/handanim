@@ -1,0 +1,4 @@
+libcairo2-dev
+pkg-config
+espeak-ng
+ffmpeg

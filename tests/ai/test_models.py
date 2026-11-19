@@ -2,6 +2,8 @@
 
 from unittest.mock import MagicMock
 
+import pytest
+
 from aianim.models import BedrockModel, MockModel, get_model
 
 
@@ -26,6 +28,7 @@ def test_get_model_resolution(monkeypatch):
 
 
 def test_bedrock_bearer_token_detection(monkeypatch):
+    pytest.importorskip("boto3")
     monkeypatch.setenv("AWS_BEARER_TOKEN_BEDROCK", "test-bearer-token")
     monkeypatch.delenv("HANDANIM_AI_PROVIDER", raising=False)
     # Boto3 client mock

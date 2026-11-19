@@ -42,9 +42,14 @@ class PoseAnimation(AnimationEvent):
 
         if keyframes is not None and len(keyframes) >= 1:
             sorted_kf = sorted([(float(t), p.copy()) for t, p in keyframes], key=lambda item: item[0])
+            if start_time != 0.0 and sorted_kf[0][0] == 0.0:
+                offset_t = float(start_time)
+                sorted_kf = [(t + offset_t, p) for t, p in sorted_kf]
+            else:
+                start_time = sorted_kf[0][0]
+            kf_span = max(0.0, sorted_kf[-1][0] - sorted_kf[0][0])
+            duration = kf_span if kf_span > 0.0 else max(0.0, float(duration))
             self.keyframes = sorted_kf
-            start_time = sorted_kf[0][0]
-            duration = max(0.0, sorted_kf[-1][0] - sorted_kf[0][0])
             self.from_pose = sorted_kf[0][1]
             self.to_pose = sorted_kf[-1][1]
         else:
@@ -100,12 +105,18 @@ class PoseAnimation(AnimationEvent):
         if self.rig is None:
             return opsset
         pose, current_time = self.get_pose_at_progress(raw_progress)
+        if self.data.get("current_time") is not None:
+            current_time = float(self.data["current_time"])
         return self.rig.draw_with_pose(pose=pose, time=current_time)
 
     def _apply(self, opsset: OpsSet, progress: float) -> OpsSet:
         if self.rig is None:
             return opsset
         pose = self.from_pose.interpolate(self.to_pose, progress)
-        current_time = self.start_time + progress * self.duration
+        current_time = (
+            float(self.data["current_time"])
+            if self.data.get("current_time") is not None
+            else (self.start_time + progress * self.duration)
+        )
         return self.rig.draw_with_pose(pose=pose, time=current_time)
 

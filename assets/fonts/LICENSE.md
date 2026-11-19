@@ -11,12 +11,16 @@ This directory contains third-party and first-party fonts used by `handanim`.
 - **Designer / Copyright:** © 2023 Single Line Studio (Ali Hamidi).
 - **License:** Freeware — **100% Free** (designated free for both personal and commercial use on [FontSpace](https://www.fontspace.com/feasibly-single-line-font-f89298)).
 
-## 3. Backstay Single Line (`ttf/BackstaySingleLine-rgOw8.ttf`)
+## 3. Hoarsely Single Line (`ttf/HoarselySingleLine-K7g0o.ttf`)
+- **Designer / Copyright:** © 2023 Single Line Studio (Ali Hamidi).
+- **License:** Freeware — **100% Free** (designated free for both personal and commercial use on [FontSpace](https://www.fontspace.com/hoarsely-single-line-font-f89296)).
+
+## 4. Backstay Single Line (`ttf/BackstaySingleLine-rgOw8.ttf`)
 - **Designer / Copyright:** © 2023 Single Line Studio (Ali Hamidi).
 - **License:** **Personal Use Only** (the embedded TTF `name` table record ID 13 states `PERSONAL USE ONLY!`, and its [FontSpace listing](https://www.fontspace.com/backstay-single-line-font-f90138) designates it as Freeware, Non-Commercial).
 - **Important Notice:** Commercial use requires obtaining a commercial license from Single Line Studio (`singlelinestd.com` / `singlelinestd@gmail.com`).
 
-## 4. Handanim Type 1 (`custom/handanimtype1.json`)
+## 5. Handanim Type 1 (`custom/handanimtype1.json`)
 - **Copyright:** © Subhrajyoty Roy (`handanim` authors).
 - **License:** MIT License (same as the `handanim` repository).
 

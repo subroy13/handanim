@@ -17,11 +17,12 @@ from .easing import (
     linear,
 )
 from .fade import FadeInAnimation, FadeOutAnimation
+from .morph import MorphAnimation
 from .pose import PoseAnimation
 from .rotate import RotateAnimation
 from .sketch import SketchAnimation
 from .transitions import PageTurnTransition, PaperCrumpleTransition, SceneTransition
-from .translate import TranslateFromAnimation, TranslateToAnimation
+from .translate import MoveBy, TranslateByAnimation, TranslateFromAnimation, TranslateToAnimation
 from .visibility import Hide, HideAnimation, Show, ShowAnimation, Swap, SwapAnimation
 from .zoom import ZoomInAnimation, ZoomOutAnimation
 
@@ -32,11 +33,14 @@ __all__ = [
     "ZoomInAnimation",
     "ZoomOutAnimation",
     "PopAnimation",
+    "MoveBy",
+    "TranslateByAnimation",
     "TranslateFromAnimation",
     "TranslateToAnimation",
     "RotateAnimation",
     "ColorTransitionAnimation",
     "CameraAnimation",
+    "MorphAnimation",
     "PoseAnimation",
     "SceneTransition",
     "PageTurnTransition",

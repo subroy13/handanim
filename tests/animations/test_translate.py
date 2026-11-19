@@ -178,3 +178,28 @@ class TestTranslateVisual:
         np.random.seed(42)
         b = render_to_png_bytes(_translate_opsset(), width=600, height=400)
         assert ssim(to_arr(a), to_arr(b), channel_axis=-1) == pytest.approx(1.0)
+
+
+class TestMoveBy:
+    def test_move_by_translates_by_offset_without_cog_lookup(self):
+        from handanim import MoveBy, TranslateByAnimation
+
+        opsset = _make_square_opsset(cx=100.0, cy=100.0)
+        orig_cx, orig_cy = opsset.get_center_of_gravity()
+        anim = MoveBy(450.0, -50.0, start_time=0.0, duration=1.0)
+
+        half = anim.apply(opsset, raw_progress=0.5)
+        hx, hy = half.get_center_of_gravity()
+        assert hx == pytest.approx(orig_cx + 225.0, abs=1e-4)
+        assert hy == pytest.approx(orig_cy - 25.0, abs=1e-4)
+
+        full = anim.apply(opsset, raw_progress=1.0)
+        fx, fy = full.get_center_of_gravity()
+        assert fx == pytest.approx(orig_cx + 450.0, abs=1e-4)
+        assert fy == pytest.approx(orig_cy - 50.0, abs=1e-4)
+
+        # Also supports offset= keyword and TranslateByAnimation alias
+        anim2 = TranslateByAnimation(start_time=0.0, duration=1.0, offset=(120.0, 30.0))
+        res2 = anim2.apply(opsset, raw_progress=1.0)
+        assert res2.get_center_of_gravity() == pytest.approx((orig_cx + 120.0, orig_cy + 30.0), abs=1e-4)
+

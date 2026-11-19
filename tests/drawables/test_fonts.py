@@ -11,6 +11,7 @@ from handanim.stylings.fonts import get_font_info, get_font_path, list_fonts
 def test_list_fonts():
     fonts = list_fonts()
     assert "feasibly" in fonts
+    assert "hoarsely" in fonts
     assert "hershey_mathlow" in fonts
 
 def test_get_font_info():
@@ -25,7 +26,7 @@ def test_get_font_info():
     assert "name" in hershey_font
 
 
-@pytest.mark.parametrize("font_name", ["feasibly", "backstay", "handanimtype1", "noto_sans_math"])
+@pytest.mark.parametrize("font_name", ["feasibly", "hoarsely", "backstay", "handanimtype1", "noto_sans_math"])
 def test_get_font_path_resolves_bundled_package_resources(font_name):
     font_path = Path(get_font_path(font_name))
     assert font_path.is_file(), f"Bundled font {font_name} not found at {font_path}"
