@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
-## [Unreleased]
+## [1.1.0] — 2026-11-18
 
 ### Added
 - Full 54-voice Kokoro-82M catalog (`KOKORO_ALL_VOICES`, `KOKORO_VOICE_CATALOG`) and 256-D latent voice blending (`KokoroProvider.blend_voices`, `VoiceEngine.blend_voices`, `KOKORO_BLEND_PRESETS`, weighted strings like `"am_puck:0.6+bm_fable:0.4"`, equal-weight `"am_puck+bm_fable"`, and dicts `{"hm_omega": 0.55, "am_liam": 0.45}`) with automatic phonemizer language inference (`lang="en-us"` / `"en-gb"`) in `voiceanim/providers/kokoro_provider.py`
@@ -24,6 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `RoundedRectangle` (`primitives/polygons.py`): constructs all four corners from explicit 90-degree circular arcs (fixing the chamfered top-left corner) and supports `corner_radius=` in pixels
 - `Scene.add(CameraAnimation(...))` (`core/scene.py`): routes camera events directly to `Scene.add_camera()` instead of raising `ValueError("drawable is required")`
 - Snapshot tests (`tests/conftest.py`, `tests/ai/test_models.py`): compares rendered PNG frames by decoded pixel arrays with tolerance for cross-platform FreeType/Cairo differences and uses `pytest.importorskip("boto3")` when `boto3` is absent
+
+---
+
+## [1.0.0] — 2026-11-14
 
 ### Removed
 - `SVG` legacy primitive (`primitives/svg.py`) — deleted entirely; use `VectorSVG` for all SVG import

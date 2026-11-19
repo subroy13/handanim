@@ -6,7 +6,7 @@ packages = [
     { include = "handanim_ai", from = "src" },
 ]
 name = "handanim"
-version = "1.0.0"
+version = "1.1.0"
 description = "A Python library to create whiteboard-style, hand-drawn animations for educational videos, tutorials or data storytelling."
 authors = ["Subhrajyoty Roy <subhrajyotyroy@gmail.com>"]
 license = "MIT"
@@ -19,6 +19,7 @@ classifiers = [
     "Topic :: Multimedia :: Graphics",
     "Topic :: Multimedia :: Video",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
 ]
 keywords = [
@@ -38,7 +39,7 @@ Issues = "https://github.com/subroy13/handanim/issues"
 Changelog = "https://github.com/subroy13/handanim/blob/master/CHANGELOG.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 cairocffi = ">=1.7.1,<2.0.0"
 numpy = ">=2.2.4,<3.0.0"
 pycairo = ">=1.27.0,<2.0.0"
@@ -47,7 +48,7 @@ matplotlib = ">=3.7.0,<4.0.0"
 svgelements = ">=1.9.6"
 urllib3 = "^2.8.0"
 hershey-fonts = "^2.1.0"
-imageio = "^2.38.1"
+imageio = ">=2.34.0,<3.0.0"
 imageio-ffmpeg = "^0.8.1"
 pillow = ">=10.0.0"
 tqdm = "^4.70.1"
