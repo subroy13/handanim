@@ -142,10 +142,12 @@ class RoundedRectangle(Drawable):
         *args,
         **kwargs,
     ):
+        corner_radius = kwargs.pop("corner_radius", None)
         self.top_left = top_left
         self.width = width
         self.height = height
-        self.border_radius = border_radius
+        self.corner_radius: float | None = float(corner_radius) if corner_radius is not None else None
+        self.border_radius = self.corner_radius if self.corner_radius is not None else border_radius
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
@@ -161,62 +163,31 @@ class RoundedRectangle(Drawable):
     def draw(self) -> OpsSet:
         opsset = OpsSet(initial_set=[])
         x, y = self.top_left
-        border_radius = self.border_radius * min(self.width, self.height)
-        points = [
-            (x + border_radius, y),
-            (x + self.width - border_radius, y),
-            (x + self.width, y + border_radius),
-            (x + self.width, y + self.height - border_radius),
-            (x + self.width - border_radius, y + self.height),
-            (x + border_radius, y + self.height),
-            (x, y + self.height - border_radius),
-            (x, y + border_radius),
-            (x + border_radius, y),  # Closing the path
-        ]
-        curve = Curve(points, *self.args, **self.kwargs)
-        opsset.extend(curve.draw())
+        min_dim = min(self.width, self.height)
+        if self.corner_radius is not None:
+            border_radius = min(max(0.0, float(self.corner_radius)), 0.5 * min_dim)
+        elif self.border_radius <= 0.5:
+            border_radius = max(0.0, float(self.border_radius) * min_dim)
+        else:
+            border_radius = min(float(self.border_radius), 0.5 * min_dim)
+
+        arc_corners = (
+            (x + self.width - border_radius, y + border_radius, -0.5 * np.pi, 0.0),
+            (x + self.width - border_radius, y + self.height - border_radius, 0.0, 0.5 * np.pi),
+            (x + border_radius, y + self.height - border_radius, 0.5 * np.pi, np.pi),
+            (x + border_radius, y + border_radius, np.pi, 1.5 * np.pi),
+        )
+        bound_box: list[tuple[float, float]] = []
+        for cx, cy, a0, a1 in arc_corners:
+            for theta in np.linspace(a0, a1, 7):
+                px = float(cx + border_radius * np.cos(theta))
+                py = float(cy + border_radius * np.sin(theta))
+                bound_box.append((px, py))
+
+        path = LinearPath(bound_box, close=True, *self.args, **self.kwargs)
+        opsset.extend(path.draw())
 
         if self.fill_style is not None:
-            ext_points = (
-                [np.array(points[0], dtype=float)]
-                + [np.array(pt, dtype=float) for pt in points]
-                + [np.array(points[-1], dtype=float)]
-            )
-            s = 1 - self.sketch_style.curve_tightness
-            corners = (
-                (x + border_radius, y + border_radius, -1.0, -1.0),
-                (x + self.width - border_radius, y + border_radius, 1.0, -1.0),
-                (
-                    x + self.width - border_radius,
-                    y + self.height - border_radius,
-                    1.0,
-                    1.0,
-                ),
-                (x + border_radius, y + self.height - border_radius, -1.0, 1.0),
-            )
-            bound_box: list[tuple[float, float]] = []
-            for i in range(1, len(ext_points) - 2):
-                b0 = ext_points[i]
-                b1 = b0 + s * (ext_points[i + 1] - ext_points[i - 1]) / 6
-                b2 = ext_points[i + 1] + s * (ext_points[i] - ext_points[i + 2]) / 6
-                b3 = ext_points[i + 1]
-                for t in np.linspace(0.0, 1.0, 8, endpoint=False):
-                    pt = (
-                        (1 - t) ** 3 * b0
-                        + 3 * (1 - t) ** 2 * t * b1
-                        + 3 * (1 - t) * t**2 * b2
-                        + t**3 * b3
-                    )
-                    px = float(np.clip(pt[0], x, x + self.width))
-                    py = float(np.clip(pt[1], y, y + self.height))
-                    for cx, cy, sx, sy in corners:
-                        if (px - cx) * sx > 0 and (py - cy) * sy > 0:
-                            dx, dy = px - cx, py - cy
-                            dist = float(np.hypot(dx, dy))
-                            if dist > border_radius > 0:
-                                px = float(cx + dx * border_radius / dist)
-                                py = float(cy + dy * border_radius / dist)
-                    bound_box.append((px, py))
             opsset.add(Ops(type=OpsType.METADATA, data={"drawing_mode": "fill"}))
             filler = get_filler([bound_box], self.fill_style, self.sketch_style)
             opsset.extend(filler.fill())

@@ -16,13 +16,17 @@ class WordTimestamp:
     start: float  # seconds
     end: float  # seconds
     confidence: float = 1.0
+    speaker: str | None = None
 
     @property
     def duration(self) -> float:
         return round(max(0.0, self.end - self.start), 6)
 
     def to_dict(self) -> dict:
-        return asdict(self)
+        d = asdict(self)
+        if d.get("speaker") is None:
+            d.pop("speaker", None)
+        return d
 
     @classmethod
     def from_dict(cls, data: dict) -> WordTimestamp:
@@ -31,6 +35,7 @@ class WordTimestamp:
             start=float(data.get("start", 0.0)),
             end=float(data.get("end", 0.0)),
             confidence=float(data.get("confidence", 1.0)),
+            speaker=data.get("speaker"),
         )
 
 
@@ -42,18 +47,22 @@ class SentenceTimestamp:
     start: float
     end: float
     words: list[WordTimestamp] = field(default_factory=list)
+    speaker: str | None = None
 
     @property
     def duration(self) -> float:
         return round(max(0.0, self.end - self.start), 6)
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "text": self.text,
             "start": self.start,
             "end": self.end,
             "words": [w.to_dict() for w in self.words],
         }
+        if self.speaker is not None:
+            d["speaker"] = self.speaker
+        return d
 
     @classmethod
     def from_dict(cls, data: dict) -> SentenceTimestamp:
@@ -63,6 +72,7 @@ class SentenceTimestamp:
             start=float(data.get("start", 0.0)),
             end=float(data.get("end", 0.0)),
             words=words,
+            speaker=data.get("speaker"),
         )
 
 

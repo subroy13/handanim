@@ -170,3 +170,11 @@ class TestSceneGetViewportAt:
         s.add_camera(anim)
         assert len(s.camera_events) == 1
         assert s.camera_events[0] is anim
+
+    def test_scene_add_routes_camera_animation(self):
+        s = _scene_with_camera()
+        anim = CameraAnimation(start_time=0.5, duration=1.5, data={"to_xrange": (100, 500)})
+        s.add(anim)
+        assert len(s.camera_events) == 1
+        assert s.camera_events[0] is anim
+

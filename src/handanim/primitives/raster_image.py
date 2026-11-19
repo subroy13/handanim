@@ -1,4 +1,4 @@
-import cairo
+from ..core._cairo import cairo
 import numpy as np
 
 from ..core.draw_ops import Ops, OpsSet, OpsType

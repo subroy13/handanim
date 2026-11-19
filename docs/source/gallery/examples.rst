@@ -1,119 +1,115 @@
-Examples & Visual Gallery
-=========================
+Gallery & Tutorials Showcase
+============================
 
-Explore complete runnable scripts in the `examples/ <https://github.com/subroy13/handanim/tree/master/examples>`_ directory of the repository.
+Welcome to the **handanim Documentation Gallery**. Every tutorial in this gallery is organized around a practical whiteboard animation theme and includes both the rendered output (GIF or MP4 with audio) and the complete, self-contained Python source code.
 
-Mathematical Proofs & Geometry
-------------------------------
+.. note::
 
-1. Pythagoras Theorem (`examples/pythagoras.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   All gallery media lives inside the documentation bundle (``docs/source/_static/gallery/``) and can be regenerated at any time using the unified gallery builder script:
 
-Demonstrates polygon construction, rotated square alignment, hachure fills, and sequential :class:`~handanim.animations.sketch.SketchAnimation` reveals.
+   .. code-block:: bash
 
-.. image:: https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/pythagoras.gif
-   :width: 520px
-   :align: center
-   :alt: Pythagoras Theorem Animation
+      # List all available gallery tutorials
+      poetry run python docs/source/gallery/build_gallery.py --list
 
-.. code-block:: bash
+      # Render a single tutorial (e.g. sketch_sound_control)
+      poetry run python docs/source/gallery/build_gallery.py --only sketch_sound_control
 
-   poetry run python examples/pythagoras.py
+      # Rebuild all gallery GIFs and MP4 videos
+      poetry run python docs/source/gallery/build_gallery.py --all
 
-2. Visual Proof of :math:`(a + b)^2` (`examples/a_plus_b_square.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----
 
-Demonstrates geometric partitioning of a square into :math:`a^2`, :math:`b^2`, and two :math:`ab` rectangles alongside step-by-step algebraic equations.
+Visual Gallery by Theme
+-----------------------
 
-.. image:: https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/a_plus_b_square.gif
-   :width: 520px
-   :align: center
-   :alt: (a+b)^2 Visual Proof
+.. raw:: html
 
-.. code-block:: bash
+   <div class="gallery-grid">
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 1 · Math &amp; Geometry</span>
+         <img src="../_static/gallery/pythagoras.gif" alt="Pythagoras Theorem Animation">
+       </div>
+       <p><strong><a href="math_and_geometry.html">Mathematical Proofs &amp; Geometry</a></strong><br>
+       Pythagorean theorem, visual proof of (a + b)², distributive property with SVG, and single-stroke Hershey calculus.</p>
+     </div>
 
-   poetry run python examples/a_plus_b_square.py
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 1 · Algebraic Proof</span>
+         <img src="../_static/gallery/a_plus_b_square.gif" alt="(a+b)^2 Visual Proof">
+       </div>
+       <p><strong><a href="math_and_geometry.html#tutorial-1-2-geometric-proof-of-a-b-2-a-2-2ab-b-2">Binomial Expansion (a + b)²</a></strong><br>
+       Area partitioning into a², b², and two ab rectangles with CompositeAnimationEvent &amp; flying labels.</p>
+     </div>
 
-3. Distributive Property (`examples/distributive_property.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 2 · Flowcharts &amp; Tables</span>
+         <img src="../_static/gallery/ml_workflow_demo.gif" alt="ML Workflow &amp; Table Demo">
+       </div>
+       <p><strong><a href="flowcharts_and_tables.html">Data Science, Flowcharts &amp; Tables</a></strong><br>
+       Declarative ML training pipeline Flowchart paired with a row-by-row animated model benchmark Table.</p>
+     </div>
 
-Shows grouped drawable transformations, :class:`~handanim.animations.translate.TranslateToAnimation`, and equation derivations.
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 3 · Character Rigging &amp; IK</span>
+         <video controls loop muted playsinline src="../_static/gallery/character_rig_demo.mp4"></video>
+       </div>
+       <p><strong><a href="character_animation.html">2D Character Rigging &amp; 2-Joint IK</a></strong><br>
+       Articulated CharacterRig with scheduled eye blinks, mouth variants, PoseAnimation, and 2-joint IK reaching targets.</p>
+     </div>
 
-.. image:: https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/distributive_property.gif
-   :width: 520px
-   :align: center
-   :alt: Distributive Property Animation
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 4 · Notebook Transitions</span>
+         <video controls loop muted playsinline src="../_static/gallery/scene_transitions_demo.mp4"></video>
+       </div>
+       <p><strong><a href="scene_transitions.html">Multi-Page Sketchbook Transitions</a></strong><br>
+       3-page story using PageTurnTransition (with ink bleed-through) and PaperCrumpleTransition (3D paper ball toss).</p>
+     </div>
 
-Flowcharts & Diagrams
----------------------
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 5 · Sketch Sound Control</span>
+         <video controls loop playsinline src="../_static/gallery/sketch_sound_control.mp4"></video>
+       </div>
+       <p><strong><a href="voice_captions_and_sound.html">Voice, Captions &amp; Sketch Sound Control</a></strong><br>
+       Turn sketch sound on/off, tune volume per SketchAnimation or globally, and pin word-timed Captions to scene.overlay.</p>
+     </div>
 
-4. Machine Learning Workflow (`examples/ml_workflow_demo.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 5 · 9:16 Portrait Short</span>
+         <video controls loop muted playsinline style="max-height: 260px;" src="../_static/gallery/captions_overlay_demo.mp4"></video>
+       </div>
+       <p><strong><a href="voice_captions_and_sound.html#tutorial-5-2-built-in-captions-camera-overlay-soundtrack">Camera-Invariant Captions &amp; HUD</a></strong><br>
+       CameraAnimation pan/zoom while overlay HUD &amp; word-by-word highlighted Captions stay pinned on screen.</p>
+     </div>
 
-Demonstrates :class:`~handanim.primitives.flowchart.FlowchartNode`, :class:`~handanim.primitives.flowchart.FlowchartDiamond`, :class:`~handanim.primitives.flowchart.FlowchartConnector`, and :class:`~handanim.primitives.table.Table` animations.
+     <div class="gallery-item">
+       <div>
+         <span class="tutorial-badge">Theme 6 · Blackboard &amp; LaTeX</span>
+         <video controls loop muted playsinline src="../_static/gallery/solar_system_journey.mp4"></video>
+       </div>
+       <p><strong><a href="storytelling_and_export.html">Scientific Storytelling &amp; LaTeX/TikZ Export</a></strong><br>
+       Dark-mode Solar System journey, plus native TikZ &amp; LaTeX Beamer slide deck export.</p>
+     </div>
+   </div>
 
-.. image:: https://raw.githubusercontent.com/subroy13/handanim/master/examples/output/ml_workflow_demo.gif
-   :width: 520px
-   :align: center
-   :alt: ML Workflow Demo
+----
 
-.. code-block:: bash
+Browse Tutorials by Theme
+-------------------------
 
-   poetry run python examples/ml_workflow_demo.py
+.. toctree::
+   :maxdepth: 2
 
-Short-Form Storytelling: Characters, Captions & Sound
------------------------------------------------------
-
-5. Character Rig, 2-Joint IK & Expressions (`examples/character_rig_demo.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Demonstrates a 9:16 portrait scene featuring:
-
-- Hierarchical :class:`~handanim.primitives.character.CharacterRig` (`torso -> head -> eyes/mouth`)
-- Analytic 2-joint inverse kinematics (:class:`~handanim.primitives.character.TwoJointLimb`) reaching for whiteboard points
-- Swappable :class:`~handanim.primitives.character.VariantSlot` eye blinks (`open` / `blink` / `wink`) and mouth shapes (`neutral` / `talk` / `smile`)
-- Smooth keyframe interpolation via :class:`~handanim.animations.pose.PoseAnimation`
-- Instant :class:`~handanim.animations.visibility.Show`, :class:`~handanim.animations.visibility.Hide`, and :class:`~handanim.animations.visibility.Swap` events
-
-.. code-block:: bash
-
-   poetry run python examples/character_rig_demo.py
-
-6. Built-In Captions, Camera Overlay & Soundtrack (`examples/captions_overlay_demo.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Demonstrates:
-
-- Word-timed :class:`~handanim.primitives.captions.Captions` pinned to ``scene.overlay``
-- :class:`~handanim.animations.camera.CameraAnimation` zooming into a diagram while the overlay HUD and captions remain stationary
-- Repeating ``"marimba"`` background theme music (`background_music="marimba"`)
-- Automatic chalk drawing sound during :class:`~handanim.animations.sketch.SketchAnimation` (`sketch_sound=True`) and board-wiping sound during :class:`~handanim.primitives.eraser.Eraser` (`eraser_sound=True`)
-
-.. code-block:: bash
-
-   poetry run python examples/captions_overlay_demo.py
-
-7. Multi-Page Scene Transitions (`examples/scene_transitions_demo.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Demonstrates a 3-page sketchbook story using:
-
-- :class:`~handanim.animations.transitions.PageTurnTransition` folding Page 1 from the bottom-right corner with ink bleed-through on the backside flap
-- :class:`~handanim.animations.transitions.PaperCrumpleTransition` grabbing a "wrong draft" on Page 2, crunching all its strokes into a multi-faceted 3D paper ball, and tossing it off to the right to reveal Page 3
-- Persistent header badge pinned to ``scene.overlay``
-- Automatic ``page_turn`` and ``crumple`` procedural sound effects (`transition_sound=True`) combined with ``sketch_sound=True`` and ``background_music="calm"``
-
-.. code-block:: bash
-
-   poetry run python examples/scene_transitions_demo.py
-
-8. LaTeX Beamer & Native TikZ Export (`examples/tikz_beamer_demo.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Demonstrates exporting an animation directly to a compilable LaTeX Beamer presentation using inline TikZ commands (:meth:`~handanim.core.scene.Scene.export_beamer`).
-
-.. code-block:: bash
-
-   poetry run python examples/tikz_beamer_demo.py
-
-
+   math_and_geometry
+   flowcharts_and_tables
+   character_animation
+   scene_transitions
+   voice_captions_and_sound
+   storytelling_and_export

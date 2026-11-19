@@ -120,6 +120,7 @@ class VoiceTimelineSync:
                         start=round(w.start + b_start, 3),
                         end=round(w.end + b_start, 3),
                         confidence=w.confidence,
+                        speaker=w.speaker,
                     )
                 )
 

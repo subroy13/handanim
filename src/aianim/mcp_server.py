@@ -60,6 +60,63 @@ class HandanimMCPServer:
                     "properties": {
                         "script_path": {"type": "string", "description": "Path to the Python animation script"},
                         "max_length": {"type": "number", "description": "Optional max duration override"},
+                        "safe_zone": {
+                            "type": "string",
+                            "description": "Optional platform safe-zone preset ('youtube_shorts' or 'youtube_landscape')",
+                        },
+                        "check_overlaps": {
+                            "type": "boolean",
+                            "description": "Whether to check for active drawable bounding-box overlaps (default true)",
+                            "default": True,
+                        },
+                    },
+                    "required": ["script_path"],
+                },
+            },
+            "render_contact_sheet": {
+                "description": "Render multiple storyboard keyframes into a single annotated PNG grid (contact sheet) with timestamps and optional safe-zone guides for fast visual review.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "script_path": {"type": "string", "description": "Path to the Python animation script"},
+                        "timestamps": {
+                            "type": "array",
+                            "items": {"type": "number"},
+                            "description": "Optional list of timestamps (in seconds) to sample",
+                        },
+                        "n_frames": {
+                            "type": "integer",
+                            "description": "Number of evenly spaced frames if timestamps not provided (default 6)",
+                            "default": 6,
+                        },
+                        "cols": {"type": "integer", "description": "Number of grid columns (default 3)", "default": 3},
+                        "safe_zone": {
+                            "type": "string",
+                            "description": "Optional safe-zone overlay guide ('youtube_shorts' or 'youtube_landscape')",
+                        },
+                        "output_path": {"type": "string", "description": "Optional output PNG path"},
+                    },
+                    "required": ["script_path"],
+                },
+            },
+            "render_video": {
+                "description": "Render an existing handanim Python script to an MP4 video (supports fast preview mode or full final resolution).",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "script_path": {"type": "string", "description": "Path to the Python animation script"},
+                        "output_path": {"type": "string", "description": "Target MP4 file path", "default": "preview.mp4"},
+                        "preview": {
+                            "type": "boolean",
+                            "description": "If true, scales pixel dimensions to fast preview (360x640 or 640x360 @ 15fps) while preserving world coordinates",
+                            "default": True,
+                        },
+                        "max_length": {"type": "number", "description": "Optional duration override in seconds"},
+                        "sketch_sound": {
+                            "type": "boolean",
+                            "description": "Whether to enable automatic chalk sketch sound",
+                            "default": False,
+                        },
                     },
                     "required": ["script_path"],
                 },
@@ -300,6 +357,8 @@ class HandanimMCPServer:
         elif tool_name == "introspect_scene":
             script_path = args.get("script_path")
             max_length = args.get("max_length")
+            safe_zone = args.get("safe_zone")
+            check_overlaps = bool(args.get("check_overlaps", True))
             if not script_path or not os.path.exists(script_path):
                 return [{"type": "text", "text": f"Error: script file '{script_path}' not found."}]
 
@@ -325,7 +384,7 @@ try:
                 break
     if scene_obj:
         print("---JSON_START---")
-        print(json.dumps(scene_obj.introspect(max_length={max_length})))
+        print(json.dumps(scene_obj.introspect(max_length={max_length!r}, safe_zone={safe_zone!r}, check_overlaps={check_overlaps!r})))
         print("---JSON_END---")
     else:
         print("ERROR: No 'scene' variable found in script.")
@@ -337,6 +396,130 @@ finally:
                 json_str = proc.stdout.split("---JSON_START---")[1].split("---JSON_END---")[0].strip()
                 return [{"type": "text", "text": json_str}]
             return [{"type": "text", "text": f"Introspection output:\n{proc.stdout}\nErrors:\n{proc.stderr}"}]
+
+        elif tool_name == "render_contact_sheet":
+            script_path = args.get("script_path")
+            timestamps = args.get("timestamps")
+            n_frames = int(args.get("n_frames", 6))
+            cols = int(args.get("cols", 3))
+            safe_zone = args.get("safe_zone")
+            output_path = args.get("output_path") or "contact_sheet.png"
+
+            if not script_path or not os.path.exists(script_path):
+                return [{"type": "text", "text": f"Error: script file '{script_path}' not found."}]
+
+            runner_code = f"""
+import sys, os
+from pathlib import Path
+sys.path.insert(0, str(Path('{os.path.abspath(script_path)}').parent))
+import importlib.util
+spec = importlib.util.spec_from_file_location("user_scene", "{os.path.abspath(script_path)}")
+mod = importlib.util.module_from_spec(spec)
+from handanim import Scene
+orig_render = Scene.render
+Scene.render = lambda *args, **kwargs: None
+try:
+    spec.loader.exec_module(mod)
+    scene_obj = getattr(mod, 'scene', None)
+    if not scene_obj:
+        for val in mod.__dict__.values():
+            if isinstance(val, Scene):
+                scene_obj = val
+                break
+    if scene_obj:
+        scene_obj.render_contact_sheet(
+            '{os.path.abspath(output_path)}',
+            timestamps={timestamps!r},
+            n_frames={n_frames!r},
+            cols={cols!r},
+            safe_zone={safe_zone!r},
+        )
+        print("CONTACT_SHEET_SUCCESS")
+    else:
+        print("ERROR: No scene object found.")
+finally:
+    Scene.render = orig_render
+"""
+            proc = subprocess.run([sys.executable, "-c", runner_code], capture_output=True, text=True)
+            if "CONTACT_SHEET_SUCCESS" in proc.stdout and os.path.exists(output_path):
+                content = [{"type": "text", "text": f"Contact sheet rendered successfully to {output_path}"}]
+                with open(output_path, "rb") as f:
+                    b64_data = base64.b64encode(f.read()).decode("utf-8")
+                content.append(
+                    {
+                        "type": "image",
+                        "data": b64_data,
+                        "mimeType": "image/png",
+                    }
+                )
+                return content
+            return [{"type": "text", "text": f"Failed to render contact sheet:\n{proc.stdout}\n{proc.stderr}"}]
+
+        elif tool_name == "render_video":
+            script_path = args.get("script_path")
+            output_path = args.get("output_path") or "preview.mp4"
+            preview = bool(args.get("preview", True))
+            max_length = args.get("max_length")
+            sketch_sound = bool(args.get("sketch_sound", False))
+
+            if not script_path or not os.path.exists(script_path):
+                return [{"type": "text", "text": f"Error: script file '{script_path}' not found."}]
+
+            runner_code = f"""
+import sys, os, json
+from pathlib import Path
+sys.path.insert(0, str(Path('{os.path.abspath(script_path)}').parent))
+import importlib.util
+spec = importlib.util.spec_from_file_location("user_scene", "{os.path.abspath(script_path)}")
+mod = importlib.util.module_from_spec(spec)
+from handanim import Scene
+orig_render = Scene.render
+Scene.render = lambda *args, **kwargs: None
+try:
+    spec.loader.exec_module(mod)
+finally:
+    Scene.render = orig_render
+
+scene_obj = getattr(mod, 'scene', None)
+if not scene_obj:
+    for val in mod.__dict__.values():
+        if isinstance(val, Scene):
+            scene_obj = val
+            break
+
+if scene_obj is None:
+    print("ERROR: No scene object found.")
+    sys.exit(1)
+
+if {preview!r}:
+    if scene_obj.height > scene_obj.width:
+        scene_obj.width, scene_obj.height = 360, 640
+    else:
+        scene_obj.width, scene_obj.height = 640, 360
+    scene_obj.viewport.screen_width = scene_obj.width
+    scene_obj.viewport.screen_height = scene_obj.height
+    scene_obj.fps = min(scene_obj.fps, 15)
+
+out_file = '{os.path.abspath(output_path)}'
+os.makedirs(os.path.dirname(out_file) or ".", exist_ok=True)
+scene_obj.render(out_file, max_length={max_length!r}, sketch_sound={sketch_sound!r})
+info = {{
+    "success": True,
+    "output_path": out_file,
+    "width": scene_obj.width,
+    "height": scene_obj.height,
+    "fps": scene_obj.fps,
+    "duration": round(float(scene_obj.get_current_time()), 2),
+}}
+print("---VIDEO_JSON_START---")
+print(json.dumps(info))
+print("---VIDEO_JSON_END---")
+"""
+            proc = subprocess.run([sys.executable, "-c", runner_code], capture_output=True, text=True)
+            if "---VIDEO_JSON_START---" in proc.stdout and os.path.exists(output_path):
+                json_str = proc.stdout.split("---VIDEO_JSON_START---")[1].split("---VIDEO_JSON_END---")[0].strip()
+                return [{"type": "text", "text": json_str}]
+            return [{"type": "text", "text": f"Failed to render video:\n{proc.stdout}\n{proc.stderr}"}]
 
         elif tool_name == "render_snapshot":
             script_path = args.get("script_path")
@@ -420,6 +603,8 @@ finally:
                         "name": "Kokoro-82M (Local ONNX)",
                         "default_voice": KokoroProvider.default_voice,
                         "voices": KokoroProvider.supported_voices,
+                        "categories": KokoroProvider.voice_catalog,
+                        "blend_presets": KokoroProvider.blend_presets,
                     },
                 },
             }
@@ -433,7 +618,7 @@ finally:
             voice = args.get("voice")
             speed = float(args.get("speed", 1.0))
             instruct = args.get("instruct")
-            output_path = args.get("output_path")
+            output_path: str = args.get("output_path", ".")
 
             clip = VoiceEngine.synthesize(
                 text=text,
@@ -501,7 +686,7 @@ finally:
                 return [{"type": "text", "text": "Error: voiceanim package is not available."}]
             video_path = args.get("video_path")
             audio_path = args.get("audio_path")
-            output_path = args.get("output_path")
+            output_path : str = args.get("output_path", ".")
             audio_offset = float(args.get("audio_offset", 0.0))
             shortest = bool(args.get("shortest", False))
 

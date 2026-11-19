@@ -5,7 +5,12 @@ from __future__ import annotations
 from typing import Any
 
 from .base import BaseVoiceProvider
-from .kokoro_provider import KokoroProvider
+from .kokoro_provider import (
+    KOKORO_ALL_VOICES,
+    KOKORO_BLEND_PRESETS,
+    KOKORO_VOICE_CATALOG,
+    KokoroProvider,
+)
 from .mock_provider import MockVoiceProvider
 from .polly_provider import PollyProvider
 from .qwen_provider import QwenTTSProvider

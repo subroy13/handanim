@@ -80,6 +80,8 @@ class Table(DrawableGroup):
         headers: list[str] | None = None,
         cell_font_size: int = 12,
         header_font_size: int = 14,
+        font_name: str | None = None,
+        text_align: str = "left",
         stroke_style: StrokeStyle = StrokeStyle(),
         sketch_style: SketchStyle = SketchStyle(),
         fill_style: FillStyle | None = None,
@@ -136,6 +138,8 @@ class Table(DrawableGroup):
                     text=label,
                     position=(cx, cy),
                     font_size=fs_size,
+                    font_name=font_name,
+                    align=text_align,
                     stroke_style=ss,
                     sketch_style=sketch_style,
                 )

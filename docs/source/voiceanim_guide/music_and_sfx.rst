@@ -47,15 +47,67 @@ Use :func:`~voiceanim.sfx.generate_theme_music` or :func:`~voiceanim.sfx.loop_au
    # Or loop any short WAV/MP3 file seamlessly for 30 seconds
    looped_clip = loop_audio("my_short_loop.wav", duration=30.0, volume=0.20)
 
-2. Automatic Chalk Sketch Sound During ``SketchAnimation``
-----------------------------------------------------------
+2. Automatic Chalk Sketch Sound During ``SketchAnimation`` (On / Off & Volume Control)
+--------------------------------------------------------------------------------------
 
-When ``sketch_sound=True`` is enabled on :class:`~handanim.core.scene.Scene` (or passed to ``scene.render(..., sketch_sound=True)``), ``handanim`` automatically scans the timeline for all :class:`~handanim.animations.sketch.SketchAnimation` events, merges overlapping intervals, and synthesizes a realistic chalk / sketch-pen drawing sound (:func:`~voiceanim.sfx.synthesize_chalk_sound`) synchronized to every stroke reveal:
+Sketch drawing sound is **off by default** (``sketch_sound=False``) and uses a soft, non-distracting default volume (``0.25``) when enabled. When narration is present, continuous sketch sounds are also automatically ducked by 35% while the speaker is talking.
+
+You can turn sketch sound **on, off, or down** at three levels:
+
+Option A: Per-Animation Control on ``SketchAnimation``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Control sound on any individual :class:`~handanim.animations.sketch.SketchAnimation` using ``sound``, ``sound_volume``, and ``sound_style``:
 
 .. code-block:: python
 
-   # Configure chalk or felt-pen style and volume on the scene
-   scene.enable_sketch_sound(enabled=True, volume=0.45, style="chalk")  # style="chalk" or "pen"
+   from handanim import SketchAnimation
+
+   # 1. Mute sketch sound on a specific animation (e.g. a title or small label)
+   silent_sketch = SketchAnimation(start_time=0.0, duration=1.0, sound=False)
+
+   # 2. Play a quiet felt-pen sound on a specific animation
+   quiet_pen = SketchAnimation(
+       start_time=1.2,
+       duration=1.5,
+       sound=True,
+       sound_volume=0.12,
+       sound_style="pen",
+   )
+
+   # 3. Shorthand: pass a float volume directly (0.0 mutes, > 0 enables at that volume)
+   subtle_chalk = SketchAnimation(start_time=3.0, duration=1.5, sound=0.15)
+
+   # 4. Toggle or adjust after creation
+   subtle_chalk.set_sound(enabled=False)
+
+Option B: Scene-Level Control
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configure or toggle sketch sound across the entire :class:`~handanim.core.scene.Scene`:
+
+.. code-block:: python
+
+   # Enable with softer volume (0.15) and felt-pen style
+   scene.enable_sketch_sound(enabled=True, volume=0.15, style="pen")  # style="chalk" or "pen"
+
+   # Or use the shorthand alias:
+   scene.set_sketch_sound(0.15)   # enables at volume 0.15
+   scene.set_sketch_sound(False)  # turns off sketch sound
+   scene.disable_sketch_sound()   # turns off sketch sound
+
+Option C: Render-Time Master Override
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Override sketch sound or its volume for a single :meth:`~handanim.core.scene.Scene.render` call:
+
+.. code-block:: python
+
+   # Master mute for this render:
+   scene.render("silent_sketch.mp4", sketch_sound=False)
+
+   # Render with quiet sketch sound (volume=0.12):
+   scene.render("quiet_sketch.mp4", sketch_sound=True, sketch_sound_volume=0.12)
 
 3. Automatic Board-Wiping Sound During ``Eraser``
 -------------------------------------------------

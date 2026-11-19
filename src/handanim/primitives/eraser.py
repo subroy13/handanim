@@ -40,11 +40,15 @@ class Eraser(Drawable):
             or getattr(self.drawable_cache, "background_color", None)
             or (1, 1, 1)
         )
+        explicit_color = self.stroke_style.options.get("color")
+        if explicit_color is None and self.stroke_style.color != (0, 0, 0):
+            explicit_color = self.stroke_style.color
+        pen_color = explicit_color if explicit_color is not None else default_color
         opsset.add(
             Ops(
                 OpsType.SET_PEN,
                 {
-                    "color": self.stroke_style.options.get("color", default_color),
+                    "color": pen_color,
                     "width": self.stroke_style.width * 10,  # make it like pastel blend
                     "opacity": self.stroke_style.opacity,
                 },
@@ -63,5 +67,8 @@ class Eraser(Drawable):
             if y <= max_y:
                 # we can do zigzag motion now
                 opsset.add(Ops(OpsType.LINE_TO, [(min_x, y)]))
+        if max_y > min_y and (y - spacing) < max_y:
+            opsset.add(Ops(OpsType.LINE_TO, [(min_x, max_y)]))
+            opsset.add(Ops(OpsType.LINE_TO, [(max_x, max_y)]))
 
         return opsset

@@ -1,5 +1,5 @@
 # mypy: ignore-errors
-import cairo
+from ..core._cairo import cairo
 import numpy as np
 
 

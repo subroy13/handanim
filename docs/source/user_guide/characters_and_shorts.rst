@@ -21,9 +21,11 @@ Building a Character with Swappable Eyes/Mouth & IK Limbs
 .. code-block:: python
 
    from handanim import (
-       CharacterRig, Circle, Curve, Line, Pose, PoseAnimation, Show, SketchStyle, VariantSlot,
+       CharacterRig, Circle, Line, Pose, PoseAnimation, Scene, Show, SketchStyle, VariantSlot,
    )
 
+   scene = Scene(width=1080, height=1920, fps=30)
+   scene.set_viewport_to_identity()
    clean = SketchStyle(roughness=0.25, bowing=0.2)
 
    rig = CharacterRig(pivot=(540, 960))
@@ -68,8 +70,10 @@ Define :class:`~handanim.primitives.character.Pose` snapshots (specifying joint 
    pose_idle = rig.capture_pose()
 
    # Wave & point at (720, 640) while smiling/blinking
+   # Use Pose(offsets={...}) to translate the character's root/torso while keeping IK targets aligned
    pose_point = Pose(
        angles={"head": -8.0},
+       offsets={"torso": (20.0, 0.0)},
        ik_targets={"right_arm": (720, 640)},
        variants={"eyes": "blink"},
    )

@@ -56,9 +56,23 @@ class DrawableCache:
         Calculates the bounding box for a list of drawables
         stored in the cache
         """
+        from .drawable import DrawableGroup
+
         merge_opsset = OpsSet(initial_set=[])
+
+        def _collect(item: Drawable) -> None:
+            if isinstance(item, DrawableGroup):
+                for elem in item.elements:
+                    _collect(elem)
+            elif self.exists_in_cache(item.id):
+                merge_opsset.extend(self.get_drawable_opsset(item.id))
+            else:
+                opsset = item.draw()
+                self.set_drawable_opsset(item, opsset)
+                merge_opsset.extend(opsset)
+
         for drawable in drawables:
-            merge_opsset.extend(self.get_drawable_opsset(drawable.id))
+            _collect(drawable)
         return merge_opsset.get_bbox()
 
 

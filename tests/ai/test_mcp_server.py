@@ -200,3 +200,44 @@ def test_mcp_mux_video_audio(tmp_path, monkeypatch):
     assert res["output_path"] == out_path
 
 
+def test_mcp_contact_sheet_and_render_video(tmp_path):
+    server = HandanimMCPServer()
+    script_file = tmp_path / "mini_scene.py"
+    script_file.write_text(
+        "from handanim import Scene, Circle, SketchAnimation\n"
+        "scene = Scene(width=360, height=640, fps=10)\n"
+        "c = Circle(center=(180, 300), radius=40)\n"
+        "scene.add(SketchAnimation(start_time=0.0, duration=0.5), c)\n",
+        encoding="utf-8",
+    )
+
+    sheet_out = str(tmp_path / "sheet.png")
+    resp_sheet = server.call_tool(
+        "render_contact_sheet",
+        {
+            "script_path": str(script_file),
+            "timestamps": [0.1, 0.5],
+            "cols": 2,
+            "safe_zone": "youtube_shorts",
+            "output_path": sheet_out,
+        },
+    )
+    assert any(item["type"] == "image" for item in resp_sheet)
+
+    vid_out = str(tmp_path / "preview.mp4")
+    resp_vid = server.call_tool(
+        "render_video",
+        {
+            "script_path": str(script_file),
+            "output_path": vid_out,
+            "preview": True,
+            "max_length": 0.6,
+        },
+    )
+    info = json.loads(resp_vid[0]["text"])
+    assert info["success"] is True
+    assert info["width"] == 360
+    assert info["height"] == 640
+
+
+

@@ -35,5 +35,7 @@ archive/*
 .env
 .env.local
 
-# Voiceanim cache
+# Voiceanim cache & rendered outputs
 .voiceanim_cache/
+.ruff_cache/
+output/
