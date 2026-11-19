@@ -7,12 +7,12 @@ as arbitrary 256-D latent style-vector blending across voices.
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 import hashlib
 import logging
 import os
-from pathlib import Path
 import urllib.request
+from collections.abc import Mapping, Sequence
+from pathlib import Path
 from typing import Any
 
 import numpy as np

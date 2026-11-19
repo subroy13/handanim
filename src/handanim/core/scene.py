@@ -2081,9 +2081,10 @@ class Scene:
                     frame_np = self.render_frame(i / self.fps, opsset=frame_ops)
                     writer.append_data(frame_np)  # type: ignore[attr-defined]
         elif n_workers > 1 and len(opsset_list) >= n_workers:
-            from concurrent.futures import ThreadPoolExecutor
             import subprocess
             import tempfile
+            from concurrent.futures import ThreadPoolExecutor
+
             import imageio_ffmpeg
 
             ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()

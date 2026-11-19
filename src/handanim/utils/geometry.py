@@ -1,6 +1,7 @@
 # mypy: ignore-errors
-from ..core._cairo import cairo
 import numpy as np
+
+from ..core._cairo import cairo
 
 
 def slice_bezier(

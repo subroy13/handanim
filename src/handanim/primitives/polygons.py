@@ -6,7 +6,6 @@ from handanim.core.draw_ops import BoundingBox
 from ..core.draw_ops import Ops, OpsSet, OpsType
 from ..core.drawable import Drawable
 from ..stylings.fillpatterns import get_filler
-from .curves import Curve
 from .lines import LinearPath
 
 
