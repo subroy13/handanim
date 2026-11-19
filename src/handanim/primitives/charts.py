@@ -90,7 +90,9 @@ class BarChart(Drawable):
         ):
             self.bar_colors = [bar_colors for _ in self.values]  # type: ignore[misc]
         else:
-            cols = list(bar_colors)  # type: ignore[arg-type]
+            cols: list[tuple[float, float, float]] = [
+                (float(c[0]), float(c[1]), float(c[2])) for c in bar_colors  # type: ignore[index]
+            ]
             self.bar_colors = [cols[i % len(cols)] for i in range(len(self.values))]
 
         self.fill_opacity = float(fill_opacity)

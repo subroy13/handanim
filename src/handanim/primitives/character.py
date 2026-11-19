@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass, field
+from typing import Any
 
 import numpy as np
 
@@ -290,13 +291,13 @@ class RigNode(Drawable):
         elif isinstance(child_or_name, str):
             node_pivot = pivot if pivot is not None else self.pivot
             child = RigNode(
-                name=child_or_name,
-                pivot=node_pivot,
-                drawables=drawables,
-                children=children,
-                angle=angle,
-                offset=offset,
-                scale_factor=scale_factor,
+                child_or_name,
+                node_pivot,
+                drawables,
+                children,
+                angle,
+                offset,
+                scale_factor,
                 *args,
                 **kwargs,
             )
@@ -321,10 +322,10 @@ class RigNode(Drawable):
                 raise ValueError("variants dict is required when creating a VariantSlot by name")
             slot_pivot = pivot if pivot is not None else self.pivot
             slot = VariantSlot(
-                name=slot_or_name,
-                variants=variants,
-                default=default,
-                pivot=slot_pivot,
+                slot_or_name,
+                variants,
+                default,
+                slot_pivot,
                 *args,
                 **kwargs,
             )
@@ -558,12 +559,12 @@ class CharacterRig(Drawable):
         """Attach a child `RigNode` directly to `self.root`."""
         return self.root.add_child(
             child_or_name,
-            pivot=pivot,
-            drawables=drawables,
-            children=children,
-            angle=angle,
-            offset=offset,
-            scale_factor=scale_factor,
+            pivot,
+            drawables,
+            children,
+            angle,
+            offset,
+            scale_factor,
             *args,
             **kwargs,
         )
@@ -580,9 +581,9 @@ class CharacterRig(Drawable):
         """Attach a `VariantSlot` directly to `self.root`."""
         return self.root.add_slot(
             slot_or_name,
-            variants=variants,
-            default=default,
-            pivot=pivot,
+            variants,
+            default,
+            pivot,
             *args,
             **kwargs,
         )
@@ -798,7 +799,7 @@ class CharacterRig(Drawable):
 
     def point_at(
         self,
-        scene: object | None,
+        scene: Any,
         target: Drawable | tuple[float, float],
         limb_name: str | None = None,
         start_time: float = 0.0,
@@ -844,13 +845,13 @@ class CharacterRig(Drawable):
 
         anim = PoseAnimation.from_keyframes(rig=self, keyframes=keyframes)
         if scene is not None and hasattr(scene, "add"):
-            scene.add(anim, self, overlay=overlay)  # type: ignore[attr-defined]
+            scene.add(anim, self, overlay=overlay)
         return anim
 
     def sync_to_audio(
         self,
-        scene: object | None,
-        audio_clip: object,
+        scene: Any,
+        audio_clip: Any,
         start_time: float = 0.0,
         mouth_slot: str = "mouth",
         open_variant: str = "open",
@@ -943,7 +944,7 @@ class CharacterRig(Drawable):
 
         anim = PoseAnimation.from_keyframes(rig=self, keyframes=keyframes)
         if scene is not None and hasattr(scene, "add"):
-            scene.add(anim, self, overlay=overlay)  # type: ignore[attr-defined]
+            scene.add(anim, self, overlay=overlay)
         return anim
 
     def draw_with_pose(self, pose: Pose | None = None, time: float | None = None) -> OpsSet:

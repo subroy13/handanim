@@ -1,7 +1,3 @@
-from .core._cairo import ensure_cairo, get_cairo_backend
-
-ensure_cairo()
-
 from .animations import (
     CameraAnimation,
     ColorTransitionAnimation,
@@ -53,6 +49,7 @@ from .core import (
     SketchStyle,
     StrokeStyle,
 )
+from .core._cairo import ensure_cairo, get_cairo_backend
 from .primitives import (
     Arrow,
     Axes,
@@ -140,6 +137,8 @@ from .stylings.color import (
     YELLOW,
 )
 from .stylings.fonts import get_font_path, list_fonts, register_font
+
+ensure_cairo()
 
 __all__ = [
     # Colors

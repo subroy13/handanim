@@ -41,3 +41,17 @@ def get_provider(name: str = "kokoro", **kwargs: Any) -> BaseVoiceProvider:
     provider_cls = PROVIDERS[key]
     return provider_cls(**kwargs)
 
+
+__all__ = [
+    "BaseVoiceProvider",
+    "KokoroProvider",
+    "KOKORO_ALL_VOICES",
+    "KOKORO_BLEND_PRESETS",
+    "KOKORO_VOICE_CATALOG",
+    "MockVoiceProvider",
+    "PollyProvider",
+    "QwenTTSProvider",
+    "PROVIDERS",
+    "get_provider",
+]
+

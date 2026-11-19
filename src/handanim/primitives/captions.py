@@ -114,7 +114,12 @@ def _extract_caption_words(
                         sw_end = float(sub.get("end", sub.get("e", 0.0)))
                         sw_spk = sub.get("speaker", parent_spk)
                         sw_em = bool(sub.get("em", False))
-                        sw_col = tuple(sub["color"]) if sub.get("color") is not None else None  # type: ignore[arg-type]
+                        raw_sc = sub.get("color")
+                        sw_col = (
+                            (float(raw_sc[0]), float(raw_sc[1]), float(raw_sc[2]))
+                            if raw_sc is not None and len(raw_sc) >= 3
+                            else None
+                        )
                         if sw_text:
                             cw = CaptionWord(
                                 word=sw_text,
@@ -134,7 +139,12 @@ def _extract_caption_words(
             w_end = float(item.get("end", item.get("e", 0.0)))
             w_speaker = item.get("speaker")
             w_em = bool(item.get("em", False))
-            w_color = tuple(item["color"]) if item.get("color") is not None else None  # type: ignore[arg-type]
+            raw_wc = item.get("color")
+            w_color = (
+                (float(raw_wc[0]), float(raw_wc[1]), float(raw_wc[2]))
+                if raw_wc is not None and len(raw_wc) >= 3
+                else None
+            )
         elif isinstance(item, (tuple, list)) and len(item) >= 3:
             w_text = str(item[0]).strip()
             w_start = float(item[1])
@@ -275,9 +285,11 @@ class Captions(Drawable):
             for spk_name, spk_cfg in clip_meta["speakers"].items():
                 if isinstance(spk_cfg, dict):
                     if spk_name not in self.speaker_colors and spk_cfg.get("color") is not None:
-                        self.speaker_colors[spk_name] = tuple(spk_cfg["color"])  # type: ignore[assignment]
+                        c_val = spk_cfg["color"]
+                        self.speaker_colors[spk_name] = (float(c_val[0]), float(c_val[1]), float(c_val[2]))
                     if spk_name not in self.speaker_highlights and spk_cfg.get("highlight") is not None:
-                        self.speaker_highlights[spk_name] = tuple(spk_cfg["highlight"])  # type: ignore[assignment]
+                        h_val = spk_cfg["highlight"]
+                        self.speaker_highlights[spk_name] = (float(h_val[0]), float(h_val[1]), float(h_val[2]))
 
         self._built_center_x: float | None = None
         self._chunks: list[_BuiltCaptionChunk] = []

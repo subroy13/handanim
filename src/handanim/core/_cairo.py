@@ -17,6 +17,7 @@ import ctypes.util
 import os
 import sys
 from types import ModuleType
+from typing import TYPE_CHECKING, Any, cast
 
 _ACTIVE_BACKEND: str | None = None
 _FIND_LIBRARY_PATCHED: bool = False
@@ -75,10 +76,10 @@ def _patch_find_library_for_cairo() -> None:
 
 def _ensure_surface_context_manager(cairo_mod: ModuleType) -> None:
     """Ensure `cairo.Surface` supports `with cairo.SVGSurface(...) as surface:` in cairocffi."""
-    surface_cls = getattr(cairo_mod, "Surface", None)
+    surface_cls: Any = getattr(cairo_mod, "Surface", None)
     if surface_cls is not None and not hasattr(surface_cls, "__enter__"):
-        surface_cls.__enter__ = lambda self: self  # type: ignore[attr-defined]
-        surface_cls.__exit__ = lambda self, exc_type, exc_val, exc_tb: self.finish()  # type: ignore[attr-defined]
+        surface_cls.__enter__ = lambda self: self
+        surface_cls.__exit__ = lambda self, exc_type, exc_val, exc_tb: self.finish()
 
 
 def _load_cairocffi() -> ModuleType:
@@ -88,7 +89,7 @@ def _load_cairocffi() -> ModuleType:
 
     _ensure_surface_context_manager(cairocffi)
     cairocffi.install_as_pycairo()
-    return cairocffi
+    return cast(ModuleType, cairocffi)
 
 
 def ensure_cairo(prefer: str | None = None) -> ModuleType:
@@ -137,6 +138,9 @@ def get_cairo_backend() -> str:
     return _ACTIVE_BACKEND
 
 
-cairo = ensure_cairo()
+if TYPE_CHECKING:
+    import cairo as cairo
+else:
+    cairo = ensure_cairo()
 
 __all__ = ["cairo", "ensure_cairo", "get_cairo_backend"]

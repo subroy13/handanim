@@ -32,7 +32,7 @@ class _OverlayLayer:
         self,
         event: AnimationEvent | Drawable,
         drawable: Drawable | None = None,
-    ) -> Drawable | None:
+    ) -> Any:
         return self._scene.add(event, drawable, overlay=True)
 
     def swap(
@@ -69,7 +69,7 @@ class _BackgroundLayer:
         self,
         event: AnimationEvent | Drawable,
         drawable: Drawable | None = None,
-    ) -> Drawable | None:
+    ) -> Any:
         return self._scene.add(event, drawable, background=True)
 
     def swap(
@@ -758,7 +758,8 @@ class Scene:
         if len(event_and_progress) == 0:
             drawable = self.drawable_cache.drawables.get(drawable_id)
             if is_time_varying and drawable is not None and hasattr(drawable, "draw_with_pose"):
-                return drawable.draw_with_pose(time=t / self.fps)
+                res_ops: OpsSet = drawable.draw_with_pose(time=t / self.fps)
+                return res_ops
             return self.drawable_cache.get_drawable_opsset(drawable_id)
         elif all_complete and not is_time_varying:
             if self.drawable_cache.exists_in_cache(drawable_id, event_and_progress[-1][0].id):

@@ -183,7 +183,7 @@ class RoundedRectangle(Drawable):
                 py = float(cy + border_radius * np.sin(theta))
                 bound_box.append((px, py))
 
-        path = LinearPath(bound_box, close=True, *self.args, **self.kwargs)
+        path = LinearPath(bound_box, True, *self.args, **self.kwargs)
         opsset.extend(path.draw())
 
         if self.fill_style is not None:
