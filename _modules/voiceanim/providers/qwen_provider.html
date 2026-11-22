@@ -483,8 +483,18 @@
         <span class="n">target_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_wav</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)</span>
 
-        <span class="c1"># 6. Extract word timings</span>
-        <span class="n">word_timings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimate_word_timings</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+        <span class="c1"># 6. Extract word timings (forced alignment when available, heuristic fallback)</span>
+        <span class="n">align</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;align&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+        <span class="n">align_backend_used</span> <span class="o">=</span> <span class="s2">&quot;heuristic&quot;</span>
+        <span class="k">if</span> <span class="n">align</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">word_timings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimate_word_timings</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">..aligner</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForcedAligner</span>
+
+            <span class="n">backend</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span> <span class="k">if</span> <span class="n">align</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">align</span><span class="p">)</span>
+            <span class="n">word_timings</span><span class="p">,</span> <span class="n">align_backend_used</span> <span class="o">=</span> <span class="n">ForcedAligner</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span><span class="o">.</span><span class="n">align</span><span class="p">(</span>
+                <span class="n">target_path</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span>
+            <span class="p">)</span>
         <span class="n">sentences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">word_timings</span><span class="p">)</span>
 
         <span class="n">clip</span> <span class="o">=</span> <span class="n">AudioClip</span><span class="p">(</span>
@@ -501,6 +511,7 @@
                 <span class="s2">&quot;model_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
                 <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="n">language</span><span class="p">,</span>
                 <span class="s2">&quot;speed&quot;</span><span class="p">:</span> <span class="n">speed</span><span class="p">,</span>
+                <span class="s2">&quot;alignment_backend&quot;</span><span class="p">:</span> <span class="n">align_backend_used</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
 

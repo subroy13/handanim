@@ -290,6 +290,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVoiceProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.chatterbox_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">CHATTERBOX_STYLE_PRESETS</span><span class="p">,</span> <span class="n">ChatterboxProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.kokoro_provider</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">KOKORO_ALL_VOICES</span><span class="p">,</span>
     <span class="n">KOKORO_BLEND_PRESETS</span><span class="p">,</span>
@@ -299,12 +300,23 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mock_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockVoiceProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.polly_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">PollyProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.qwen_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">QwenTTSProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.zonos_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZONOS_BLEND_PRESETS</span><span class="p">,</span> <span class="n">ZONOS_STEERING_PRESETS</span><span class="p">,</span> <span class="n">ZonosProvider</span>
 
 <span class="n">PROVIDERS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseVoiceProvider</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;kokoro&quot;</span><span class="p">:</span> <span class="n">KokoroProvider</span><span class="p">,</span>
     <span class="s2">&quot;polly&quot;</span><span class="p">:</span> <span class="n">PollyProvider</span><span class="p">,</span>
     <span class="s2">&quot;qwen&quot;</span><span class="p">:</span> <span class="n">QwenTTSProvider</span><span class="p">,</span>
+    <span class="s2">&quot;chatterbox&quot;</span><span class="p">:</span> <span class="n">ChatterboxProvider</span><span class="p">,</span>
+    <span class="s2">&quot;zonos&quot;</span><span class="p">:</span> <span class="n">ZonosProvider</span><span class="p">,</span>
     <span class="s2">&quot;mock&quot;</span><span class="p">:</span> <span class="n">MockVoiceProvider</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_PROVIDER_ALIASES</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;chatterbox-tts&quot;</span><span class="p">:</span> <span class="s2">&quot;chatterbox&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chatterbox-turbo&quot;</span><span class="p">:</span> <span class="s2">&quot;chatterbox&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zonos3&quot;</span><span class="p">:</span> <span class="s2">&quot;zonos&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zonos3-mini&quot;</span><span class="p">:</span> <span class="s2">&quot;zonos&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zonos3_mini&quot;</span><span class="p">:</span> <span class="s2">&quot;zonos&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -314,13 +326,14 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve an initialized voice provider instance.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name: Provider name (&#39;kokoro&#39; [default], &#39;polly&#39;, &#39;qwen&#39;, &#39;mock&#39;).</span>
+<span class="sd">        name: Provider name (&#39;kokoro&#39; [default], &#39;polly&#39;, &#39;qwen&#39;, &#39;chatterbox&#39;, &#39;zonos&#39;, &#39;mock&#39;).</span>
 <span class="sd">        **kwargs: Provider-specific configuration arguments.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        An instance of BaseVoiceProvider.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">_PROVIDER_ALIASES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PROVIDERS</span><span class="p">:</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">PROVIDERS</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown voice provider &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;. Available providers: </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -332,17 +345,21 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;BaseVoiceProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ChatterboxProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CHATTERBOX_STYLE_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KokoroProvider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KOKORO_ALL_VOICES&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;KOKORO_BLEND_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KOKORO_VOICE_CATALOG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KOKORO_BLEND_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MockVoiceProvider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PollyProvider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;QwenTTSProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ZonosProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ZONOS_BLEND_PRESETS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ZONOS_STEERING_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PROVIDERS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;get_provider&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-
 </pre></div>
         </article>
       </div>

@@ -290,20 +290,26 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.aligner</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForcedAligner</span><span class="p">,</span> <span class="n">align_clip</span><span class="p">,</span> <span class="n">align_words</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">AudioCache</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.dialogue</span><span class="w"> </span><span class="kn">import</span> <span class="n">DialogueTurn</span><span class="p">,</span> <span class="n">SpeakerProfile</span><span class="p">,</span> <span class="n">synthesize_dialogue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mixer</span><span class="w"> </span><span class="kn">import</span> <span class="n">mix_audio_with_video</span><span class="p">,</span> <span class="n">mix_soundtrack</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.pronunciation</span><span class="w"> </span><span class="kn">import</span> <span class="n">latex_to_speech</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.providers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CHATTERBOX_STYLE_PRESETS</span><span class="p">,</span>
     <span class="n">KOKORO_ALL_VOICES</span><span class="p">,</span>
     <span class="n">KOKORO_BLEND_PRESETS</span><span class="p">,</span>
     <span class="n">KOKORO_VOICE_CATALOG</span><span class="p">,</span>
     <span class="n">PROVIDERS</span><span class="p">,</span>
+    <span class="n">ZONOS_BLEND_PRESETS</span><span class="p">,</span>
+    <span class="n">ZONOS_STEERING_PRESETS</span><span class="p">,</span>
     <span class="n">BaseVoiceProvider</span><span class="p">,</span>
+    <span class="n">ChatterboxProvider</span><span class="p">,</span>
     <span class="n">KokoroProvider</span><span class="p">,</span>
     <span class="n">MockVoiceProvider</span><span class="p">,</span>
     <span class="n">PollyProvider</span><span class="p">,</span>
     <span class="n">QwenTTSProvider</span><span class="p">,</span>
+    <span class="n">ZonosProvider</span><span class="p">,</span>
     <span class="n">get_provider</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">AudioClip</span><span class="p">,</span> <span class="n">NarrationBeat</span><span class="p">,</span> <span class="n">SentenceTimestamp</span><span class="p">,</span> <span class="n">WordTimestamp</span>
@@ -409,10 +415,32 @@
 <span class="sd">            An AudioClip object containing duration and word-level timestamps.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">spoken_text</span> <span class="o">=</span> <span class="n">latex_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">preprocess_math</span> <span class="k">else</span> <span class="n">text</span>
-        <span class="n">engine</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Separate per-call synthesis kwargs from provider constructor kwargs</span>
+        <span class="n">synth_keys</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;exaggeration&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cfg_weight&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ref_audio&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;controls&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;control_spans&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;condition_values&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;speaker_cfg_scale&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;align&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;language&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">synth_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">init_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">synth_keys</span><span class="p">:</span>
+                <span class="n">synth_kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">init_kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
         <span class="k">if</span> <span class="n">lang</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">synth_kwargs</span><span class="p">[</span><span class="s2">&quot;lang&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
+
+        <span class="n">engine</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="o">**</span><span class="n">init_kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
             <span class="n">text</span><span class="o">=</span><span class="n">spoken_text</span><span class="p">,</span>
             <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span>
@@ -421,6 +449,90 @@
             <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
             <span class="o">**</span><span class="n">synth_kwargs</span><span class="p">,</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VoiceEngine.synthesize_beats">
+<a class="viewcode-back" href="../api/voiceanim.html#voiceanim.VoiceEngine.synthesize_beats">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">synthesize_beats</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">beats</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;kokoro&quot;</span><span class="p">,</span>
+        <span class="n">voice</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">instruct</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">preprocess_math</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">align</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">NarrationBeat</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Synthesize a sequence of per-beat narration specs with optional per-beat `instruct` directions.</span>
+
+<span class="sd">        Each beat in `beats` may be a `NarrationBeat`, a `(id, text)` 2-tuple,</span>
+<span class="sd">        a `(id, text, instruct)` 3-tuple, or a dict with `id`/`text`/`instruct`/overrides.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NarrationBeat</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">provider_cache</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseVoiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">raw_beat</span> <span class="ow">in</span> <span class="n">beats</span><span class="p">:</span>
+            <span class="n">beat</span> <span class="o">=</span> <span class="n">NarrationBeat</span><span class="o">.</span><span class="n">from_spec</span><span class="p">(</span><span class="n">raw_beat</span><span class="p">)</span>
+            <span class="n">eff_provider</span> <span class="o">=</span> <span class="p">(</span><span class="n">beat</span><span class="o">.</span><span class="n">provider</span> <span class="ow">or</span> <span class="n">provider</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">eff_voice</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">voice</span> <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">voice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">voice</span>
+            <span class="n">eff_speed</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">speed</span> <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">speed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">speed</span>
+            <span class="n">eff_instruct</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">instruct</span> <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">instruct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">instruct</span>
+
+            <span class="k">if</span> <span class="n">eff_provider</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">provider_cache</span><span class="p">:</span>
+                <span class="n">provider_cache</span><span class="p">[</span><span class="n">eff_provider</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">eff_provider</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="n">provider_cache</span><span class="p">[</span><span class="n">eff_provider</span><span class="p">]</span>
+
+            <span class="n">spoken_text</span> <span class="o">=</span> <span class="n">latex_to_speech</span><span class="p">(</span><span class="n">beat</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">preprocess_math</span> <span class="k">else</span> <span class="n">beat</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">beat_out</span> <span class="o">=</span> <span class="p">(</span><span class="n">out_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">beat</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="n">call_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">exaggeration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">call_kwargs</span><span class="p">[</span><span class="s2">&quot;exaggeration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">exaggeration</span>
+            <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">cfg_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">call_kwargs</span><span class="p">[</span><span class="s2">&quot;cfg_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">cfg_weight</span>
+            <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">controls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">call_kwargs</span><span class="p">[</span><span class="s2">&quot;controls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">controls</span>
+            <span class="k">if</span> <span class="n">beat</span><span class="o">.</span><span class="n">ref_audio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">call_kwargs</span><span class="p">[</span><span class="s2">&quot;ref_audio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beat</span><span class="o">.</span><span class="n">ref_audio</span>
+            <span class="k">if</span> <span class="n">eff_provider</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;chatterbox&quot;</span><span class="p">,</span> <span class="s2">&quot;zonos&quot;</span><span class="p">,</span> <span class="s2">&quot;zonos3&quot;</span><span class="p">,</span> <span class="s2">&quot;zonos3-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;qwen&quot;</span><span class="p">):</span>
+                <span class="n">call_kwargs</span><span class="p">[</span><span class="s2">&quot;align&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">align</span>
+
+            <span class="n">clip</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+                <span class="n">text</span><span class="o">=</span><span class="n">spoken_text</span><span class="p">,</span>
+                <span class="n">voice</span><span class="o">=</span><span class="n">eff_voice</span><span class="p">,</span>
+                <span class="n">speed</span><span class="o">=</span><span class="n">eff_speed</span><span class="p">,</span>
+                <span class="n">instruct</span><span class="o">=</span><span class="n">eff_instruct</span><span class="p">,</span>
+                <span class="n">output_path</span><span class="o">=</span><span class="n">beat_out</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">call_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">align</span> <span class="ow">and</span> <span class="n">eff_provider</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;chatterbox&quot;</span><span class="p">,</span> <span class="s2">&quot;zonos&quot;</span><span class="p">,</span> <span class="s2">&quot;zonos3&quot;</span><span class="p">,</span> <span class="s2">&quot;zonos3-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;qwen&quot;</span><span class="p">,</span> <span class="s2">&quot;polly&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">align</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">align</span> <span class="o">!=</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+                    <span class="n">align_clip</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">align</span><span class="p">))</span>
+
+            <span class="n">beat</span><span class="o">.</span><span class="n">clip</span> <span class="o">=</span> <span class="n">clip</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">beat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="VoiceEngine.align_clip">
+<a class="viewcode-back" href="../api/voiceanim.html#voiceanim.VoiceEngine.align_clip">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">align_clip</span><span class="p">(</span>
+        <span class="n">clip</span><span class="p">:</span> <span class="n">AudioClip</span><span class="p">,</span>
+        <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="n">model_size</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;base&quot;</span><span class="p">,</span>
+        <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AudioClip</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run forced alignment on an existing `AudioClip` to refresh its word timestamps.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">align_clip</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">model_size</span><span class="o">=</span><span class="n">model_size</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="VoiceEngine.synthesize_dialogue">
@@ -494,6 +606,9 @@
     <span class="s2">&quot;SentenceTimestamp&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NarrationBeat&quot;</span><span class="p">,</span>
     <span class="s2">&quot;AudioCache&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ForcedAligner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;align_words&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;align_clip&quot;</span><span class="p">,</span>
     <span class="s2">&quot;VoiceTimelineSync&quot;</span><span class="p">,</span>
     <span class="s2">&quot;mix_audio_with_video&quot;</span><span class="p">,</span>
     <span class="s2">&quot;mix_soundtrack&quot;</span><span class="p">,</span>
@@ -508,12 +623,17 @@
     <span class="s2">&quot;synthesize_ding_sound&quot;</span><span class="p">,</span>
     <span class="s2">&quot;synthesize_theme_loop&quot;</span><span class="p">,</span>
     <span class="s2">&quot;BaseVoiceProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ChatterboxProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CHATTERBOX_STYLE_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KokoroProvider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KOKORO_ALL_VOICES&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KOKORO_VOICE_CATALOG&quot;</span><span class="p">,</span>
     <span class="s2">&quot;KOKORO_BLEND_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PollyProvider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;QwenTTSProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ZonosProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ZONOS_BLEND_PRESETS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ZONOS_STEERING_PRESETS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MockVoiceProvider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;get_provider&quot;</span><span class="p">,</span>
     <span class="s2">&quot;latex_to_speech&quot;</span><span class="p">,</span>

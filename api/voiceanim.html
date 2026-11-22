@@ -398,6 +398,51 @@ blend preset (e.g. <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.VoiceEngine.synthesize_beats">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">synthesize_beats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kokoro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess_math</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim.html#VoiceEngine.synthesize_beats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.VoiceEngine.synthesize_beats" title="Link to this definition">¶</a></dt>
+<dd><p>Synthesize a sequence of per-beat narration specs with optional per-beat <cite>instruct</cite> directions.</p>
+<p>Each beat in <cite>beats</cite> may be a <cite>NarrationBeat</cite>, a <cite>(id, text)</cite> 2-tuple,
+a <cite>(id, text, instruct)</cite> 3-tuple, or a dict with <cite>id</cite>/<cite>text</cite>/<cite>instruct</cite>/overrides.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>beats</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a>)</p></li>
+<li><p><strong>provider</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>voice</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>speed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>instruct</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>preprocess_math</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+<li><p><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.VoiceEngine.align_clip">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">align_clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'base'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim.html#VoiceEngine.align_clip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.VoiceEngine.align_clip" title="Link to this definition">¶</a></dt>
+<dd><p>Run forced alignment on an existing <cite>AudioClip</cite> to refresh its word timestamps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clip</strong> (<a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a>)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>model_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>language</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="voiceanim.VoiceEngine.synthesize_dialogue">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">synthesize_dialogue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">turns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speakers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kokoro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess_math</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim.html#VoiceEngine.synthesize_dialogue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.VoiceEngine.synthesize_dialogue" title="Link to this definition">¶</a></dt>
 <dd><p>Synthesize a multi-speaker dialogue into a single stitched <cite>AudioClip</cite>.</p>
@@ -789,14 +834,22 @@ blend preset (e.g. <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py class">
 <dt class="sig sig-object py" id="voiceanim.NarrationBeat">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">NarrationBeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/schema.html#NarrationBeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.NarrationBeat" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">NarrationBeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exaggeration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/schema.html#NarrationBeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.NarrationBeat" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>A designated beat or section in an animation narration script.</p>
+<p>A designated beat or section in an animation narration script with optional delivery direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
 <li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>instruct</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>voice</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>provider</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>speed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>exaggeration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>cfg_weight</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>controls</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>ref_audio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>target_duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>clip</strong> (<a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a><em> | </em><em>None</em>)</p></li>
@@ -814,6 +867,46 @@ blend preset (e.g. <code class="docutils literal notranslate"><span class="pre">
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.instruct">
+<span class="sig-name descname"><span class="pre">instruct</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.instruct" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.voice">
+<span class="sig-name descname"><span class="pre">voice</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.voice" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.provider">
+<span class="sig-name descname"><span class="pre">provider</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.provider" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.speed">
+<span class="sig-name descname"><span class="pre">speed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.speed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.exaggeration">
+<span class="sig-name descname"><span class="pre">exaggeration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.exaggeration" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.cfg_weight">
+<span class="sig-name descname"><span class="pre">cfg_weight</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.cfg_weight" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.controls">
+<span class="sig-name descname"><span class="pre">controls</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.controls" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.ref_audio">
+<span class="sig-name descname"><span class="pre">ref_audio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.ref_audio" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="voiceanim.NarrationBeat.start_time">
 <span class="sig-name descname"><span class="pre">start_time</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.start_time" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -827,6 +920,28 @@ blend preset (e.g. <code class="docutils literal notranslate"><span class="pre">
 <dt class="sig sig-object py" id="voiceanim.NarrationBeat.clip">
 <span class="sig-name descname"><span class="pre">clip</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><span class="pre">AudioClip</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.NarrationBeat.clip" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.NarrationBeat.from_spec">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/schema.html#NarrationBeat.from_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.NarrationBeat.from_spec" title="Link to this definition">¶</a></dt>
+<dd><p>Coerce a beat specification into a <cite>NarrationBeat</cite>.</p>
+<p>Accepts:
+- <cite>NarrationBeat</cite> instance
+- 2-tuple <cite>(id, text)</cite>
+- 3-tuple <cite>(id, text, instruct)</cite>
+- dict with keys <cite>id</cite> (or <cite>key</cite>), <cite>text</cite>, and optional <cite>instruct</cite>, <cite>voice</cite>,</p>
+<blockquote>
+<div><p><cite>provider</cite>, <cite>speed</cite>, <cite>exaggeration</cite>, <cite>cfg_weight</cite>, <cite>controls</cite>, <cite>ref_audio</cite>, etc.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spec</strong> (<a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -908,6 +1023,91 @@ allowing re-renders of whiteboard animations to avoid redundant API or model syn
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="voiceanim.ForcedAligner">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">ForcedAligner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'base'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/aligner.html#ForcedAligner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ForcedAligner" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Forced word-level aligner supporting neural Whisper backends and acoustic VAD fallback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>model_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>language</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.ForcedAligner.available_backends">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">available_backends</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/aligner.html#ForcedAligner.available_backends"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ForcedAligner.available_backends" title="Link to this definition">¶</a></dt>
+<dd><p>Return list of currently importable alignment backends on this machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.ForcedAligner.align">
+<span class="sig-name descname"><span class="pre">align</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/aligner.html#ForcedAligner.align"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ForcedAligner.align" title="Link to this definition">¶</a></dt>
+<dd><p>Align <cite>text</cite> to <cite>audio_path</cite> and return <cite>(word_timestamps, backend_used)</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>audio_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a>)</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference internal" href="#voiceanim.schema.WordTimestamp" title="voiceanim.schema.WordTimestamp"><em>WordTimestamp</em></a>], <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voiceanim.align_words">
+<span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">align_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'base'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/aligner.html#align_words"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.align_words" title="Link to this definition">¶</a></dt>
+<dd><p>Convenience function to compute word timestamps for an audio file and script text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>audio_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a>)</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>model_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>language</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference internal" href="#voiceanim.schema.WordTimestamp" title="voiceanim.schema.WordTimestamp"><em>WordTimestamp</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voiceanim.align_clip">
+<span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">align_clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clip</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'base'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/aligner.html#align_clip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.align_clip" title="Link to this definition">¶</a></dt>
+<dd><p>Re-align an existing <cite>AudioClip</cite> in place and refresh its <cite>words</cite> and <cite>sentences</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clip</strong> (<a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a>)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>model_size</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>language</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="voiceanim.VoiceTimelineSync">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">VoiceTimelineSync</span></span><a class="reference internal" href="../_modules/voiceanim/timeline.html#VoiceTimelineSync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.VoiceTimelineSync" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
@@ -954,15 +1154,16 @@ allowing re-renders of whiteboard animations to avoid redundant API or model syn
 
 <dl class="py method">
 <dt class="sig sig-object py" id="voiceanim.VoiceTimelineSync.stitch_narration_beats">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stitch_narration_beats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/timeline.html#VoiceTimelineSync.stitch_narration_beats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.VoiceTimelineSync.stitch_narration_beats" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stitch_narration_beats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/timeline.html#VoiceTimelineSync.stitch_narration_beats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.VoiceTimelineSync.stitch_narration_beats" title="Link to this definition">¶</a></dt>
 <dd><p>Combine multiple per-scene narration clips into a single aligned audio track.</p>
-<p>Pads with silence between beats so each beat plays at its designated start_time.</p>
+<p>Pads with silence between beats so each beat plays at its designated start_time.
+Preserves native sample rate when <code class="docutils literal notranslate"><span class="pre">sample_rate=None</span></code> and resamples any mismatched clips.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>beats</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a><em>]</em>)</p></li>
 <li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a>)</p></li>
-<li><p><strong>sample_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>sample_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>total_duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -1365,6 +1566,70 @@ or tuples <cite>(start_time, kind, duration[, volume])</cite>.</p></li>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="voiceanim.ChatterboxProvider">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">ChatterboxProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exaggeration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fallback_to_mock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/providers/chatterbox_provider.html#ChatterboxProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ChatterboxProvider" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#voiceanim.providers.base.BaseVoiceProvider" title="voiceanim.providers.base.BaseVoiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseVoiceProvider</span></code></a></p>
+<p>Expressive speech synthesis provider backed by Resemble AI Chatterbox.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_id</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>ref_audio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>exaggeration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>cfg_weight</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>align_backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>cache</strong> (<a class="reference internal" href="#voiceanim.AudioCache" title="voiceanim.AudioCache"><em>AudioCache</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>fallback_to_mock</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.ChatterboxProvider.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'chatterbox'</span></span><a class="headerlink" href="#voiceanim.ChatterboxProvider.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.ChatterboxProvider.default_voice">
+<span class="sig-name descname"><span class="pre">default_voice</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default'</span></span><a class="headerlink" href="#voiceanim.ChatterboxProvider.default_voice" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.ChatterboxProvider.supported_voices">
+<span class="sig-name descname"><span class="pre">supported_voices</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['default',</span> <span class="pre">'energetic',</span> <span class="pre">'dramatic',</span> <span class="pre">'playful',</span> <span class="pre">'calm',</span> <span class="pre">'storyteller']</span></span><a class="headerlink" href="#voiceanim.ChatterboxProvider.supported_voices" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.ChatterboxProvider.synthesize">
+<span class="sig-name descname"><span class="pre">synthesize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exaggeration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/providers/chatterbox_provider.html#ChatterboxProvider.synthesize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ChatterboxProvider.synthesize" title="Link to this definition">¶</a></dt>
+<dd><p>Synthesize expressive speech with Chatterbox and compute word timestamps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>voice</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>speed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>instruct</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>ref_audio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>exaggeration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>cfg_weight</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="voiceanim.KokoroProvider">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">KokoroProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fallback_to_mock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/providers/kokoro_provider.html#KokoroProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.KokoroProvider" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#voiceanim.providers.base.BaseVoiceProvider" title="voiceanim.providers.base.BaseVoiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseVoiceProvider</span></code></a></p>
@@ -1657,6 +1922,72 @@ word-level and sentence-level SpeechMarks for precise whiteboard visual sync.</p
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="voiceanim.ZonosProvider">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">ZonosProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fallback_to_mock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/providers/zonos_provider.html#ZonosProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ZonosProvider" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#voiceanim.providers.base.BaseVoiceProvider" title="voiceanim.providers.base.BaseVoiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseVoiceProvider</span></code></a></p>
+<p>Expressive speech synthesis provider backed by Zyphra ZONOS3-Mini.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_id</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>api_url</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>ref_audio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>language</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>align_backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>cache</strong> (<a class="reference internal" href="#voiceanim.AudioCache" title="voiceanim.AudioCache"><em>AudioCache</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>fallback_to_mock</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.ZonosProvider.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'zonos'</span></span><a class="headerlink" href="#voiceanim.ZonosProvider.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.ZonosProvider.default_voice">
+<span class="sig-name descname"><span class="pre">default_voice</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'jett'</span></span><a class="headerlink" href="#voiceanim.ZonosProvider.default_voice" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.ZonosProvider.supported_voices">
+<span class="sig-name descname"><span class="pre">supported_voices</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ananya',</span> <span class="pre">'arjun',</span> <span class="pre">'chaitanya',</span> <span class="pre">'cillian',</span> <span class="pre">'gaspard',</span> <span class="pre">'ginevra',</span> <span class="pre">'haoran',</span> <span class="pre">'imogen',</span> <span class="pre">'jett',</span> <span class="pre">'leonor',</span> <span class="pre">'liesel',</span> <span class="pre">'lorenzo',</span> <span class="pre">'meilin',</span> <span class="pre">'minjun',</span> <span class="pre">'morgana',</span> <span class="pre">'rodrigo',</span> <span class="pre">'rupert',</span> <span class="pre">'sakura',</span> <span class="pre">'savannah',</span> <span class="pre">'seoyeon',</span> <span class="pre">'sravya',</span> <span class="pre">'thaddeus',</span> <span class="pre">'thiago',</span> <span class="pre">'willow',</span> <span class="pre">'wolfgang',</span> <span class="pre">'wyatt',</span> <span class="pre">'ximena']</span></span><a class="headerlink" href="#voiceanim.ZonosProvider.supported_voices" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.ZonosProvider.synthesize">
+<span class="sig-name descname"><span class="pre">synthesize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_spans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speaker_cfg_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/providers/zonos_provider.html#ZonosProvider.synthesize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.ZonosProvider.synthesize" title="Link to this definition">¶</a></dt>
+<dd><p>Synthesize speech with ZONOS3-Mini using steering controls or zero-shot cloning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>voice</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>speed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>instruct</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>ref_audio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>language</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>controls</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>control_spans</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>condition_values</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>speaker_cfg_scale</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="voiceanim.MockVoiceProvider">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.</span></span><span class="sig-name descname"><span class="pre">MockVoiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">words_per_minute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">160.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/providers/mock_provider.html#MockVoiceProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.MockVoiceProvider" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#voiceanim.providers.base.BaseVoiceProvider" title="voiceanim.providers.base.BaseVoiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseVoiceProvider</span></code></a></p>
@@ -1717,7 +2048,7 @@ word-level and sentence-level SpeechMarks for precise whiteboard visual sync.</p
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Provider name (‘kokoro’ [default], ‘polly’, ‘qwen’, ‘mock’).</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Provider name (‘kokoro’ [default], ‘polly’, ‘qwen’, ‘chatterbox’, ‘zonos’, ‘mock’).</p></li>
 <li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.15)"><em>Any</em></a>) – Provider-specific configuration arguments.</p></li>
 </ul>
 </dd>
@@ -2227,14 +2558,22 @@ or voice ID string (e.g. <cite>{“student”: “am_adam”, “professor”: �
 
 <dl class="py class">
 <dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.schema.</span></span><span class="sig-name descname"><span class="pre">NarrationBeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/schema.html#NarrationBeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.schema.NarrationBeat" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">voiceanim.schema.</span></span><span class="sig-name descname"><span class="pre">NarrationBeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exaggeration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/schema.html#NarrationBeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.schema.NarrationBeat" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>A designated beat or section in an animation narration script.</p>
+<p>A designated beat or section in an animation narration script with optional delivery direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
 <li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
+<li><p><strong>instruct</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>voice</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>provider</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>speed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>exaggeration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>cfg_weight</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>controls</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>ref_audio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>target_duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>clip</strong> (<a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><em>AudioClip</em></a><em> | </em><em>None</em>)</p></li>
@@ -2252,6 +2591,46 @@ or voice ID string (e.g. <cite>{“student”: “am_adam”, “professor”: �
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.instruct">
+<span class="sig-name descname"><span class="pre">instruct</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.instruct" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.voice">
+<span class="sig-name descname"><span class="pre">voice</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.voice" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.provider">
+<span class="sig-name descname"><span class="pre">provider</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.provider" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.speed">
+<span class="sig-name descname"><span class="pre">speed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.speed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.exaggeration">
+<span class="sig-name descname"><span class="pre">exaggeration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.exaggeration" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.cfg_weight">
+<span class="sig-name descname"><span class="pre">cfg_weight</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.cfg_weight" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.controls">
+<span class="sig-name descname"><span class="pre">controls</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.controls" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.ref_audio">
+<span class="sig-name descname"><span class="pre">ref_audio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.ref_audio" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.start_time">
 <span class="sig-name descname"><span class="pre">start_time</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.start_time" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2265,6 +2644,28 @@ or voice ID string (e.g. <cite>{“student”: “am_adam”, “professor”: �
 <dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.clip">
 <span class="sig-name descname"><span class="pre">clip</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#voiceanim.schema.AudioClip" title="voiceanim.schema.AudioClip"><span class="pre">AudioClip</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#voiceanim.schema.NarrationBeat.clip" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voiceanim.schema.NarrationBeat.from_spec">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/schema.html#NarrationBeat.from_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.schema.NarrationBeat.from_spec" title="Link to this definition">¶</a></dt>
+<dd><p>Coerce a beat specification into a <cite>NarrationBeat</cite>.</p>
+<p>Accepts:
+- <cite>NarrationBeat</cite> instance
+- 2-tuple <cite>(id, text)</cite>
+- 3-tuple <cite>(id, text, instruct)</cite>
+- dict with keys <cite>id</cite> (or <cite>key</cite>), <cite>text</cite>, and optional <cite>instruct</cite>, <cite>voice</cite>,</p>
+<blockquote>
+<div><p><cite>provider</cite>, <cite>speed</cite>, <cite>exaggeration</cite>, <cite>cfg_weight</cite>, <cite>controls</cite>, <cite>ref_audio</cite>, etc.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spec</strong> (<a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -2319,15 +2720,16 @@ or voice ID string (e.g. <cite>{“student”: “am_adam”, “professor”: �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="voiceanim.timeline.VoiceTimelineSync.stitch_narration_beats">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stitch_narration_beats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/timeline.html#VoiceTimelineSync.stitch_narration_beats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.timeline.VoiceTimelineSync.stitch_narration_beats" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stitch_narration_beats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/voiceanim/timeline.html#VoiceTimelineSync.stitch_narration_beats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voiceanim.timeline.VoiceTimelineSync.stitch_narration_beats" title="Link to this definition">¶</a></dt>
 <dd><p>Combine multiple per-scene narration clips into a single aligned audio track.</p>
-<p>Pads with silence between beats so each beat plays at its designated start_time.</p>
+<p>Pads with silence between beats so each beat plays at its designated start_time.
+Preserves native sample rate when <code class="docutils literal notranslate"><span class="pre">sample_rate=None</span></code> and resamples any mismatched clips.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>beats</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference internal" href="#voiceanim.schema.NarrationBeat" title="voiceanim.schema.NarrationBeat"><em>NarrationBeat</em></a><em>]</em>)</p></li>
 <li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><em>Path</em></a>)</p></li>
-<li><p><strong>sample_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>sample_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>total_duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -3354,6 +3756,8 @@ acoustic attribute control (timbre, emotion, rhythm, and prosody) via natural la
 <li><a class="reference internal" href="#voiceanim.VoiceEngine.list_voices"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.list_voices()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceEngine.blend_voices"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.blend_voices()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceEngine.synthesize"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.synthesize()</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.VoiceEngine.synthesize_beats"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.synthesize_beats()</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.VoiceEngine.align_clip"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.align_clip()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceEngine.synthesize_dialogue"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.synthesize_dialogue()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceEngine.generate_theme_music"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.generate_theme_music()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceEngine.loop_audio"><code class="docutils literal notranslate"><span class="pre">VoiceEngine.loop_audio()</span></code></a></li>
@@ -3405,9 +3809,18 @@ acoustic attribute control (timbre, emotion, rhythm, and prosody) via natural la
 <li><a class="reference internal" href="#voiceanim.NarrationBeat"><code class="docutils literal notranslate"><span class="pre">NarrationBeat</span></code></a><ul>
 <li><a class="reference internal" href="#voiceanim.NarrationBeat.id"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.id</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.NarrationBeat.text"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.text</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.instruct"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.instruct</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.voice"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.voice</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.provider"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.provider</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.speed"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.speed</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.exaggeration"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.exaggeration</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.cfg_weight"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.cfg_weight</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.controls"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.controls</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.ref_audio"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.ref_audio</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.NarrationBeat.start_time"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.start_time</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.NarrationBeat.target_duration"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.target_duration</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.NarrationBeat.clip"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.clip</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.NarrationBeat.from_spec"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.from_spec()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#voiceanim.AudioCache"><code class="docutils literal notranslate"><span class="pre">AudioCache</span></code></a><ul>
@@ -3417,6 +3830,13 @@ acoustic attribute control (timbre, emotion, rhythm, and prosody) via natural la
 <li><a class="reference internal" href="#voiceanim.AudioCache.clear"><code class="docutils literal notranslate"><span class="pre">AudioCache.clear()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#voiceanim.ForcedAligner"><code class="docutils literal notranslate"><span class="pre">ForcedAligner</span></code></a><ul>
+<li><a class="reference internal" href="#voiceanim.ForcedAligner.available_backends"><code class="docutils literal notranslate"><span class="pre">ForcedAligner.available_backends()</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ForcedAligner.align"><code class="docutils literal notranslate"><span class="pre">ForcedAligner.align()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#voiceanim.align_words"><code class="docutils literal notranslate"><span class="pre">align_words()</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.align_clip"><code class="docutils literal notranslate"><span class="pre">align_clip()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceTimelineSync"><code class="docutils literal notranslate"><span class="pre">VoiceTimelineSync</span></code></a><ul>
 <li><a class="reference internal" href="#voiceanim.VoiceTimelineSync.sync_event_to_word"><code class="docutils literal notranslate"><span class="pre">VoiceTimelineSync.sync_event_to_word()</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.VoiceTimelineSync.validate_beat_fit"><code class="docutils literal notranslate"><span class="pre">VoiceTimelineSync.validate_beat_fit()</span></code></a></li>
@@ -3446,6 +3866,13 @@ acoustic attribute control (timbre, emotion, rhythm, and prosody) via natural la
 <li><a class="reference internal" href="#voiceanim.BaseVoiceProvider.write_wav"><code class="docutils literal notranslate"><span class="pre">BaseVoiceProvider.write_wav()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#voiceanim.ChatterboxProvider"><code class="docutils literal notranslate"><span class="pre">ChatterboxProvider</span></code></a><ul>
+<li><a class="reference internal" href="#voiceanim.ChatterboxProvider.name"><code class="docutils literal notranslate"><span class="pre">ChatterboxProvider.name</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ChatterboxProvider.default_voice"><code class="docutils literal notranslate"><span class="pre">ChatterboxProvider.default_voice</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ChatterboxProvider.supported_voices"><code class="docutils literal notranslate"><span class="pre">ChatterboxProvider.supported_voices</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ChatterboxProvider.synthesize"><code class="docutils literal notranslate"><span class="pre">ChatterboxProvider.synthesize()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#voiceanim.KokoroProvider"><code class="docutils literal notranslate"><span class="pre">KokoroProvider</span></code></a><ul>
 <li><a class="reference internal" href="#voiceanim.KokoroProvider.name"><code class="docutils literal notranslate"><span class="pre">KokoroProvider.name</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.KokoroProvider.default_voice"><code class="docutils literal notranslate"><span class="pre">KokoroProvider.default_voice</span></code></a></li>
@@ -3472,6 +3899,13 @@ acoustic attribute control (timbre, emotion, rhythm, and prosody) via natural la
 <li><a class="reference internal" href="#voiceanim.QwenTTSProvider.default_voice"><code class="docutils literal notranslate"><span class="pre">QwenTTSProvider.default_voice</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.QwenTTSProvider.supported_voices"><code class="docutils literal notranslate"><span class="pre">QwenTTSProvider.supported_voices</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.QwenTTSProvider.synthesize"><code class="docutils literal notranslate"><span class="pre">QwenTTSProvider.synthesize()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#voiceanim.ZonosProvider"><code class="docutils literal notranslate"><span class="pre">ZonosProvider</span></code></a><ul>
+<li><a class="reference internal" href="#voiceanim.ZonosProvider.name"><code class="docutils literal notranslate"><span class="pre">ZonosProvider.name</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ZonosProvider.default_voice"><code class="docutils literal notranslate"><span class="pre">ZonosProvider.default_voice</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ZonosProvider.supported_voices"><code class="docutils literal notranslate"><span class="pre">ZonosProvider.supported_voices</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.ZonosProvider.synthesize"><code class="docutils literal notranslate"><span class="pre">ZonosProvider.synthesize()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#voiceanim.MockVoiceProvider"><code class="docutils literal notranslate"><span class="pre">MockVoiceProvider</span></code></a><ul>
@@ -3553,9 +3987,18 @@ acoustic attribute control (timbre, emotion, rhythm, and prosody) via natural la
 <li><a class="reference internal" href="#voiceanim.schema.NarrationBeat"><code class="docutils literal notranslate"><span class="pre">NarrationBeat</span></code></a><ul>
 <li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.id"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.id</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.text"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.text</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.instruct"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.instruct</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.voice"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.voice</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.provider"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.provider</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.speed"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.speed</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.exaggeration"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.exaggeration</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.cfg_weight"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.cfg_weight</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.controls"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.controls</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.ref_audio"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.ref_audio</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.start_time"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.start_time</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.target_duration"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.target_duration</span></code></a></li>
 <li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.clip"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.clip</span></code></a></li>
+<li><a class="reference internal" href="#voiceanim.schema.NarrationBeat.from_spec"><code class="docutils literal notranslate"><span class="pre">NarrationBeat.from_spec()</span></code></a></li>
 </ul>
 </li>
 </ul>
