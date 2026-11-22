@@ -93,15 +93,14 @@ clip = VoiceEngine.synthesize(
 )
 
 scene = Scene(width=1280, height=720, audio=clip, background_music="marimba", sketch_sound=True)
-sync = VoiceTimelineSync(clip)
 
-# 2. Trigger the equation sketch on the exact word "Euler's" and finish on "equation."
-t_start, t_end = sync.word_range("Euler's", "equation.")
+# 2. Trigger the equation sketch on the exact word "Euler's"
 eq = Math(r"$e^{i\pi} + 1 = 0$", position=(380, 260), font_size=96, stroke_style=StrokeStyle(color=BLUE, width=3))
-scene.add(SketchAnimation(start_time=t_start, duration=t_end - t_start), drawable=eq)
+event, drawable = VoiceTimelineSync.sync_event_to_word(clip, word="Euler's", event_cls=SketchAnimation, drawable=eq, duration=2.2)
+scene.add(event, drawable=drawable)
 
 # 3. Add word-highlighted subtitles on the camera-invariant overlay layer
-scene.overlay.add(Captions.from_audio_clip(clip, position=(640, 620)))
+scene.overlay.add(Captions(clip, words_per_chunk=5, x=640, y=620, font_size=38))
 scene.render("euler_explained.mp4")
 ```
 

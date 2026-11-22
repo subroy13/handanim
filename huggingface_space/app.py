@@ -11,6 +11,15 @@ from __future__ import annotations
 from pathlib import Path
 import tempfile
 
+try:
+    import spaces
+
+    _spaces_gpu = spaces.GPU(duration=60)
+except Exception:
+
+    def _spaces_gpu(fn):  # type: ignore[no-redef]
+        return fn
+
 from handanim import (
     BLACK,
     BLUE,
@@ -45,7 +54,6 @@ from voiceanim import (
     KOKORO_ALL_VOICES,
     KOKORO_BLEND_PRESETS,
     VoiceEngine,
-    VoiceTimelineSync,
 )
 
 FEATURED_VOICE_CHOICES: list[tuple[str, str]] = [
@@ -99,6 +107,7 @@ def _synthesize_safe(
         )
 
 
+@_spaces_gpu
 def build_custom_whiteboard(
     title_text: str,
     latex_formula: str,
@@ -184,8 +193,8 @@ def build_custom_whiteboard(
         scene.add(SketchAnimation(start_time=cursor, duration=flow_dur), drawable=flow)
 
     if clip is not None and enable_captions:
-        captions = Captions.from_audio_clip(clip, position=(480, 475), font_size=30)
-        scene.overlay.add(captions.create_animation(), drawable=captions)
+        captions = Captions(clip, words_per_chunk=5, x=480, y=475, font_size=30, max_width=860)
+        scene.overlay.add(captions)
 
     mp4_path = str(work_dir / "custom_whiteboard.mp4")
     scene.render(mp4_path, max_length=total_dur)
@@ -235,8 +244,8 @@ scene.add(SketchAnimation(start_time=1.7, duration=1.5), drawable=flow)
 """
     if enable_captions:
         python_code += """
-captions = Captions.from_audio_clip(clip, position=(480, 475), font_size=30)
-scene.overlay.add(captions.create_animation(), drawable=captions)
+captions = Captions(clip, words_per_chunk=5, x=480, y=475, font_size=30, max_width=860)
+scene.overlay.add(captions)
 """
     python_code += """
 scene.render("whiteboard.mp4")
@@ -245,6 +254,7 @@ scene.export_beamer("slides/", n_frames=4, backend="tikz")
     return mp4_path, python_code, tikz_code
 
 
+@_spaces_gpu
 def render_preset_demo(
     preset_name: str,
     voice_choice: str,
@@ -365,8 +375,8 @@ scene.render("hero_showcase.mp4", max_length=5.0)
             speed=1.0,
             out_wav=work_dir / "euler.wav",
         )
-        sync = VoiceTimelineSync(clip)
-        t_start, t_end = sync.word_range("Euler's", "equation.")
+        t_start = clip.get_word_time("Euler's") or 0.0
+        t_end = (clip.get_word_range("equation.") or (t_start + 1.5, t_start + 2.0))[1]
         scene = Scene(
             width=960,
             height=540,
@@ -379,25 +389,25 @@ scene.render("hero_showcase.mp4", max_length=5.0)
         eq = Math(r"$e^{i\pi} + 1 = 0$", position=(240, 195), font_size=84, stroke_style=StrokeStyle(color=BLUE, width=3.0))
         scene.add(SketchAnimation(start_time=0.0, duration=0.8), drawable=title)
         scene.add(SketchAnimation(start_time=t_start, duration=max(1.2, t_end - t_start)), drawable=eq)
-        captions = Captions.from_audio_clip(clip, position=(480, 465), font_size=32)
-        scene.overlay.add(captions.create_animation(), drawable=captions)
+        captions = Captions(clip, words_per_chunk=5, x=480, y=465, font_size=32, max_width=860)
+        scene.overlay.add(captions)
         max_len = max(3.5, round(clip.duration + 0.4, 2))
         py_code = f"""from handanim import BLUE, NAVY, Captions, Math, Scene, SketchAnimation, StrokeStyle, Text
-from voiceanim import VoiceEngine, VoiceTimelineSync
+from voiceanim import VoiceEngine
 
 clip = VoiceEngine.synthesize(
     "Euler's identity connects five fundamental mathematical constants in a single equation.",
     voice={active_voice!r},
 )
-sync = VoiceTimelineSync(clip)
-t_start, t_end = sync.word_range("Euler's", "equation.")
+t_start = clip.get_word_time("Euler's") or 0.0
+t_end = (clip.get_word_range("equation.") or (t_start + 1.5, t_start + 2.0))[1]
 
 scene = Scene(width=960, height=540, fps=24, audio=clip, background_music={music_arg!r}, sketch_sound=True)
 scene.add(SketchAnimation(start_time=0.0, duration=0.8), Text("Euler's Identity", position=(480, 80), font_size=48, stroke_style=StrokeStyle(color=NAVY, width=2.5)))
 scene.add(SketchAnimation(start_time=t_start, duration=max(1.2, t_end - t_start)), Math(r"$e^{{i\\pi}} + 1 = 0$", position=(240, 195), font_size=84, stroke_style=StrokeStyle(color=BLUE, width=3.0)))
 
-captions = Captions.from_audio_clip(clip, position=(480, 465), font_size=32)
-scene.overlay.add(captions.create_animation(), drawable=captions)
+captions = Captions(clip, words_per_chunk=5, x=480, y=465, font_size=32, max_width=860)
+scene.overlay.add(captions)
 scene.render("euler_voiced.mp4")
 """
 
@@ -624,7 +634,7 @@ def create_demo_app():
                         with gr.Accordion("🐍 Copy Generated Python Script", open=True):
                             py_out = gr.Code(language="python", label="Python Code")
                         with gr.Accordion("📄 Copy Generated LaTeX Beamer / TikZ Slide Deck (.tex)", open=False):
-                            tikz_out = gr.Code(language="latex", label="LaTeX Beamer + Inline TikZ")
+                            tikz_out = gr.Code(language=None, label="LaTeX Beamer + Inline TikZ")
 
                 render_btn.click(
                     fn=build_custom_whiteboard,
@@ -673,7 +683,7 @@ def create_demo_app():
                         with gr.Accordion("🐍 Copy Preset Python Script", open=True):
                             preset_py_out = gr.Code(language="python", label="Python Code")
                         with gr.Accordion("📄 Copy Preset LaTeX Beamer / TikZ Deck (.tex)", open=False):
-                            preset_tikz_out = gr.Code(language="latex", label="LaTeX Beamer + Inline TikZ")
+                            preset_tikz_out = gr.Code(language=None, label="LaTeX Beamer + Inline TikZ")
 
                 preset_btn.click(
                     fn=render_preset_demo,

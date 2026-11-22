@@ -72,45 +72,69 @@ class VoiceTimelineSync:
     def stitch_narration_beats(
         beats: list[NarrationBeat],
         output_path: str | Path,
-        sample_rate: int = 24000,
+        sample_rate: int | None = None,
         total_duration: float | None = None,
     ) -> AudioClip:
         """Combine multiple per-scene narration clips into a single aligned audio track.
 
         Pads with silence between beats so each beat plays at its designated start_time.
+        Preserves native sample rate when ``sample_rate=None`` and resamples any mismatched clips.
         """
         output_path = Path(output_path).resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # 1. Determine total duration
+        # 1. Determine total duration and target sample rate
         calculated_end = 0.0
+        detected_rates: list[int] = []
         for b in beats:
             if b.clip is not None:
                 b_start = b.start_time or 0.0
                 calculated_end = max(calculated_end, b_start + b.clip.duration)
+                if Path(b.clip.audio_path).exists():
+                    with wave.open(str(b.clip.audio_path), "rb") as wf:
+                        detected_rates.append(int(wf.getframerate()))
+                elif b.clip.sample_rate:
+                    detected_rates.append(int(b.clip.sample_rate))
 
+        target_sr = int(sample_rate) if sample_rate is not None else (max(detected_rates) if detected_rates else 24000)
         end_duration = total_duration if total_duration is not None else calculated_end
-        total_samples = int(np.ceil(end_duration * sample_rate))
+        total_samples = int(np.ceil(end_duration * target_sr))
 
         # 2. Allocate 16-bit PCM buffer
-        audio_buffer = np.zeros(total_samples, dtype=np.int16)
+        audio_buffer = np.zeros(max(1, total_samples), dtype=np.int16)
         all_words: list[WordTimestamp] = []
         full_text_parts: list[str] = []
 
-        # 3. Paste each beat into buffer
+        # 3. Paste each beat into buffer (resampling if clip sample rate differs from target_sr)
         for b in beats:
             if b.clip is None or not Path(b.clip.audio_path).exists():
                 continue
 
             b_start = b.start_time or 0.0
-            start_sample = int(round(b_start * sample_rate))
+            start_sample = int(round(b_start * target_sr))
 
             with wave.open(str(b.clip.audio_path), "rb") as wf:
+                clip_sr = int(wf.getframerate())
+                n_channels = int(wf.getnchannels())
                 raw_bytes = wf.readframes(wf.getnframes())
                 clip_samples = np.frombuffer(raw_bytes, dtype=np.int16)
 
-            end_sample = min(total_samples, start_sample + len(clip_samples))
-            audio_buffer[start_sample:end_sample] = clip_samples[: end_sample - start_sample]
+            if n_channels > 1 and len(clip_samples) >= n_channels:
+                clip_samples = clip_samples.reshape(-1, n_channels).mean(axis=1).astype(np.int16)
+
+            if clip_sr != target_sr and len(clip_samples) > 1:
+                new_len = max(1, int(round(len(clip_samples) * target_sr / clip_sr)))
+                x_old = np.linspace(0.0, 1.0, len(clip_samples), dtype=np.float64)
+                x_new = np.linspace(0.0, 1.0, new_len, dtype=np.float64)
+                clip_samples = np.clip(
+                    np.round(np.interp(x_new, x_old, clip_samples.astype(np.float64))),
+                    -32768,
+                    32767,
+                ).astype(np.int16)
+
+            end_sample = min(len(audio_buffer), start_sample + len(clip_samples))
+            if end_sample > start_sample:
+                audio_buffer[start_sample:end_sample] = clip_samples[: end_sample - start_sample]
 
             # Shift word timestamps by b_start
             for w in b.clip.words:
@@ -130,13 +154,13 @@ class VoiceTimelineSync:
         with wave.open(str(output_path), "wb") as wf:
             wf.setnchannels(1)
             wf.setsampwidth(2)
-            wf.setframerate(sample_rate)
+            wf.setframerate(target_sr)
             wf.writeframes(audio_buffer.tobytes())
 
         return AudioClip(
             audio_path=str(output_path),
             duration=round(end_duration, 3),
-            sample_rate=sample_rate,
+            sample_rate=target_sr,
             text=" ".join(full_text_parts),
             words=all_words,
             provider="stitched",

@@ -194,8 +194,18 @@ class QwenTTSProvider(BaseVoiceProvider):
         target_path = output_path or (self.cache.cache_dir / f"{key}.wav")
         self.write_wav(target_path, samples, sample_rate=sample_rate)
 
-        # 6. Extract word timings
-        word_timings = self.estimate_word_timings(text, duration)
+        # 6. Extract word timings (forced alignment when available, heuristic fallback)
+        align = kwargs.get("align", "auto")
+        align_backend_used = "heuristic"
+        if align is False:
+            word_timings = self.estimate_word_timings(text, duration)
+        else:
+            from ..aligner import ForcedAligner
+
+            backend = "auto" if align in (True, "auto") else str(align)
+            word_timings, align_backend_used = ForcedAligner(backend=backend).align(
+                target_path, text, duration=duration
+            )
         sentences = self.extract_sentences(text, word_timings)
 
         clip = AudioClip(
@@ -212,6 +222,7 @@ class QwenTTSProvider(BaseVoiceProvider):
                 "model_id": self.model_id,
                 "language": language,
                 "speed": speed,
+                "alignment_backend": align_backend_used,
             },
         )
 

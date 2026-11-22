@@ -230,3 +230,90 @@ def test_polly_provider_with_mocked_boto3(monkeypatch, tmp_path):
     assert clip.get_word_time("Draw") == 0.1
     assert clip.get_word_time("blue") == 0.6
     assert clip.get_word_time("circle") == 0.95
+
+
+def test_chatterbox_and_zonos_providers_and_aliases(tmp_path):
+    from voiceanim import ChatterboxProvider, NarrationBeat, ZonosProvider
+
+    assert isinstance(get_provider("chatterbox"), ChatterboxProvider)
+    assert isinstance(get_provider("chatterbox-turbo"), ChatterboxProvider)
+    assert isinstance(get_provider("zonos"), ZonosProvider)
+    assert isinstance(get_provider("zonos3"), ZonosProvider)
+    assert isinstance(get_provider("zonos3-mini"), ZonosProvider)
+
+    cache = AudioCache(cache_dir=tmp_path)
+
+    cb = ChatterboxProvider(cache=cache, backend="torch", fallback_to_mock=True)
+    clip_cb = cb.synthesize(
+        "Ninety-nine percent? No, much smaller!",
+        voice="energetic",
+        instruct="Incredulous question, then punchy playful reveal",
+    )
+    assert clip_cb.provider == "chatterbox"
+    assert clip_cb.instruct == "Incredulous question, then punchy playful reveal"
+    assert clip_cb.metadata["exaggeration"] > 0.85
+    assert clip_cb.metadata["cfg_weight"] <= 0.42
+    assert Path(clip_cb.audio_path).exists()
+    assert len(clip_cb.words) == 5
+
+    zn = ZonosProvider(cache=cache, backend="torch", fallback_to_mock=True)
+    clip_zn = zn.synthesize(
+        "Ninety-nine percent? No, much smaller!",
+        voice="jett",
+        instruct="Excited dramatic reveal with playful energy",
+    )
+    assert clip_zn.provider == "zonos"
+    assert clip_zn.metadata["controls"]["delivery.emotion"] >= 2.2
+    assert clip_zn.metadata["controls"]["delivery.liveliness"] >= 1.6
+    assert Path(clip_zn.audio_path).exists()
+    assert len(clip_zn.words) == 5
+
+    # Per-beat direction specs via VoiceEngine.synthesize_beats
+    beats = VoiceEngine.synthesize_beats(
+        [
+            ("hook", "What is the chance it is spam?", "Curious, upbeat hook"),
+            ("answer", "Ninety-nine percent? No, much smaller!", "Incredulous, punchy reveal"),
+            NarrationBeat(id="outro", text="Let's see why.", instruct="Warm, inviting"),
+        ],
+        provider="chatterbox",
+        output_dir=tmp_path / "beats",
+        cache=cache,
+        backend="torch",
+        fallback_to_mock=True,
+    )
+    assert len(beats) == 3
+    assert beats[1].instruct == "Incredulous, punchy reveal"
+    assert beats[1].clip is not None
+    assert Path(beats[1].clip.audio_path).name == "answer.wav"
+
+
+def test_forced_aligner_energy_and_clip_alignment(tmp_path):
+    from voiceanim import ForcedAligner, align_clip
+    from voiceanim.providers.base import BaseVoiceProvider
+
+    # Build a synthetic WAV with two speech bursts separated by a 0.6s silence pause
+    sr = 24000
+    t_burst1 = np.linspace(0.0, 0.5, int(0.5 * sr), endpoint=False)
+    burst1 = (0.4 * np.sin(2.0 * np.pi * 220.0 * t_burst1)).astype(np.float32)
+    silence = np.zeros(int(0.6 * sr), dtype=np.float32)
+    t_burst2 = np.linspace(0.0, 0.7, int(0.7 * sr), endpoint=False)
+    burst2 = (0.4 * np.sin(2.0 * np.pi * 260.0 * t_burst2)).astype(np.float32)
+    samples = np.concatenate([burst1, silence, burst2])
+
+    wav_path = tmp_path / "two_bursts.wav"
+    BaseVoiceProvider.write_wav(wav_path, samples, sample_rate=sr)
+
+    aligner = ForcedAligner(backend="energy")
+    words, used = aligner.align(wav_path, "Ninety-nine percent? No, much smaller!")
+    assert used == "energy"
+    assert len(words) == 5
+    # First word starts near 0.0, last word lands inside second burst (> 1.1s)
+    assert words[0].start < 0.1
+    assert words[-1].end > 1.3
+
+    # Verify align_clip updates an AudioClip in place
+    cache = AudioCache(cache_dir=tmp_path / "cache")
+    clip = MockVoiceProvider(cache=cache).synthesize("Hello world!")
+    aligned = align_clip(clip, backend="energy")
+    assert aligned.metadata["alignment_backend"] == "energy"
+    assert len(aligned.words) == 2

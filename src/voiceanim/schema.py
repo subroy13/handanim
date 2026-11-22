@@ -225,10 +225,52 @@ class AudioClip:
 
 @dataclass
 class NarrationBeat:
-    """A designated beat or section in an animation narration script."""
+    """A designated beat or section in an animation narration script with optional delivery direction."""
 
     id: str
     text: str
+    instruct: str | None = None
+    voice: str | None = None
+    provider: str | None = None
+    speed: float | None = None
+    exaggeration: float | None = None
+    cfg_weight: float | None = None
+    controls: dict[str, float] | None = None
+    ref_audio: str | None = None
     start_time: float | None = None
     target_duration: float | None = None
     clip: AudioClip | None = None
+
+    @classmethod
+    def from_spec(cls, spec: NarrationBeat | dict | tuple | list) -> NarrationBeat:
+        """Coerce a beat specification into a `NarrationBeat`.
+
+        Accepts:
+        - `NarrationBeat` instance
+        - 2-tuple `(id, text)`
+        - 3-tuple `(id, text, instruct)`
+        - dict with keys `id` (or `key`), `text`, and optional `instruct`, `voice`,
+          `provider`, `speed`, `exaggeration`, `cfg_weight`, `controls`, `ref_audio`, etc.
+        """
+        if isinstance(spec, cls):
+            return spec
+        if isinstance(spec, dict):
+            beat_id = str(spec.get("id", spec.get("key", "")))
+            return cls(
+                id=beat_id,
+                text=str(spec.get("text", "")),
+                instruct=spec.get("instruct") or spec.get("direction"),
+                voice=spec.get("voice"),
+                provider=spec.get("provider"),
+                speed=float(spec["speed"]) if spec.get("speed") is not None else None,
+                exaggeration=float(spec["exaggeration"]) if spec.get("exaggeration") is not None else None,
+                cfg_weight=float(spec["cfg_weight"]) if spec.get("cfg_weight") is not None else None,
+                controls=dict(spec["controls"]) if spec.get("controls") is not None else None,
+                ref_audio=str(spec["ref_audio"]) if spec.get("ref_audio") is not None else None,
+                start_time=float(spec["start_time"]) if spec.get("start_time") is not None else None,
+                target_duration=float(spec["target_duration"]) if spec.get("target_duration") is not None else None,
+            )
+        if isinstance(spec, (tuple, list)) and len(spec) >= 2:
+            instruct = str(spec[2]) if len(spec) >= 3 and spec[2] is not None else None
+            return cls(id=str(spec[0]), text=str(spec[1]), instruct=instruct)
+        raise TypeError(f"Unsupported NarrationBeat specification: {spec!r}")

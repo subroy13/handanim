@@ -65,3 +65,39 @@ def test_stitch_narration_beats(tmp_path):
     second_beat_first_word = [w for w in unified_clip.words if "two" in w.word.lower()][0]
     assert second_beat_first_word.start >= 4.0
 
+
+def test_stitch_narration_beats_preserves_44100_and_resamples_mixed(tmp_path):
+    import wave
+
+    import numpy as np
+
+    from voiceanim.providers.base import BaseVoiceProvider
+    from voiceanim.schema import AudioClip, WordTimestamp
+
+    sr_hi = 44100
+    t_hi = np.linspace(0.0, 1.0, sr_hi, endpoint=False)
+    wav_hi = tmp_path / "b44k.wav"
+    BaseVoiceProvider.write_wav(wav_hi, (0.3 * np.sin(2 * np.pi * 440 * t_hi)).astype(np.float32), sample_rate=sr_hi)
+
+    sr_lo = 24000
+    t_lo = np.linspace(0.0, 1.0, sr_lo, endpoint=False)
+    wav_lo = tmp_path / "b24k.wav"
+    BaseVoiceProvider.write_wav(wav_lo, (0.3 * np.sin(2 * np.pi * 440 * t_lo)).astype(np.float32), sample_rate=sr_lo)
+
+    c_hi = AudioClip(audio_path=str(wav_hi), duration=1.0, sample_rate=sr_hi, text="Hi", words=[WordTimestamp("Hi", 0.0, 0.5)])
+    c_lo = AudioClip(audio_path=str(wav_lo), duration=1.0, sample_rate=sr_lo, text="Lo", words=[WordTimestamp("Lo", 0.0, 0.5)])
+
+    out_wav = tmp_path / "stitched_44k.wav"
+    stitched = VoiceTimelineSync.stitch_narration_beats(
+        [
+            NarrationBeat(id="1", text="Hi", start_time=0.0, clip=c_hi),
+            NarrationBeat(id="2", text="Lo", start_time=1.5, clip=c_lo),
+        ],
+        out_wav,
+        total_duration=3.0,
+    )
+    assert stitched.sample_rate == 44100
+    with wave.open(str(out_wav), "rb") as wf:
+        assert wf.getframerate() == 44100
+        assert abs(wf.getnframes() / wf.getframerate() - 3.0) < 0.01
+
