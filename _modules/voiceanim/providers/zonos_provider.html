@@ -538,6 +538,20 @@
         <span class="k">assert</span> <span class="n">blended</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">blended</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sanitize_tts_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize Unicode dashes/quotes that can cause ZONOS3-Mini&#39;s tokenizer to code-switch.&quot;&quot;&quot;</span>
+        <span class="n">cleaned</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u2013</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u2014</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u2018</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u2019</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u201c</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u201d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u2026</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cleaned</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_synthesize_mlx</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -546,34 +560,44 @@
         <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">controls</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
+        <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
         <span class="n">condition_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">speaker_cfg_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mlx_model</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="n">gen_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
+        <span class="n">lang_short</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span> <span class="k">if</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">gen_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize_tts_text</span><span class="p">(</span><span class="n">text</span><span class="p">),</span>
+            <span class="s2">&quot;lang_code&quot;</span><span class="p">:</span> <span class="n">lang_short</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">condition_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;condition_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">condition_values</span>
         <span class="k">elif</span> <span class="n">speed</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
             <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;speed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">speaker_cfg_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;speaker_cfg_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">speaker_cfg_scale</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">temperature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">controls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;delivery.liveliness&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1.5</span><span class="p">:</span>
-            <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.82</span>
+            <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.72</span>
 
         <span class="k">if</span> <span class="n">ref_audio</span><span class="p">:</span>
             <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;ref_audio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_audio</span>
+            <span class="k">if</span> <span class="n">speaker_cfg_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;speaker_cfg_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">speaker_cfg_scale</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">blended_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_mlx_blended_embedding</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">voice</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">blended_emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;speaker_embedding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">blended_emb</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;voice&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">voice</span>
+            <span class="k">if</span> <span class="n">speaker_cfg_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;speaker_cfg_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">speaker_cfg_scale</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">controls</span><span class="p">:</span>
             <span class="n">gen_kwargs</span><span class="p">[</span><span class="s2">&quot;controls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">controls</span>
 
@@ -677,6 +701,7 @@
         <span class="n">condition_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">speaker_cfg_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">align</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AudioClip</span><span class="p">:</span>
@@ -695,6 +720,9 @@
                 <span class="s2">&quot;control_spans&quot;</span><span class="p">:</span> <span class="n">control_spans</span> <span class="ow">or</span> <span class="p">[],</span>
                 <span class="s2">&quot;ref_audio&quot;</span><span class="p">:</span> <span class="n">effective_ref</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="n">eff_lang</span><span class="p">,</span>
+                <span class="s2">&quot;speaker_cfg_scale&quot;</span><span class="p">:</span> <span class="n">speaker_cfg_scale</span><span class="p">,</span>
+                <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
+                <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
@@ -736,9 +764,11 @@
                     <span class="n">effective_ref</span><span class="p">,</span>
                     <span class="n">speed</span><span class="p">,</span>
                     <span class="n">merged_controls</span><span class="p">,</span>
+                    <span class="n">language</span><span class="o">=</span><span class="n">eff_lang</span><span class="p">,</span>
                     <span class="n">condition_values</span><span class="o">=</span><span class="n">condition_values</span><span class="p">,</span>
                     <span class="n">speaker_cfg_scale</span><span class="o">=</span><span class="n">speaker_cfg_scale</span><span class="p">,</span>
                     <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                    <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">samples</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">res</span>
