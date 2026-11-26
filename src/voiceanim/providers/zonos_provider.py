@@ -251,6 +251,20 @@ class ZonosProvider(BaseVoiceProvider):
         assert blended is not None
         return blended.astype(np.float32)
 
+    @staticmethod
+    def _sanitize_tts_text(text: str) -> str:
+        """Normalize Unicode dashes/quotes that can cause ZONOS3-Mini's tokenizer to code-switch."""
+        cleaned = (
+            text.replace("\u2013", " ")
+            .replace("\u2014", ", ")
+            .replace("\u2018", "'")
+            .replace("\u2019", "'")
+            .replace("\u201c", '"')
+            .replace("\u201d", '"')
+            .replace("\u2026", "...")
+        )
+        return " ".join(cleaned.split())
+
     def _synthesize_mlx(
         self,
         text: str,
@@ -259,34 +273,44 @@ class ZonosProvider(BaseVoiceProvider):
         speed: float,
         controls: dict[str, float],
         *,
+        language: str = "en-us",
         condition_values: dict[str, float] | None = None,
         speaker_cfg_scale: float | None = None,
         temperature: float | None = None,
+        seed: int | None = None,
     ) -> tuple[np.ndarray, int] | None:
         model = self._get_mlx_model()
         if model is None:
             return None
 
-        gen_kwargs: dict[str, Any] = {"text": text}
+        lang_short = "en" if language.lower().startswith("en") else language.lower().split("-")[0]
+        gen_kwargs: dict[str, Any] = {
+            "text": self._sanitize_tts_text(text),
+            "lang_code": lang_short,
+        }
         if condition_values is not None:
             gen_kwargs["condition_values"] = condition_values
         elif speed != 1.0:
             gen_kwargs["speed"] = float(speed)
-        if speaker_cfg_scale is not None:
-            gen_kwargs["speaker_cfg_scale"] = float(speaker_cfg_scale)
+        if seed is not None:
+            gen_kwargs["seed"] = int(seed)
         if temperature is not None:
             gen_kwargs["temperature"] = float(temperature)
         elif controls.get("delivery.liveliness", 0.0) >= 1.5:
-            gen_kwargs["temperature"] = 0.82
+            gen_kwargs["temperature"] = 0.72
 
         if ref_audio:
             gen_kwargs["ref_audio"] = ref_audio
+            if speaker_cfg_scale is not None:
+                gen_kwargs["speaker_cfg_scale"] = float(speaker_cfg_scale)
         else:
             blended_emb = self._resolve_mlx_blended_embedding(model, voice)
             if blended_emb is not None:
                 gen_kwargs["speaker_embedding"] = blended_emb
             else:
                 gen_kwargs["voice"] = voice
+            if speaker_cfg_scale is not None:
+                gen_kwargs["speaker_cfg_scale"] = float(speaker_cfg_scale)
         if controls:
             gen_kwargs["controls"] = controls
 
@@ -388,6 +412,7 @@ class ZonosProvider(BaseVoiceProvider):
         condition_values: dict[str, float] | None = None,
         speaker_cfg_scale: float | None = None,
         temperature: float | None = None,
+        seed: int | None = None,
         align: bool | str = "auto",
         **kwargs: Any,
     ) -> AudioClip:
@@ -406,6 +431,9 @@ class ZonosProvider(BaseVoiceProvider):
                 "control_spans": control_spans or [],
                 "ref_audio": effective_ref or "",
                 "lang": eff_lang,
+                "speaker_cfg_scale": speaker_cfg_scale,
+                "temperature": temperature,
+                "seed": seed,
             },
             sort_keys=True,
         )
@@ -447,9 +475,11 @@ class ZonosProvider(BaseVoiceProvider):
                     effective_ref,
                     speed,
                     merged_controls,
+                    language=eff_lang,
                     condition_values=condition_values,
                     speaker_cfg_scale=speaker_cfg_scale,
                     temperature=temperature,
+                    seed=seed,
                 )
                 if res is not None:
                     samples, sample_rate = res

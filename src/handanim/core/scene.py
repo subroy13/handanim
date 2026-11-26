@@ -304,12 +304,25 @@ class Scene:
                     self.add(event=segment_event, drawable=sub_drawable, overlay=overlay, background=background)
                 return drawable
             elif drawable.grouping_method == "parallel":
-                # group does not have any drawable opsset, so it is not in cache
-                # but group_memberships are useful to calculate the opsset on which events get applied.
-                if drawable.id not in self.drawable_groups:
-                    self.drawable_groups[drawable.id] = drawable
-                event.data["apply_to_group"] = drawable.id  # add more context to the event with the group_id
-                for elem in drawable.elements:
+                # Flatten any nested parallel DrawableGroups so apply_to_group is never overwritten
+                flat_elems: list[Drawable] = []
+
+                def _collect_parallel(grp: DrawableGroup) -> None:
+                    for item in grp.elements:
+                        if isinstance(item, DrawableGroup) and grp.grouping_method == "parallel" and item.grouping_method == "parallel":
+                            _collect_parallel(item)
+                        else:
+                            flat_elems.append(item)
+
+                _collect_parallel(drawable)
+                if len(flat_elems) != len(drawable.elements) or any(isinstance(x, DrawableGroup) for x in drawable.elements):
+                    eff_group = DrawableGroup(flat_elems, grouping_method="parallel")
+                else:
+                    eff_group = drawable
+                if eff_group.id not in self.drawable_groups:
+                    self.drawable_groups[eff_group.id] = eff_group
+                event.data["apply_to_group"] = eff_group.id  # add more context to the event with the group_id
+                for elem in flat_elems:
                     self.add(event, elem, overlay=overlay, background=background)
 
                 return drawable
@@ -319,6 +332,9 @@ class Scene:
             self.drawable_cache.background_color = self.background_color
             if hasattr(drawable, "objects_to_erase"):
                 drawable.drawable_cache = self.drawable_cache  # type: ignore[attr-defined]
+            if hasattr(event, "rig") and event.rig is None:
+                event.rig = drawable  # type: ignore[attr-defined]
+                event.data["rig"] = drawable
             self.drawable_cache.set_drawable_opsset(drawable)
             self.drawable_cache.drawables[drawable.id] = drawable
 

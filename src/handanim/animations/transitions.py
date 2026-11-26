@@ -268,7 +268,6 @@ class PageTurnTransition(SceneTransition):
         """Return `(source_anchor, target_anchor)` for the lifted paper corner/edge."""
         w = x1 - x0
         h = y1 - y0
-        cx = 0.5 * (x0 + x1)
         cy = 0.5 * (y0 + y1)
 
         d = self.direction
@@ -286,9 +285,9 @@ class PageTurnTransition(SceneTransition):
         if d == "top_left":
             return (x0, y0), (x1 + 0.95 * w, y1 + 0.95 * h)
         if d == "bottom_to_top":
-            return (cx + 0.06 * w, y1), (cx - 0.08 * w, y0 - 1.15 * h)
+            return (x0 + 0.62 * w, y1), (x0 + 0.34 * w, y0 - 1.02 * h)
         # top_to_bottom
-        return (cx + 0.06 * w, y0), (cx - 0.08 * w, y1 + 1.15 * h)
+        return (x0 + 0.62 * w, y0), (x0 + 0.34 * w, y1 + 1.02 * h)
 
     def apply_transition(
         self,
@@ -639,16 +638,26 @@ class PaperCrumpleTransition(SceneTransition):
             facet_fill_alpha = float(np.clip(crunch_smooth * 0.55, 0.0, 0.55))
 
             # Triangular facets connecting perimeter vertices to inner crease vertices
+            is_dark_sheet = (sheet_color[0] + sheet_color[1] + sheet_color[2]) / 3.0 < 0.45
             for k in range(0, self._n_perim, 2):
                 p_a = perim_world[k]
                 p_b = perim_world[(k + 2) % self._n_perim]
                 in_pt = inner_world[(k // 2) % n_inner]
                 shade = float(self._facet_shades[k])
-                f_color = (
-                    max(0.0, sheet_color[0] * shade),
-                    max(0.0, sheet_color[1] * shade),
-                    max(0.0, sheet_color[2] * (shade - 0.02)),
-                )
+                if is_dark_sheet:
+                    # Centered around ~0.915 in [0.86, 0.97] -> map to subtle 3D highlight/shadow delta on dark sheets
+                    delta = (shade - 0.915) * 1.45
+                    f_color = (
+                        float(np.clip(sheet_color[0] + delta * 0.75, 0.0, 1.0)),
+                        float(np.clip(sheet_color[1] + delta * 0.90, 0.0, 1.0)),
+                        float(np.clip(sheet_color[2] + delta * 1.10, 0.0, 1.0)),
+                    )
+                else:
+                    f_color = (
+                        max(0.0, sheet_color[0] * shade),
+                        max(0.0, sheet_color[1] * shade),
+                        max(0.0, sheet_color[2] * (shade - 0.02)),
+                    )
                 result.extend(
                     _polygon_fill_and_stroke_ops(
                         [p_a, p_b, in_pt],

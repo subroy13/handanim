@@ -26,7 +26,21 @@ def test_get_font_info():
     assert "name" in hershey_font
 
 
-@pytest.mark.parametrize("font_name", ["feasibly", "hoarsely", "backstay", "handanimtype1", "noto_sans_math"])
+@pytest.mark.parametrize(
+    "font_name",
+    [
+        "feasibly",
+        "hoarsely",
+        "backstay",
+        "casual_hand",
+        "architect_hand",
+        "clean_sans",
+        "marker_round",
+        "blueprint_sans",
+        "handanimtype1",
+        "noto_sans_math",
+    ],
+)
 def test_get_font_path_resolves_bundled_package_resources(font_name):
     font_path = Path(get_font_path(font_name))
     assert font_path.is_file(), f"Bundled font {font_name} not found at {font_path}"
@@ -159,6 +173,44 @@ def test_backstay_emits_personal_use_warning_and_linter_warning():
         'scene.render("out.mp4")\n'
     )
     assert any("backstay" in w and "personal use" in w for w in report.warnings)
+
+
+@pytest.mark.parametrize(
+    "font_name",
+    ["casual_hand", "architect_hand", "clean_sans", "marker_round", "blueprint_sans", "hershey_rowmans"],
+)
+def test_svg_and_hershey_single_line_fonts_and_rupee_symbol(font_name):
+    txt = Text(
+        "Paid ₹48,000 → 99.1% ≈ 120 km/h",
+        position=(250, 200),
+        font_size=36,
+        font_name=font_name,
+        align="center",
+    )
+    ops = txt.draw()
+    assert any(op.type in (OpsType.LINE_TO, OpsType.CURVE_TO) for op in ops.opsset)
+    bbox = ops.get_bbox()
+    assert bbox.width > 120 and bbox.height > 15
+
+    # Verify ₹ alone produces visible strokes in every single-line font
+    rupee_ops = Text("₹", position=(0, 0), font_size=48, font_name=font_name).draw()
+    assert len(rupee_ops.opsset) >= 4
+    assert rupee_ops.get_bbox().width > 10
+
+
+def test_relief_singleline_kerning_and_svg_register_font():
+    from handanim.stylings.fonts import register_font
+
+    svg_path = get_font_path("blueprint_sans")
+    reg_path = register_font("custom_svg_test", svg_path)
+    assert Path(reg_path).is_file()
+    assert get_font_info("custom_svg_test") == {"type": "svg", "file": reg_path}
+
+    # "AV" in Relief SingleLine has negative kerning compared to unkerned sum of A + V
+    w_a = Text("A", font_size=100, font_name="blueprint_sans")._measure_text_width("A")
+    w_v = Text("V", font_size=100, font_name="blueprint_sans")._measure_text_width("V")
+    w_av = Text("AV", font_size=100, font_name="blueprint_sans")._measure_text_width("AV")
+    assert w_av < (w_a + w_v)
 
 
 

@@ -15,6 +15,18 @@ _BUILTIN_FONTS: dict[str, dict[str, str]] = {
     "feasibly": {"type": "ttf", "file": "FeasiblySingleLine-z8D90.ttf"},
     "hoarsely": {"type": "ttf", "file": "HoarselySingleLine-K7g0o.ttf"},
     "backstay": {"type": "ttf", "file": "BackstaySingleLine-rgOw8.ttf", "license": "personal_use_only"},
+    # Open-path SIL OFL-1.1 SVG 1.1 single-line plotter & whiteboard fonts
+    "casual_hand": {"type": "svg", "file": "EMSCasualHand.svg"},
+    "ems_casual": {"type": "svg", "file": "EMSCasualHand.svg"},
+    "architect_hand": {"type": "svg", "file": "EMSTech.svg"},
+    "ems_tech": {"type": "svg", "file": "EMSTech.svg"},
+    "clean_sans": {"type": "svg", "file": "EMSReadability.svg"},
+    "ems_readability": {"type": "svg", "file": "EMSReadability.svg"},
+    "marker_round": {"type": "svg", "file": "EMSNixish.svg"},
+    "ems_nixish": {"type": "svg", "file": "EMSNixish.svg"},
+    "blueprint_sans": {"type": "svg", "file": "ReliefSingleLineSVG-Regular.svg"},
+    "relief_singleline": {"type": "svg", "file": "ReliefSingleLineSVG-Regular.svg"},
+    # Custom JSON skeleton & Hershey stroke fonts
     "handanimtype1": {"type": "custom", "file": "handanimtype1.json"},
     "noto_sans_math": {"type": "custom", "file": "noto_sans_math_skeleton.json"},
     "hershey_mathlow": {"type": "hershey", "name": "mathlow"},
@@ -54,26 +66,34 @@ def get_font_info(font_name: str) -> dict[str, str] | None:
 def register_font(
     name: str,
     file_path: str | Path,
-    font_type: str = "ttf",
+    font_type: str | None = None,
     persist: bool = False,
 ) -> str:
-    """Register a TTF or custom JSON font for use in `Text` and `Math`.
+    """Register a TTF, SVG 1.1 single-line, or custom JSON font for use in `Text` and `Math`.
 
     By default (`persist=False`), registers the font in memory for the current
     Python process without modifying `~/.handanim/config.json`.
 
     Args:
-        name: Identifier to use as `font_name` (e.g. `"kalam"`).
-        file_path: Path to the `.ttf` or `.json` font file.
-        font_type: Either `"ttf"` (default) or `"custom"`.
+        name: Identifier to use as `font_name` (e.g. `"casual_hand"`).
+        file_path: Path to the `.ttf`, `.svg`, or `.json` font file.
+        font_type: One of `"ttf"`, `"svg"`, or `"custom"`. Inferred from suffix if omitted.
         persist: If True, also saves the registration in `~/.handanim/config.json`.
 
     Returns:
         The resolved absolute path to the registered font file.
     """
-    if font_type not in ("ttf", "custom"):
-        raise ValueError(f"font_type must be 'ttf' or 'custom', got {font_type!r}")
     resolved = Path(file_path).expanduser().resolve()
+    if font_type is None:
+        ext = resolved.suffix.lower()
+        if ext == ".svg":
+            font_type = "svg"
+        elif ext == ".json":
+            font_type = "custom"
+        else:
+            font_type = "ttf"
+    if font_type not in ("ttf", "svg", "custom"):
+        raise ValueError(f"font_type must be 'ttf', 'svg', or 'custom', got {font_type!r}")
     if not resolved.is_file():
         raise FileNotFoundError(f"Font file not found: {resolved}")
 

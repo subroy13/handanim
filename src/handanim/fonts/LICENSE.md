@@ -23,3 +23,15 @@ This directory contains third-party and first-party fonts used by `handanim`.
 ## 5. Handanim Type 1 (`custom/handanimtype1.json`)
 - **Copyright:** © Subhrajyoty Roy (`handanim` authors).
 - **License:** MIT License (same as the `handanim` repository).
+
+## 6. Relief SingleLine (`svg/ReliefSingleLineSVG-Regular.svg`)
+- **Copyright:** Copyright 2021 The Relief SingleLine Project Authors (`https://github.com/isdat-type/Relief-SingleLine`), designed by Tanguy Vanlaeys / isdaT-type.
+- **License:** [SIL Open Font License, Version 1.1 (OFL-1.1)](./OFL.txt).
+
+## 7. Evil Mad Scientist (EMS) Open-Path SVG Fonts (`svg/EMSCasualHand.svg`, `svg/EMSTech.svg`, `svg/EMSReadability.svg`, `svg/EMSNixish.svg`)
+- **Copyright & Attribution:** Created by Sheldon B. Michaels; SVG font conversion by Windell H. Oskay (`https://gitlab.com/oskay/svg-fonts`):
+  - `EMSCasualHand.svg` — single-line derivative of *Covered By Your Grace* (© Kimberly Geswein).
+  - `EMSTech.svg` — single-line derivative of *Architects Daughter* (© Kimberly Geswein).
+  - `EMSReadability.svg` — single-line derivative of *Source Sans Pro Light* (© Adobe, Paul D. Hunt).
+  - `EMSNixish.svg` — single-line derivative of *Nixie One* (© Jovanny Lemonad).
+- **License:** [SIL Open Font License, Version 1.1 (OFL-1.1)](./OFL.txt).

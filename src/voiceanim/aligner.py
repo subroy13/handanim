@@ -335,8 +335,16 @@ class ForcedAligner:
             "large-v3-turbo": "mlx-community/whisper-large-v3-turbo",
         }
         hf_repo = repo_map.get(self.model_size, self.model_size)
+        samples, sr = _read_wav_mono_float(audio_path)
+        if sr != 16000 and samples.size > 1:
+            n_out = max(1, int(round(samples.size * 16000.0 / float(sr))))
+            samples = np.interp(
+                np.linspace(0.0, float(samples.size - 1), n_out),
+                np.arange(samples.size, dtype=np.float64),
+                samples.astype(np.float64),
+            ).astype(np.float32)
         result = mlx_whisper.transcribe(
-            str(audio_path),
+            samples,
             path_or_hf_repo=hf_repo,
             word_timestamps=True,
             language=self.language,
